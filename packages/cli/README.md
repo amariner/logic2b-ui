@@ -40,4 +40,5 @@ Full docs, live previews and the theme builder are at
 
 ## License
 
-MIT
+MIT. Component design and API based on [shadcn/ui](https://ui.shadcn.com) (MIT).
+See [LICENSE](./LICENSE).
