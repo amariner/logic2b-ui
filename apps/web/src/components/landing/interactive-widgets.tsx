@@ -111,7 +111,7 @@ const contributionConfig = {
   value: { label: "Contributions", color: "var(--chart-1)" },
 } satisfies ChartConfig
 
-export function ContributionHistory() {
+export function ContributionHistory({ animate = true }: { animate?: boolean }) {
   return (
     <Card>
       <CardHeader>
@@ -129,7 +129,12 @@ export function ContributionHistory() {
               axisLine={false}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Bar dataKey="value" fill="var(--color-value)" radius={4} />
+            <Bar
+              dataKey="value"
+              fill="var(--color-value)"
+              radius={4}
+              isAnimationActive={animate}
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -158,7 +163,7 @@ const analyticsConfig = {
   v: { label: "Visitors", color: "var(--chart-2)" },
 } satisfies ChartConfig
 
-export function AnalyticsCard() {
+export function AnalyticsCard({ animate = true }: { animate?: boolean }) {
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between">
@@ -185,6 +190,7 @@ export function AnalyticsCard() {
               fill="url(#fillAnalytics)"
               stroke="var(--color-v)"
               strokeWidth={2}
+              isAnimationActive={animate}
             />
           </AreaChart>
         </ChartContainer>
@@ -210,7 +216,7 @@ const powerConfig = {
   kw: { label: "kW", color: "var(--chart-4)" },
 } satisfies ChartConfig
 
-export function PowerUsage() {
+export function PowerUsage({ animate = true }: { animate?: boolean }) {
   return (
     <Card>
       <CardHeader>
@@ -222,7 +228,12 @@ export function PowerUsage() {
           <BarChart accessibilityLayer data={powerData}>
             <XAxis dataKey="t" tickLine={false} tickMargin={8} axisLine={false} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Bar dataKey="kw" fill="var(--color-kw)" radius={3} />
+            <Bar
+              dataKey="kw"
+              fill="var(--color-kw)"
+              radius={3}
+              isAnimationActive={animate}
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>
