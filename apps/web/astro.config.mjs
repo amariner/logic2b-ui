@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { fileURLToPath } from "node:url";
 
 export default defineConfig({
-  site: "https://logic2b-ui.workers.dev",
+  site: "https://ui.logic2b.com",
   output: "static",
   adapter: cloudflare(),
   integrations: [react(), mdx()],

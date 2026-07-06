@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
   "name": "utils",
   "type": "registry:lib",
   "description": "The cn() helper that merges Tailwind classes with clsx and tailwind-merge. Required by every component.",

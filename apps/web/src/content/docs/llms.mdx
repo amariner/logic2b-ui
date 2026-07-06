@@ -18,18 +18,18 @@ LLM or building an agent, use these endpoints instead of scraping HTML.
 
 ## Installing components programmatically
 
-The registry follows the shadcn registry-item schema. Each item includes
+The registry uses an open registry-item JSON schema. Each item includes
 `dependencies` (npm), `registryDependencies` (other registry items) and
 `files[].content` (the full TypeScript source):
 
 ```bash
-curl https://ui.logic2b.dev/r/button.json
+curl https://ui.logic2b.com/r/button.json
 ```
 
-To install into a user project, either run the shadcn CLI:
+To install into a user project, either run the logic2b CLI:
 
 ```bash
-npx shadcn@latest add https://ui.logic2b.dev/r/button.json
+npx logic2b@latest add button
 ```
 
 or write `files[].content` to `src/components/ui/<name>.tsx` yourself, install

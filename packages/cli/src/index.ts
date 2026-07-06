@@ -4,7 +4,7 @@ import { existsSync } from "node:fs"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, join, resolve } from "node:path"
 
-const DEFAULT_REGISTRY = "https://ui.logic2b.dev"
+const DEFAULT_REGISTRY = "https://ui.logic2b.com"
 
 interface RegistryFile {
   path: string
@@ -119,7 +119,7 @@ program
         configPath,
         JSON.stringify(
           {
-            $schema: "https://ui.shadcn.com/schema.json",
+            $schema: "https://ui.logic2b.com/schema.json",
             style: "default",
             tailwind: { css: "src/styles/global.css", baseColor: "neutral", cssVariables: true },
             aliases: {

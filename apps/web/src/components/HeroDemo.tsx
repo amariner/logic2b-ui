@@ -80,11 +80,11 @@ export function HeroDemo() {
           <CardContent className="grid gap-4">
             <div className="flex items-center gap-3">
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                <AvatarImage src="https://github.com/vercel.png" alt="@logic2b" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="text-sm">
-                <p className="font-medium leading-none">shadcn</p>
+                <p className="font-medium leading-none">logic2b</p>
                 <p className="text-muted-foreground">Owner</p>
               </div>
               <Badge variant="outline" className="ml-auto">

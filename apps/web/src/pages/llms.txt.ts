@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import registryIndex from "../../public/r/index.json";
 
 export const GET: APIRoute = async ({ site }) => {
-  const base = (site?.href ?? "https://ui.logic2b.dev/").replace(/\/$/, "");
+  const base = (site?.href ?? "https://ui.logic2b.com/").replace(/\/$/, "");
   const docs = await getCollection("docs");
 
   const guides = docs.filter((d) => !d.id.startsWith("components/"));
@@ -16,8 +16,8 @@ export const GET: APIRoute = async ({ site }) => {
   const body = [
     "# logic2b ui",
     "",
-    "> Copy-paste React + Tailwind components with a shadcn-compatible registry,",
-    "> optimized for Cloudflare and for consumption by LLMs and coding agents.",
+    "> Copy-paste UI components with an open JSON registry, designed for",
+    "> consumption by LLMs and coding agents.",
     "",
     "Every docs page is available as plain Markdown by appending `.md` to its URL.",
     `The registry index is at ${base}/r/index.json and each component's full`,

@@ -18,15 +18,17 @@ from npm — it's code you own.**
 - **Edge-first.** The site and registry are fully static, served from
   Cloudflare's edge.
 
-## shadcn compatibility
+## Install with one command
 
-The registry follows the shadcn registry-item schema. Any tool that can install
-from a shadcn registry — including the `shadcn` CLI itself — can install
-logic2b components:
+Every component is available from the logic2b registry through the CLI — it
+copies the source into your project and resolves dependencies for you:
 
 ```bash
-npx shadcn@latest add https://ui.logic2b.dev/r/button.json
+npx logic2b@latest add button
 ```
+
+The registry uses an open, widely-adopted JSON format, so third-party tools and
+AI agents can consume it too.
 
 ## Where to go next
 

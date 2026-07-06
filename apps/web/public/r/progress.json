@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
   "name": "progress",
   "type": "registry:ui",
   "description": "Displays an indicator showing the completion progress of a task. Use to communicate long-running operations, built on Radix Progress.",

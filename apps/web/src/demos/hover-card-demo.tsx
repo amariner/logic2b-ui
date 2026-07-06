@@ -22,7 +22,7 @@ export default function HoverCardDemo() {
           <div className="space-y-1">
             <h4 className="text-sm font-semibold">@logic2b</h4>
             <p className="text-sm">
-              A clone of shadcn/ui optimized for Cloudflare Workers and LLMs.
+              Beautifully designed components you copy into your project.
             </p>
             <div className="flex items-center pt-2">
               <CalendarIcon className="mr-2 size-4 opacity-70" />

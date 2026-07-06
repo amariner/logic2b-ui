@@ -48,7 +48,7 @@ for (const item of registry) {
   )
 
   const payload = registryItemSchema.parse({
-    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    $schema: "https://ui.logic2b.com/schema/registry-item.json",
     name: item.name,
     type: item.type,
     description: item.description,

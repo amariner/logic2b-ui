@@ -4,7 +4,7 @@ export default function AvatarDemo() {
   return (
     <div className="flex justify-center gap-3">
       <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+        <AvatarImage src="https://github.com/vercel.png" alt="@logic2b" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <Avatar>

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
   "name": "aspect-ratio",
   "type": "registry:ui",
   "description": "Displays content, such as images or videos, within a fixed, desired ratio.",
