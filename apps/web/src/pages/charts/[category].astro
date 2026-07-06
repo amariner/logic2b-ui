@@ -1,0 +1,74 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+const categories = [
+  {
+    slug: "area",
+    label: "Area",
+    demos: ["chart-area-demo", "chart-area-stacked-demo"],
+  },
+  {
+    slug: "bar",
+    label: "Bar",
+    demos: ["chart-bar-demo", "chart-bar-horizontal-demo"],
+  },
+  {
+    slug: "line",
+    label: "Line",
+    demos: ["chart-line-demo", "chart-line-multiple-demo"],
+  },
+  {
+    slug: "pie",
+    label: "Pie",
+    demos: ["chart-pie-demo", "chart-pie-donut-demo"],
+  },
+];
+
+export async function getStaticPaths() {
+  return [
+    { params: { category: "area" } },
+    { params: { category: "bar" } },
+    { params: { category: "line" } },
+    { params: { category: "pie" } },
+  ];
+}
+
+const { category } = Astro.params;
+const current = categories.find((c) => c.slug === category)!;
+---
+
+<BaseLayout title={`${current.label} Charts`}>
+  <div class="mx-auto max-w-6xl px-4 py-10">
+    <h1 class="text-3xl font-bold tracking-tight">Charts</h1>
+    <p class="mt-2 text-muted-foreground">
+      A collection of chart components built using Recharts.
+    </p>
+
+    <nav class="mt-6 flex items-center gap-1 border-b">
+      {
+        categories.map((c) => (
+          <a
+            href={`/charts/${c.slug}`}
+            class:list={[
+              "-mb-px border-b-2 px-3 py-2 text-sm font-medium",
+              c.slug === category
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground",
+            ]}
+          >
+            {c.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="mt-8 flex flex-col gap-10">
+      {
+        current.demos.map((demo) => (
+          <ComponentPreview name={demo} />
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

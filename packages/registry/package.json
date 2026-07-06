@@ -14,14 +14,20 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "lucide-react": "^1.23.0",
     "radix-ui": "^1.6.1",
+    "recharts": "^3.9.2",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
   "devDependencies": {
     "@types/react": "^19.2.17",
-    "react": "^19.2.7",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3"
   }

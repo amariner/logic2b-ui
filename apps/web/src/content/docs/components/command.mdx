@@ -1,0 +1,51 @@
+---
+title: Command
+description: Fast, composable command menu for React.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="command-demo" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/command.json
+```
+
+## Usage
+
+```tsx
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+
+<Command>
+  <CommandInput placeholder="Type a command or search..." />
+  <CommandList>
+    <CommandEmpty>No results found.</CommandEmpty>
+    <CommandGroup heading="Suggestions">
+      <CommandItem>Calendar</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>
+```
+
+### CommandDialog
+
+Use `CommandDialog` to render the command menu inside a modal (cmd+k style).
+It depends on the `dialog` component.
+
+```tsx
+import { CommandDialog, CommandInput, CommandList } from "@/components/ui/command"
+
+<CommandDialog open={open} onOpenChange={setOpen}>
+  <CommandInput placeholder="Type a command or search..." />
+  <CommandList>...</CommandList>
+</CommandDialog>
+```

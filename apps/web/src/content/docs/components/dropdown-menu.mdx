@@ -1,0 +1,45 @@
+---
+title: Dropdown Menu
+description: Displays a menu of actions or options triggered by a button.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="dropdown-menu-demo" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/dropdown-menu.json
+```
+
+## Usage
+
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+<DropdownMenu>
+  <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem>Billing</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` (DropdownMenuItem) | `default \| destructive` | `default` |
+| `inset` (DropdownMenuItem / Label / SubTrigger) | `boolean` | `false` |
+| `checked` (DropdownMenuCheckboxItem) | `boolean` | — |

@@ -1,0 +1,32 @@
+---
+title: Popover
+description: Displays rich content in a portal, triggered by a button.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="popover-demo" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/popover.json
+```
+
+## Usage
+
+```tsx
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
+<Popover>
+  <PopoverTrigger>Open</PopoverTrigger>
+  <PopoverContent>Place content for the popover here.</PopoverContent>
+</Popover>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `align` (PopoverContent) | `start \| center \| end` | `center` |
+| `sideOffset` (PopoverContent) | `number` | `4` |

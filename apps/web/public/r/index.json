@@ -53,5 +53,135 @@
     "name": "textarea",
     "type": "registry:ui",
     "description": "Displays a form textarea that auto-sizes to its content (field-sizing)."
+  },
+  {
+    "name": "accordion",
+    "type": "registry:ui",
+    "description": "A vertically stacked set of interactive headings that each reveal a section of content, built on Radix Accordion. Use it for FAQs or collapsible content groups. Parts: Accordion (root, supports type 'single' or 'multiple'), AccordionItem, AccordionTrigger, AccordionContent."
+  },
+  {
+    "name": "collapsible",
+    "type": "registry:ui",
+    "description": "An interactive component which expands and collapses a panel of content, built on Radix Collapsible. Use it for simple show/hide sections without the multi-item semantics of an accordion. Parts: Collapsible (root), CollapsibleTrigger, CollapsibleContent."
+  },
+  {
+    "name": "dialog",
+    "type": "registry:ui",
+    "description": "A window overlaid on the primary window, rendering content that requires the user's attention, built on Radix Dialog. Use it for modal forms or confirmations that block interaction with the page. Parts: Dialog (root), DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose, DialogOverlay, DialogPortal."
+  },
+  {
+    "name": "alert-dialog",
+    "type": "registry:ui",
+    "description": "A modal dialog that interrupts the user with important content and expects an explicit confirmation, built on Radix Alert Dialog. Use it for destructive actions (e.g. delete) that need a yes/no confirmation, unlike a regular Dialog it cannot be dismissed by clicking outside. Parts: AlertDialog (root), AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel."
+  },
+  {
+    "name": "dropdown-menu",
+    "type": "registry:ui",
+    "description": "Displays a menu of actions or options triggered by a button, built on Radix Dropdown Menu. Use it for contextual action lists, with support for items, checkboxes, radio groups, submenus, labels, separators and shortcuts. Parts: DropdownMenu (root), DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuPortal."
+  },
+  {
+    "name": "popover",
+    "type": "registry:ui",
+    "description": "Displays rich content in a portal, triggered by a button, built on Radix Popover. Use it for non-modal floating panels such as pickers or extra details that stay open until dismissed. Parts: Popover (root), PopoverTrigger, PopoverContent, PopoverAnchor."
+  },
+  {
+    "name": "tooltip",
+    "type": "registry:ui",
+    "description": "A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it, built on Radix Tooltip. Use it for short contextual hints on icons or truncated labels. Parts: TooltipProvider, Tooltip (root), TooltipTrigger, TooltipContent."
+  },
+  {
+    "name": "sheet",
+    "type": "registry:ui",
+    "description": "Extends the Dialog component to display content that complements the main content of the screen, sliding in from an edge, built on Radix Dialog. Use it for side panels, filters or mobile navigation drawers. Variant: side (top, bottom, left, right). Parts: Sheet (root), SheetTrigger, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, SheetClose."
+  },
+  {
+    "name": "tabs",
+    "type": "registry:ui",
+    "description": "A set of layered sections of content, only one of which is displayed at a time, built on Radix Tabs. Use it to switch between related views without navigation. Parts: Tabs (root), TabsList, TabsTrigger, TabsContent."
+  },
+  {
+    "name": "hover-card",
+    "type": "registry:ui",
+    "description": "For sighted users to preview content available behind a link, shown after a short hover delay, built on Radix Hover Card. Use it for user profile previews or link previews, unlike Tooltip it supports rich interactive content. Parts: HoverCard (root), HoverCardTrigger, HoverCardContent."
+  },
+  {
+    "name": "checkbox",
+    "type": "registry:ui",
+    "description": "A control that allows the user to toggle between checked, unchecked and indeterminate states. Use for boolean options in forms, built on Radix Checkbox."
+  },
+  {
+    "name": "radio-group",
+    "type": "registry:ui",
+    "description": "A set of checkable buttons where no more than one can be checked at a time. Use when the user must pick exactly one option from a visible list, built on Radix Radio Group."
+  },
+  {
+    "name": "switch",
+    "type": "registry:ui",
+    "description": "A control that toggles between checked and unchecked states, presented as a physical switch. Use for on/off settings, built on Radix Switch."
+  },
+  {
+    "name": "select",
+    "type": "registry:ui",
+    "description": "Displays a list of options for the user to pick from, triggered by a button. Use for choosing one value from a longer or dropdown-style list, built on Radix Select."
+  },
+  {
+    "name": "slider",
+    "type": "registry:ui",
+    "description": "An input where the user selects a value, or range of values, by dragging a handle within a track. Use for numeric ranges like volume or price, built on Radix Slider."
+  },
+  {
+    "name": "progress",
+    "type": "registry:ui",
+    "description": "Displays an indicator showing the completion progress of a task. Use to communicate long-running operations, built on Radix Progress."
+  },
+  {
+    "name": "toggle",
+    "type": "registry:ui",
+    "description": "A two-state button that can be either on or off. Use for a single toggleable action like bold formatting, built on Radix Toggle."
+  },
+  {
+    "name": "toggle-group",
+    "type": "registry:ui",
+    "description": "A set of two-state buttons that can be toggled on or off, grouped together with shared variant and size. Use for grouped exclusive or multiple selection toggles like text alignment, built on Radix Toggle Group."
+  },
+  {
+    "name": "table",
+    "type": "registry:ui",
+    "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions."
+  },
+  {
+    "name": "breadcrumb",
+    "type": "registry:ui",
+    "description": "Displays the path to the current resource using a hierarchy of links. Use for navigation showing the user's location within a site."
+  },
+  {
+    "name": "pagination",
+    "type": "registry:ui",
+    "description": "Renders page navigation links for paginated content, such as tables or search results."
+  },
+  {
+    "name": "scroll-area",
+    "type": "registry:ui",
+    "description": "Augments native scroll functionality with custom, cross-browser styled scrollbars. Use to control overflow inside a fixed-size container."
+  },
+  {
+    "name": "aspect-ratio",
+    "type": "registry:ui",
+    "description": "Displays content, such as images or videos, within a fixed, desired ratio."
+  },
+  {
+    "name": "command",
+    "type": "registry:ui",
+    "description": "A fast, composable command menu for building command palettes (cmd+k style search-and-run interfaces), built on cmdk."
+  },
+  {
+    "name": "sonner",
+    "type": "registry:ui",
+    "description": "An opinionated toast notification component. Use to show brief, auto-dismissing messages to the user."
+  },
+  {
+    "name": "chart",
+    "type": "registry:ui",
+    "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a shadcn-style tooltip and legend."
   }
 ]

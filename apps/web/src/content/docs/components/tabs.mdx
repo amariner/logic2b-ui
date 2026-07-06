@@ -1,0 +1,37 @@
+---
+title: Tabs
+description: A set of layered sections of content, only one of which is displayed at a time.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="tabs-demo" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/tabs.json
+```
+
+## Usage
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+<Tabs defaultValue="account">
+  <TabsList>
+    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger value="password">Password</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">Account settings.</TabsContent>
+  <TabsContent value="password">Password settings.</TabsContent>
+</Tabs>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `defaultValue` (Tabs) | `string` | — |
+| `value` / `onValueChange` (Tabs) | `string` / `(value: string) => void` | — |
+| `orientation` (Tabs) | `horizontal \| vertical` | `horizontal` |

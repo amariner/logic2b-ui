@@ -1,0 +1,34 @@
+---
+title: Tooltip
+description: A popup that displays information related to an element when it receives focus or the mouse hovers over it.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="tooltip-demo" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/tooltip.json
+```
+
+## Usage
+
+```tsx
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+
+<Tooltip>
+  <TooltipTrigger>Hover</TooltipTrigger>
+  <TooltipContent>Add to library</TooltipContent>
+</Tooltip>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `delayDuration` (TooltipProvider) | `number` (ms) | `0` |
+| `sideOffset` (TooltipContent) | `number` | `0` |
+
+Note: `Tooltip` wraps itself in a `TooltipProvider`, so it works standalone. Wrap your app in a single `TooltipProvider` to share delay settings across multiple tooltips.

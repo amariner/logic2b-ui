@@ -1,0 +1,64 @@
+import type { RegistryItem } from "../types.ts"
+
+export const items: RegistryItem[] = [
+  {
+    name: "table",
+    type: "registry:ui",
+    description:
+      "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions.",
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/table.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "breadcrumb",
+    type: "registry:ui",
+    description:
+      "Displays the path to the current resource using a hierarchy of links. Use for navigation showing the user's location within a site.",
+    dependencies: ["radix-ui", "lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/breadcrumb.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "pagination",
+    type: "registry:ui",
+    description:
+      "Renders page navigation links for paginated content, such as tables or search results.",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils", "button"],
+    files: [{ path: "src/ui/pagination.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "scroll-area",
+    type: "registry:ui",
+    description:
+      "Augments native scroll functionality with custom, cross-browser styled scrollbars. Use to control overflow inside a fixed-size container.",
+    dependencies: ["radix-ui"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/scroll-area.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "aspect-ratio",
+    type: "registry:ui",
+    description:
+      "Displays content, such as images or videos, within a fixed, desired ratio.",
+    dependencies: ["radix-ui"],
+    files: [{ path: "src/ui/aspect-ratio.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "command",
+    type: "registry:ui",
+    description:
+      "A fast, composable command menu for building command palettes (cmd+k style search-and-run interfaces), built on cmdk.",
+    dependencies: ["cmdk", "lucide-react"],
+    registryDependencies: ["utils", "dialog"],
+    files: [{ path: "src/ui/command.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "sonner",
+    type: "registry:ui",
+    description:
+      "An opinionated toast notification component. Use to show brief, auto-dismissing messages to the user.",
+    dependencies: ["sonner"],
+    files: [{ path: "src/ui/sonner.tsx", type: "registry:ui" }],
+  },
+]

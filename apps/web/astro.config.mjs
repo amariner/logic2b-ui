@@ -13,7 +13,12 @@ export default defineConfig({
   integrations: [react(), mdx()],
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      // Force linked/monorepo React libs through Vite so dev SSR uses a single React copy.
+      noExternal: ["radix-ui", /^@radix-ui\//, "cmdk", "sonner", "recharts", "lucide-react"],
+    },
     resolve: {
+      dedupe: ["react", "react-dom"],
       alias: {
         "@/registry": fileURLToPath(
           new URL("../../packages/registry/src", import.meta.url),
