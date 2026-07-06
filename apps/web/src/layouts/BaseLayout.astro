@@ -4,12 +4,18 @@ import "@/styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  wide?: boolean;
 }
 
 const {
   title,
   description = "logic2b ui — Build interfaces fast, AI-assisted. Beautifully designed components you copy into your project and make your own.",
+  wide = false,
 } = Astro.props;
+
+const headerInner = wide
+  ? "mx-auto flex h-14 w-full max-w-none items-center gap-6 px-6"
+  : "mx-auto flex h-14 max-w-6xl items-center gap-6 px-4";
 ---
 
 <!doctype html>
@@ -37,7 +43,7 @@ const {
     <header
       class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur"
     >
-      <div class="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
+      <div class={headerInner}>
         <a href="/" class="flex items-center gap-2 font-semibold">
           <span
             class="flex size-6 items-center justify-center rounded bg-primary text-xs font-bold text-primary-foreground"

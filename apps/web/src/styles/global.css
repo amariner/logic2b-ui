@@ -99,3 +99,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* /create preview: heading font applies to titles inside the themed canvas. */
+.create-canvas :is(h1, h2, h3, [data-slot="card-title"]) {
+  font-family: var(--font-heading, var(--font-sans));
+}

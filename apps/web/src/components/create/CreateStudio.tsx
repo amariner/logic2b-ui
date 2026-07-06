@@ -76,6 +76,7 @@ function useThemeStyle(cfg: ThemeConfig, mode: Mode): React.CSSProperties {
     const style: Record<string, string> = {
       "--radius": RADII[cfg.radius] ?? RADII.default,
       "--font-sans": FONTS[cfg.font] ?? FONTS.sans,
+      "--font-heading": FONTS[cfg.heading] ?? FONTS.sans,
       fontFamily: FONTS[cfg.font] ?? FONTS.sans,
     }
     for (const [k, v] of Object.entries(tokens)) style[`--${k}`] = v
@@ -160,7 +161,7 @@ const PMS: Record<string, string> = {
 
 export function CreateStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULT_CONFIG)
-  const [mode, setMode] = React.useState<Mode>("light")
+  const [mode, setMode] = React.useState<Mode>("dark")
   const set = (patch: Partial<ThemeConfig>) => setCfg((c) => ({ ...c, ...patch }))
 
   const style = useThemeStyle(cfg, mode)
@@ -203,28 +204,26 @@ export function CreateStudio() {
     key,
     label: FONT_LABELS[key] ?? key,
   }))
+  const headingOpts = fontOpts
 
   return (
-    <div
-      style={style}
-      className={`bg-background text-foreground ${mode === "dark" ? "dark" : ""}`}
-    >
-      <div className="grid gap-6 rounded-xl border bg-background p-4 lg:grid-cols-[300px_1fr]">
-        {/* --------------------------- Customizer --------------------------- */}
-        <aside className="grid grid-cols-[minmax(0,1fr)] content-start gap-3">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-sm font-semibold">Customize</h2>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>Light</span>
-              <Switch
-                checked={mode === "dark"}
-                onCheckedChange={(v) => setMode(v ? "dark" : "light")}
-                aria-label="Toggle preview theme"
-              />
-              <span>Dark</span>
-            </div>
+    <div className="flex w-full flex-col lg:flex-row">
+      {/* --------------------------- Customizer rail --------------------------- */}
+      <aside className="flex w-full flex-col gap-3 border-b bg-background p-4 lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r">
+        <div className="flex items-center justify-between px-1">
+          <h2 className="text-sm font-semibold">Customize</h2>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>Light</span>
+            <Switch
+              checked={mode === "dark"}
+              onCheckedChange={(v) => setMode(v ? "dark" : "light")}
+              aria-label="Toggle preview theme"
+            />
+            <span>Dark</span>
           </div>
+        </div>
 
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
           <ControlRow
             label="Base Color"
             valueLabel={BASE_COLORS[cfg.base].label}
@@ -250,19 +249,17 @@ export function CreateStudio() {
             onChange={(k) => set({ chart: k })}
           />
           <ControlRow
-            label="Radius"
-            valueLabel={RADIUS_LABELS[cfg.radius] ?? cfg.radius}
-            glyph={
-              <span className="inline-block size-5 rounded-tl-lg border-l-2 border-t-2" />
-            }
-            options={radiusOpts}
-            value={cfg.radius}
-            onChange={(k) => set({ radius: k })}
+            label="Heading"
+            valueLabel={FONT_LABELS[cfg.heading] ?? cfg.heading}
+            glyph={<span className="text-base font-semibold">Aa</span>}
+            options={headingOpts}
+            value={cfg.heading}
+            onChange={(k) => set({ heading: k })}
           />
           <ControlRow
             label="Font"
             valueLabel={FONT_LABELS[cfg.font] ?? cfg.font}
-            glyph={<span className="text-base font-semibold">Aa</span>}
+            glyph={<span className="text-base">Aa</span>}
             options={fontOpts}
             value={cfg.font}
             onChange={(k) => set({ font: k })}
@@ -290,28 +287,46 @@ export function CreateStudio() {
             value="lucide"
             onChange={() => {}}
           />
+          <ControlRow
+            label="Radius"
+            valueLabel={RADIUS_LABELS[cfg.radius] ?? cfg.radius}
+            glyph={
+              <span className="inline-block size-5 rounded-tl-lg border-l-2 border-t-2" />
+            }
+            options={radiusOpts}
+            value={cfg.radius}
+            onChange={(k) => set({ radius: k })}
+          />
+        </div>
 
-          <Separator className="my-1" />
+        <Separator className="my-1" />
 
-          <div className="flex min-w-0 items-center justify-between rounded-lg border bg-muted/40 px-3 py-2 font-mono text-xs">
-            <span className="truncate">--preset {presetId}</span>
-          </div>
+        <div className="flex min-w-0 items-center justify-between rounded-lg border bg-muted/40 px-3 py-2 font-mono text-xs">
+          <span className="truncate">--preset {presetId}</span>
+        </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <OpenPresetDialog onApply={setCfg} />
-            <Button variant="outline" size="sm" onClick={shuffle}>
-              Shuffle
-            </Button>
-          </div>
+        <div className="grid grid-cols-2 gap-2">
+          <OpenPresetDialog onApply={setCfg} />
+          <Button variant="outline" size="sm" onClick={shuffle}>
+            Shuffle
+          </Button>
+        </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <GetCodeDialog cfg={cfg} presetId={presetId} />
-            <NewProjectDialog presetId={presetId} />
-          </div>
-        </aside>
+        {/* Pinned actions */}
+        <div className="mt-auto grid gap-2 pt-2">
+          <NewProjectDialog presetId={presetId} />
+          <GetCodeDialog cfg={cfg} presetId={presetId} />
+        </div>
+      </aside>
 
-        {/* ---------------------------- Preview ----------------------------- */}
-        <section className="grid min-w-0 grid-cols-1 items-start gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {/* ------------------------------- Canvas ------------------------------- */}
+      <div
+        style={style}
+        className={`create-canvas min-h-[calc(100dvh-3.5rem)] min-w-0 flex-1 bg-background p-4 text-foreground sm:p-6 ${
+          mode === "dark" ? "dark" : ""
+        }`}
+      >
+        <section className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           <ComponentShowcase />
           <ContributionHistory animate={false} />
           <PayoutThreshold />
@@ -410,7 +425,7 @@ function GetCodeDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">Get Code</Button>
+        <Button className="w-full">Get Code</Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
@@ -467,7 +482,7 @@ function NewProjectDialog({ presetId }: { presetId: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
+        <Button variant="outline" className="w-full">
           New Project
         </Button>
       </DialogTrigger>

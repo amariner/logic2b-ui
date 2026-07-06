@@ -5,17 +5,8 @@ import { CreateStudio } from "@/components/create/CreateStudio";
 
 <BaseLayout
   title="Create — logic2b/ui"
-  description="Design your theme live: base color, accent, charts, radius and font. Copy the CSS, generate components.json, or scaffold a new project with the CLI."
+  description="Design your theme live: base color, accent, charts, radius and fonts. Copy the CSS, generate components.json, or scaffold a new project with the CLI."
+  wide
 >
-  <main class="mx-auto max-w-[1400px] px-4 py-10">
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold tracking-tight">Create your design system</h1>
-      <p class="mt-2 max-w-2xl text-muted-foreground">
-        Tweak the base color, accent, charts, radius and font. The canvas updates
-        live — then copy the CSS, export <code>components.json</code>, or scaffold
-        a fresh project with your theme baked in.
-      </p>
-    </div>
-    <CreateStudio client:load />
-  </main>
+  <CreateStudio client:load />
 </BaseLayout>

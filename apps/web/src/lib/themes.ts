@@ -256,6 +256,7 @@ export interface ThemeConfig {
   chart: string
   radius: string
   font: string
+  heading: string
 }
 
 export const DEFAULT_CONFIG: ThemeConfig = {
@@ -264,6 +265,7 @@ export const DEFAULT_CONFIG: ThemeConfig = {
   chart: "default",
   radius: "default",
   font: "sans",
+  heading: "sans",
 }
 
 /** Resolve the effective token set + chart palette for a mode. */
@@ -284,6 +286,7 @@ export function resolveTokens(cfg: ThemeConfig, mode: Mode) {
 export function buildCss(cfg: ThemeConfig): string {
   const radius = RADII[cfg.radius] ?? RADII.default
   const font = FONTS[cfg.font] ?? FONTS.sans
+  const heading = FONTS[cfg.heading] ?? FONTS.sans
   const block = (mode: Mode) => {
     const { tokens, chart } = resolveTokens(cfg, mode)
     const lines = Object.entries(tokens).map(([k, v]) => `  --${k}: ${v};`)
@@ -293,6 +296,7 @@ export function buildCss(cfg: ThemeConfig): string {
   return `:root {
   --radius: ${radius};
   --font-sans: ${font};
+  --font-heading: ${heading};
 ${block("light")}
 }
 
@@ -317,7 +321,14 @@ export function buildComponentsJson(cfg: ThemeConfig): string {
 }
 
 /** Compact, URL-safe preset id: base64url of the ordered config values. */
-const ORDER: (keyof ThemeConfig)[] = ["base", "theme", "chart", "radius", "font"]
+const ORDER: (keyof ThemeConfig)[] = [
+  "base",
+  "theme",
+  "chart",
+  "radius",
+  "font",
+  "heading",
+]
 export function encodePreset(cfg: ThemeConfig): string {
   const raw = ORDER.map((k) => cfg[k]).join("|")
   const b64 = btoa(raw)
@@ -337,6 +348,7 @@ export function decodePreset(id: string): ThemeConfig | null {
     if (!CHARTS[cfg.chart]) return null
     if (!RADII[cfg.radius]) return null
     if (!FONTS[cfg.font]) return null
+    if (!FONTS[cfg.heading]) return null
     return cfg
   } catch {
     return null
