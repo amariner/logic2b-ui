@@ -1,0 +1,44 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { HeroDemo } from "@/components/HeroDemo";
+---
+
+<BaseLayout title="logic2b/ui — Build interfaces fast, AI-assisted">
+  <main class="mx-auto max-w-6xl px-4">
+    <section class="flex flex-col items-start gap-4 py-16 md:py-24">
+      <a
+        href="/docs"
+        class="inline-flex items-center rounded-full border px-3 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+      >
+        Introducing logic2b ui →
+      </a>
+      <h1
+        class="max-w-2xl text-4xl font-bold leading-tight tracking-tighter md:text-5xl"
+      >
+        Build interfaces fast, assisted by AI.
+      </h1>
+      <p class="max-w-xl text-lg text-muted-foreground">
+        A set of beautifully designed, copy-paste React components. Open code,
+        shadcn-compatible registry, optimized for Cloudflare and built for LLMs.
+      </p>
+      <div class="flex gap-3">
+        <a
+          href="/docs"
+          class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
+        >
+          Get Started
+        </a>
+        <a
+          href="/docs/components"
+          class="inline-flex h-9 items-center rounded-md border bg-background px-4 text-sm font-medium shadow-xs hover:bg-accent"
+        >
+          Browse Components
+        </a>
+      </div>
+    </section>
+
+    <section class="pb-24">
+      <HeroDemo />
+    </section>
+  </main>
+</BaseLayout>

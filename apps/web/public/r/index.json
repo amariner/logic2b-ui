@@ -1,0 +1,57 @@
+[
+  {
+    "name": "utils",
+    "type": "registry:lib",
+    "description": "The cn() helper that merges Tailwind classes with clsx and tailwind-merge. Required by every component."
+  },
+  {
+    "name": "button",
+    "type": "registry:ui",
+    "description": "Displays a button or a component that looks like a button. Variants: default, destructive, outline, secondary, ghost, link. Sizes: default, sm, lg, icon."
+  },
+  {
+    "name": "card",
+    "type": "registry:ui",
+    "description": "Displays a card with header, title, description, action, content and footer sections."
+  },
+  {
+    "name": "input",
+    "type": "registry:ui",
+    "description": "Displays a form input field. Supports all native input types, file inputs, invalid state styling."
+  },
+  {
+    "name": "label",
+    "type": "registry:ui",
+    "description": "Renders an accessible label associated with form controls, built on Radix Label."
+  },
+  {
+    "name": "badge",
+    "type": "registry:ui",
+    "description": "Displays a badge or a component that looks like a badge. Variants: default, secondary, destructive, outline."
+  },
+  {
+    "name": "separator",
+    "type": "registry:ui",
+    "description": "Visually or semantically separates content, horizontal or vertical, built on Radix Separator."
+  },
+  {
+    "name": "avatar",
+    "type": "registry:ui",
+    "description": "An image element with a fallback for representing a user, built on Radix Avatar."
+  },
+  {
+    "name": "skeleton",
+    "type": "registry:ui",
+    "description": "Use to show a placeholder while content is loading."
+  },
+  {
+    "name": "alert",
+    "type": "registry:ui",
+    "description": "Displays a callout for user attention with title and description. Variants: default, destructive."
+  },
+  {
+    "name": "textarea",
+    "type": "registry:ui",
+    "description": "Displays a form textarea that auto-sizes to its content (field-sizing)."
+  }
+]
