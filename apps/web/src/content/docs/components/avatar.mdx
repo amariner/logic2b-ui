@@ -1,0 +1,25 @@
+---
+title: Avatar
+description: An image element with a fallback for representing the user.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="avatar-demo" />
+
+## Installation
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/avatar.json
+```
+
+## Usage
+
+```tsx
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+<Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+```

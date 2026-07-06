@@ -1,0 +1,44 @@
+---
+title: For LLMs & Agents
+description: logic2b ui is designed to be consumed by AI agents. Here is the machine-readable surface.
+---
+
+Everything on this site is available in machine-friendly formats. If you are an
+LLM or building an agent, use these endpoints instead of scraping HTML.
+
+## Endpoints
+
+| Endpoint | Content |
+| --- | --- |
+| `/llms.txt` | Index of all documentation with absolute URLs |
+| `/llms-full.txt` | The entire documentation in one Markdown file |
+| `/docs/<page>.md` | Any docs page as plain Markdown (append `.md`) |
+| `/r/index.json` | Registry index: every component with its description |
+| `/r/<name>.json` | Full component payload: metadata + source code |
+
+## Installing components programmatically
+
+The registry follows the shadcn registry-item schema. Each item includes
+`dependencies` (npm), `registryDependencies` (other registry items) and
+`files[].content` (the full TypeScript source):
+
+```bash
+curl https://ui.logic2b.dev/r/button.json
+```
+
+To install into a user project, either run the shadcn CLI:
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/button.json
+```
+
+or write `files[].content` to `src/components/ui/<name>.tsx` yourself, install
+the listed `dependencies`, and recurse into `registryDependencies`.
+
+## Conventions an agent can rely on
+
+- Every component uses the `cn()` helper from `@/lib/utils`.
+- Colors are always theme tokens (`bg-primary`), never raw palette classes.
+- Variants are defined with `class-variance-authority` and exported
+  (e.g. `buttonVariants`).
+- Every root element has a `data-slot` attribute for reliable selection.

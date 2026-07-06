@@ -1,0 +1,72 @@
+---
+import { Code } from "astro:components";
+import { DemoRenderer } from "@/components/DemoRenderer";
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+
+const sources = import.meta.glob<string>("../demos/*.tsx", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+const rawSource = sources[`../demos/${name}.tsx`] ?? "// demo source not found";
+// Shown code should read like the user's own file.
+const source = rawSource.replaceAll("@/registry/", "@/components/");
+---
+
+<div class="component-preview mt-6" data-name={name}>
+  <div class="flex items-center gap-1 border-b">
+    <button
+      class="tab-btn -mb-px border-b-2 border-primary px-3 py-1.5 text-sm font-medium"
+      data-tab="preview">Preview</button
+    >
+    <button
+      class="tab-btn -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground"
+      data-tab="code">Code</button
+    >
+  </div>
+  <div
+    class="panel-preview flex min-h-[320px] items-center justify-center rounded-b-lg border border-t-0 p-8"
+  >
+    <div class="w-full max-w-md">
+      <DemoRenderer name={name} client:visible />
+    </div>
+  </div>
+  <div
+    class="panel-code hidden max-h-[420px] overflow-auto rounded-b-lg border border-t-0 [&_pre]:m-0 [&_pre]:rounded-none [&_pre]:border-0 [&_pre]:p-4"
+  >
+    <Code code={source} lang="tsx" theme="github-dark-default" />
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll(".component-preview").forEach((root) => {
+    const tabs = root.querySelectorAll<HTMLButtonElement>(".tab-btn");
+    const panels: Record<string, Element | null> = {
+      preview: root.querySelector(".panel-preview"),
+      code: root.querySelector(".panel-code"),
+    };
+    tabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabs.forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle("border-primary", active);
+          b.classList.toggle("border-transparent", !active);
+          b.classList.toggle("text-muted-foreground", !active);
+        });
+        Object.entries(panels).forEach(([key, panel]) => {
+          panel?.classList.toggle("hidden", key !== btn.dataset.tab);
+          if (key === "preview" && key === btn.dataset.tab) {
+            panel?.classList.add("flex");
+          } else if (key === "preview") {
+            panel?.classList.remove("flex");
+          }
+        });
+      });
+    });
+  });
+</script>

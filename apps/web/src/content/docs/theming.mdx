@@ -1,0 +1,75 @@
+---
+title: Theming
+description: CSS variables, dark mode and radius. Change the look of every component from one place.
+---
+
+logic2b ui uses CSS variables (design tokens) for all colors, following the
+shadcn convention: a `--background`/`--foreground` pair per surface. Components
+never hardcode colors — restyle everything by editing the tokens.
+
+## Tokens
+
+Add this to your global CSS (Tailwind v4, `oklch` colors). This is the default
+neutral theme; generate other palettes with the [theme creator](/create):
+
+```css
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  /* ... dark values for every token ... */
+}
+```
+
+Then map them to Tailwind utilities with `@theme inline`:
+
+```css
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  /* ... one --color-* per token ... */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+```
+
+## Dark mode
+
+Components style dark mode via the `.dark` class on `<html>`. Toggle it with a
+few lines — no library needed:
+
+```js
+const isDark = document.documentElement.classList.toggle("dark")
+localStorage.setItem("theme", isDark ? "dark" : "light")
+```
+
+Run a small inline script before paint to avoid a flash of the wrong theme.
+
+## Radius
+
+One variable controls the roundness of every component: `--radius`. Set it to
+`0rem` for sharp corners or `1rem` for a soft look.

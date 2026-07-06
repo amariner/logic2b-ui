@@ -1,0 +1,36 @@
+---
+title: Introduction
+description: Build interfaces fast, assisted by AI. Copy-paste React components you own.
+---
+
+logic2b ui is a collection of beautifully designed, accessible React components
+that you copy into your project. **This is not a component library you install
+from npm — it's code you own.**
+
+## Principles
+
+- **Open Code.** Every component ships as source code. Read it, change it, own it.
+- **Composable.** Built on [Radix UI](https://www.radix-ui.com) primitives and
+  Tailwind CSS, with a small, predictable API surface.
+- **AI-Ready.** The whole registry and documentation are consumable by LLMs:
+  plain-JSON registry at [/r/index.json](/r/index.json), Markdown versions of
+  every page, and [/llms.txt](/llms.txt).
+- **Edge-first.** The site and registry are fully static, served from
+  Cloudflare's edge.
+
+## shadcn compatibility
+
+The registry follows the shadcn registry-item schema. Any tool that can install
+from a shadcn registry — including the `shadcn` CLI itself — can install
+logic2b components:
+
+```bash
+npx shadcn@latest add https://ui.logic2b.dev/r/button.json
+```
+
+## Where to go next
+
+- [Installation](/docs/installation) — set up your project.
+- [Theming](/docs/theming) — CSS variables, dark mode, radius.
+- [Components](/docs/components) — browse the catalog.
+- [For LLMs & Agents](/docs/llms) — how to consume logic2b from an AI agent.

@@ -1,0 +1,27 @@
+---
+import DocsLayout from "@/layouts/DocsLayout.astro";
+import registryIndex from "../../../../public/r/index.json";
+
+const components = registryIndex.filter((item) => item.type === "registry:ui");
+---
+
+<DocsLayout
+  title="Components"
+  description={`${components.length} beautifully designed components you can copy and paste into your apps.`}
+>
+  <ul class="mt-2 grid gap-3 !list-none !pl-0 sm:grid-cols-2">
+    {
+      components.map((item) => (
+        <li class="!mt-0">
+          <a
+            href={`/docs/components/${item.name}`}
+            class="block h-full rounded-lg border p-4 !no-underline transition-colors hover:bg-accent/50"
+          >
+            <span class="font-medium capitalize">{item.name.replace(/-/g, " ")}</span>
+            <p class="!mt-1 text-sm text-muted-foreground">{item.description}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</DocsLayout>
