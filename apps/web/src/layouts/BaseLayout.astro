@@ -4,18 +4,15 @@ import "@/styles/global.css";
 interface Props {
   title: string;
   description?: string;
-  wide?: boolean;
 }
 
 const {
   title,
   description = "logic2b ui — Build interfaces fast, AI-assisted. Beautifully designed components you copy into your project and make your own.",
-  wide = false,
 } = Astro.props;
 
-const headerInner = wide
-  ? "mx-auto flex h-14 w-full max-w-none items-center gap-6 px-6"
-  : "mx-auto flex h-14 max-w-6xl items-center gap-6 px-4";
+// Full-bleed header on every page (edge-to-edge with consistent padding).
+const headerInner = "flex h-14 w-full items-center gap-6 px-6";
 ---
 
 <!doctype html>

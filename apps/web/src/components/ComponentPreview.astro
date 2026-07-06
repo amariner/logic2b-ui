@@ -4,9 +4,11 @@ import { DemoRenderer } from "@/components/DemoRenderer";
 
 interface Props {
   name: string;
+  /** Let the demo fill the preview box (charts, tables) instead of the default narrow cap. */
+  wide?: boolean;
 }
 
-const { name } = Astro.props;
+const { name, wide = false } = Astro.props;
 
 const sources = import.meta.glob<string>("../demos/*.tsx", {
   query: "?raw",
@@ -32,7 +34,7 @@ const source = rawSource.replaceAll("@/registry/", "@/components/");
   <div
     class="panel-preview flex min-h-[320px] items-center justify-center rounded-b-lg border border-t-0 p-8"
   >
-    <div class="w-full max-w-md">
+    <div class={wide ? "w-full" : "w-full max-w-md"}>
       <DemoRenderer name={name} client:visible />
     </div>
   </div>
