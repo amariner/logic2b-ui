@@ -1,7 +1,7 @@
 {
   "name": "logic2b",
   "version": "0.1.0",
-  "description": "CLI for logic2b ui — add copy-paste React components to your project.",
+  "description": "CLI for logic2b ui — add copy-paste components to your project.",
   "type": "module",
   "bin": {
     "logic2b": "./dist/index.js"
@@ -9,9 +9,34 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "logic2b",
+    "ui",
+    "components",
+    "registry",
+    "cli",
+    "tailwind",
+    "design-system"
+  ],
+  "homepage": "https://ui.logic2b.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amariner/logic2b-ui.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/amariner/logic2b-ui/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "tsc -p tsconfig.json"
   },
   "license": "MIT",
   "dependencies": {
