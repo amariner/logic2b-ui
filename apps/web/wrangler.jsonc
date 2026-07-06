@@ -4,8 +4,9 @@
   "compatibility_date": "2026-07-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist/client"
   },
+  "routes": [{ "pattern": "ui.logic2b.com", "custom_domain": true }],
   "observability": {
     "enabled": true
   }
