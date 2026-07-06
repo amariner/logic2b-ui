@@ -18,6 +18,12 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href={Astro.url.href} />
     <title>{title}</title>
     <script is:inline>
       // Anti-flash dark mode: runs before paint.
