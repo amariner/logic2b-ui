@@ -303,9 +303,13 @@ export function CreateStudio() {
   const headingOpts = fontOpts
 
   return (
-    <div className="flex w-full flex-col lg:flex-row">
-      {/* Customizer rail — always dark, like shadcn's control panel. */}
-      <aside className="dark flex w-full flex-col gap-3 border-b border-white/10 bg-[oklch(0.145_0_0)] p-4 text-foreground lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:border-r-white/10">
+    <div
+      className={`flex w-full flex-col gap-3 p-3 lg:h-[calc(100dvh-3.5rem)] lg:flex-row lg:overflow-hidden ${
+        mode === "dark" ? "bg-neutral-950" : "bg-neutral-100"
+      }`}
+    >
+      {/* Customizer rail — a floating dark control panel, like shadcn. */}
+      <aside className="dark flex w-full flex-col gap-3 rounded-xl border border-white/10 bg-[oklch(0.185_0_0)] p-4 text-foreground shadow-sm lg:h-full lg:w-72 lg:shrink-0 lg:overflow-y-auto">
         <div className="flex items-center px-1">
           <h2 className="text-sm font-semibold">Customize</h2>
         </div>
@@ -420,8 +424,8 @@ export function CreateStudio() {
           A floating 01/02 pager switches pages. */}
       <div
         style={style}
-        className={`create-canvas relative min-w-0 flex-1 text-foreground lg:h-[calc(100dvh-3.5rem)] ${
-          mode === "dark" ? "dark bg-background" : "bg-muted"
+        className={`create-canvas relative min-w-0 flex-1 text-foreground lg:h-full ${
+          mode === "dark" ? "dark" : ""
         }`}
       >
         <div className="h-full overflow-x-auto p-4 sm:p-6">
