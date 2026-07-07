@@ -61,7 +61,31 @@ import {
   ClaimableBalance,
   SavingsTargets,
   DividendList,
+  QrConnectCard,
+  DistributeCard,
+  ChatCard,
+  AccountAccess,
+  PaymentsCard,
 } from "@/components/landing/static-widgets"
+import {
+  BuyInvestment,
+  ReceivingMethod,
+  RecentTransactions,
+  TransferFunds,
+  PreferencesCard,
+  SocialLinks,
+  ShippingAddress,
+  ProfileCard,
+  ShortcutsCard,
+  InvoiceCard,
+  BookAppointment,
+  FileUpload,
+  EnvVariables,
+  SecurityFaq,
+  NotFoundCard,
+  StockPerformance,
+  TrafficChannels,
+} from "@/components/create/preview-widgets"
 
 const FONT_LABELS: Record<string, string> = {
   inter: "Inter",
@@ -174,6 +198,7 @@ export function CreateStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULT_CONFIG)
   const [mode, setMode] = React.useState<Mode>("dark")
   const [codeOpen, setCodeOpen] = React.useState(false)
+  const [page, setPage] = React.useState(1)
   const set = (patch: Partial<ThemeConfig>) => setCfg((c) => ({ ...c, ...patch }))
 
   const style = useThemeStyle(cfg, mode)
@@ -360,17 +385,74 @@ export function CreateStudio() {
         }`}
       >
         <section className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          <ComponentShowcase />
-          <ContributionHistory animate={false} />
-          <PayoutThreshold />
-          <NotificationsCard />
-          <MilestoneForm />
-          <AnalyticsCard animate={false} />
-          <SavingsTargets />
-          <ClaimableBalance />
-          <DividendList />
-          <PowerUsage animate={false} />
+          {page === 1 ? (
+            <>
+              <ComponentShowcase />
+              <ContributionHistory animate={false} />
+              <PayoutThreshold />
+              <NotificationsCard />
+              <MilestoneForm />
+              <AnalyticsCard animate={false} />
+              <SavingsTargets />
+              <BuyInvestment />
+              <ClaimableBalance />
+              <DividendList />
+              <PowerUsage animate={false} />
+              <RecentTransactions />
+              <TransferFunds />
+              <PreferencesCard />
+              <AccountAccess />
+              <ReceivingMethod />
+            </>
+          ) : (
+            <>
+              <StockPerformance />
+              <TrafficChannels />
+              <EnvVariables />
+              <ProfileCard />
+              <ShippingAddress />
+              <SecurityFaq />
+              <BookAppointment />
+              <FileUpload />
+              <InvoiceCard />
+              <SocialLinks />
+              <ShortcutsCard />
+              <PaymentsCard />
+              <QrConnectCard />
+              <ChatCard />
+              <DistributeCard />
+              <NotFoundCard />
+            </>
+          )}
         </section>
+
+        {/* Page switcher */}
+        <div className="mt-6 flex items-center justify-end gap-2">
+          <button
+            onClick={() => setPage(1)}
+            aria-label="Page 1"
+            aria-current={page === 1}
+            className={`inline-flex size-8 items-center justify-center rounded-md border text-xs font-medium tabular-nums transition-colors ${
+              page === 1
+                ? "border-ring bg-accent text-foreground"
+                : "text-muted-foreground hover:bg-accent"
+            }`}
+          >
+            01
+          </button>
+          <button
+            onClick={() => setPage(2)}
+            aria-label="Page 2"
+            aria-current={page === 2}
+            className={`inline-flex size-8 items-center justify-center rounded-md border text-xs font-medium tabular-nums transition-colors ${
+              page === 2
+                ? "border-ring bg-accent text-foreground"
+                : "text-muted-foreground hover:bg-accent"
+            }`}
+          >
+            02
+          </button>
+        </div>
       </div>
     </div>
   )
