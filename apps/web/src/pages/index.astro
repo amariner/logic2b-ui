@@ -19,6 +19,28 @@ import {
   AccountAccess,
   PaymentsCard,
 } from "@/components/landing/static-widgets";
+import {
+  BuyInvestment,
+  ReceivingMethod,
+  RecentTransactions,
+  TransferFunds,
+  PreferencesCard,
+  StockPerformance,
+} from "@/components/create/preview-widgets";
+import {
+  DashboardNav,
+  CardBalance,
+  ConnectBank,
+} from "@/components/create/preview-widgets-b";
+
+// Monochrome chart ramp for the landing — grayscale that follows light/dark.
+const monoCharts = [
+  "--chart-1: color-mix(in oklch, var(--foreground) 92%, var(--background))",
+  "--chart-2: color-mix(in oklch, var(--foreground) 72%, var(--background))",
+  "--chart-3: color-mix(in oklch, var(--foreground) 55%, var(--background))",
+  "--chart-4: color-mix(in oklch, var(--foreground) 42%, var(--background))",
+  "--chart-5: color-mix(in oklch, var(--foreground) 30%, var(--background))",
+].join(";");
 ---
 
 <BaseLayout title="logic2b/ui — Build interfaces fast, AI-assisted">
@@ -57,26 +79,36 @@ import {
     </section>
 
     <!-- Bento mosaic: masonry via CSS columns. Interactive widgets hydrate on
-         view; the rest is static HTML with zero client JS. -->
+         view; the rest is static HTML with zero client JS. Charts are monochrome. -->
     <section class="pb-24">
       <div
+        style={monoCharts}
         class="gap-4 [column-fill:balance] columns-1 sm:columns-2 lg:columns-3 xl:columns-4"
       >
         <div class="mb-4 break-inside-avoid"><ComponentShowcase client:visible /></div>
         <div class="mb-4 break-inside-avoid"><ContributionHistory client:visible /></div>
         <div class="mb-4 break-inside-avoid"><MilestoneForm /></div>
         <div class="mb-4 break-inside-avoid"><QrConnectCard /></div>
+        <div class="mb-4 break-inside-avoid"><DashboardNav /></div>
         <div class="mb-4 break-inside-avoid"><NotificationsCard client:visible /></div>
         <div class="mb-4 break-inside-avoid"><ClaimableBalance /></div>
         <div class="mb-4 break-inside-avoid"><PayoutThreshold client:visible /></div>
+        <div class="mb-4 break-inside-avoid"><BuyInvestment /></div>
         <div class="mb-4 break-inside-avoid"><SavingsTargets /></div>
         <div class="mb-4 break-inside-avoid"><AnalyticsCard client:visible /></div>
         <div class="mb-4 break-inside-avoid"><ChatCard /></div>
+        <div class="mb-4 break-inside-avoid"><RecentTransactions /></div>
         <div class="mb-4 break-inside-avoid"><DistributeCard /></div>
         <div class="mb-4 break-inside-avoid"><DividendList /></div>
+        <div class="mb-4 break-inside-avoid"><TransferFunds /></div>
         <div class="mb-4 break-inside-avoid"><AccountAccess /></div>
+        <div class="mb-4 break-inside-avoid"><StockPerformance client:visible /></div>
         <div class="mb-4 break-inside-avoid"><PaymentsCard /></div>
+        <div class="mb-4 break-inside-avoid"><PreferencesCard /></div>
+        <div class="mb-4 break-inside-avoid"><ReceivingMethod /></div>
+        <div class="mb-4 break-inside-avoid"><CardBalance /></div>
         <div class="mb-4 break-inside-avoid"><PowerUsage client:visible /></div>
+        <div class="mb-4 break-inside-avoid"><ConnectBank /></div>
       </div>
     </section>
   </main>

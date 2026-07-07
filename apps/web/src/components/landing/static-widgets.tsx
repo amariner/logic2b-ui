@@ -370,7 +370,7 @@ export function PaymentsCard() {
         {rows.map((r) => (
           <div
             key={r.title}
-            className="flex items-center gap-3 rounded-lg border p-3 text-sm"
+            className="flex items-center gap-2.5 rounded-lg border p-2.5 text-sm"
           >
             <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
               <svg
