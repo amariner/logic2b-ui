@@ -164,12 +164,13 @@ const PMS: Record<string, string> = {
 export function CreateStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULT_CONFIG)
   const [mode, setMode] = React.useState<Mode>("dark")
+  const [codeOpen, setCodeOpen] = React.useState(false)
   const set = (patch: Partial<ThemeConfig>) => setCfg((c) => ({ ...c, ...patch }))
 
   const style = useThemeStyle(cfg, mode)
   const presetId = encodePreset(cfg)
 
-  const shuffle = () => {
+  const shuffle = React.useCallback(() => {
     const pick = <T,>(obj: Record<string, T>) => {
       const keys = Object.keys(obj)
       return keys[Math.floor(Math.random() * keys.length)]
@@ -180,8 +181,21 @@ export function CreateStudio() {
       chart: pick(CHARTS),
       radius: pick(RADII),
       font: pick(FONTS),
+      heading: pick(FONTS),
     })
-  }
+  }, [])
+
+  // Header actions (BaseLayout renders Shuffle + Get Code on /create).
+  React.useEffect(() => {
+    const onShuffle = () => shuffle()
+    const onGetCode = () => setCodeOpen(true)
+    window.addEventListener("l2:shuffle", onShuffle)
+    window.addEventListener("l2:get-code", onGetCode)
+    return () => {
+      window.removeEventListener("l2:shuffle", onShuffle)
+      window.removeEventListener("l2:get-code", onGetCode)
+    }
+  }, [shuffle])
 
   const baseOpts = Object.entries(BASE_COLORS).map(([key, v]) => ({
     key,
@@ -314,12 +328,20 @@ export function CreateStudio() {
           </Button>
         </div>
 
-        {/* Pinned actions */}
-        <div className="mt-auto grid gap-2 pt-2">
-          <NewProjectDialog presetId={presetId} />
-          <GetCodeDialog cfg={cfg} presetId={presetId} />
+        {/* Pinned action (also available from the header on /create) */}
+        <div className="mt-auto grid pt-2">
+          <Button className="w-full" onClick={() => setCodeOpen(true)}>
+            Get Code
+          </Button>
         </div>
       </aside>
+
+      <GetCodeDialog
+        cfg={cfg}
+        presetId={presetId}
+        open={codeOpen}
+        onOpenChange={setCodeOpen}
+      />
 
       {/* ------------------------------- Canvas ------------------------------- */}
       <div
@@ -346,18 +368,67 @@ export function CreateStudio() {
 }
 
 /* ------------------------------ Dialogs ------------------------------ */
-function CopyButton({ text, label = "Copy" }: { text: string; label?: string }) {
+function useCopy(text: string) {
   const [copied, setCopied] = React.useState(false)
+  const copy = async () => {
+    await navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+  return { copied, copy }
+}
+
+/* Command box: package-manager switcher + copy icon in the header row,
+   the command itself below (reference: shadcn /create dialog). */
+function CommandBlock({
+  cmd,
+  pm,
+  onPmChange,
+}: {
+  cmd: string
+  pm: string
+  onPmChange: (p: string) => void
+}) {
+  const { copied, copy } = useCopy(cmd)
   return (
-    <Button
-      size="sm"
-      variant="outline"
-      onClick={async () => {
-        await navigator.clipboard.writeText(text)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 1500)
-      }}
-    >
+    <div className="overflow-hidden rounded-lg border bg-muted/40">
+      <div className="flex items-center justify-between border-b px-2 py-1.5">
+        <div className="flex items-center gap-1 font-mono text-xs">
+          {Object.keys(PMS).map((p) => (
+            <button
+              key={p}
+              onClick={() => onPmChange(p)}
+              className={
+                p === pm
+                  ? "rounded-md border bg-background px-2 py-0.5 font-medium"
+                  : "px-2 py-0.5 text-muted-foreground transition-colors hover:text-foreground"
+              }
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+        <button
+          aria-label="Copy command"
+          onClick={copy}
+          className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        >
+          {copied ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+          )}
+        </button>
+      </div>
+      <pre className="overflow-x-auto px-3 py-2.5 font-mono text-xs leading-relaxed">{cmd}</pre>
+    </div>
+  )
+}
+
+function BigCopyButton({ text, label }: { text: string; label: string }) {
+  const { copied, copy } = useCopy(text)
+  return (
+    <Button className="w-full" onClick={copy}>
       {copied ? "Copied!" : label}
     </Button>
   )
@@ -414,130 +485,111 @@ function OpenPresetDialog({ onApply }: { onApply: (c: ThemeConfig) => void }) {
   )
 }
 
+/* Unified Get Code dialog (reference: shadcn /create): New Project scaffolds,
+   Existing Project inits in place, Theme exposes the raw CSS / components.json. */
 function GetCodeDialog({
   cfg,
   presetId,
+  open,
+  onOpenChange,
 }: {
   cfg: ThemeConfig
   presetId: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }) {
-  const css = buildCss(cfg)
-  const json = buildComponentsJson(cfg)
-  const cmd = `npx logic2b@latest init --preset ${presetId}`
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="w-full">Get Code</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Theme code</DialogTitle>
-          <DialogDescription>
-            Copy the CSS variables into your global stylesheet, or scaffold with
-            the CLI.
-          </DialogDescription>
-        </DialogHeader>
-        <Tabs defaultValue="css">
-          <TabsList>
-            <TabsTrigger value="css">CSS</TabsTrigger>
-            <TabsTrigger value="cli">CLI</TabsTrigger>
-            <TabsTrigger value="json">components.json</TabsTrigger>
-          </TabsList>
-          <TabsContent value="css" className="grid gap-2">
-            <div className="flex justify-end">
-              <CopyButton text={css} />
-            </div>
-            <pre className="max-h-80 overflow-auto rounded-lg border bg-muted/50 p-3 text-xs leading-relaxed">
-              {css}
-            </pre>
-          </TabsContent>
-          <TabsContent value="cli" className="grid gap-2">
-            <div className="flex items-center justify-between rounded-lg border bg-muted/50 p-3 font-mono text-sm">
-              <span className="truncate">{cmd}</span>
-              <CopyButton text={cmd} />
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Runs <code>init</code> and applies this exact theme via the preset.
-            </p>
-          </TabsContent>
-          <TabsContent value="json" className="grid gap-2">
-            <div className="flex justify-end">
-              <CopyButton text={json} />
-            </div>
-            <pre className="max-h-80 overflow-auto rounded-lg border bg-muted/50 p-3 text-xs leading-relaxed">
-              {json}
-            </pre>
-          </TabsContent>
-        </Tabs>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function NewProjectDialog({ presetId }: { presetId: string }) {
   const [tpl, setTpl] = React.useState("next")
   const [pm, setPm] = React.useState("pnpm")
   const [monorepo, setMonorepo] = React.useState(false)
-  const cmd = `${PMS[pm]} logic2b@latest init --template ${tpl}${
+  const [themeView, setThemeView] = React.useState<"css" | "json">("css")
+
+  const css = buildCss(cfg)
+  const json = buildComponentsJson(cfg)
+  const newCmd = `${PMS[pm]} logic2b@latest init --template ${tpl}${
     monorepo ? " --monorepo" : ""
   } --preset ${presetId}`
+  const existingCmd = `${PMS[pm]} logic2b@latest init --preset ${presetId}`
+  const themeText = themeView === "css" ? css : json
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          New Project
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Start a new project</DialogTitle>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="bg-popover sm:max-w-[480px]">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Get Code</DialogTitle>
           <DialogDescription>
-            Pick a framework and package manager. We&apos;ll generate the command
-            with your theme baked in.
+            Scaffold a new project, apply the theme to an existing one, or copy
+            the theme code.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label>Template</Label>
-            <div className="grid grid-cols-3 gap-2">
-              {TEMPLATES.map((t) => (
+        <Tabs defaultValue="new">
+          <TabsList>
+            <TabsTrigger value="new">New Project</TabsTrigger>
+            <TabsTrigger value="existing">Existing Project</TabsTrigger>
+            <TabsTrigger value="theme">Theme</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="new" className="mt-4 grid gap-4">
+            <div className="grid gap-2">
+              <Label>Template</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {TEMPLATES.map((t) => (
+                  <button
+                    key={t.key}
+                    onClick={() => setTpl(t.key)}
+                    className={`rounded-lg border px-4 py-2.5 text-left text-sm font-medium transition-colors ${
+                      tpl === t.key
+                        ? "border-input bg-accent"
+                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <label className="flex items-center justify-between rounded-lg border px-4 py-3 text-sm font-medium">
+              Create a monorepo
+              <Switch checked={monorepo} onCheckedChange={setMonorepo} />
+            </label>
+            <CommandBlock cmd={newCmd} pm={pm} onPmChange={setPm} />
+            <BigCopyButton text={newCmd} label="Copy Command" />
+          </TabsContent>
+
+          <TabsContent value="existing" className="mt-4 grid gap-4">
+            <p className="text-sm text-muted-foreground">
+              Run <code>init</code> inside your project — it writes{" "}
+              <code>components.json</code> and applies this exact theme via the
+              preset.
+            </p>
+            <CommandBlock cmd={existingCmd} pm={pm} onPmChange={setPm} />
+            <BigCopyButton text={existingCmd} label="Copy Command" />
+          </TabsContent>
+
+          <TabsContent value="theme" className="mt-4 grid gap-4">
+            <div className="flex w-fit items-center gap-1 rounded-lg bg-muted p-1 text-xs">
+              {(["css", "json"] as const).map((v) => (
                 <button
-                  key={t.key}
-                  onClick={() => setTpl(t.key)}
-                  className={`rounded-md border px-2 py-2 text-sm transition-colors hover:bg-accent ${
-                    tpl === t.key ? "border-ring ring-2 ring-ring/30" : ""
+                  key={v}
+                  onClick={() => setThemeView(v)}
+                  className={`rounded-md px-2.5 py-1 font-medium transition-colors ${
+                    themeView === v
+                      ? "bg-background shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {t.label}
+                  {v === "css" ? "CSS" : "components.json"}
                 </button>
               ))}
             </div>
-          </div>
-          <div className="grid gap-2">
-            <Label>Package manager</Label>
-            <div className="grid grid-cols-4 gap-2">
-              {Object.keys(PMS).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setPm(p)}
-                  className={`rounded-md border px-2 py-1.5 text-sm transition-colors hover:bg-accent ${
-                    pm === p ? "border-ring ring-2 ring-ring/30" : ""
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-          </div>
-          <label className="flex items-center justify-between rounded-md border p-3 text-sm">
-            <span>Monorepo layout</span>
-            <Switch checked={monorepo} onCheckedChange={setMonorepo} />
-          </label>
-          <div className="flex items-center justify-between rounded-lg border bg-muted/50 p-3 font-mono text-xs">
-            <span className="truncate">{cmd}</span>
-            <CopyButton text={cmd} />
-          </div>
-        </div>
+            <pre className="max-h-72 overflow-auto rounded-lg border bg-muted/40 p-3 text-xs leading-relaxed">
+              {themeText}
+            </pre>
+            <BigCopyButton
+              text={themeText}
+              label={themeView === "css" ? "Copy CSS" : "Copy components.json"}
+            />
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   )

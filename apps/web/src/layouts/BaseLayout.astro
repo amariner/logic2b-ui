@@ -4,11 +4,15 @@ import "@/styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  /** Header CTA: "new" links to /create; "get-code" swaps in the creator
+      actions (Shuffle + Get Code) that talk to the CreateStudio island. */
+  cta?: "new" | "get-code";
 }
 
 const {
   title,
   description = "logic2b ui — Build interfaces fast, AI-assisted. Beautifully designed components you copy into your project and make your own.",
+  cta = "new",
 } = Astro.props;
 
 // Full-bleed header on every page (edge-to-edge with consistent padding).
@@ -75,13 +79,34 @@ const headerInner = "flex h-14 w-full items-center gap-6 px-6";
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark:hidden"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
           </button>
-          <a
-            href="/create"
-            class="ml-1 inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"></path></svg>
-            New
-          </a>
+          {
+            cta === "get-code" ? (
+              <>
+                <button
+                  id="create-shuffle"
+                  aria-label="Shuffle theme"
+                  title="Shuffle theme"
+                  class="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22" /><path d="m18 2 4 4-4 4" /><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2" /><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8" /><path d="m18 14 4 4-4 4" /></svg>
+                </button>
+                <button
+                  id="create-get-code"
+                  class="ml-1 inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
+                >
+                  Get Code
+                </button>
+              </>
+            ) : (
+              <a
+                href="/create"
+                class="ml-1 inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14" /></svg>
+                New
+              </a>
+            )
+          }
         </div>
       </div>
     </header>
@@ -90,6 +115,13 @@ const headerInner = "flex h-14 w-full items-center gap-6 px-6";
       document.getElementById("theme-toggle")?.addEventListener("click", () => {
         const isDark = document.documentElement.classList.toggle("dark");
         localStorage.setItem("theme", isDark ? "dark" : "light");
+      });
+      // Creator actions (only rendered on /create): the React island listens.
+      document.getElementById("create-shuffle")?.addEventListener("click", () => {
+        window.dispatchEvent(new CustomEvent("l2:shuffle"));
+      });
+      document.getElementById("create-get-code")?.addEventListener("click", () => {
+        window.dispatchEvent(new CustomEvent("l2:get-code"));
       });
     </script>
   </body>
