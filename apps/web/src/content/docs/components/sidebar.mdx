@@ -1,0 +1,55 @@
+---
+title: Sidebar
+description: A composable, themeable app-shell sidebar for building dashboards.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="sidebar-demo" wide />
+
+## Installation
+
+```bash
+npx logic2b@latest add sidebar
+```
+
+## Usage
+
+Wrap your layout in `SidebarProvider`, place `Sidebar` and `SidebarInset` as
+siblings inside it, and use `SidebarTrigger` to toggle. State persists across
+reloads via a cookie and can be toggled with <kbd>⌘</kbd>/<kbd>Ctrl</kbd> +
+<kbd>B</kbd>.
+
+```tsx
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+
+export function AppLayout() {
+  return (
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>My App</SidebarHeader>
+        <SidebarContent>{/* SidebarGroup, SidebarMenu... */}</SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <header>
+          <SidebarTrigger />
+        </header>
+        {/* page content */}
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
+```
+
+`Sidebar` takes `side` (`left` | `right`), `variant` (`sidebar` | `floating` |
+`inset`) and `collapsible` (`offcanvas` | `icon` | `none`). On narrow
+viewports it renders as a `Sheet` automatically. Read the current state
+(`state`, `open`, `isMobile`, `toggleSidebar`) with the `useSidebar()` hook
+from any descendant.

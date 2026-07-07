@@ -61,4 +61,21 @@ export const items: RegistryItem[] = [
     dependencies: ["sonner"],
     files: [{ path: "src/ui/sonner.tsx", type: "registry:ui" }],
   },
+  {
+    name: "sidebar",
+    type: "registry:ui",
+    description:
+      "A composable, themeable app-shell sidebar with a provider (state, mobile sheet, cookie-persisted collapse, ⌘B shortcut), collapsible variants (offcanvas/icon/none) and menu primitives (group, menu, submenu, skeleton). Use as the base layout for dashboards.",
+    dependencies: ["radix-ui", "lucide-react", "class-variance-authority"],
+    registryDependencies: [
+      "utils",
+      "button",
+      "input",
+      "separator",
+      "sheet",
+      "skeleton",
+      "tooltip",
+    ],
+    files: [{ path: "src/ui/sidebar.tsx", type: "registry:ui" }],
+  },
 ]
