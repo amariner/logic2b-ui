@@ -4,5 +4,17 @@ dist/
 .turbo/
 .wrangler/
 .env
+.env.*
+.dev.vars*
+.npmrc
+*.tgz
 .DS_Store
 *.log
+
+# Internal planning docs & editor tooling (never publish)
+CLAUDE.md
+GUIA-MAESTRA.md
+ESTADO.md
+ROADMAP.md
+DECISIONES.md
+.claude/
