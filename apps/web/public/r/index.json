@@ -205,6 +205,16 @@
     "description": "A simple sidebar with navigation links grouped by section. Use as the starting point for a dashboard's app-shell navigation."
   },
   {
+    "name": "login-02",
+    "type": "registry:block",
+    "description": "A two-column login page: form on one side, a decorative panel on the other. Use as an alternative, more spacious authentication page layout."
+  },
+  {
+    "name": "signup-01",
+    "type": "registry:block",
+    "description": "A simple, centered signup form with name, email, password and confirm password fields. Use as the starting point for a registration page."
+  },
+  {
     "name": "dashboard-01",
     "type": "registry:block",
     "description": "A dashboard with a sidebar, stat cards, an interactive area chart and a data table. Use as the starting point for an admin or analytics app-shell."
