@@ -63,7 +63,6 @@ import {
   DividendList,
   QrConnectCard,
   DistributeCard,
-  ChatCard,
   AccountAccess,
   PaymentsCard,
 } from "@/components/landing/static-widgets"
@@ -100,6 +99,27 @@ import {
   DollarCostAveraging,
   SyncingAccounts,
 } from "@/components/create/preview-widgets-b"
+import {
+  NovaTypography,
+  TypographySample,
+  ToolbarIcons,
+  Codespaces,
+  InviteTeam,
+  AIAgent,
+  SkeletonCard,
+  BrowserShare,
+  NoTeamMembers,
+  ReportBug,
+  Contributors,
+  TopicFeedback,
+  SleepReport,
+  WeeklyFitness,
+  VisitorsChart,
+  UsageMeter,
+  AnomalyAlert,
+  AudioWaveform,
+  ContributionsActivity,
+} from "@/components/create/preview-widgets-c"
 
 const FONT_LABELS: Record<string, string> = {
   inter: "Inter",
@@ -459,27 +479,55 @@ export function CreateStudio() {
             </div>
           ) : (
             <div className="flex items-start gap-4 pb-2">
-              <div className="flex w-[320px] shrink-0 flex-col gap-4">
-                <TrafficChannels animate={false} />
-                <ShortcutsCard />
-                <NotFoundCard />
+              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+                <NovaTypography />
+                <Codespaces />
+                <InvoiceCard />
+              </div>
+              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+                <ToolbarIcons />
+                <ComponentShowcase />
+                <TypographySample />
               </div>
               <div className="flex w-[360px] shrink-0 flex-col gap-4">
                 <EnvVariables />
-                <ComponentShowcase />
-                <AnalyticsCard animate={false} />
-              </div>
-              <div className="flex w-[380px] shrink-0 flex-col gap-4">
-                <ProfileCard />
+                <TrafficChannels animate={false} />
                 <ShippingAddress />
               </div>
               <div className="flex w-[340px] shrink-0 flex-col gap-4">
+                <InviteTeam />
+                <AIAgent />
+                <SkeletonCard />
+              </div>
+              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+                <BrowserShare animate={false} />
+                <NoTeamMembers />
+                <Contributors />
+              </div>
+              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+                <TopicFeedback />
+                <ReportBug />
+                <AnomalyAlert />
+              </div>
+              <div className="flex w-[340px] shrink-0 flex-col gap-4">
                 <BookAppointment />
+                <SleepReport animate={false} />
+                <WeeklyFitness animate={false} />
+              </div>
+              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+                <ProfileCard />
                 <FileUpload />
+                <AnalyticsCard animate={false} />
               </div>
               <div className="flex w-[320px] shrink-0 flex-col gap-4">
-                <InvoiceCard />
-                <ChatCard />
+                <UsageMeter />
+                <ShortcutsCard />
+                <AudioWaveform />
+              </div>
+              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+                <VisitorsChart animate={false} />
+                <ContributionsActivity />
+                <NotFoundCard />
               </div>
             </div>
           )}
