@@ -7,8 +7,8 @@ LLMs and coding agents.
 ## What's inside
 
 - **`packages/registry`** — the product: copy-paste React 19 + Tailwind v4
-  components (shadcn v4 style), a typed index, and a build script that emits
-  shadcn-compatible JSON payloads to `/r/*.json`.
+  components with a shadcn-compatible API, a typed index, and a build script
+  that emits shadcn-compatible JSON payloads to `/r/*.json`.
 - **`apps/web`** — the site: landing, docs, charts and the `/create` theme
   builder. Astro 7 with React islands, fully static, deployed to Cloudflare
   Workers.
@@ -40,4 +40,6 @@ normative. Current status lives in `ESTADO.md`, decisions in `DECISIONES.md`.
 
 ## License
 
-MIT. Component design and API based on [shadcn/ui](https://ui.shadcn.com) (MIT).
+MIT © [logic2b](https://ui.logic2b.com) — see [LICENSE](./LICENSE). Notices for
+bundled open-source software live in
+[THIRD-PARTY-LICENSES.md](./THIRD-PARTY-LICENSES.md).

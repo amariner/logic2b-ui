@@ -40,5 +40,6 @@ Full docs, live previews and the theme builder are at
 
 ## License
 
-MIT. Component design and API based on [shadcn/ui](https://ui.shadcn.com) (MIT).
-See [LICENSE](./LICENSE).
+MIT © [logic2b](https://ui.logic2b.com). See [LICENSE](./LICENSE); third-party
+notices in the
+[project repository](https://github.com/amariner/logic2b-ui/blob/main/THIRD-PARTY-LICENSES.md).
