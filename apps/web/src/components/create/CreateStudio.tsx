@@ -305,7 +305,7 @@ export function CreateStudio() {
   return (
     <div
       className={`flex w-full flex-col gap-3 p-3 lg:h-[calc(100dvh-3.5rem)] lg:flex-row lg:overflow-hidden ${
-        mode === "dark" ? "bg-neutral-950" : "bg-neutral-100"
+        mode === "dark" ? "bg-[oklch(0.115_0_0)]" : "bg-neutral-50"
       }`}
     >
       {/* Customizer rail — a floating dark control panel, like shadcn. */}
@@ -424,8 +424,8 @@ export function CreateStudio() {
           A floating 01/02 pager switches pages. */}
       <div
         style={style}
-        className={`create-canvas relative min-w-0 flex-1 text-foreground lg:h-full ${
-          mode === "dark" ? "dark" : ""
+        className={`create-canvas relative min-w-0 flex-1 overflow-hidden rounded-xl border text-foreground shadow-sm lg:h-full ${
+          mode === "dark" ? "dark border-white/10 bg-[oklch(0.16_0_0)]" : "border-black/[0.06] bg-neutral-100"
         }`}
       >
         <div className="h-full overflow-x-auto p-4 sm:p-6">
