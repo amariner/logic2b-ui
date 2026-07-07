@@ -31,12 +31,26 @@ pnpm --dir apps/web dev              # dev server on :4321
 pnpm build                           # full build (turbo)
 ```
 
-Deploy: `cd apps/web && wrangler deploy`.
+## Deploy
 
-## Governance
+The site is configured for **Cloudflare Workers** (the `@astrojs/cloudflare`
+adapter plus `apps/web/wrangler.jsonc`). The build is self-contained — no secrets
+or environment variables required.
 
-Read `GUIA-MAESTRA.md` before contributing — stack, conventions and phases are
-normative. Current status lives in `ESTADO.md`, decisions in `DECISIONES.md`.
+- **Manual:** `cd apps/web && npx wrangler deploy`.
+- **Automatic:** in the Cloudflare dashboard, connect this repo under
+  _Workers & Pages → your Worker → Builds_. Root directory `apps/web`, build
+  command `npx astro build`. Every push to `main` then deploys on its own.
+- **Other hosts (Vercel, Netlify, a static server):** the site builds to static
+  files, so just swap the adapter in `apps/web/astro.config.mjs` for your
+  platform. `wrangler.jsonc` is Cloudflare-only and ignored everywhere else.
+
+## Contributing
+
+Components follow the shadcn conventions: one file per component, `cva` for
+variants, the `cn()` helper for classes, a `data-slot` on each root element, and
+strict TypeScript. Commits use
+[Conventional Commits](https://www.conventionalcommits.org).
 
 ## License
 
