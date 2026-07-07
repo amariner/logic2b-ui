@@ -32,12 +32,21 @@ import {
   RADII,
   buildComponentsJson,
   buildCss,
+  buildDesignMd,
   decodePreset,
   encodePreset,
   resolveTokens,
   type Mode,
   type ThemeConfig,
 } from "@/lib/themes"
+import {
+  siAstro,
+  siLaravel,
+  siNextdotjs,
+  siReactrouter,
+  siTanstack,
+  siVite,
+} from "simple-icons"
 
 import {
   ComponentShowcase,
@@ -147,12 +156,12 @@ function ControlRow({
 }
 
 const TEMPLATES = [
-  { key: "next", label: "Next.js" },
-  { key: "vite", label: "Vite" },
-  { key: "tanstack", label: "TanStack Start" },
-  { key: "react-router", label: "React Router" },
-  { key: "astro", label: "Astro" },
-  { key: "laravel", label: "Laravel" },
+  { key: "next", label: "Next.js", icon: siNextdotjs.path },
+  { key: "vite", label: "Vite", icon: siVite.path },
+  { key: "tanstack", label: "TanStack Start", icon: siTanstack.path },
+  { key: "react-router", label: "React Router", icon: siReactrouter.path },
+  { key: "astro", label: "Astro", icon: siAstro.path },
+  { key: "laravel", label: "Laravel", icon: siLaravel.path },
 ]
 const PMS: Record<string, string> = {
   pnpm: "pnpm dlx",
@@ -425,11 +434,43 @@ function CommandBlock({
   )
 }
 
-function BigCopyButton({ text, label }: { text: string; label: string }) {
+function BigCopyButton({
+  text,
+  label,
+  variant = "default",
+}: {
+  text: string
+  label: string
+  variant?: "default" | "outline"
+}) {
   const { copied, copy } = useCopy(text)
   return (
-    <Button className="w-full" onClick={copy}>
+    <Button className="w-full" variant={variant} onClick={copy}>
       {copied ? "Copied!" : label}
+    </Button>
+  )
+}
+
+function DownloadButton({
+  text,
+  filename,
+  label,
+}: {
+  text: string
+  filename: string
+  label: string
+}) {
+  const download = () => {
+    const url = URL.createObjectURL(new Blob([text], { type: "text/markdown" }))
+    const a = document.createElement("a")
+    a.href = url
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+  return (
+    <Button className="w-full" onClick={download}>
+      {label}
     </Button>
   )
 }
@@ -501,15 +542,20 @@ function GetCodeDialog({
   const [tpl, setTpl] = React.useState("next")
   const [pm, setPm] = React.useState("pnpm")
   const [monorepo, setMonorepo] = React.useState(false)
-  const [themeView, setThemeView] = React.useState<"css" | "json">("css")
+  const [themeView, setThemeView] = React.useState<"css" | "json" | "design">(
+    "css",
+  )
 
-  const css = buildCss(cfg)
-  const json = buildComponentsJson(cfg)
   const newCmd = `${PMS[pm]} logic2b@latest init --template ${tpl}${
     monorepo ? " --monorepo" : ""
   } --preset ${presetId}`
   const existingCmd = `${PMS[pm]} logic2b@latest init --preset ${presetId}`
-  const themeText = themeView === "css" ? css : json
+  const themeText =
+    themeView === "css"
+      ? buildCss(cfg)
+      : themeView === "json"
+        ? buildComponentsJson(cfg)
+        : buildDesignMd(cfg)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -521,7 +567,9 @@ function GetCodeDialog({
             the theme code.
           </DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue="new">
+        {/* Manual activation: focus alone must not switch tabs (the dialog's
+            focus trap re-focuses the first trigger on window refocus). */}
+        <Tabs defaultValue="new" activationMode="manual">
           <TabsList>
             <TabsTrigger value="new">New Project</TabsTrigger>
             <TabsTrigger value="existing">Existing Project</TabsTrigger>
@@ -536,12 +584,19 @@ function GetCodeDialog({
                   <button
                     key={t.key}
                     onClick={() => setTpl(t.key)}
-                    className={`rounded-lg border px-4 py-2.5 text-left text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2.5 rounded-lg border px-4 py-2.5 text-left text-sm font-medium transition-colors ${
                       tpl === t.key
                         ? "border-input bg-accent"
                         : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                     }`}
                   >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="size-4 shrink-0 fill-current"
+                      aria-hidden="true"
+                    >
+                      <path d={t.icon} />
+                    </svg>
                     {t.label}
                   </button>
                 ))}
@@ -567,7 +622,7 @@ function GetCodeDialog({
 
           <TabsContent value="theme" className="mt-4 grid gap-4">
             <div className="flex w-fit items-center gap-1 rounded-lg bg-muted p-1 text-xs">
-              {(["css", "json"] as const).map((v) => (
+              {(["css", "json", "design"] as const).map((v) => (
                 <button
                   key={v}
                   onClick={() => setThemeView(v)}
@@ -577,17 +632,32 @@ function GetCodeDialog({
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {v === "css" ? "CSS" : "components.json"}
+                  {v === "css"
+                    ? "CSS"
+                    : v === "json"
+                      ? "components.json"
+                      : "DESIGN.md"}
                 </button>
               ))}
             </div>
             <pre className="max-h-72 overflow-auto rounded-lg border bg-muted/40 p-3 text-xs leading-relaxed">
               {themeText}
             </pre>
-            <BigCopyButton
-              text={themeText}
-              label={themeView === "css" ? "Copy CSS" : "Copy components.json"}
-            />
+            {themeView === "design" ? (
+              <div className="grid grid-cols-2 gap-2">
+                <BigCopyButton text={themeText} label="Copy" variant="outline" />
+                <DownloadButton
+                  text={themeText}
+                  filename="DESIGN.md"
+                  label="Download DESIGN.md"
+                />
+              </div>
+            ) : (
+              <BigCopyButton
+                text={themeText}
+                label={themeView === "css" ? "Copy CSS" : "Copy components.json"}
+              />
+            )}
           </TabsContent>
         </Tabs>
       </DialogContent>

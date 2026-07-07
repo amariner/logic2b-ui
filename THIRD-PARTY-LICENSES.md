@@ -21,6 +21,11 @@ upstream repositories.
 | [tw-animate-css](https://github.com/Wombosvideo/tw-animate-css) | MIT | © 2025 Wombosvideo |
 | [react / react-dom](https://github.com/facebook/react) | MIT | © Meta Platforms, Inc. and affiliates |
 | [tailwindcss](https://github.com/tailwindlabs/tailwindcss) | MIT | © Tailwind Labs, Inc. |
+| [simple-icons](https://github.com/simple-icons/simple-icons) | CC0-1.0 | Simple Icons Collaborators |
+
+Brand logos rendered via simple-icons (Next.js, Vite, TanStack, React Router,
+Astro, Laravel) are trademarks of their respective owners and are used for
+identification purposes only.
 
 ## CLI and build tooling
 
