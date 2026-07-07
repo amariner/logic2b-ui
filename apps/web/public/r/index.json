@@ -203,5 +203,10 @@
     "name": "sidebar-01",
     "type": "registry:block",
     "description": "A simple sidebar with navigation links grouped by section. Use as the starting point for a dashboard's app-shell navigation."
+  },
+  {
+    "name": "dashboard-01",
+    "type": "registry:block",
+    "description": "A dashboard with a sidebar, stat cards, an interactive area chart and a data table. Use as the starting point for an admin or analytics app-shell."
   }
 ]

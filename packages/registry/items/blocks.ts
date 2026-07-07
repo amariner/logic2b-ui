@@ -25,4 +25,26 @@ export const items: RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "dashboard-01",
+    type: "registry:block",
+    description:
+      "A dashboard with a sidebar, stat cards, an interactive area chart and a data table. Use as the starting point for an admin or analytics app-shell.",
+    dependencies: ["recharts", "lucide-react"],
+    registryDependencies: ["sidebar-01", "card", "badge", "chart", "table"],
+    files: [
+      {
+        path: "src/blocks/dashboard-01/section-cards.tsx",
+        type: "registry:block",
+      },
+      {
+        path: "src/blocks/dashboard-01/chart-area-interactive.tsx",
+        type: "registry:block",
+      },
+      {
+        path: "src/blocks/dashboard-01/data-table.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
 ]
