@@ -389,7 +389,7 @@ export function PaymentsCard() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="font-medium">{r.title}</p>
+              <p className="truncate font-medium">{r.title}</p>
               <p className="truncate text-xs text-muted-foreground">{r.desc}</p>
             </div>
             <svg

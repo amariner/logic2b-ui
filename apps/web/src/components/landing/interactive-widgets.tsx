@@ -329,7 +329,7 @@ export function PayoutThreshold() {
         <div className="grid gap-2">
           <Label>Preferred Currency</Label>
           <Select defaultValue="usd">
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

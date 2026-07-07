@@ -63,7 +63,7 @@ export function BuyInvestment() {
         <div className="grid gap-2">
           <Label>Order Type</Label>
           <Select defaultValue="market">
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -170,8 +170,7 @@ export function RecentTransactions() {
               <p className="truncate text-sm font-medium">{r.name}</p>
               <p className="truncate text-xs text-muted-foreground">{r.cat}</p>
             </div>
-            <span className="hidden text-xs text-muted-foreground sm:block">{r.when}</span>
-            <span className={`text-sm font-medium tabular-nums ${r.pos ? "text-emerald-600 dark:text-emerald-400" : ""}`}>{r.amt}</span>
+            <span className={`shrink-0 text-sm font-medium tabular-nums ${r.pos ? "text-emerald-600 dark:text-emerald-400" : ""}`}>{r.amt}</span>
           </div>
         ))}
       </CardContent>
@@ -197,7 +196,7 @@ export function TransferFunds() {
         <div className="grid gap-2">
           <Label>From Account</Label>
           <Select defaultValue="checking">
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="checking">Main Checking (··8402) — $12,450.00</SelectItem>
               <SelectItem value="savings">High Yield Savings (··1192) — $42,100.00</SelectItem>
@@ -207,7 +206,7 @@ export function TransferFunds() {
         <div className="grid gap-2">
           <Label>To Account</Label>
           <Select defaultValue="savings">
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="savings">High Yield Savings (··1192) — $42,100.00</SelectItem>
               <SelectItem value="checking">Main Checking (··8402) — $12,450.00</SelectItem>
@@ -246,7 +245,7 @@ export function PreferencesCard() {
         <div className="grid gap-2">
           <Label>Default Currency</Label>
           <Select defaultValue="usd">
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="usd">USD — United States Dollar</SelectItem>
               <SelectItem value="eur">EUR — Euro</SelectItem>
@@ -325,7 +324,7 @@ export function ShippingAddress() {
           <div className="grid gap-2">
             <Label>State</Label>
             <Select defaultValue="ca">
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="ca">California</SelectItem>
                 <SelectItem value="ny">New York</SelectItem>
@@ -341,7 +340,7 @@ export function ShippingAddress() {
           <div className="grid gap-2">
             <Label>Country</Label>
             <Select defaultValue="us">
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="us">United States</SelectItem>
                 <SelectItem value="es">Spain</SelectItem>
@@ -376,7 +375,7 @@ export function ProfileCard() {
         <div className="grid gap-2">
           <Label htmlFor="pr-email">Public Email</Label>
           <Select defaultValue="m">
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="m">m@logic2b.com</SelectItem>
               <SelectItem value="hi">hi@logic2b.com</SelectItem>
@@ -558,8 +557,8 @@ export function EnvVariables() {
       <CardContent className="grid gap-2">
         {rows.map((r) => (
           <div key={r.k} className="flex items-center justify-between gap-3 rounded-md border px-3 py-2 font-mono text-xs">
-            <span className="font-medium">{r.k}</span>
-            <span className="truncate text-muted-foreground">{r.v}</span>
+            <span className="shrink-0 font-medium">{r.k}</span>
+            <span className="min-w-0 flex-1 truncate text-right text-muted-foreground">{r.v}</span>
           </div>
         ))}
       </CardContent>

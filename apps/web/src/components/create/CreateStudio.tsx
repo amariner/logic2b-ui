@@ -198,7 +198,6 @@ export function CreateStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULT_CONFIG)
   const [mode, setMode] = React.useState<Mode>("dark")
   const [codeOpen, setCodeOpen] = React.useState(false)
-  const [page, setPage] = React.useState(1)
   const set = (patch: Partial<ThemeConfig>) => setCfg((c) => ({ ...c, ...patch }))
 
   const style = useThemeStyle(cfg, mode)
@@ -378,80 +377,67 @@ export function CreateStudio() {
       />
 
       {/* ------------------------------- Canvas ------------------------------- */}
+      {/* Horizontal-scroll masonry: each column is a flex-col (no vertical gaps),
+          columns have varied widths, and the canvas scrolls sideways. */}
       <div
         style={style}
-        className={`create-canvas min-h-[calc(100dvh-3.5rem)] min-w-0 flex-1 bg-background p-4 text-foreground sm:p-6 ${
+        className={`create-canvas min-w-0 flex-1 overflow-x-auto bg-background p-4 text-foreground sm:p-6 lg:h-[calc(100dvh-3.5rem)] ${
           mode === "dark" ? "dark" : ""
         }`}
       >
-        <section className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {page === 1 ? (
-            <>
-              <ComponentShowcase />
-              <ContributionHistory animate={false} />
-              <PayoutThreshold />
-              <NotificationsCard />
-              <MilestoneForm />
-              <AnalyticsCard animate={false} />
-              <SavingsTargets />
-              <BuyInvestment />
-              <ClaimableBalance />
-              <DividendList />
-              <PowerUsage animate={false} />
-              <RecentTransactions />
-              <TransferFunds />
-              <PreferencesCard />
-              <AccountAccess />
-              <ReceivingMethod />
-            </>
-          ) : (
-            <>
-              <StockPerformance />
-              <TrafficChannels />
-              <EnvVariables />
-              <ProfileCard />
-              <ShippingAddress />
-              <SecurityFaq />
-              <BookAppointment />
-              <FileUpload />
-              <InvoiceCard />
-              <SocialLinks />
-              <ShortcutsCard />
-              <PaymentsCard />
-              <QrConnectCard />
-              <ChatCard />
-              <DistributeCard />
-              <NotFoundCard />
-            </>
-          )}
-        </section>
-
-        {/* Page switcher */}
-        <div className="mt-6 flex items-center justify-end gap-2">
-          <button
-            onClick={() => setPage(1)}
-            aria-label="Page 1"
-            aria-current={page === 1}
-            className={`inline-flex size-8 items-center justify-center rounded-md border text-xs font-medium tabular-nums transition-colors ${
-              page === 1
-                ? "border-ring bg-accent text-foreground"
-                : "text-muted-foreground hover:bg-accent"
-            }`}
-          >
-            01
-          </button>
-          <button
-            onClick={() => setPage(2)}
-            aria-label="Page 2"
-            aria-current={page === 2}
-            className={`inline-flex size-8 items-center justify-center rounded-md border text-xs font-medium tabular-nums transition-colors ${
-              page === 2
-                ? "border-ring bg-accent text-foreground"
-                : "text-muted-foreground hover:bg-accent"
-            }`}
-          >
-            02
-          </button>
+        <div className="flex items-start gap-4 pb-2">
+          <div className="flex w-[300px] shrink-0 flex-col gap-4">
+            <ComponentShowcase />
+            <ClaimableBalance />
+            <ShortcutsCard />
+            <NotFoundCard />
+          </div>
+          <div className="flex w-[360px] shrink-0 flex-col gap-4">
+            <ContributionHistory animate={false} />
+            <RecentTransactions />
+            <QrConnectCard />
+          </div>
+          <div className="flex w-[360px] shrink-0 flex-col gap-4">
+            <PayoutThreshold />
+            <SavingsTargets />
+            <PaymentsCard />
+          </div>
+          <div className="flex w-[380px] shrink-0 flex-col gap-4">
+            <TransferFunds />
+            <TrafficChannels animate={false} />
+            <DistributeCard />
+          </div>
+          <div className="flex w-[300px] shrink-0 flex-col gap-4">
+            <NotificationsCard />
+            <PreferencesCard />
+            <ChatCard />
+          </div>
+          <div className="flex w-[340px] shrink-0 flex-col gap-4">
+            <MilestoneForm />
+            <BuyInvestment />
+            <AnalyticsCard animate={false} />
+          </div>
+          <div className="flex w-[360px] shrink-0 flex-col gap-4">
+            <AccountAccess />
+            <ReceivingMethod />
+            <StockPerformance animate={false} />
+          </div>
+          <div className="flex w-[380px] shrink-0 flex-col gap-4">
+            <EnvVariables />
+            <ProfileCard />
+            <ShippingAddress />
+          </div>
+          <div className="flex w-[360px] shrink-0 flex-col gap-4">
+            <SecurityFaq />
+            <BookAppointment />
+            <FileUpload />
+          </div>
+          <div className="flex w-[320px] shrink-0 flex-col gap-4">
+            <InvoiceCard />
+            <SocialLinks />
+            <DividendList />
+            <PowerUsage animate={false} />
+          </div>
         </div>
       </div>
     </div>
