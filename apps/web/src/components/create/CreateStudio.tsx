@@ -86,6 +86,20 @@ import {
   StockPerformance,
   TrafficChannels,
 } from "@/components/create/preview-widgets"
+import {
+  PortfolioDonut,
+  LightingControls,
+  RollerShades,
+  HoldingsTable,
+  DashboardNav,
+  CardBalance,
+  UpcomingPayments,
+  CoverArtUpload,
+  ConnectBank,
+  FrontDoorLock,
+  DollarCostAveraging,
+  SyncingAccounts,
+} from "@/components/create/preview-widgets-b"
 
 const FONT_LABELS: Record<string, string> = {
   inter: "Inter",
@@ -198,6 +212,7 @@ export function CreateStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULT_CONFIG)
   const [mode, setMode] = React.useState<Mode>("dark")
   const [codeOpen, setCodeOpen] = React.useState(false)
+  const [page, setPage] = React.useState(1)
   const set = (patch: Partial<ThemeConfig>) => setCfg((c) => ({ ...c, ...patch }))
 
   const style = useThemeStyle(cfg, mode)
@@ -377,67 +392,116 @@ export function CreateStudio() {
       />
 
       {/* ------------------------------- Canvas ------------------------------- */}
-      {/* Horizontal-scroll masonry: each column is a flex-col (no vertical gaps),
-          columns have varied widths, and the canvas scrolls sideways. */}
+      {/* Two pages, each a horizontal-scroll masonry: columns are flex-cols
+          (no vertical gaps) with varied widths; the canvas scrolls sideways.
+          A floating 01/02 pager switches pages. */}
       <div
         style={style}
-        className={`create-canvas min-w-0 flex-1 overflow-x-auto bg-background p-4 text-foreground sm:p-6 lg:h-[calc(100dvh-3.5rem)] ${
+        className={`create-canvas relative min-w-0 flex-1 bg-background text-foreground lg:h-[calc(100dvh-3.5rem)] ${
           mode === "dark" ? "dark" : ""
         }`}
       >
-        <div className="flex items-start gap-4 pb-2">
-          <div className="flex w-[300px] shrink-0 flex-col gap-4">
-            <ComponentShowcase />
-            <ClaimableBalance />
-            <ShortcutsCard />
-            <NotFoundCard />
-          </div>
-          <div className="flex w-[360px] shrink-0 flex-col gap-4">
-            <ContributionHistory animate={false} />
-            <RecentTransactions />
-            <QrConnectCard />
-          </div>
-          <div className="flex w-[360px] shrink-0 flex-col gap-4">
-            <PayoutThreshold />
-            <SavingsTargets />
-            <PaymentsCard />
-          </div>
-          <div className="flex w-[380px] shrink-0 flex-col gap-4">
-            <TransferFunds />
-            <TrafficChannels animate={false} />
-            <DistributeCard />
-          </div>
-          <div className="flex w-[300px] shrink-0 flex-col gap-4">
-            <NotificationsCard />
-            <PreferencesCard />
-            <ChatCard />
-          </div>
-          <div className="flex w-[340px] shrink-0 flex-col gap-4">
-            <MilestoneForm />
-            <BuyInvestment />
-            <AnalyticsCard animate={false} />
-          </div>
-          <div className="flex w-[360px] shrink-0 flex-col gap-4">
-            <AccountAccess />
-            <ReceivingMethod />
-            <StockPerformance animate={false} />
-          </div>
-          <div className="flex w-[380px] shrink-0 flex-col gap-4">
-            <EnvVariables />
-            <ProfileCard />
-            <ShippingAddress />
-          </div>
-          <div className="flex w-[360px] shrink-0 flex-col gap-4">
-            <SecurityFaq />
-            <BookAppointment />
-            <FileUpload />
-          </div>
-          <div className="flex w-[320px] shrink-0 flex-col gap-4">
-            <InvoiceCard />
-            <SocialLinks />
-            <DividendList />
-            <PowerUsage animate={false} />
-          </div>
+        <div className="h-full overflow-x-auto p-4 sm:p-6">
+          {page === 1 ? (
+            <div className="flex items-start gap-4 pb-2">
+              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+                <ContributionHistory animate={false} />
+                <DistributeCard />
+                <QrConnectCard />
+                <DollarCostAveraging />
+              </div>
+              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+                <PayoutThreshold />
+                <ClaimableBalance />
+                <SyncingAccounts />
+              </div>
+              <div className="flex w-[320px] shrink-0 flex-col gap-4">
+                <SavingsTargets />
+                <PreferencesCard />
+                <PortfolioDonut animate={false} />
+              </div>
+              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+                <BuyInvestment />
+                <RecentTransactions />
+                <CardBalance />
+              </div>
+              <div className="flex w-[380px] shrink-0 flex-col gap-4">
+                <AccountAccess />
+                <DashboardNav />
+                <LightingControls />
+              </div>
+              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+                <ReceivingMethod />
+                <PaymentsCard />
+                <SecurityFaq />
+              </div>
+              <div className="flex w-[380px] shrink-0 flex-col gap-4">
+                <StockPerformance animate={false} />
+                <TransferFunds />
+                <FrontDoorLock />
+              </div>
+              <div className="flex w-[380px] shrink-0 flex-col gap-4">
+                <DividendList />
+                <PowerUsage animate={false} />
+                <HoldingsTable />
+              </div>
+              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+                <MilestoneForm />
+                <ConnectBank />
+                <UpcomingPayments />
+              </div>
+              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+                <SocialLinks />
+                <NotificationsCard />
+                <CoverArtUpload />
+                <RollerShades />
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-start gap-4 pb-2">
+              <div className="flex w-[320px] shrink-0 flex-col gap-4">
+                <TrafficChannels animate={false} />
+                <ShortcutsCard />
+                <NotFoundCard />
+              </div>
+              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+                <EnvVariables />
+                <ComponentShowcase />
+                <AnalyticsCard animate={false} />
+              </div>
+              <div className="flex w-[380px] shrink-0 flex-col gap-4">
+                <ProfileCard />
+                <ShippingAddress />
+              </div>
+              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+                <BookAppointment />
+                <FileUpload />
+              </div>
+              <div className="flex w-[320px] shrink-0 flex-col gap-4">
+                <InvoiceCard />
+                <ChatCard />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Floating page switcher */}
+        <div className="absolute bottom-4 right-4 flex gap-1.5 rounded-lg border bg-background/80 p-1 shadow-sm backdrop-blur">
+          {[1, 2].map((n) => (
+            <button
+              key={n}
+              onClick={() => setPage(n)}
+              aria-label={`Page ${n}`}
+              aria-current={page === n}
+              className={`inline-flex size-8 items-center justify-center rounded-md text-xs font-medium tabular-nums transition-colors ${
+                page === n
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent"
+              }`}
+            >
+              {n.toString().padStart(2, "0")}
+            </button>
+          ))}
         </div>
       </div>
     </div>
