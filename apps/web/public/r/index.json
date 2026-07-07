@@ -105,6 +105,21 @@
     "description": "For sighted users to preview content available behind a link, shown after a short hover delay, built on Radix Hover Card. Use it for user profile previews or link previews, unlike Tooltip it supports rich interactive content. Parts: HoverCard (root), HoverCardTrigger, HoverCardContent."
   },
   {
+    "name": "context-menu",
+    "type": "registry:ui",
+    "description": "Displays a menu of actions or options triggered by right-clicking an element, built on Radix Context Menu. Use it for contextual actions on a table row, card or canvas item. Parts: ContextMenu (root), ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuGroup, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuPortal."
+  },
+  {
+    "name": "menubar",
+    "type": "registry:ui",
+    "description": "A horizontal bar of menus, like a desktop application's menu bar, built on Radix Menubar. Use for app-shell top-level command menus (File, Edit, View...). Parts: Menubar (root), MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarLabel, MenubarSeparator, MenubarShortcut, MenubarGroup, MenubarSub, MenubarSubTrigger, MenubarSubContent, MenubarPortal."
+  },
+  {
+    "name": "navigation-menu",
+    "type": "registry:ui",
+    "description": "A collection of links and dropdown panels for site or app navigation, built on Radix Navigation Menu. Use for a primary site nav with dropdown mega-menus, unlike menubar it's meant for navigation links, not commands. Parts: NavigationMenu (root, viewport), NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, NavigationMenuIndicator, NavigationMenuViewport, navigationMenuTriggerStyle (cva for plain link items)."
+  },
+  {
     "name": "form",
     "type": "registry:ui",
     "description": "A set of composable components (built on react-hook-form + zod) for building accessible forms with labels, descriptions and validation messages wired to field state. Use for any form that needs validation."
@@ -150,6 +165,21 @@
     "description": "A set of two-state buttons that can be toggled on or off, grouped together with shared variant and size. Use for grouped exclusive or multiple selection toggles like text alignment, built on Radix Toggle Group."
   },
   {
+    "name": "button-group",
+    "type": "registry:ui",
+    "description": "Groups related buttons (and optionally a text label or select) together edge-to-edge, horizontal or vertical. Use for segmented actions like a split button or a toolbar. Parts: ButtonGroup (root, orientation), ButtonGroupText, ButtonGroupSeparator."
+  },
+  {
+    "name": "input-group",
+    "type": "registry:ui",
+    "description": "Wraps an input or textarea with addons (icons, text, buttons) aligned to either edge, sharing one bordered container. Use for search boxes with an icon, inputs with a unit suffix, or inline actions. Parts: InputGroup (root), InputGroupAddon (align inline-start | inline-end | block-start | block-end), InputGroupButton, InputGroupText, InputGroupInput, InputGroupTextarea."
+  },
+  {
+    "name": "field",
+    "type": "registry:ui",
+    "description": "Composable primitives for laying out a form field (label, control slot, description, validation error) without requiring react-hook-form. Use for simple forms or to wrap a single control; use the form component instead when you need react-hook-form + zod wiring. Parts: FieldSet, FieldLegend, FieldGroup, Field (orientation vertical | horizontal | responsive), FieldContent, FieldLabel, FieldTitle, FieldDescription, FieldSeparator, FieldError."
+  },
+  {
     "name": "table",
     "type": "registry:ui",
     "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions."
@@ -188,6 +218,21 @@
     "name": "sidebar",
     "type": "registry:ui",
     "description": "A composable, themeable app-shell sidebar with a provider (state, mobile sheet, cookie-persisted collapse, ⌘B shortcut), collapsible variants (offcanvas/icon/none) and menu primitives (group, menu, submenu, skeleton). Use as the base layout for dashboards."
+  },
+  {
+    "name": "kbd",
+    "type": "registry:ui",
+    "description": "Displays a keyboard shortcut or key combination, e.g. a ⌘K hint next to a menu item. Parts: Kbd, KbdGroup (wraps multiple keys with a separator-free gap)."
+  },
+  {
+    "name": "spinner",
+    "type": "registry:ui",
+    "description": "A spinning loading indicator built on lucide-react's Loader2 icon. Use inline in buttons or standalone to signal a pending async operation."
+  },
+  {
+    "name": "empty",
+    "type": "registry:ui",
+    "description": "Displays an empty state placeholder with an icon, title, description and actions. Use for empty lists, search results with no matches or first-run states. Parts: Empty (root), EmptyHeader, EmptyMedia (variant default | icon), EmptyTitle, EmptyDescription, EmptyContent."
   },
   {
     "name": "chart",

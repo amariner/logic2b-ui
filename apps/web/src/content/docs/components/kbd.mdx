@@ -1,0 +1,31 @@
+---
+title: Kbd
+description: Displays a keyboard shortcut or key combination.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="kbd-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add kbd
+```
+
+## Usage
+
+```tsx
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
+
+<KbdGroup>
+  <Kbd>⌘</Kbd>
+  <Kbd>K</Kbd>
+</KbdGroup>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` (Kbd / KbdGroup) | `string` | — |

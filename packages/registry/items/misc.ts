@@ -78,4 +78,30 @@ export const items: RegistryItem[] = [
     ],
     files: [{ path: "src/ui/sidebar.tsx", type: "registry:ui" }],
   },
+  {
+    name: "kbd",
+    type: "registry:ui",
+    description:
+      "Displays a keyboard shortcut or key combination, e.g. a ⌘K hint next to a menu item. Parts: Kbd, KbdGroup (wraps multiple keys with a separator-free gap).",
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/kbd.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "spinner",
+    type: "registry:ui",
+    description:
+      "A spinning loading indicator built on lucide-react's Loader2 icon. Use inline in buttons or standalone to signal a pending async operation.",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/spinner.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "empty",
+    type: "registry:ui",
+    description:
+      "Displays an empty state placeholder with an icon, title, description and actions. Use for empty lists, search results with no matches or first-run states. Parts: Empty (root), EmptyHeader, EmptyMedia (variant default | icon), EmptyTitle, EmptyDescription, EmptyContent.",
+    dependencies: ["class-variance-authority"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/empty.tsx", type: "registry:ui" }],
+  },
 ]

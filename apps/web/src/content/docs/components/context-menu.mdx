@@ -1,0 +1,41 @@
+---
+title: Context Menu
+description: Displays a menu of actions or options triggered by right-clicking an element.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="context-menu-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add context-menu
+```
+
+## Usage
+
+```tsx
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+
+<ContextMenu>
+  <ContextMenuTrigger>Right click here</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Back</ContextMenuItem>
+    <ContextMenuItem>Reload</ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` (ContextMenuItem) | `default \| destructive` | `default` |
+| `inset` (ContextMenuItem / Label / SubTrigger) | `boolean` | `false` |
+| `checked` (ContextMenuCheckboxItem) | `boolean` | — |

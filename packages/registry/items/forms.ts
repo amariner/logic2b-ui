@@ -82,4 +82,30 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils", "toggle"],
     files: [{ path: "src/ui/toggle-group.tsx", type: "registry:ui" }],
   },
+  {
+    name: "button-group",
+    type: "registry:ui",
+    description:
+      "Groups related buttons (and optionally a text label or select) together edge-to-edge, horizontal or vertical. Use for segmented actions like a split button or a toolbar. Parts: ButtonGroup (root, orientation), ButtonGroupText, ButtonGroupSeparator.",
+    registryDependencies: ["utils", "separator"],
+    files: [{ path: "src/ui/button-group.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "input-group",
+    type: "registry:ui",
+    description:
+      "Wraps an input or textarea with addons (icons, text, buttons) aligned to either edge, sharing one bordered container. Use for search boxes with an icon, inputs with a unit suffix, or inline actions. Parts: InputGroup (root), InputGroupAddon (align inline-start | inline-end | block-start | block-end), InputGroupButton, InputGroupText, InputGroupInput, InputGroupTextarea.",
+    dependencies: ["class-variance-authority"],
+    registryDependencies: ["utils", "button"],
+    files: [{ path: "src/ui/input-group.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "field",
+    type: "registry:ui",
+    description:
+      "Composable primitives for laying out a form field (label, control slot, description, validation error) without requiring react-hook-form. Use for simple forms or to wrap a single control; use the form component instead when you need react-hook-form + zod wiring. Parts: FieldSet, FieldLegend, FieldGroup, Field (orientation vertical | horizontal | responsive), FieldContent, FieldLabel, FieldTitle, FieldDescription, FieldSeparator, FieldError.",
+    dependencies: ["class-variance-authority"],
+    registryDependencies: ["utils", "label", "separator"],
+    files: [{ path: "src/ui/field.tsx", type: "registry:ui" }],
+  },
 ]

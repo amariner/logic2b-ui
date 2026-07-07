@@ -1,0 +1,39 @@
+---
+title: Button Group
+description: Groups related buttons together edge-to-edge, horizontal or vertical.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="button-group-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add button-group
+```
+
+## Usage
+
+```tsx
+import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group"
+
+<ButtonGroup>
+  <Button variant="outline">Copy</Button>
+  <Button variant="outline">Paste</Button>
+</ButtonGroup>
+
+<ButtonGroup>
+  <ButtonGroupText>https://</ButtonGroupText>
+  <ButtonGroupSeparator />
+  <Button variant="outline">example.com</Button>
+</ButtonGroup>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `orientation` (ButtonGroup) | `horizontal \| vertical` | `horizontal` |
+| `orientation` (ButtonGroupSeparator) | `horizontal \| vertical` | `vertical` |
+| `asChild` (ButtonGroupText) | `boolean` | `false` |

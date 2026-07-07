@@ -1,0 +1,44 @@
+---
+title: Menubar
+description: A horizontal bar of menus, like a desktop application's menu bar.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="menubar-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add menubar
+```
+
+## Usage
+
+```tsx
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@/components/ui/menubar"
+
+<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>File</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>New Tab</MenubarItem>
+      <MenubarItem>New Window</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` (MenubarItem) | `default \| destructive` | `default` |
+| `inset` (MenubarItem / Label / SubTrigger) | `boolean` | `false` |
+| `checked` (MenubarCheckboxItem) | `boolean` | — |

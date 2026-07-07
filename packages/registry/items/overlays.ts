@@ -90,4 +90,31 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/hover-card.tsx", type: "registry:ui" }],
   },
+  {
+    name: "context-menu",
+    type: "registry:ui",
+    description:
+      "Displays a menu of actions or options triggered by right-clicking an element, built on Radix Context Menu. Use it for contextual actions on a table row, card or canvas item. Parts: ContextMenu (root), ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuGroup, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuPortal.",
+    dependencies: ["radix-ui", "lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/context-menu.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "menubar",
+    type: "registry:ui",
+    description:
+      "A horizontal bar of menus, like a desktop application's menu bar, built on Radix Menubar. Use for app-shell top-level command menus (File, Edit, View...). Parts: Menubar (root), MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarLabel, MenubarSeparator, MenubarShortcut, MenubarGroup, MenubarSub, MenubarSubTrigger, MenubarSubContent, MenubarPortal.",
+    dependencies: ["radix-ui", "lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/menubar.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "navigation-menu",
+    type: "registry:ui",
+    description:
+      "A collection of links and dropdown panels for site or app navigation, built on Radix Navigation Menu. Use for a primary site nav with dropdown mega-menus, unlike menubar it's meant for navigation links, not commands. Parts: NavigationMenu (root, viewport), NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, NavigationMenuIndicator, NavigationMenuViewport, navigationMenuTriggerStyle (cva for plain link items).",
+    dependencies: ["radix-ui", "class-variance-authority", "lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/navigation-menu.tsx", type: "registry:ui" }],
+  },
 ]

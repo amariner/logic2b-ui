@@ -1,0 +1,39 @@
+---
+title: Input Group
+description: Wraps an input or textarea with addons aligned to either edge.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="input-group-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add input-group
+```
+
+## Usage
+
+```tsx
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group"
+
+<InputGroup>
+  <InputGroupAddon>
+    <SearchIcon />
+  </InputGroupAddon>
+  <InputGroupInput placeholder="Search..." />
+</InputGroup>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `align` (InputGroupAddon) | `inline-start \| inline-end \| block-start \| block-end` | `inline-start` |
+| `size` (InputGroupButton) | `xs \| sm \| icon-xs \| icon-sm` | `xs` |

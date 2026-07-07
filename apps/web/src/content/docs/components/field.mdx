@@ -1,0 +1,45 @@
+---
+title: Field
+description: Composable primitives for laying out a form field without requiring react-hook-form.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="field-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add field
+```
+
+## Usage
+
+```tsx
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+
+<FieldGroup>
+  <Field>
+    <FieldLabel htmlFor="username">Username</FieldLabel>
+    <Input id="username" placeholder="shadcn" />
+    <FieldDescription>This is your public display name.</FieldDescription>
+  </Field>
+  <Field>
+    <FieldLabel htmlFor="email">Email</FieldLabel>
+    <Input id="email" type="email" aria-invalid />
+    <FieldError>Please enter a valid email address.</FieldError>
+  </Field>
+</FieldGroup>
+```
+
+Use `field` for simple forms or to wrap a single control without react-hook-form.
+For forms that need schema validation wired to field state, use the
+[form](/docs/components/form) component (react-hook-form + zod) instead.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `orientation` (Field) | `vertical \| horizontal \| responsive` | `vertical` |
+| `variant` (FieldLegend) | `legend \| label` | `legend` |
+| `errors` (FieldError) | `Array<{ message?: string } \| undefined>` | — |

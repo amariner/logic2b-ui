@@ -1,0 +1,32 @@
+---
+title: Spinner
+description: A spinning loading indicator.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="spinner-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add spinner
+```
+
+## Usage
+
+```tsx
+import { Spinner } from "@/components/ui/spinner"
+
+<Spinner />
+<Spinner className="size-6 text-primary" />
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` | — |
+
+Renders lucide-react's `Loader2Icon` with `animate-spin`; any prop accepted by an
+`<svg>` element (e.g. `className` for size/color) is passed through.
