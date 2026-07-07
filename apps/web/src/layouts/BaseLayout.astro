@@ -29,10 +29,9 @@ const headerInner = "flex h-14 w-full items-center gap-6 px-6";
     <link rel="canonical" href={Astro.url.href} />
     <title>{title}</title>
     <script is:inline>
-      // Anti-flash dark mode: runs before paint.
-      const theme =
-        localStorage.getItem("theme") ??
-        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      // Anti-flash dark mode: runs before paint. Dark is the brand default
+      // (DESIGN.md); an explicit user choice in localStorage always wins.
+      const theme = localStorage.getItem("theme") ?? "dark";
       document.documentElement.classList.toggle("dark", theme === "dark");
     </script>
   </head>

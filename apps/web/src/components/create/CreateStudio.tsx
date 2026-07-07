@@ -55,6 +55,8 @@ import {
 } from "@/components/landing/static-widgets"
 
 const FONT_LABELS: Record<string, string> = {
+  inter: "Inter",
+  grotesk: "Space Grotesk",
   sans: "Sans",
   system: "System",
   serif: "Serif",

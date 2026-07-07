@@ -43,6 +43,30 @@ const DESTRUCTIVE_D = "oklch(0.704 0.191 22.216)"
 
 /* -- Base colors (the neutral scale). Selecting one swaps every gray token. -- */
 export const BASE_COLORS: Record<string, BaseColor> = {
+  logic2b: {
+    label: "logic2b",
+    swatch: "oklch(0.669 0.1837 248.807)",
+    light: {
+      background: WHITE, foreground: "oklch(0.1776 0 0)", card: WHITE,
+      "card-foreground": "oklch(0.1776 0 0)", popover: WHITE, "popover-foreground": "oklch(0.1776 0 0)",
+      primary: "oklch(0.5635 0.2408 260.818)", "primary-foreground": WHITE,
+      secondary: "oklch(0.97 0 0)", "secondary-foreground": "oklch(0.1776 0 0)",
+      muted: "oklch(0.97 0 0)", "muted-foreground": "oklch(0.5103 0 0)",
+      accent: "oklch(0.97 0 0)", "accent-foreground": "oklch(0.1776 0 0)",
+      destructive: "oklch(0.58 0.237 26.417)", "destructive-foreground": WHITE,
+      border: "oklch(0.922 0 0)", input: "oklch(0.922 0 0)", ring: "oklch(0.5635 0.2408 260.818)",
+    },
+    dark: {
+      background: "oklch(0 0 0)", foreground: WHITE, card: "oklch(0.1776 0 0)",
+      "card-foreground": WHITE, popover: "oklch(0.2046 0 0)", "popover-foreground": WHITE,
+      primary: "oklch(0.669 0.1837 248.807)", "primary-foreground": "oklch(0 0 0)",
+      secondary: "oklch(0.2046 0 0)", "secondary-foreground": WHITE,
+      muted: "oklch(0.2046 0 0)", "muted-foreground": "oklch(0.683 0 0)",
+      accent: "oklch(0.2603 0 0)", "accent-foreground": WHITE,
+      destructive: "oklch(0.6293 0.256 26.417)", "destructive-foreground": WHITE,
+      border: "oklch(1 0 0 / 10%)", input: "oklch(1 0 0 / 15%)", ring: "oklch(0.669 0.1837 248.807)",
+    },
+  },
   neutral: {
     label: "Neutral",
     swatch: "oklch(0.205 0 0)",
@@ -216,14 +240,14 @@ function ramp(hue: number, chroma: number): [string, string, string, string, str
 }
 export const CHARTS: Record<string, ChartPalette> = {
   default: {
-    label: "Default", swatch: "oklch(0.646 0.222 41.116)",
+    label: "Default", swatch: "oklch(0.669 0.1837 248.807)",
     light: [
-      "oklch(0.646 0.222 41.116)", "oklch(0.6 0.118 184.704)", "oklch(0.398 0.07 227.392)",
-      "oklch(0.828 0.189 84.429)", "oklch(0.769 0.188 70.08)",
+      "oklch(0.5635 0.2408 260.818)", "oklch(0.62 0.19 146.164)", "oklch(0.723 0.16 82.058)",
+      "oklch(0.6293 0.256 26.417)", "oklch(0.5103 0 0)",
     ],
     dark: [
-      "oklch(0.488 0.243 264.376)", "oklch(0.696 0.17 162.48)", "oklch(0.769 0.188 70.08)",
-      "oklch(0.627 0.265 303.9)", "oklch(0.645 0.246 16.439)",
+      "oklch(0.669 0.1837 248.807)", "oklch(0.7838 0.2004 146.164)", "oklch(0.8328 0.1716 82.058)",
+      "oklch(0.6293 0.256 26.417)", "oklch(0.8452 0 0)",
     ],
   },
   blue: { label: "Blue", swatch: "oklch(0.546 0.245 262.881)", light: ramp(262.881, 0.2), dark: ramp(262.881, 0.2) },
@@ -243,6 +267,8 @@ export const RADII: Record<string, string> = {
 }
 
 export const FONTS: Record<string, string> = {
+  inter: "'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif",
+  grotesk: "'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif",
   sans: "ui-sans-serif, system-ui, sans-serif",
   system: "system-ui, -apple-system, sans-serif",
   serif: "ui-serif, Georgia, Cambria, serif",
@@ -260,12 +286,12 @@ export interface ThemeConfig {
 }
 
 export const DEFAULT_CONFIG: ThemeConfig = {
-  base: "neutral",
+  base: "logic2b",
   theme: "base",
   chart: "default",
-  radius: "default",
-  font: "sans",
-  heading: "sans",
+  radius: "md",
+  font: "inter",
+  heading: "grotesk",
 }
 
 /** Resolve the effective token set + chart palette for a mode. */
