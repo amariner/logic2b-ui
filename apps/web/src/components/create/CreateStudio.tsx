@@ -430,54 +430,54 @@ export function CreateStudio() {
       >
         <div className="h-full overflow-x-auto p-4 sm:p-6">
           {page === 1 ? (
-            <div className="flex items-start gap-4 pb-2">
-              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+            <div className="flex items-start gap-6 pb-2">
+              <div className="flex w-[300px] shrink-0 flex-col gap-6">
                 <ContributionHistory animate={false} />
                 <DistributeCard />
                 <QrConnectCard />
                 <DollarCostAveraging />
               </div>
-              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+              <div className="flex w-[340px] shrink-0 flex-col gap-6">
                 <PayoutThreshold />
                 <ClaimableBalance />
                 <SyncingAccounts />
               </div>
-              <div className="flex w-[320px] shrink-0 flex-col gap-4">
+              <div className="flex w-[320px] shrink-0 flex-col gap-6">
                 <SavingsTargets />
                 <PreferencesCard />
                 <PortfolioDonut animate={false} />
               </div>
-              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+              <div className="flex w-[360px] shrink-0 flex-col gap-6">
                 <BuyInvestment />
                 <RecentTransactions />
                 <CardBalance />
               </div>
-              <div className="flex w-[380px] shrink-0 flex-col gap-4">
+              <div className="flex w-[380px] shrink-0 flex-col gap-6">
                 <AccountAccess />
                 <DashboardNav />
                 <LightingControls />
               </div>
-              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+              <div className="flex w-[360px] shrink-0 flex-col gap-6">
                 <ReceivingMethod />
                 <PaymentsCard />
                 <SecurityFaq />
               </div>
-              <div className="flex w-[380px] shrink-0 flex-col gap-4">
+              <div className="flex w-[380px] shrink-0 flex-col gap-6">
                 <StockPerformance animate={false} />
                 <TransferFunds />
                 <FrontDoorLock />
               </div>
-              <div className="flex w-[380px] shrink-0 flex-col gap-4">
+              <div className="flex w-[380px] shrink-0 flex-col gap-6">
                 <DividendList />
                 <PowerUsage animate={false} />
                 <HoldingsTable />
               </div>
-              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+              <div className="flex w-[340px] shrink-0 flex-col gap-6">
                 <MilestoneForm />
                 <ConnectBank />
                 <UpcomingPayments />
               </div>
-              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+              <div className="flex w-[300px] shrink-0 flex-col gap-6">
                 <SocialLinks />
                 <NotificationsCard />
                 <CoverArtUpload />
@@ -485,53 +485,53 @@ export function CreateStudio() {
               </div>
             </div>
           ) : (
-            <div className="flex items-start gap-4 pb-2">
-              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+            <div className="flex items-start gap-6 pb-2">
+              <div className="flex w-[300px] shrink-0 flex-col gap-6">
                 <NovaTypography />
                 <Codespaces />
                 <InvoiceCard />
               </div>
-              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+              <div className="flex w-[360px] shrink-0 flex-col gap-6">
                 <ToolbarIcons />
                 <ComponentShowcase />
                 <TypographySample />
               </div>
-              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+              <div className="flex w-[360px] shrink-0 flex-col gap-6">
                 <EnvVariables />
                 <TrafficChannels animate={false} />
                 <ShippingAddress />
               </div>
-              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+              <div className="flex w-[340px] shrink-0 flex-col gap-6">
                 <InviteTeam />
                 <AIAgent />
                 <SkeletonCard />
               </div>
-              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+              <div className="flex w-[300px] shrink-0 flex-col gap-6">
                 <BrowserShare animate={false} />
                 <NoTeamMembers />
                 <Contributors />
               </div>
-              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+              <div className="flex w-[340px] shrink-0 flex-col gap-6">
                 <TopicFeedback />
                 <ReportBug />
                 <AnomalyAlert />
               </div>
-              <div className="flex w-[340px] shrink-0 flex-col gap-4">
+              <div className="flex w-[340px] shrink-0 flex-col gap-6">
                 <BookAppointment />
                 <SleepReport animate={false} />
                 <WeeklyFitness animate={false} />
               </div>
-              <div className="flex w-[360px] shrink-0 flex-col gap-4">
+              <div className="flex w-[360px] shrink-0 flex-col gap-6">
                 <ProfileCard />
                 <FileUpload />
                 <AnalyticsCard animate={false} />
               </div>
-              <div className="flex w-[320px] shrink-0 flex-col gap-4">
+              <div className="flex w-[320px] shrink-0 flex-col gap-6">
                 <UsageMeter />
                 <ShortcutsCard />
                 <AudioWaveform />
               </div>
-              <div className="flex w-[300px] shrink-0 flex-col gap-4">
+              <div className="flex w-[300px] shrink-0 flex-col gap-6">
                 <VisitorsChart animate={false} />
                 <ContributionsActivity />
                 <NotFoundCard />
