@@ -16,8 +16,12 @@ const sources = import.meta.glob<string>("../demos/*.tsx", {
   eager: true,
 });
 const rawSource = sources[`../demos/${name}.tsx`] ?? "// demo source not found";
-// Shown code should read like the user's own file.
-const source = rawSource.replaceAll("@/registry/", "@/components/");
+// Shown code should read like the user's own file — same mapping as
+// build-registry.ts (ui/ and blocks/ live under components/, lib/ doesn't).
+const source = rawSource
+  .replaceAll("@/registry/ui/", "@/components/ui/")
+  .replaceAll("@/registry/blocks/", "@/components/")
+  .replaceAll("@/registry/lib/", "@/lib/");
 ---
 
 <div class="component-preview mt-6" data-name={name}>

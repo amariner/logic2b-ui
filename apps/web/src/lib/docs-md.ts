@@ -32,7 +32,11 @@ export function entryToMarkdown(entry: CollectionEntry<"docs">): string {
         "### Example",
         "",
         "```tsx",
-        source.replaceAll("@/registry/", "@/components/").trim(),
+        source
+          .replaceAll("@/registry/ui/", "@/components/ui/")
+          .replaceAll("@/registry/blocks/", "@/components/")
+          .replaceAll("@/registry/lib/", "@/lib/")
+          .trim(),
         "```",
       ].join("\n");
     }

@@ -38,11 +38,13 @@ const index: { name: string; type: string; description: string }[] = []
 for (const item of registry) {
   const files = await Promise.all(
     item.files.map(async (file) => {
-      // Consumers import from "@/registry/..."; installed files live in "@/..."
-      const content = (await readFile(join(root, file.path), "utf8")).replaceAll(
-        "@/registry/",
-        "@/"
-      )
+      // Consumers import from "@/registry/...". Installed files land where the
+      // CLI's targetPath() + components.json aliases put them: ui/ under
+      // "components/ui", blocks/ under "components/<block>", lib/ as-is.
+      const content = (await readFile(join(root, file.path), "utf8"))
+        .replaceAll("@/registry/ui/", "@/components/ui/")
+        .replaceAll("@/registry/blocks/", "@/components/")
+        .replaceAll("@/registry/lib/", "@/lib/")
       return { path: file.path.replace(/^src\//, ""), type: file.type, content }
     })
   )
