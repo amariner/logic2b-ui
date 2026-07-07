@@ -193,5 +193,15 @@
     "name": "chart",
     "type": "registry:ui",
     "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend."
+  },
+  {
+    "name": "login-01",
+    "type": "registry:block",
+    "description": "A simple, centered login form with email and password fields. Use as the starting point for an authentication page."
+  },
+  {
+    "name": "sidebar-01",
+    "type": "registry:block",
+    "description": "A simple sidebar with navigation links grouped by section. Use as the starting point for a dashboard's app-shell navigation."
   }
 ]

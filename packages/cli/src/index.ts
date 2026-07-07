@@ -47,9 +47,13 @@ async function fetchItem(registry: string, name: string): Promise<RegistryItem> 
 }
 
 function targetPath(cwd: string, srcDir: string, file: RegistryFile): string {
-  // Registry file paths look like "ui/button.tsx" or "lib/utils.ts".
+  // Registry file paths look like "ui/button.tsx", "blocks/login-01/login-form.tsx"
+  // or "lib/utils.ts" — mirrors the "@/registry/..." rewrite in build-registry.ts.
   if (file.path.startsWith("ui/")) {
     return join(cwd, srcDir, "components", file.path)
+  }
+  if (file.path.startsWith("blocks/")) {
+    return join(cwd, srcDir, "components", file.path.replace(/^blocks\//, ""))
   }
   return join(cwd, srcDir, file.path)
 }

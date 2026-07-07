@@ -1,0 +1,28 @@
+---
+import "@/styles/global.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+    <script is:inline>
+      // Same anti-flash script as BaseLayout: the iframe is a standalone
+      // document, so it needs its own copy (not inherited from the parent).
+      const theme = localStorage.getItem("theme") ?? "dark";
+      document.documentElement.classList.toggle("dark", theme === "dark");
+    </script>
+  </head>
+  <body class="min-h-svh bg-background font-sans antialiased">
+    <slot />
+  </body>
+</html>

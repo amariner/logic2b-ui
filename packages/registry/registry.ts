@@ -6,6 +6,7 @@ import { items as overlays } from "./items/overlays.ts"
 import { items as forms } from "./items/forms.ts"
 import { items as misc } from "./items/misc.ts"
 import { items as charts } from "./items/charts.ts"
+import { items as blocks } from "./items/blocks.ts"
 
 export const registry: RegistryItem[] = [
   ...core,
@@ -13,4 +14,5 @@ export const registry: RegistryItem[] = [
   ...forms,
   ...misc,
   ...charts,
+  ...blocks,
 ]

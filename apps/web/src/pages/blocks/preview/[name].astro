@@ -1,0 +1,18 @@
+---
+import BlockPreviewLayout from "@/layouts/BlockPreviewLayout.astro";
+import { BlockDemoRenderer } from "@/components/BlockDemoRenderer";
+
+export function getStaticPaths() {
+  const demos = import.meta.glob("../../../block-demos/*.tsx");
+  return Object.keys(demos).map((path) => {
+    const name = path.split("/").pop()!.replace(/\.tsx$/, "");
+    return { params: { name } };
+  });
+}
+
+const { name } = Astro.params;
+---
+
+<BlockPreviewLayout title={`${name} preview`}>
+  <BlockDemoRenderer name={name} client:load />
+</BlockPreviewLayout>

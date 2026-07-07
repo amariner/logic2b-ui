@@ -1,0 +1,100 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import registryIndex from "../../../public/r/index.json";
+
+const blocks = registryIndex.filter((item) => item.type === "registry:block");
+---
+
+<BaseLayout
+  title="Blocks — logic2b/ui"
+  description="Ready-made page sections and layouts, built from the components."
+>
+  <div class="w-full px-6 py-10">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight">Blocks</h1>
+      <p class="mt-2 text-muted-foreground">
+        Full sections and layouts built from the components. Copy the install
+        command or preview at different viewport sizes.
+      </p>
+    </div>
+    <div class="grid gap-8">
+      {
+        blocks.map((block) => (
+          <div class="overflow-hidden rounded-xl border">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b bg-muted/40 px-4 py-3">
+              <div>
+                <h2 class="font-semibold">{block.name}</h2>
+                <p class="text-sm text-muted-foreground">
+                  {block.description}
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <div
+                  class="viewport-toggle flex items-center gap-1 rounded-md border p-0.5"
+                  data-target={block.name}
+                >
+                  <button data-width="100%" class="viewport-btn bg-accent rounded px-2 py-1 text-xs">
+                    Desktop
+                  </button>
+                  <button data-width="768px" class="viewport-btn rounded px-2 py-1 text-xs">
+                    Tablet
+                  </button>
+                  <button data-width="375px" class="viewport-btn rounded px-2 py-1 text-xs">
+                    Mobile
+                  </button>
+                </div>
+                <button
+                  class="copy-btn rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                  data-command={`npx logic2b@latest add ${block.name}`}
+                >
+                  Copy install command
+                </button>
+              </div>
+            </div>
+            <div class="flex justify-center bg-muted/20 p-4">
+              <iframe
+                id={`frame-${block.name}`}
+                src={`/blocks/preview/${block.name}`}
+                class="h-[600px] w-full rounded-lg border bg-background transition-[width] duration-200"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const command = btn.dataset.command;
+      if (!command) return;
+      await navigator.clipboard.writeText(command);
+      const original = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => {
+        btn.textContent = original;
+      }, 1500);
+    });
+  });
+
+  document
+    .querySelectorAll<HTMLDivElement>(".viewport-toggle")
+    .forEach((group) => {
+      const target = group.dataset.target;
+      const frame = document.getElementById(
+        `frame-${target}`
+      ) as HTMLIFrameElement | null;
+      const buttons = group.querySelectorAll<HTMLButtonElement>(".viewport-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (!frame) return;
+          frame.style.width = btn.dataset.width ?? "100%";
+          buttons.forEach((b) => b.classList.remove("bg-accent"));
+          btn.classList.add("bg-accent");
+        });
+      });
+    });
+</script>
