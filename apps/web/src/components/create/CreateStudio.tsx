@@ -3,7 +3,6 @@ import * as React from "react"
 import { Button } from "@/registry/ui/button"
 import { Input } from "@/registry/ui/input"
 import { Label } from "@/registry/ui/label"
-import { Separator } from "@/registry/ui/separator"
 import { Switch } from "@/registry/ui/switch"
 import {
   DropdownMenu,
@@ -308,13 +307,17 @@ export function CreateStudio() {
         mode === "dark" ? "bg-[oklch(0.115_0_0)]" : "bg-neutral-50"
       }`}
     >
-      {/* Customizer rail — a floating dark control panel, like shadcn. */}
-      <aside className="dark flex w-full flex-col gap-3 rounded-xl border border-white/10 bg-[oklch(0.185_0_0)] p-4 text-foreground shadow-sm lg:h-full lg:w-72 lg:shrink-0 lg:overflow-y-auto">
-        <div className="flex items-center px-1">
+      {/* Customizer rail — a floating dark control panel, like shadcn.
+          Pinned header + footer, only the middle scrolls (scrollbar hidden). */}
+      <aside className="dark flex max-h-[70dvh] w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[oklch(0.185_0_0)] text-foreground shadow-sm lg:h-full lg:max-h-none lg:w-72 lg:shrink-0">
+        {/* Pinned header */}
+        <div className="flex shrink-0 items-center border-b border-white/10 px-4 py-3.5">
           <h2 className="text-sm font-semibold">Customize</h2>
         </div>
 
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
+        {/* Scrollable controls — hidden scrollbar */}
+        <div className="min-h-0 flex-1 overflow-y-auto p-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
           <ControlRow
             label="Base Color"
             valueLabel={BASE_COLORS[cfg.base].label}
@@ -388,23 +391,20 @@ export function CreateStudio() {
             value={cfg.radius}
             onChange={(k) => set({ radius: k })}
           />
+          </div>
         </div>
 
-        <Separator className="my-1" />
-
-        <div className="flex min-w-0 items-center justify-between rounded-lg border bg-muted/40 px-3 py-2 font-mono text-xs">
-          <span className="truncate">--preset {presetId}</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <OpenPresetDialog onApply={setCfg} />
-          <Button variant="outline" size="sm" onClick={shuffle}>
-            Shuffle
-          </Button>
-        </div>
-
-        {/* Pinned action (also available from the header on /create) */}
-        <div className="mt-auto grid pt-2">
+        {/* Pinned footer */}
+        <div className="grid shrink-0 gap-2 border-t border-white/10 p-4">
+          <div className="flex min-w-0 items-center justify-between rounded-lg border bg-muted/40 px-3 py-2 font-mono text-xs">
+            <span className="truncate">--preset {presetId}</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <OpenPresetDialog onApply={setCfg} />
+            <Button variant="outline" size="sm" onClick={shuffle}>
+              Shuffle
+            </Button>
+          </div>
           <Button className="w-full" onClick={() => setCodeOpen(true)}>
             Get Code
           </Button>
@@ -424,8 +424,8 @@ export function CreateStudio() {
           A floating 01/02 pager switches pages. */}
       <div
         style={style}
-        className={`create-canvas relative min-w-0 flex-1 overflow-hidden rounded-xl border text-foreground shadow-sm lg:h-full ${
-          mode === "dark" ? "dark border-white/10 bg-[oklch(0.16_0_0)]" : "border-black/[0.06] bg-neutral-100"
+        className={`create-canvas relative min-w-0 flex-1 overflow-hidden rounded-xl text-foreground shadow-sm lg:h-full ${
+          mode === "dark" ? "dark border border-white/10 bg-[oklch(0.16_0_0)]" : "bg-neutral-100"
         }`}
       >
         <div className="h-full overflow-x-auto p-4 sm:p-6">
