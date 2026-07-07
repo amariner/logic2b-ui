@@ -48,6 +48,40 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
     </aside>
 
     <main class="min-w-0 flex-1 py-8">
+      <details class="mb-6 rounded-lg border border-border/40 md:hidden">
+        <summary
+          class="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-medium"
+        >
+          Menu
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+        </summary>
+        <nav class="grid gap-6 border-t border-border/40 px-4 py-4">
+          {
+            docsNav.map((section) => (
+              <div>
+                <h4 class="mb-2 text-sm font-semibold">{section.title}</h4>
+                <ul class="grid gap-0.5">
+                  {section.items.map((item) => (
+                    <li>
+                      <a
+                        href={item.href}
+                        class:list={[
+                          "block rounded-md px-2 py-1 text-sm transition-colors",
+                          currentPath === item.href
+                            ? "bg-accent font-medium text-accent-foreground"
+                            : "text-muted-foreground hover:text-foreground",
+                        ]}
+                      >
+                        {item.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </nav>
+      </details>
       <div class="mb-8 max-w-3xl">
         <h1 class="text-3xl font-bold tracking-tight">{title}</h1>
         {description && <p class="mt-2 text-lg text-muted-foreground">{description}</p>}
