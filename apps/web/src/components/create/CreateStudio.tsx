@@ -230,6 +230,8 @@ const PMS: Record<string, string> = {
 
 export function CreateStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULT_CONFIG)
+  // The canvas follows the site's light/dark theme (toggled from the header),
+  // like shadcn — no separate switch in the customizer.
   const [mode, setMode] = React.useState<Mode>("dark")
   const [codeOpen, setCodeOpen] = React.useState(false)
   const [page, setPage] = React.useState(1)
@@ -265,6 +267,16 @@ export function CreateStudio() {
     }
   }, [shuffle])
 
+  // Mirror the site theme (the `dark` class on <html>) into the canvas.
+  React.useEffect(() => {
+    const el = document.documentElement
+    const sync = () => setMode(el.classList.contains("dark") ? "dark" : "light")
+    sync()
+    const obs = new MutationObserver(sync)
+    obs.observe(el, { attributes: true, attributeFilter: ["class"] })
+    return () => obs.disconnect()
+  }, [])
+
   const baseOpts = Object.entries(BASE_COLORS).map(([key, v]) => ({
     key,
     label: v.label,
@@ -292,19 +304,10 @@ export function CreateStudio() {
 
   return (
     <div className="flex w-full flex-col lg:flex-row">
-      {/* --------------------------- Customizer rail --------------------------- */}
-      <aside className="flex w-full flex-col gap-3 border-b bg-background p-4 lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r">
-        <div className="flex items-center justify-between px-1">
+      {/* Customizer rail — always dark, like shadcn's control panel. */}
+      <aside className="dark flex w-full flex-col gap-3 border-b border-white/10 bg-[oklch(0.145_0_0)] p-4 text-foreground lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:border-r-white/10">
+        <div className="flex items-center px-1">
           <h2 className="text-sm font-semibold">Customize</h2>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>Light</span>
-            <Switch
-              checked={mode === "dark"}
-              onCheckedChange={(v) => setMode(v ? "dark" : "light")}
-              aria-label="Toggle preview theme"
-            />
-            <span>Dark</span>
-          </div>
         </div>
 
         <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
@@ -417,8 +420,8 @@ export function CreateStudio() {
           A floating 01/02 pager switches pages. */}
       <div
         style={style}
-        className={`create-canvas relative min-w-0 flex-1 bg-background text-foreground lg:h-[calc(100dvh-3.5rem)] ${
-          mode === "dark" ? "dark" : ""
+        className={`create-canvas relative min-w-0 flex-1 text-foreground lg:h-[calc(100dvh-3.5rem)] ${
+          mode === "dark" ? "dark bg-background" : "bg-muted"
         }`}
       >
         <div className="h-full overflow-x-auto p-4 sm:p-6">
