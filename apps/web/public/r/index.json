@@ -105,6 +105,11 @@
     "description": "For sighted users to preview content available behind a link, shown after a short hover delay, built on Radix Hover Card. Use it for user profile previews or link previews, unlike Tooltip it supports rich interactive content. Parts: HoverCard (root), HoverCardTrigger, HoverCardContent."
   },
   {
+    "name": "form",
+    "type": "registry:ui",
+    "description": "A set of composable components (built on react-hook-form + zod) for building accessible forms with labels, descriptions and validation messages wired to field state. Use for any form that needs validation."
+  },
+  {
     "name": "checkbox",
     "type": "registry:ui",
     "description": "A control that allows the user to toggle between checked, unchecked and indeterminate states. Use for boolean options in forms, built on Radix Checkbox."

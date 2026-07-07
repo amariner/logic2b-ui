@@ -15,7 +15,16 @@ export default defineConfig({
     plugins: [tailwindcss()],
     ssr: {
       // Force linked/monorepo React libs through Vite so dev SSR uses a single React copy.
-      noExternal: ["radix-ui", /^@radix-ui\//, "cmdk", "sonner", "recharts", "lucide-react"],
+      noExternal: [
+        "radix-ui",
+        /^@radix-ui\//,
+        "cmdk",
+        "sonner",
+        "recharts",
+        "lucide-react",
+        "react-hook-form",
+        "@hookform/resolvers",
+      ],
     },
     resolve: {
       dedupe: ["react", "react-dom"],

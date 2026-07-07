@@ -2,6 +2,15 @@ import type { RegistryItem } from "../types.ts"
 
 export const items: RegistryItem[] = [
   {
+    name: "form",
+    type: "registry:ui",
+    description:
+      "A set of composable components (built on react-hook-form + zod) for building accessible forms with labels, descriptions and validation messages wired to field state. Use for any form that needs validation.",
+    dependencies: ["radix-ui", "react-hook-form", "@hookform/resolvers", "zod"],
+    registryDependencies: ["utils", "label"],
+    files: [{ path: "src/ui/form.tsx", type: "registry:ui" }],
+  },
+  {
     name: "checkbox",
     type: "registry:ui",
     description:
