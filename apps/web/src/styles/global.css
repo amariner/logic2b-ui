@@ -124,3 +124,16 @@
 .create-canvas :is(h1, h2, h3, [data-slot="card-title"]) {
   font-family: var(--font-heading, var(--font-sans));
 }
+
+/* Home bento on phones: tighter card padding so two columns don't feel cramped. */
+@media (max-width: 639px) {
+  .mosaic-compact
+    :is(
+      [data-slot="card-header"],
+      [data-slot="card-content"],
+      [data-slot="card-footer"]
+    ) {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+}

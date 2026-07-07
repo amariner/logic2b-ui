@@ -44,7 +44,7 @@ const monoCharts = [
 ---
 
 <BaseLayout title="logic2b/ui — Build interfaces fast, AI-assisted">
-  <main class="w-full px-4 sm:px-6">
+  <main class="w-full overflow-x-clip px-4 sm:px-6">
     <section class="flex flex-col items-center gap-5 py-16 text-center md:py-24">
       <a
         href="/docs"
@@ -79,12 +79,11 @@ const monoCharts = [
     </section>
 
     <!-- Bento mosaic: masonry via CSS columns. Charts are monochrome and near the
-         top. On phones the columns keep a comfortable width and overflow off the
-         right edge (clipped, no horizontal scroll) for a showcase "peek" look. -->
-    <section class="overflow-hidden pb-24">
+         top. Two columns on phones (compact card padding), never overflows. -->
+    <section class="pb-24">
       <div
         style={monoCharts}
-        class="w-[560px] gap-4 [column-fill:balance] columns-2 sm:w-full lg:columns-3 xl:columns-4"
+        class="mosaic-compact gap-3 [column-fill:balance] columns-2 sm:gap-4 lg:columns-3 xl:columns-4"
       >
         <div class="mb-4 break-inside-avoid"><ComponentShowcase client:visible /></div>
         <div class="mb-4 break-inside-avoid"><AnalyticsCard client:visible /></div>
@@ -103,9 +102,9 @@ const monoCharts = [
         <div class="mb-4 break-inside-avoid"><DistributeCard /></div>
         <div class="mb-4 break-inside-avoid"><TransferFunds /></div>
         <div class="mb-4 break-inside-avoid"><AccountAccess /></div>
-        <div class="mb-4 break-inside-avoid"><RecentTransactions /></div>
+        <div class="hidden break-inside-avoid sm:mb-4 sm:block"><RecentTransactions /></div>
         <div class="mb-4 break-inside-avoid"><PayoutThreshold client:visible /></div>
-        <div class="mb-4 break-inside-avoid"><PaymentsCard /></div>
+        <div class="hidden break-inside-avoid sm:mb-4 sm:block"><PaymentsCard /></div>
         <div class="mb-4 break-inside-avoid"><PreferencesCard /></div>
         <div class="mb-4 break-inside-avoid"><ReceivingMethod /></div>
         <div class="mb-4 break-inside-avoid"><CardBalance /></div>
