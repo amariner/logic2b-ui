@@ -247,7 +247,7 @@ function NavList({ title, items, active }: { title: string; items: string[]; act
 export function DashboardNav() {
   return (
     <Card>
-      <CardContent className="grid grid-cols-2 gap-5 pt-6">
+      <CardContent className="grid grid-cols-1 gap-5 pt-6 sm:grid-cols-2">
         <div className="grid gap-4">
           <NavList title="Overview" items={["Dashboard", "Transactions", "Investments", "Accounts", "Spending"]} active="Dashboard" />
           <NavList title="Planning" items={["Goals", "Budget", "Reports", "Documents"]} />

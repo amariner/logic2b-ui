@@ -262,9 +262,9 @@ export function PreferencesCard() {
           </div>
         ))}
       </CardContent>
-      <CardFooter className="justify-between">
-        <Button variant="ghost" size="sm">Reset</Button>
-        <Button size="sm">Save Preferences</Button>
+      <CardFooter className="grid gap-2 sm:flex sm:justify-between">
+        <Button variant="ghost" size="sm" className="w-full sm:w-auto">Reset</Button>
+        <Button size="sm" className="w-full sm:w-auto">Save Preferences</Button>
       </CardFooter>
     </Card>
   )
