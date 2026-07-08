@@ -300,5 +300,59 @@
     "name": "dashboard-01",
     "type": "registry:block",
     "description": "A dashboard with a sidebar, stat cards, an interactive area chart and a data table. Use as the starting point for an admin or analytics app-shell."
+  },
+  {
+    "name": "login-03",
+    "type": "registry:block",
+    "title": "Login with social",
+    "description": "A centered login card with GitHub and Google provider buttons, an 'or continue with' divider, and email/password fields. Use for an authentication page with social sign-in.",
+    "categories": [
+      "authentication"
+    ]
+  },
+  {
+    "name": "pricing-01",
+    "type": "registry:block",
+    "title": "Three-tier pricing",
+    "description": "A responsive three-tier pricing section with a featured plan, feature checklists and per-plan calls to action. Use on a marketing or upgrade page.",
+    "categories": [
+      "marketing"
+    ]
+  },
+  {
+    "name": "stats-01",
+    "type": "registry:block",
+    "title": "KPI stat cards",
+    "description": "A row of four KPI stat cards with values and trend deltas. Use as the header of a dashboard or analytics overview.",
+    "categories": [
+      "dashboard"
+    ]
+  },
+  {
+    "name": "faq-01",
+    "type": "registry:block",
+    "title": "FAQ accordion",
+    "description": "A centered FAQ section built on the accordion, with a heading and a contact prompt. Use on a marketing, pricing or support page.",
+    "categories": [
+      "marketing"
+    ]
+  },
+  {
+    "name": "cta-01",
+    "type": "registry:block",
+    "title": "Call to action",
+    "description": "A bordered, centered call-to-action band with a headline, supporting copy and two buttons. Use to close a landing page.",
+    "categories": [
+      "marketing"
+    ]
+  },
+  {
+    "name": "contact-01",
+    "type": "registry:block",
+    "title": "Contact form",
+    "description": "A centered contact form card with name, email and message fields. Use as a standalone contact page or a section.",
+    "categories": [
+      "marketing"
+    ]
   }
 ]

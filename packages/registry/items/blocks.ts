@@ -71,4 +71,71 @@ export const items: RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "login-03",
+    type: "registry:block",
+    title: "Login with social",
+    description:
+      "A centered login card with GitHub and Google provider buttons, an 'or continue with' divider, and email/password fields. Use for an authentication page with social sign-in.",
+    categories: ["authentication"],
+    registryDependencies: ["button", "card", "input", "label"],
+    files: [
+      { path: "src/blocks/login-03/login-form.tsx", type: "registry:block" },
+    ],
+  },
+  {
+    name: "pricing-01",
+    type: "registry:block",
+    title: "Three-tier pricing",
+    description:
+      "A responsive three-tier pricing section with a featured plan, feature checklists and per-plan calls to action. Use on a marketing or upgrade page.",
+    categories: ["marketing"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["badge", "button", "card"],
+    files: [{ path: "src/blocks/pricing-01/pricing.tsx", type: "registry:block" }],
+  },
+  {
+    name: "stats-01",
+    type: "registry:block",
+    title: "KPI stat cards",
+    description:
+      "A row of four KPI stat cards with values and trend deltas. Use as the header of a dashboard or analytics overview.",
+    categories: ["dashboard"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["card"],
+    files: [{ path: "src/blocks/stats-01/stats.tsx", type: "registry:block" }],
+  },
+  {
+    name: "faq-01",
+    type: "registry:block",
+    title: "FAQ accordion",
+    description:
+      "A centered FAQ section built on the accordion, with a heading and a contact prompt. Use on a marketing, pricing or support page.",
+    categories: ["marketing"],
+    registryDependencies: ["accordion"],
+    files: [{ path: "src/blocks/faq-01/faq.tsx", type: "registry:block" }],
+  },
+  {
+    name: "cta-01",
+    type: "registry:block",
+    title: "Call to action",
+    description:
+      "A bordered, centered call-to-action band with a headline, supporting copy and two buttons. Use to close a landing page.",
+    categories: ["marketing"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["button"],
+    files: [{ path: "src/blocks/cta-01/cta.tsx", type: "registry:block" }],
+  },
+  {
+    name: "contact-01",
+    type: "registry:block",
+    title: "Contact form",
+    description:
+      "A centered contact form card with name, email and message fields. Use as a standalone contact page or a section.",
+    categories: ["marketing"],
+    registryDependencies: ["button", "card", "input", "label", "textarea"],
+    files: [
+      { path: "src/blocks/contact-01/contact-form.tsx", type: "registry:block" },
+    ],
+  },
 ]

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "faq-01",
+  "type": "registry:block",
+  "title": "FAQ accordion",
+  "description": "A centered FAQ section built on the accordion, with a heading and a contact prompt. Use on a marketing, pricing or support page.",
+  "registryDependencies": [
+    "accordion"
+  ],
+  "files": [
+    {
+      "path": "blocks/faq-01/faq.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\"\n\nconst faqs = [\n  {\n    q: \"Do I own the code?\",\n    a: \"Yes. Components are copied into your project — no runtime dependency, no lock-in. Edit them however you like.\",\n  },\n  {\n    q: \"Which frameworks are supported?\",\n    a: \"Anything that runs React and Tailwind: Next.js, Vite, Astro, Remix, TanStack Start and more. The CLI writes files into your project structure.\",\n  },\n  {\n    q: \"How do updates work?\",\n    a: \"Run the CLI's diff command to see what changed upstream, then re-add a component with --overwrite when you want the update.\",\n  },\n  {\n    q: \"Is it free?\",\n    a: \"Yes, it's open source under the MIT license. Use it in personal and commercial projects.\",\n  },\n]\n\nexport function Faq({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\"mx-auto w-full max-w-2xl px-6 py-16\", className)}\n      {...props}\n    >\n      <div className=\"mb-8 text-center\">\n        <h2 className=\"font-heading text-3xl font-bold tracking-tight\">\n          Frequently asked questions\n        </h2>\n        <p className=\"text-muted-foreground mt-3\">\n          Everything you need to know. Can&apos;t find an answer?{\" \"}\n          <a href=\"#\" className=\"text-foreground underline underline-offset-4\">\n            Get in touch\n          </a>\n          .\n        </p>\n      </div>\n      <Accordion type=\"single\" collapsible className=\"w-full\">\n        {faqs.map((faq, i) => (\n          <AccordionItem key={faq.q} value={`item-${i}`}>\n            <AccordionTrigger className=\"text-left\">{faq.q}</AccordionTrigger>\n            <AccordionContent className=\"text-muted-foreground\">\n              {faq.a}\n            </AccordionContent>\n          </AccordionItem>\n        ))}\n      </Accordion>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "marketing"
+  ]
+}
