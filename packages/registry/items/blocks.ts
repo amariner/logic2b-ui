@@ -138,4 +138,55 @@ export const items: RegistryItem[] = [
       { path: "src/blocks/contact-01/contact-form.tsx", type: "registry:block" },
     ],
   },
+  {
+    name: "hero-01",
+    type: "registry:block",
+    title: "Marketing hero",
+    description:
+      "A centered marketing hero with a badge, a large display headline, supporting copy and two calls to action. Use as the top of a landing page.",
+    categories: ["marketing"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["badge", "button"],
+    files: [{ path: "src/blocks/hero-01/hero.tsx", type: "registry:block" }],
+  },
+  {
+    name: "testimonials-01",
+    type: "registry:block",
+    title: "Testimonials grid",
+    description:
+      "A grid of testimonial cards with quotes and avatars (initials fallback). Use as social proof on a marketing page.",
+    categories: ["marketing"],
+    registryDependencies: ["avatar", "card"],
+    files: [
+      {
+        path: "src/blocks/testimonials-01/testimonials.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "settings-01",
+    type: "registry:block",
+    title: "Settings panel",
+    description:
+      "A settings card with profile fields, notification switches and save/cancel actions. Use as an account or preferences page.",
+    categories: ["application"],
+    registryDependencies: ["button", "card", "input", "label", "separator", "switch"],
+    files: [
+      { path: "src/blocks/settings-01/settings.tsx", type: "registry:block" },
+    ],
+  },
+  {
+    name: "signup-02",
+    type: "registry:block",
+    title: "Two-column signup",
+    description:
+      "A two-column signup page: decorative panel on one side, name/email/password form on the other. Use as a spacious registration page.",
+    categories: ["authentication"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["button", "input", "label"],
+    files: [
+      { path: "src/blocks/signup-02/signup-form.tsx", type: "registry:block" },
+    ],
+  },
 ]
