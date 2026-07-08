@@ -10,7 +10,8 @@
     "./registry": "./registry.ts"
   },
   "scripts": {
-    "build": "tsx scripts/build-registry.ts"
+    "build": "tsx scripts/build-registry.ts",
+    "lint": "tsx scripts/check-registry.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
