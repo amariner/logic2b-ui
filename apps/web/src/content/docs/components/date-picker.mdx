@@ -1,0 +1,43 @@
+---
+title: Date Picker
+description: A date input built by composing the Popover and Calendar components.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="date-picker-demo" />
+
+The Date Picker isn't a standalone registry item — it's a composition of the
+[popover](/docs/components/popover) and [calendar](/docs/components/calendar)
+components. Install both, then compose them as shown below.
+
+## Installation
+
+```bash
+npx logic2b@latest add popover calendar
+```
+
+## Usage
+
+```tsx
+import { useState } from "react"
+import { CalendarIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
+const [date, setDate] = useState<Date | undefined>()
+
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">
+      <CalendarIcon />
+      {date ? date.toLocaleDateString() : "Pick a date"}
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-auto p-0" align="start">
+    <Calendar mode="single" selected={date} onSelect={setDate} />
+  </PopoverContent>
+</Popover>
+```

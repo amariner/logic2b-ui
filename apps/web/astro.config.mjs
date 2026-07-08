@@ -24,6 +24,11 @@ export default defineConfig({
         "lucide-react",
         "react-hook-form",
         "@hookform/resolvers",
+        "react-day-picker",
+        "vaul",
+        "embla-carousel-react",
+        "react-resizable-panels",
+        "input-otp",
       ],
     },
     resolve: {

@@ -1,0 +1,49 @@
+---
+title: Carousel
+description: A carousel of slides with previous/next controls and keyboard navigation.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="carousel-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add carousel
+```
+
+## Usage
+
+```tsx
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+
+<Carousel>
+  <CarouselContent>
+    <CarouselItem>1</CarouselItem>
+    <CarouselItem>2</CarouselItem>
+    <CarouselItem>3</CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+</Carousel>
+```
+
+Built on [embla-carousel-react](https://www.embla-carousel.com/get-started/react/) —
+pass embla options via the `opts` prop and plugins via `plugins`, or get the
+imperative API with `setApi`.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `orientation` (Carousel) | `horizontal \| vertical` | `horizontal` |
+| `opts` (Carousel) | Embla `EmblaOptionsType` | — |
+| `plugins` (Carousel) | Embla plugins array | — |
+| `setApi` (Carousel) | `(api: CarouselApi) => void` | — |

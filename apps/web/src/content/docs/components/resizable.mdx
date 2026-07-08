@@ -1,0 +1,44 @@
+---
+title: Resizable
+description: Resizable split panels the user can drag to resize, horizontal or vertical.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="resizable-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add resizable
+```
+
+## Usage
+
+```tsx
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
+
+<ResizablePanelGroup direction="horizontal">
+  <ResizablePanel>One</ResizablePanel>
+  <ResizableHandle withHandle />
+  <ResizablePanel>Two</ResizablePanel>
+</ResizablePanelGroup>
+```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `direction` (ResizablePanelGroup) | `horizontal \| vertical` | `horizontal` |
+| `defaultSize` / `minSize` / `maxSize` (ResizablePanel) | `number` (percentage) | — |
+| `withHandle` (ResizableHandle) | `boolean` — shows a visible grip | `false` |
+
+Built on [react-resizable-panels](https://github.com/bvaughn/react-resizable-panels) v4.
+This registry wraps its `Group`/`Panel`/`Separator` exports as
+`ResizablePanelGroup`/`ResizablePanel`/`ResizableHandle` and keeps the
+familiar `direction` prop name (mapped internally to the library's
+`orientation` prop) for API stability across upstream versions.

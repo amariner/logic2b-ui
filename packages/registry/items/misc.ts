@@ -104,4 +104,40 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/empty.tsx", type: "registry:ui" }],
   },
+  {
+    name: "calendar",
+    type: "registry:ui",
+    description:
+      "A date field with a calendar grid for picking a single day, multiple days or a date range, built on react-day-picker. Use it standalone or compose it with popover for a date-picker input.",
+    dependencies: ["react-day-picker", "lucide-react"],
+    registryDependencies: ["utils", "button"],
+    files: [{ path: "src/ui/calendar.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "carousel",
+    type: "registry:ui",
+    description:
+      "A carousel of slides with previous/next controls and keyboard navigation, built on embla-carousel-react. Use for image galleries, testimonial rotators or onboarding steps. Parts: Carousel (root, orientation), CarouselContent, CarouselItem, CarouselPrevious, CarouselNext.",
+    dependencies: ["embla-carousel-react", "lucide-react"],
+    registryDependencies: ["utils", "button"],
+    files: [{ path: "src/ui/carousel.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "resizable",
+    type: "registry:ui",
+    description:
+      "Resizable split panels the user can drag to resize, horizontal or vertical, built on react-resizable-panels. Use for split views like a code editor's sidebar/pane layout. Parts: ResizablePanelGroup (root, direction), ResizablePanel, ResizableHandle (withHandle for a visible grip).",
+    dependencies: ["react-resizable-panels", "lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/resizable.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "input-otp",
+    type: "registry:ui",
+    description:
+      "An accessible one-time-password input with individual character slots and a fake caret, built on input-otp. Use for verification codes (SMS/email/2FA). Parts: InputOTP (root), InputOTPGroup, InputOTPSlot (index), InputOTPSeparator.",
+    dependencies: ["input-otp", "lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/input-otp.tsx", type: "registry:ui" }],
+  },
 ]

@@ -1,0 +1,53 @@
+---
+title: Drawer
+description: Extends the Dialog component to display content sliding in from an edge with a drag handle.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="drawer-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add drawer
+```
+
+## Usage
+
+```tsx
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+
+<Drawer>
+  <DrawerTrigger>Open</DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Edit profile</DrawerTitle>
+      <DrawerDescription>Make changes to your profile here.</DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose>Cancel</DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+Built on [vaul](https://vaul.emilkowal.ski/). Unlike [sheet](/docs/components/sheet),
+which is a plain Radix Dialog sliding in from an edge, drawer supports
+drag-to-dismiss and snap points — better suited for mobile bottom sheets.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `direction` (Drawer) | `top \| bottom \| left \| right` | `bottom` |
+| `shouldScaleBackground` (Drawer) | `boolean` | — |

@@ -117,4 +117,13 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/navigation-menu.tsx", type: "registry:ui" }],
   },
+  {
+    name: "drawer",
+    type: "registry:ui",
+    description:
+      "Extends the Dialog component to display content sliding in from an edge with a drag handle, built on vaul. Use for mobile-friendly bottom sheets, unlike sheet it supports drag-to-dismiss. Parts: Drawer (root, direction top | bottom | left | right), DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter, DrawerTitle, DrawerDescription, DrawerClose, DrawerOverlay, DrawerPortal.",
+    dependencies: ["vaul"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/drawer.tsx", type: "registry:ui" }],
+  },
 ]

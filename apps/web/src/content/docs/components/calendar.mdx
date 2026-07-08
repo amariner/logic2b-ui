@@ -1,0 +1,39 @@
+---
+title: Calendar
+description: A date field with a calendar grid for picking a single day, multiple days or a date range.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="calendar-demo" />
+
+## Installation
+
+```bash
+npx logic2b@latest add calendar
+```
+
+## Usage
+
+```tsx
+import { useState } from "react"
+import { Calendar } from "@/components/ui/calendar"
+
+const [date, setDate] = useState<Date | undefined>(new Date())
+
+<Calendar mode="single" selected={date} onSelect={setDate} className="rounded-md border" />
+```
+
+Built on [react-day-picker](https://daypicker.dev). See also
+[date picker](/docs/components/date-picker) for a composition with popover
+that turns the calendar into a text-input-style field.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `mode` | `single \| multiple \| range` | — |
+| `selected` / `onSelect` | depends on `mode` | — |
+| `captionLayout` | `label \| dropdown \| dropdown-months \| dropdown-years` | `label` |
+| `buttonVariant` | button variant for the nav buttons | `ghost` |
+| `showOutsideDays` | `boolean` | `true` |
