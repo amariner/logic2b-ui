@@ -29,7 +29,7 @@ export default function CommandDialogDemo() {
 
   return (
     <>
-      <p className="text-muted-foreground text-sm">
+      <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
         Press{" "}
         <KbdGroup>
           <Kbd>⌘</Kbd>
@@ -44,7 +44,7 @@ export default function CommandDialogDemo() {
           open the menu
         </button>
         .
-      </p>
+      </div>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
