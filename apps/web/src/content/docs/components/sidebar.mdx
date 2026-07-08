@@ -52,3 +52,39 @@ export function AppLayout() {
 viewports it renders as a `Sheet` automatically. Read the current state
 (`state`, `open`, `isMobile`, `toggleSidebar`) with the `useSidebar()` hook
 from any descendant.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `defaultOpen` (SidebarProvider) | `boolean` — uncontrolled initial open state | `true` |
+| `open` / `onOpenChange` (SidebarProvider) | `boolean` / `(open: boolean) => void` — controlled state | — |
+| `side` (Sidebar) | `left \| right` | `left` |
+| `variant` (Sidebar) | `sidebar \| floating \| inset` | `sidebar` |
+| `collapsible` (Sidebar) | `offcanvas \| icon \| none` | `offcanvas` |
+| `tooltip` (SidebarMenuButton) | `string \| TooltipContent props` — shown when collapsed to icons | — |
+
+`SidebarTrigger` is a `Button` that calls `toggleSidebar()`; it forwards all
+button props.
+
+## Examples
+
+### Icon rail
+
+<ComponentPreview name="sidebar-icon-demo" wide />
+
+### Floating variant
+
+<ComponentPreview name="sidebar-floating-demo" wide />
+
+## Accessibility
+
+- The whole sidebar can be toggled from the keyboard with
+  <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>B</kbd>, in addition to the
+  `SidebarTrigger` button.
+- `SidebarTrigger` renders a labelled button (`sr-only` "Toggle Sidebar")
+  wired to `toggleSidebar()`.
+- On mobile the sidebar becomes a `Sheet`, inheriting its focus trap and
+  <kbd>Esc</kbd>-to-close behavior.
+- When collapsed to `icon`, add a `tooltip` to each `SidebarMenuButton` so the
+  destination stays discoverable.

@@ -29,3 +29,26 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 | --- | --- | --- |
 | `align` (PopoverContent) | `start \| center \| end` | `center` |
 | `sideOffset` (PopoverContent) | `number` | `4` |
+| `side` (PopoverContent) | `top \| right \| bottom \| left` | `bottom` |
+
+## Examples
+
+### Form content
+
+<ComponentPreview name="popover-form-demo" />
+
+### Side and alignment
+
+<ComponentPreview name="popover-align-demo" />
+
+## Accessibility
+
+Built on [Radix Popover](https://www.radix-ui.com/primitives/docs/components/popover).
+
+- The trigger toggles the popover on click and manages `aria-expanded` and
+  `aria-controls` for you.
+- Focus moves into the popover when it opens and returns to the trigger on
+  close.
+- <kbd>Esc</kbd> or an outside click dismisses the popover.
+- Use `PopoverAnchor` to position the content relative to a different element
+  than the trigger.

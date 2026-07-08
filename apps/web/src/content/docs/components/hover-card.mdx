@@ -36,3 +36,24 @@ import {
 | `align` (HoverCardContent) | `start \| center \| end` | `center` |
 | `sideOffset` (HoverCardContent) | `number` | `4` |
 | `openDelay` / `closeDelay` (HoverCard) | `number` (ms) | `700` / `300` |
+| `open` / `onOpenChange` (HoverCard) | `boolean` / `(open: boolean) => void` | — |
+
+## Examples
+
+### Profile
+
+<ComponentPreview name="hover-card-profile-demo" />
+
+### Custom Delay & Alignment
+
+<ComponentPreview name="hover-card-align-demo" />
+
+## Accessibility
+
+- Built on Radix [Hover Card](https://www.radix-ui.com/primitives/docs/components/hover-card):
+  it opens on pointer hover and on keyboard focus of the trigger, so it is
+  reachable with the `Tab` key.
+- It is a supplementary preview for sighted users — it does not trap focus and
+  is not announced as a dialog, so never place essential content or actions
+  only inside the card.
+- `Escape` dismisses an open card.

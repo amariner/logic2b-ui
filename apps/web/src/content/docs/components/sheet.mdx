@@ -40,3 +40,25 @@ import {
 | Prop | Type | Default |
 | --- | --- | --- |
 | `side` (SheetContent) | `top \| bottom \| left \| right` | `right` |
+
+## Examples
+
+### From any side
+
+<ComponentPreview name="sheet-sides-demo" />
+
+### Navigation drawer
+
+<ComponentPreview name="sheet-navigation-demo" />
+
+## Accessibility
+
+`Sheet` is built on [Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog),
+so it inherits the WAI-ARIA modal dialog behavior.
+
+- Focus is trapped inside the sheet while open and returns to the trigger on
+  close.
+- <kbd>Esc</kbd> or a click on the overlay closes the sheet.
+- Content behind the sheet is inert and hidden from screen readers.
+- Include a `SheetTitle` (and ideally a `SheetDescription`) so the dialog is
+  properly labelled.

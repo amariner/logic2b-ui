@@ -19,3 +19,32 @@ import { Textarea } from "@/components/ui/textarea"
 
 <Textarea placeholder="Type your message here." />
 ```
+
+## API
+
+`Textarea` renders a native `<textarea>` and forwards every prop it accepts. It
+auto-sizes to its content (`field-sizing-content`) and styles `aria-invalid` for
+validation states.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `placeholder` | `string` | — |
+| `value` / `defaultValue` | `string` | — |
+| `disabled` | `boolean` | `false` |
+| `rows` | `number` | — |
+| `className` | `string` | — |
+| `...props` | `React.ComponentProps<"textarea">` | — |
+
+## Examples
+
+### With label
+
+<ComponentPreview name="textarea-label-demo" />
+
+### Disabled
+
+<ComponentPreview name="textarea-disabled-demo" />
+
+### With a button
+
+<ComponentPreview name="textarea-form-demo" />

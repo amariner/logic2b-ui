@@ -22,3 +22,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
   <AvatarFallback>CN</AvatarFallback>
 </Avatar>
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `src` (AvatarImage) | `string` — image source | — |
+| `alt` (AvatarImage) | `string` | — |
+| `onLoadingStatusChange` (AvatarImage) | `(status: "idle" \| "loading" \| "loaded" \| "error") => void` | — |
+| `delayMs` (AvatarFallback) | `number` — wait before showing the fallback | — |
+
+`Avatar`, `AvatarImage`, and `AvatarFallback` also forward standard element props. Size the avatar with a `className` (e.g. `size-12`).
+
+## Examples
+
+### Group
+
+Overlap several avatars to represent a set of users.
+
+<ComponentPreview name="avatar-group-demo" />
+
+### Fallback
+
+When the image is missing or fails to load, the fallback is shown.
+
+<ComponentPreview name="avatar-fallback-demo" />

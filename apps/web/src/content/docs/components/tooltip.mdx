@@ -31,3 +31,21 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 | `sideOffset` (TooltipContent) | `number` | `0` |
 
 Note: `Tooltip` wraps itself in a `TooltipProvider`, so it works standalone. Wrap your app in a single `TooltipProvider` to share delay settings across multiple tooltips.
+
+`TooltipContent` also accepts Radix positioning props such as `side` (`top \| right \| bottom \| left`) and `align`.
+
+## Examples
+
+### Sides
+
+<ComponentPreview name="tooltip-sides-demo" />
+
+### On an icon button
+
+<ComponentPreview name="tooltip-icon-demo" />
+
+## Accessibility
+
+- The tooltip opens on hover and on keyboard focus of the trigger, and closes on `Escape`.
+- Use `TooltipTrigger asChild` so the tooltip attaches to a real interactive element (e.g. a `Button`) that can receive focus.
+- Tooltips supplement, but do not replace, an accessible name — give icon-only triggers their own `aria-label`.

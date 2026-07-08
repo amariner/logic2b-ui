@@ -10,6 +10,31 @@ export interface NavSection {
   items: NavItem[];
 }
 
+// Pages that have a docs page but no registry:ui item of their own — either
+// compositions (date-picker, combobox) or recipes/guides (data-table,
+// typography). Listed manually so they stay discoverable in the sidebar.
+const EXTRA_PAGES: NavItem[] = [
+  { title: "Combobox", href: "/docs/components/combobox" },
+  { title: "Data Table", href: "/docs/components/data-table" },
+  { title: "Date Picker", href: "/docs/components/date-picker" },
+  { title: "Typography", href: "/docs/components/typography" },
+];
+
+function buildComponentNav(): NavItem[] {
+  const fromRegistry: NavItem[] = registryIndex
+    .filter((item) => item.type === "registry:ui")
+    .map((item) => ({
+      title:
+        item.name.charAt(0).toUpperCase() +
+        item.name.slice(1).replace(/-/g, " "),
+      href: `/docs/components/${item.name}`,
+    }));
+
+  return [...fromRegistry, ...EXTRA_PAGES].sort((a, b) =>
+    a.title.localeCompare(b.title)
+  );
+}
+
 export const docsNav: NavSection[] = [
   {
     title: "Getting Started",
@@ -22,28 +47,6 @@ export const docsNav: NavSection[] = [
   },
   {
     title: "Components",
-    items: insertDatePicker(
-      registryIndex
-        .filter((item) => item.type === "registry:ui")
-        .map((item) => ({
-          title:
-            item.name.charAt(0).toUpperCase() +
-            item.name.slice(1).replace(/-/g, " "),
-          href: `/docs/components/${item.name}`,
-        }))
-    ),
+    items: buildComponentNav(),
   },
 ];
-
-// "date-picker" has no registry item of its own (it's a composition of
-// popover + calendar, same as upstream shadcn) — insert it manually right
-// after Calendar so it stays discoverable in the sidebar.
-function insertDatePicker(items: NavItem[]): NavItem[] {
-  const index = items.findIndex((item) => item.title === "Calendar");
-  const datePicker: NavItem = {
-    title: "Date Picker",
-    href: "/docs/components/date-picker",
-  };
-  if (index === -1) return [...items, datePicker];
-  return [...items.slice(0, index + 1), datePicker, ...items.slice(index + 1)];
-}

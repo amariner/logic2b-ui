@@ -66,3 +66,39 @@ function ProfileForm() {
 `FormLabel`, `FormControl`, `FormDescription` and `FormMessage` — they read
 validation state (error, id) from that context, so labels and messages stay
 wired to the right input automatically.
+
+## API
+
+`Form` is an alias for react-hook-form's `FormProvider`, so spread your `useForm`
+return value onto it. The pieces below consume field context.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `control` (FormField) | `Control` — from `useForm()` | — |
+| `name` (FormField) | `string` — the field path | — |
+| `render` (FormField) | `({ field, fieldState, formState }) => ReactElement` | — |
+| `...form` (Form) | the object returned by `useForm()` | — |
+| `useFormField()` | hook returning `{ id, name, error, formItemId, formDescriptionId, formMessageId }` | — |
+
+## Examples
+
+### Sign In
+
+Validate an email and password with zod.
+
+<ComponentPreview name="form-signin-demo" />
+
+### Textarea
+
+<ComponentPreview name="form-textarea-demo" />
+
+## Accessibility
+
+- `FormControl` sets `id`, `aria-describedby` and `aria-invalid` from field
+  context, so the label, description and error message are all wired to the
+  input without manual `htmlFor` / `id` bookkeeping.
+- On validation failure `FormMessage` renders the error text with the id
+  referenced by `aria-describedby`, and `FormLabel` turns destructive — the
+  invalid state is conveyed both visually and to screen readers.
+- Because each control gets a unique generated id, labels always point at the
+  right input even when the field is reused in a list.

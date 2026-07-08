@@ -27,3 +27,28 @@ import { toast } from "sonner"
 
 toast("Event has been created")
 ```
+
+## API
+
+The `Toaster` component wraps sonner's `Toaster` and forwards every
+[`ToasterProps`](https://sonner.emilkowal.ski/toaster). Toasts themselves are
+created imperatively with `toast()`.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `theme` | `light \| dark \| system` | `system` |
+| `position` | `top-left \| top-center \| top-right \| bottom-left \| bottom-center \| bottom-right` | `bottom-right` |
+| `richColors` | `boolean` | `false` |
+| `closeButton` | `boolean` | `false` |
+| `expand` | `boolean` | `false` |
+| `duration` | `number` (ms) | `4000` |
+
+## Examples
+
+### With an action
+
+<ComponentPreview name="sonner-action-demo" />
+
+### Promise
+
+<ComponentPreview name="sonner-promise-demo" />

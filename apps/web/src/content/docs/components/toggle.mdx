@@ -21,3 +21,36 @@ import { Toggle } from "@/components/ui/toggle"
   <ItalicIcon />
 </Toggle>
 ```
+
+## API
+
+Built on Radix `Toggle.Root` with `cva` variants.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` | `default \| outline` | `default` |
+| `size` | `default \| sm \| lg` | `default` |
+| `pressed` | `boolean` — controlled state | — |
+| `defaultPressed` | `boolean` | — |
+| `onPressedChange` | `(pressed: boolean) => void` | — |
+| `disabled` | `boolean` | `false` |
+
+## Examples
+
+### Outline
+
+<ComponentPreview name="toggle-outline-demo" />
+
+### With text
+
+<ComponentPreview name="toggle-text-demo" />
+
+### Sizes
+
+<ComponentPreview name="toggle-sizes-demo" />
+
+## Accessibility
+
+- Exposes `aria-pressed` so its on/off state is announced.
+- Toggle with `Space` or `Enter` when focused; reachable with `Tab`.
+- Icon-only toggles need an `aria-label` to provide an accessible name.

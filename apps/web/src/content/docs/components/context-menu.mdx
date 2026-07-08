@@ -38,3 +38,24 @@ import {
 | `variant` (ContextMenuItem) | `default \| destructive` | `default` |
 | `inset` (ContextMenuItem / Label / SubTrigger) | `boolean` | `false` |
 | `checked` (ContextMenuCheckboxItem) | `boolean` | — |
+| `value` / `onValueChange` (ContextMenuRadioGroup) | `string` / `(value: string) => void` | — |
+
+## Examples
+
+### Checkboxes & Radios
+
+<ComponentPreview name="context-menu-checkbox-demo" />
+
+### With Submenu
+
+<ComponentPreview name="context-menu-submenu-demo" />
+
+## Accessibility
+
+- Opens on right-click (or the context-menu key) and can be navigated entirely
+  with the arrow keys; `Enter` or `Space` activates the focused item.
+- Wraps Radix [Context Menu](https://www.radix-ui.com/primitives/docs/components/context-menu),
+  which manages `role="menu"`, `menuitem`, `menuitemcheckbox` and
+  `menuitemradio` semantics for you.
+- Typeahead lets users jump to an item by typing its label; `Escape` closes the
+  menu and returns focus to the trigger.

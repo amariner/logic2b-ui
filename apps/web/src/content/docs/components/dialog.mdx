@@ -43,4 +43,28 @@ import {
 | --- | --- | --- |
 | `open` | `boolean` | — |
 | `onOpenChange` | `(open: boolean) => void` | — |
+| `defaultOpen` | `boolean` | `false` |
+| `modal` | `boolean` — block interaction with the rest of the page | `true` |
 | `showCloseButton` (DialogContent) | `boolean` | `true` |
+
+## Examples
+
+### Share Link
+
+<ComponentPreview name="dialog-share-demo" />
+
+### Controlled
+
+Drive the open state yourself to confirm a destructive action.
+
+<ComponentPreview name="dialog-controlled-demo" />
+
+## Accessibility
+
+- Built on Radix [Dialog](https://www.radix-ui.com/primitives/docs/components/dialog):
+  focus is trapped inside the content and returns to the trigger on close.
+- `DialogTitle` is required for an accessible name — pair it with
+  `DialogDescription` (wire both to the content via `aria-labelledby` /
+  `aria-describedby`, which Radix handles automatically).
+- `Escape` and an overlay click both dismiss the dialog; the close button ships
+  an `sr-only` "Close" label.

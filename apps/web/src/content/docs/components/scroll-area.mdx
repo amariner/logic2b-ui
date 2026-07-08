@@ -21,3 +21,25 @@ import { ScrollArea } from "@/components/ui/scroll-area"
   Jokester began sneaking into the castle in the middle of the night...
 </ScrollArea>
 ```
+
+Set the viewport size with `className` (height/width) — the content scrolls
+inside it. For horizontal scrolling, render a `ScrollBar` with
+`orientation="horizontal"` inside the `ScrollArea`.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `type` (ScrollArea) | `auto \| always \| scroll \| hover` | `hover` |
+| `scrollHideDelay` (ScrollArea) | `number` (ms) | `600` |
+| `orientation` (ScrollBar) | `vertical \| horizontal` | `vertical` |
+
+## Examples
+
+### Horizontal
+
+<ComponentPreview name="scroll-area-horizontal-demo" />
+
+### Long text
+
+<ComponentPreview name="scroll-area-prose-demo" />

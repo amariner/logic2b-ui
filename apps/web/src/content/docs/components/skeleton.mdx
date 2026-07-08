@@ -19,3 +19,23 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 <Skeleton className="h-4 w-[250px]" />
 ```
+
+## API
+
+`Skeleton` renders a single `<div>` and forwards every native `<div>` prop.
+Set its shape and size with `className`.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `className` | `string` — size, shape, and layout utilities | — |
+| `...props` | `React.ComponentProps<"div">` | — |
+
+## Examples
+
+### Card
+
+<ComponentPreview name="skeleton-card-demo" />
+
+### List
+
+<ComponentPreview name="skeleton-list-demo" />

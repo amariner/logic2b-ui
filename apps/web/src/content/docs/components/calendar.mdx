@@ -36,3 +36,20 @@ that turns the calendar into a text-input-style field.
 | `captionLayout` | `label \| dropdown \| dropdown-months \| dropdown-years` | `label` |
 | `buttonVariant` | button variant for the nav buttons | `ghost` |
 | `showOutsideDays` | `boolean` | `true` |
+| `numberOfMonths` | `number` — months to render side by side | `1` |
+
+All other [react-day-picker](https://daypicker.dev) `DayPicker` props are forwarded.
+
+## Examples
+
+### Range
+
+Set `mode="range"` and hold a `DateRange` in state to pick a start and end day.
+
+<ComponentPreview name="calendar-range-demo" />
+
+### Dropdown caption
+
+Use `captionLayout="dropdown"` to switch months and years with select menus.
+
+<ComponentPreview name="calendar-dropdown-demo" />

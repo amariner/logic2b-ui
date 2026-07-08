@@ -40,3 +40,32 @@ import {
   </TableBody>
 </Table>
 ```
+
+## API
+
+Each part is a thin wrapper over the matching HTML element and forwards its
+native props. `Table` also wraps the `<table>` in a horizontally scrollable
+container.
+
+| Component | Renders | Notes |
+| --- | --- | --- |
+| `Table` | `<table>` | Wrapped in an overflow-x container |
+| `TableHeader` | `<thead>` | — |
+| `TableBody` | `<tbody>` | — |
+| `TableFooter` | `<tfoot>` | Muted background, top border |
+| `TableRow` | `<tr>` | Supports `data-state="selected"` |
+| `TableHead` | `<th>` | Column header cell |
+| `TableCell` | `<td>` | Body cell |
+| `TableCaption` | `<caption>` | Rendered below the table |
+
+All accept `className` and the standard props of the element they render.
+
+## Examples
+
+### With status
+
+<ComponentPreview name="table-status-demo" />
+
+### Simple
+
+<ComponentPreview name="table-simple-demo" />

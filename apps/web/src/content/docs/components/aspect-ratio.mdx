@@ -21,3 +21,21 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
   <img src="..." alt="Image" className="rounded-md object-cover" />
 </AspectRatio>
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `ratio` | `number` — desired width-to-height ratio (e.g. `16 / 9`) | `1` |
+
+Also accepts any standard `div` props, which are forwarded to the wrapper.
+
+## Examples
+
+### Square
+
+<ComponentPreview name="aspect-ratio-square-demo" />
+
+### Portrait
+
+<ComponentPreview name="aspect-ratio-portrait-demo" />

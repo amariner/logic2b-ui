@@ -23,3 +23,34 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
   </ToggleGroupItem>
 </ToggleGroup>
 ```
+
+## API
+
+Built on Radix `ToggleGroup`. The group's `variant` and `size` are shared with
+every `ToggleGroupItem` through context.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `type` (ToggleGroup) | `single \| multiple` | — |
+| `variant` (ToggleGroup) | `default \| outline` | `default` |
+| `size` (ToggleGroup) | `default \| sm \| lg` | `default` |
+| `value` / `onValueChange` (ToggleGroup) | controlled value — `string` or `string[]` depending on `type` | — |
+| `defaultValue` (ToggleGroup) | `string \| string[]` | — |
+| `disabled` (ToggleGroup) | `boolean` | `false` |
+| `value` (ToggleGroupItem) | `string` — required | — |
+
+## Examples
+
+### Single selection
+
+<ComponentPreview name="toggle-group-single-demo" />
+
+### Sizes
+
+<ComponentPreview name="toggle-group-sizes-demo" />
+
+## Accessibility
+
+- With `type="single"` items behave as a radio group; `Arrow` keys move selection between them.
+- With `type="multiple"` each item toggles independently and exposes `aria-pressed`.
+- `Tab` moves focus into the group, then `Arrow` keys move between items; icon-only items need an `aria-label`.

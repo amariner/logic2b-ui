@@ -36,3 +36,27 @@ import {
   </BreadcrumbList>
 </Breadcrumb>
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `asChild` (BreadcrumbLink) | `boolean` — compose with a router `Link` | `false` |
+| `href` (BreadcrumbLink) | `string` | — |
+| `children` (BreadcrumbSeparator) | `ReactNode` — custom separator, defaults to a chevron | `<ChevronRight />` |
+
+All parts are semantic wrappers (`nav`, `ol`, `li`, `a`, `span`) and forward their native props. `BreadcrumbPage` marks the current page with `aria-current="page"`, and `BreadcrumbEllipsis` is decorative with an `sr-only` "More" label.
+
+## Examples
+
+### Custom separator
+
+Pass children to `BreadcrumbSeparator` to swap the default chevron.
+
+<ComponentPreview name="breadcrumb-separator-demo" />
+
+### With dropdown
+
+Collapse a middle segment into a dropdown menu for long paths.
+
+<ComponentPreview name="breadcrumb-dropdown-demo" />

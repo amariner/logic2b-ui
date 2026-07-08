@@ -42,3 +42,24 @@ import {
 | `variant` (DropdownMenuItem) | `default \| destructive` | `default` |
 | `inset` (DropdownMenuItem / Label / SubTrigger) | `boolean` | `false` |
 | `checked` (DropdownMenuCheckboxItem) | `boolean` | — |
+| `value` / `onValueChange` (DropdownMenuRadioGroup) | `string` / `(value: string) => void` | — |
+| `sideOffset` (DropdownMenuContent) | `number` | `4` |
+
+## Examples
+
+### Checkboxes
+
+<ComponentPreview name="dropdown-menu-checkboxes-demo" />
+
+### Radio Group
+
+<ComponentPreview name="dropdown-menu-radio-group-demo" />
+
+## Accessibility
+
+- Wraps Radix [Dropdown Menu](https://www.radix-ui.com/primitives/docs/components/dropdown-menu):
+  opens with `Enter`, `Space`, or the arrow keys and closes on `Escape`.
+- Arrow keys move between items, typeahead jumps to a label, and submenus open
+  with `ArrowRight` — all following the WAI-ARIA menu pattern.
+- Checkbox and radio items expose `menuitemcheckbox` / `menuitemradio` roles and
+  announce their checked state to assistive technology.

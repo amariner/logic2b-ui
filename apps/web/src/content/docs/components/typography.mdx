@@ -1,0 +1,64 @@
+---
+title: Typography
+description: The type system — Space Grotesk for display, Inter for everything else.
+---
+
+logic2b sets a deliberate two-family system: **Space Grotesk** carries display
+type and headings with tight tracking and compressed line-height — the system's
+voice — while **Inter** does the work in body copy, navigation and UI chrome.
+Code and technical metadata use the system monospace stack. Both webfonts are
+self-hosted via `@fontsource-variable`, so there's no third-party font request.
+
+The tokens are `--font-heading` (Space Grotesk), `--font-sans` (Inter) and
+`--font-mono`. Headings (`h1`–`h4`) inherit `--font-heading` from the base layer;
+everything else defaults to `--font-sans`.
+
+## Heading
+
+Headings use Space Grotesk 600–700 with negative tracking. Keep line-height
+compressed at display sizes.
+
+### Subheading
+
+The third level steps down in size but holds the same geometric voice.
+
+## Paragraph
+
+Body text is Inter at 16px with a 1.5 line-height and a hair of negative
+tracking. It should stay comfortable to read in long form, never dipping below
+12px, and it never mixes fonts inside a block.
+
+## Blockquote
+
+> Depth never comes from shadows; it comes from the luminance ladder and
+> hairline borders. Restraint everywhere.
+
+## List
+
+- Route every color through semantic tokens (`text-foreground`, `text-muted-foreground`).
+- Use Space Grotesk for every heading; Inter for everything else.
+- Reserve color for chart series and the destructive state.
+
+## Inline code
+
+Wrap technical tokens in `inline code` — it renders in the monospace stack on a
+muted surface, e.g. `npx logic2b@latest add button`.
+
+## Table
+
+| Role | Font | Size | Tracking |
+| --- | --- | --- | --- |
+| Display | Space Grotesk 700 | 48–68px | -0.035em |
+| Heading | Space Grotesk 700 | 30–36px | -0.025em |
+| Body | Inter 400 | 16px | -0.011em |
+| Caption | Inter 400 | 12px | -0.01em |
+
+## Utilities
+
+Apply the families directly with Tailwind when you step outside the defaults:
+
+```tsx
+<h2 className="font-heading tracking-tighter">Engineered</h2>
+<p className="font-sans text-muted-foreground">Monochrome discipline.</p>
+<code className="font-mono">--radius: 0.625rem</code>
+```

@@ -21,3 +21,24 @@ import { Badge } from "@/components/ui/badge"
 ```
 
 Use `asChild` to render a link that looks like a badge.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` | `default \| secondary \| destructive \| outline` | `default` |
+| `asChild` | `boolean` — render as the child element (e.g. an `a`) | `false` |
+
+## Examples
+
+### With icon
+
+A leading `svg` icon is sized and spaced automatically.
+
+<ComponentPreview name="badge-icon-demo" />
+
+### As a link
+
+Use `asChild` to render an anchor that looks like a badge.
+
+<ComponentPreview name="badge-link-demo" />

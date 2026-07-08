@@ -23,6 +23,16 @@ const categories = [
     label: "Pie",
     demos: ["chart-pie-demo", "chart-pie-donut-demo"],
   },
+  {
+    slug: "radar",
+    label: "Radar",
+    demos: ["chart-radar-demo"],
+  },
+  {
+    slug: "radial",
+    label: "Radial",
+    demos: ["chart-radial-demo"],
+  },
 ];
 
 export async function getStaticPaths() {
@@ -31,6 +41,8 @@ export async function getStaticPaths() {
     { params: { category: "bar" } },
     { params: { category: "line" } },
     { params: { category: "pie" } },
+    { params: { category: "radar" } },
+    { params: { category: "radial" } },
   ];
 }
 

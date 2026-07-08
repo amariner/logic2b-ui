@@ -22,3 +22,36 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
   <RadioGroupItem value="comfortable" id="r2" />
 </RadioGroup>
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` / `defaultValue` (RadioGroup) | `string` | — |
+| `onValueChange` (RadioGroup) | `(value: string) => void` | — |
+| `orientation` (RadioGroup) | `horizontal \| vertical` | `vertical` |
+| `disabled` (RadioGroup) | `boolean` | `false` |
+| `value` (RadioGroupItem) | `string` — required | — |
+| `disabled` (RadioGroupItem) | `boolean` | `false` |
+
+## Examples
+
+### Cards
+
+<ComponentPreview name="radio-group-cards-demo" />
+
+### With a disabled option
+
+<ComponentPreview name="radio-group-disabled-demo" />
+
+## Accessibility
+
+Built on [Radix Radio Group](https://www.radix-ui.com/primitives/docs/components/radio-group),
+following the WAI-ARIA radiogroup pattern.
+
+- Arrow keys move between and select options; only one item is checked at a
+  time.
+- The group is reachable with <kbd>Tab</kbd>; focus lands on the checked item
+  (or the first item if none is selected).
+- Pair each `RadioGroupItem` with a `Label` via matching `id`/`htmlFor` so the
+  hit target and screen-reader name are correct.

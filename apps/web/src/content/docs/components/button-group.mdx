@@ -36,3 +36,17 @@ import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components
 | `orientation` (ButtonGroup) | `horizontal \| vertical` | `horizontal` |
 | `orientation` (ButtonGroupSeparator) | `horizontal \| vertical` | `vertical` |
 | `asChild` (ButtonGroupText) | `boolean` | `false` |
+
+All three parts also forward the native props of the element they render
+(`ButtonGroup` and `ButtonGroupText` render a `<div>`; `ButtonGroupSeparator`
+renders a `Separator`).
+
+## Examples
+
+### Vertical
+
+<ComponentPreview name="button-group-vertical-demo" />
+
+### With an input
+
+<ComponentPreview name="button-group-input-demo" />

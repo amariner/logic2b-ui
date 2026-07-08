@@ -19,3 +19,31 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 <Checkbox id="terms" />
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `checked` / `defaultChecked` | `boolean \| "indeterminate"` — controlled/uncontrolled state | — |
+| `onCheckedChange` | `(checked: boolean \| "indeterminate") => void` | — |
+| `disabled` | `boolean` | `false` |
+| `required` | `boolean` | `false` |
+| `name` / `value` | `string` — form field name and submitted value | — |
+
+## Examples
+
+### With text
+
+Pair the checkbox with a `Label` and helper description.
+
+<ComponentPreview name="checkbox-with-text-demo" />
+
+### Disabled
+
+<ComponentPreview name="checkbox-disabled-demo" />
+
+## Accessibility
+
+- Renders a native-equivalent control with `role="checkbox"` and reflects state via `aria-checked` (including the mixed/indeterminate state).
+- <kbd>Space</kbd> toggles the focused checkbox; it is reachable and focusable with <kbd>Tab</kbd>.
+- Associate a `Label` via `htmlFor` matching the checkbox `id` so clicking the text toggles it.

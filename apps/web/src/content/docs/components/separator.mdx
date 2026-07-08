@@ -20,3 +20,23 @@ import { Separator } from "@/components/ui/separator"
 <Separator />
 <Separator orientation="vertical" />
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `orientation` | `horizontal \| vertical` | `horizontal` |
+| `decorative` | `boolean` — when `true`, hidden from the accessibility tree | `true` |
+
+Vertical separators need a parent with a defined height (e.g. a flex row with
+`h-5`) to be visible.
+
+## Examples
+
+### Vertical
+
+<ComponentPreview name="separator-vertical-demo" />
+
+### As a labeled divider
+
+<ComponentPreview name="separator-labeled-demo" />

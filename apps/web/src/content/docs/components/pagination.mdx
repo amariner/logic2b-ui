@@ -38,3 +38,24 @@ import {
   </PaginationContent>
 </Pagination>
 ```
+
+## API
+
+`Pagination` is a set of styled elements — the parts are plain `nav`, `ul`,
+`li`, and `a` wrappers, so they accept the usual HTML attributes (`href`,
+`onClick`, etc.).
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `isActive` (PaginationLink) | `boolean` — marks the current page (`aria-current="page"`) | `false` |
+| `size` (PaginationLink) | `default \| sm \| lg \| icon` | `icon` |
+
+## Examples
+
+### Previous / next only
+
+<ComponentPreview name="pagination-simple-demo" />
+
+### With ellipsis
+
+<ComponentPreview name="pagination-ellipsis-demo" />

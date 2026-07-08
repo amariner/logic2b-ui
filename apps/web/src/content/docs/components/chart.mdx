@@ -1,0 +1,95 @@
+---
+title: Chart
+description: Composable charts built on Recharts, themed through your CSS tokens.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="chart-area-demo" wide />
+
+Charts are a thin, composable layer over [Recharts](https://recharts.org). You
+bring the Recharts primitives; logic2b gives you `ChartContainer` (theme +
+responsive wrapper), a `ChartConfig` type that maps each data key to a label and
+a color, and theme-aware `ChartTooltip` / `ChartLegend`. Colors come from the
+`--chart-1…5` tokens, so every chart tracks light and dark automatically.
+
+## Installation
+
+<Install name="chart" />
+
+## Usage
+
+```tsx
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+
+const chartData = [
+  { month: "January", desktop: 186 },
+  { month: "February", desktop: 305 },
+  { month: "March", desktop: 237 },
+]
+
+const chartConfig = {
+  desktop: { label: "Desktop", color: "var(--chart-1)" },
+} satisfies ChartConfig
+
+export function Example() {
+  return (
+    <ChartContainer config={chartConfig} className="h-[240px] w-full">
+      <AreaChart data={chartData}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Area dataKey="desktop" fill="var(--color-desktop)" stroke="var(--color-desktop)" />
+      </AreaChart>
+    </ChartContainer>
+  )
+}
+```
+
+Every key in `chartConfig` becomes a `--color-<key>` CSS variable inside the
+container, so you reference `var(--color-desktop)` rather than hardcoding a hue.
+
+## Examples
+
+### Bar
+
+<ComponentPreview name="chart-bar-demo" wide />
+
+### Line (multiple series)
+
+<ComponentPreview name="chart-line-multiple-demo" wide />
+
+### Stacked area
+
+<ComponentPreview name="chart-area-stacked-demo" wide />
+
+### Radar
+
+<ComponentPreview name="chart-radar-demo" wide />
+
+### Radial
+
+<ComponentPreview name="chart-radial-demo" wide />
+
+### Donut
+
+<ComponentPreview name="chart-pie-donut-demo" wide />
+
+## API
+
+| Export | Description |
+| --- | --- |
+| `ChartContainer` | Responsive wrapper. Props: `config: ChartConfig`, `children`. Emits the `--color-*` variables. |
+| `ChartConfig` | `Record<string, { label?: ReactNode; icon?: Component; color?: string; theme?: { light: string; dark: string } }>`. |
+| `ChartTooltip` | Recharts `Tooltip` wired to the theme. Use with `content={<ChartTooltipContent />}`. |
+| `ChartTooltipContent` | Themed tooltip body. Props: `hideLabel`, `hideIndicator`, `indicator` (`dot \| line \| dashed`), `nameKey`, `labelKey`. |
+| `ChartLegend` | Recharts `Legend` wrapper. Use with `content={<ChartLegendContent />}`. |
+| `ChartLegendContent` | Themed legend. Props: `hideIcon`, `nameKey`. |

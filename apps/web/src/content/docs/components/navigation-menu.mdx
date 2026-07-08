@@ -42,3 +42,24 @@ import {
 | --- | --- | --- |
 | `viewport` (NavigationMenu) | `boolean` | `true` |
 | `navigationMenuTriggerStyle()` | cva helper for plain link items styled like a trigger | — |
+
+## Examples
+
+### Link bar
+
+<ComponentPreview name="navigation-menu-links-demo" />
+
+### Inline dropdown
+
+<ComponentPreview name="navigation-menu-inline-demo" />
+
+## Accessibility
+
+Built on [Radix Navigation Menu](https://www.radix-ui.com/primitives/docs/components/navigation-menu).
+
+- Triggers are keyboard focusable; <kbd>Enter</kbd>/<kbd>Space</kbd> and the
+  arrow keys open and move through the menu.
+- <kbd>Esc</kbd> closes an open panel and restores focus to its trigger.
+- The active link is marked with `data-active` (mapped to `aria-current`) so
+  screen readers announce the current page.
+- Content panels are labelled by their trigger for correct announcement.

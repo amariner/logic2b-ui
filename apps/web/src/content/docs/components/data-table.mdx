@@ -1,0 +1,64 @@
+---
+title: Data Table
+description: Filtering, sorting and pagination composed over the Table component.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="data-table-demo" wide />
+
+A data table isn't a single component — it's a pattern you compose from
+[table](/docs/components/table), [input](/docs/components/input) and
+[button](/docs/components/button), driven by your own state. The example above is
+fully self-contained (no table library): a text filter, a sortable amount column
+and client-side pagination in ~40 lines of React.
+
+For large datasets or complex column models, wire the same markup to
+[TanStack Table](https://tanstack.com/table) — logic2b's Table primitives are
+unstyled enough to drop straight in.
+
+## Installation
+
+```bash
+npx logic2b@latest add table input button badge
+```
+
+## Anatomy
+
+```tsx
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+
+export function DataTable() {
+  const [filter, setFilter] = React.useState("")
+  const [asc, setAsc] = React.useState(false)
+  const [page, setPage] = React.useState(0)
+
+  const rows = React.useMemo(() => {
+    const filtered = data.filter((d) => d.email.includes(filter))
+    return [...filtered].sort((a, b) => (asc ? a.amount - b.amount : b.amount - a.amount))
+  }, [filter, asc])
+
+  // slice `rows` by page and render <Table> …
+}
+```
+
+## Building blocks
+
+| Piece | Component | Responsibility |
+| --- | --- | --- |
+| Toolbar filter | `Input` | Controlled text that narrows the row set. |
+| Sortable header | `Button variant="ghost"` in `TableHead` | Toggles the sort direction. |
+| Rows | `Table` / `TableRow` / `TableCell` | Render the current page. |
+| Status cell | `Badge` | Maps a value to a variant (`secondary`/`destructive`/`outline`). |
+| Pager | `Button variant="outline"` | Previous / Next with disabled edges. |
+
+## Notes
+
+- Keep sorting and filtering in `useMemo` so they only recompute when their
+  inputs change.
+- Reset the page index to `0` whenever the filter changes, and clamp the current
+  page to the available range so an empty result never shows a blank table.
+- For server-side data, lift `filter`/`sort`/`page` into query params and fetch
+  per page instead of slicing in the client.

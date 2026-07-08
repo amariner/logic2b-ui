@@ -48,5 +48,29 @@ import {
 
 | Prop | Type | Default |
 | --- | --- | --- |
-| `open` | `boolean` | — |
-| `onOpenChange` | `(open: boolean) => void` | — |
+| `open` / `defaultOpen` (AlertDialog) | `boolean` — controlled/uncontrolled open state | — |
+| `onOpenChange` (AlertDialog) | `(open: boolean) => void` | — |
+| `asChild` (AlertDialogTrigger / Action / Cancel) | `boolean` | `false` |
+
+`AlertDialogAction` and `AlertDialogCancel` render with the default and outline button variants respectively — pass `className` to restyle (e.g. a destructive action).
+
+## Examples
+
+### Destructive action
+
+Style the confirm button as destructive for irreversible operations.
+
+<ComponentPreview name="alert-dialog-destructive-demo" />
+
+### Controlled
+
+Open the dialog from your own state with `open` and `onOpenChange`.
+
+<ComponentPreview name="alert-dialog-controlled-demo" />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Alert Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/) and traps focus while open.
+- Opening moves focus to the dialog; closing returns it to the trigger.
+- <kbd>Escape</kbd> closes the dialog and fires `AlertDialogCancel`. Unlike a plain dialog, clicking the overlay does not dismiss it — a response is required.
+- The content is labelled by `AlertDialogTitle` and described by `AlertDialogDescription`.

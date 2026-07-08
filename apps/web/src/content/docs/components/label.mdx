@@ -19,3 +19,26 @@ import { Label } from "@/components/ui/label"
 
 <Label htmlFor="email">Your email address</Label>
 ```
+
+## API
+
+`Label` forwards every prop to the underlying Radix `Label.Root` (a native
+`<label>`), so all standard label attributes apply.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `htmlFor` | `string` — id of the control this label describes | — |
+| `className` | `string` — merged with the default styles | — |
+
+It also picks up `peer-disabled` and `group-data-[disabled=true]` styles
+automatically when placed next to a disabled control.
+
+## Examples
+
+### With a checkbox
+
+<ComponentPreview name="label-checkbox-demo" />
+
+### Required field
+
+<ComponentPreview name="label-required-demo" />

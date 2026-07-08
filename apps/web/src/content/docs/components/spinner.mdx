@@ -28,4 +28,15 @@ import { Spinner } from "@/components/ui/spinner"
 | `className` | `string` | — |
 
 Renders lucide-react's `Loader2Icon` with `animate-spin`; any prop accepted by an
-`<svg>` element (e.g. `className` for size/color) is passed through.
+`<svg>` element (e.g. `className` for size/color) is passed through. It ships with
+`role="status"` and `aria-label="Loading"` so assistive technology announces it.
+
+## Examples
+
+### Sizes
+
+<ComponentPreview name="spinner-sizes-demo" />
+
+### In a button
+
+<ComponentPreview name="spinner-button-demo" />

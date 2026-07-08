@@ -28,3 +28,16 @@ import { Kbd, KbdGroup } from "@/components/ui/kbd"
 | Prop | Type | Default |
 | --- | --- | --- |
 | `className` (Kbd / KbdGroup) | `string` | — |
+
+Both render plain elements (`Kbd` a `<kbd>`, `KbdGroup` a `<div>`) and forward
+all native attributes. Use `KbdGroup` to lay out a multi-key combination.
+
+## Examples
+
+### In a Button
+
+<ComponentPreview name="kbd-button-demo" />
+
+### Key Combinations
+
+<ComponentPreview name="kbd-combination-demo" />

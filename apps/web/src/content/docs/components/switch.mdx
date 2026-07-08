@@ -19,3 +19,37 @@ import { Switch } from "@/components/ui/switch"
 
 <Switch id="airplane-mode" />
 ```
+
+## API
+
+Built on Radix `Switch.Root`; forwards all of its props.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `checked` | `boolean` — controlled state | — |
+| `defaultChecked` | `boolean` | — |
+| `onCheckedChange` | `(checked: boolean) => void` | — |
+| `disabled` | `boolean` | `false` |
+| `required` | `boolean` | `false` |
+| `name` | `string` — submitted with a form | — |
+| `value` | `string` | `on` |
+
+## Examples
+
+### Controlled
+
+<ComponentPreview name="switch-controlled-demo" />
+
+### Disabled
+
+<ComponentPreview name="switch-disabled-demo" />
+
+### Settings list
+
+<ComponentPreview name="switch-settings-demo" />
+
+## Accessibility
+
+- Renders a `switch` role element that reflects its on/off state to assistive technology.
+- Toggle with `Space` or `Enter` when focused; fully reachable with `Tab`.
+- Associate a `Label` via `htmlFor` (or wrap the control) so the state has an accessible name.

@@ -45,4 +45,31 @@ Built on [input-otp](https://github.com/guilhermerodz/input-otp).
 | --- | --- | --- |
 | `maxLength` (InputOTP) | `number` | — |
 | `value` / `onChange` (InputOTP) | `string` / `(value: string) => void` | — |
+| `pattern` (InputOTP) | `string` — regex allow-list (e.g. `REGEXP_ONLY_DIGITS`) | — |
+| `onComplete` (InputOTP) | `(value: string) => void` — fired when all slots fill | — |
+| `disabled` (InputOTP) | `boolean` | `false` |
 | `index` (InputOTPSlot) | `number` — which slot to render | — |
+
+## Examples
+
+### Digits Only
+
+Pass a `pattern` to restrict input — `REGEXP_ONLY_DIGITS` is re-exported by
+`input-otp`.
+
+<ComponentPreview name="input-otp-pattern-demo" />
+
+### Controlled
+
+<ComponentPreview name="input-otp-controlled-demo" />
+
+## Accessibility
+
+- Renders a single real `<input>` behind the slots, so browser and password
+  manager autofill of one-time codes (`autocomplete="one-time-code"`) works and
+  the field is announced normally by screen readers.
+- Fully keyboard operable: typing advances through slots, `Backspace` moves
+  back, and arrow keys plus paste are handled by the underlying
+  [input-otp](https://github.com/guilhermerodz/input-otp) primitive.
+- Invalid state is driven by `aria-invalid`, which styles the active slot with
+  the destructive ring.

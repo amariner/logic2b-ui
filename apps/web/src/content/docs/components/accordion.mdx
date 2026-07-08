@@ -37,5 +37,29 @@ import {
 | Prop | Type | Default |
 | --- | --- | --- |
 | `type` (Accordion) | `single \| multiple` | — |
-| `collapsible` (Accordion) | `boolean` — allow closing the open item | `false` |
-| `value` (AccordionItem) | `string` | — |
+| `collapsible` (Accordion) | `boolean` — allow closing the open item (single mode) | `false` |
+| `value` / `defaultValue` (Accordion) | `string \| string[]` — controlled/uncontrolled open item(s) | — |
+| `onValueChange` (Accordion) | `(value: string \| string[]) => void` | — |
+| `disabled` (Accordion / AccordionItem) | `boolean` | `false` |
+| `value` (AccordionItem) | `string` — unique item id (required) | — |
+
+## Examples
+
+### Multiple
+
+Set `type="multiple"` to let more than one section stay open at a time.
+
+<ComponentPreview name="accordion-multiple-demo" />
+
+### Controlled
+
+Drive the open item externally with `value` and `onValueChange`.
+
+<ComponentPreview name="accordion-controlled-demo" />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Accordion pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/).
+- <kbd>Space</kbd> or <kbd>Enter</kbd> toggles the focused section.
+- <kbd>Arrow Up</kbd> / <kbd>Arrow Down</kbd> move focus between triggers, and <kbd>Home</kbd> / <kbd>End</kbd> jump to the first/last.
+- Each trigger sits inside a heading and exposes `aria-expanded` and `aria-controls` linking it to its panel.

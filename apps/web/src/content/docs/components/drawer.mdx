@@ -50,3 +50,25 @@ drag-to-dismiss and snap points — better suited for mobile bottom sheets.
 | --- | --- | --- |
 | `direction` (Drawer) | `top \| bottom \| left \| right` | `bottom` |
 | `shouldScaleBackground` (Drawer) | `boolean` | — |
+| `open` / `onOpenChange` (Drawer) | `boolean` / `(open: boolean) => void` | — |
+| `snapPoints` (Drawer) | `(number \| string)[]` | — |
+
+## Examples
+
+### Right Direction
+
+<ComponentPreview name="drawer-direction-demo" />
+
+### Scrollable Content
+
+<ComponentPreview name="drawer-content-demo" />
+
+## Accessibility
+
+- Extends Radix [Dialog](https://www.radix-ui.com/primitives/docs/components/dialog)
+  via [vaul](https://vaul.emilkowal.ski/), so focus is trapped while open and
+  restored to the trigger on close.
+- Provide a `DrawerTitle` (and ideally a `DrawerDescription`) so screen readers
+  announce the drawer — vaul wires them up as the accessible name/description.
+- Dismissable with `Escape`, an overlay click, or a drag/swipe toward the edge
+  it slides in from.

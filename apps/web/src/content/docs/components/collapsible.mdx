@@ -33,6 +33,27 @@ import {
 
 | Prop | Type | Default |
 | --- | --- | --- |
-| `open` | `boolean` | — |
+| `open` / `defaultOpen` | `boolean` — controlled/uncontrolled state | — |
 | `onOpenChange` | `(open: boolean) => void` | — |
 | `disabled` | `boolean` | `false` |
+| `asChild` (CollapsibleTrigger) | `boolean` | `false` |
+
+## Examples
+
+### Controlled
+
+Drive the open state with `open` and `onOpenChange`.
+
+<ComponentPreview name="collapsible-controlled-demo" />
+
+### FAQ item
+
+Compose a self-contained expandable panel with a bordered trigger.
+
+<ComponentPreview name="collapsible-faq-demo" />
+
+## Accessibility
+
+- The trigger exposes `aria-expanded` and `aria-controls` pointing at the collapsible content.
+- <kbd>Space</kbd> or <kbd>Enter</kbd> on the focused trigger toggles the panel.
+- When collapsed the content is hidden from assistive technology and removed from the tab order.

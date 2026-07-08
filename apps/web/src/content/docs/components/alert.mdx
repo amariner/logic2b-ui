@@ -22,3 +22,25 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
   <AlertDescription>Something went wrong.</AlertDescription>
 </Alert>
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` (Alert) | `default \| destructive` | `default` |
+
+An optional leading `svg` icon is placed in its own column automatically. `AlertTitle` and `AlertDescription` accept the standard `div` props.
+
+## Examples
+
+### With icon
+
+Drop a Lucide icon as the first child to render it alongside the title.
+
+<ComponentPreview name="alert-with-icon-demo" />
+
+### Destructive
+
+Use `variant="destructive"` to signal an error state.
+
+<ComponentPreview name="alert-destructive-demo" />

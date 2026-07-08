@@ -32,3 +32,37 @@ import {
   </SelectContent>
 </Select>
 ```
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` / `defaultValue` (Select) | `string` | — |
+| `onValueChange` (Select) | `(value: string) => void` | — |
+| `disabled` (Select) | `boolean` | `false` |
+| `size` (SelectTrigger) | `sm \| default` | `default` |
+| `position` (SelectContent) | `popper \| item-aligned` | `popper` |
+| `disabled` (SelectItem) | `boolean` | `false` |
+
+## Examples
+
+### Grouped options
+
+<ComponentPreview name="select-groups-demo" />
+
+### With a disabled option
+
+<ComponentPreview name="select-disabled-demo" />
+
+## Accessibility
+
+Built on [Radix Select](https://www.radix-ui.com/primitives/docs/components/select),
+following the WAI-ARIA listbox pattern.
+
+- Fully keyboard operable: open with <kbd>Enter</kbd>/<kbd>Space</kbd>/arrow
+  keys, move with arrows, and type-ahead to jump to an option.
+- <kbd>Esc</kbd> closes the list and focus returns to the trigger.
+- The trigger exposes the selected value to assistive technology; use
+  `SelectValue`'s `placeholder` for the empty state.
+- Group related options with `SelectGroup` + `SelectLabel` for clearer
+  announcements.

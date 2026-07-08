@@ -46,3 +46,25 @@ imperative API with `setApi`.
 | `opts` (Carousel) | Embla `EmblaOptionsType` | — |
 | `plugins` (Carousel) | Embla plugins array | — |
 | `setApi` (Carousel) | `(api: CarouselApi) => void` | — |
+
+`CarouselPrevious` and `CarouselNext` accept the standard `Button` props (`variant`, `size`) and are automatically disabled at the ends.
+
+## Examples
+
+### Multiple items
+
+Set the `basis` of each `CarouselItem` to show several slides at once.
+
+<ComponentPreview name="carousel-multiple-demo" />
+
+### Vertical
+
+Use `orientation="vertical"` to scroll slides top to bottom.
+
+<ComponentPreview name="carousel-vertical-demo" />
+
+## Accessibility
+
+- The root has `role="region"` with `aria-roledescription="carousel"`, and each slide is a `role="group"` labelled as a slide.
+- When the carousel is focused, <kbd>Arrow Left</kbd> and <kbd>Arrow Right</kbd> scroll to the previous/next slide.
+- The previous/next buttons include `sr-only` labels and become `disabled` when there is nothing more to scroll to.

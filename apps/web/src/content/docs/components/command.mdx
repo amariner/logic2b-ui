@@ -48,3 +48,40 @@ import { CommandDialog, CommandInput, CommandList } from "@/components/ui/comman
   <CommandList>...</CommandList>
 </CommandDialog>
 ```
+
+## API
+
+Built on [cmdk](https://cmdk.paco.me/). Props flow through to the underlying
+primitives.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `shouldFilter` (Command) | `boolean` — filter items automatically as you type | `true` |
+| `filter` (Command) | `(value, search, keywords) => number` — custom scoring | — |
+| `value` / `onValueChange` (Command) | `string` / `(value: string) => void` — control the highlighted item | — |
+| `value` (CommandItem) | `string` — value used for filtering | text content |
+| `onSelect` (CommandItem) | `(value: string) => void` | — |
+| `disabled` (CommandItem) | `boolean` | `false` |
+| `title` / `description` (CommandDialog) | `string` — accessible labels for the dialog | `Command Palette` / `Search for a command to run...` |
+| `showCloseButton` (CommandDialog) | `boolean` | `true` |
+
+## Examples
+
+### With Icons
+
+<ComponentPreview name="command-icons-demo" />
+
+### Command Dialog
+
+Render the menu inside a modal and toggle it with a keyboard shortcut.
+
+<ComponentPreview name="command-dialog-demo" />
+
+## Accessibility
+
+- Fully keyboard driven: the arrow keys move between items, `Enter` runs the
+  highlighted item, and `Home` / `End` jump to the ends of the list.
+- `CommandInput` is a combobox that owns the list via `aria-activedescendant`,
+  so focus stays in the input while items are announced as active.
+- `CommandDialog` traps focus, closes on `Escape`, and ships an `sr-only` title
+  and description so screen readers announce the palette on open.

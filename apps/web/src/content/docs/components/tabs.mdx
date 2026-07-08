@@ -34,3 +34,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 | `defaultValue` (Tabs) | `string` | — |
 | `value` / `onValueChange` (Tabs) | `string` / `(value: string) => void` | — |
 | `orientation` (Tabs) | `horizontal \| vertical` | `horizontal` |
+| `value` (TabsTrigger / TabsContent) | `string` — links a trigger to its panel | — |
+| `disabled` (TabsTrigger) | `boolean` | `false` |
+
+## Examples
+
+### With icons
+
+<ComponentPreview name="tabs-icons-demo" />
+
+### Disabled tab
+
+<ComponentPreview name="tabs-disabled-demo" />
+
+## Accessibility
+
+- Follows the WAI-ARIA tabs pattern: `Tab` moves focus into the active trigger, then `Arrow` keys move between triggers.
+- `Home` / `End` jump to the first / last trigger; disabled triggers are skipped.
+- Each `TabsContent` is exposed as a `tabpanel` labelled by its trigger, so the relationship is announced.

@@ -41,3 +41,26 @@ import {
 | `variant` (MenubarItem) | `default \| destructive` | `default` |
 | `inset` (MenubarItem / Label / SubTrigger) | `boolean` | `false` |
 | `checked` (MenubarCheckboxItem) | `boolean` | — |
+| `value` (MenubarRadioGroup / MenubarRadioItem) | `string` | — |
+
+## Examples
+
+### Checkboxes and radios
+
+<ComponentPreview name="menubar-checkbox-demo" />
+
+### Submenus
+
+<ComponentPreview name="menubar-submenu-demo" />
+
+## Accessibility
+
+Built on [Radix Menubar](https://www.radix-ui.com/primitives/docs/components/menubar),
+which follows the WAI-ARIA menubar pattern.
+
+- Arrow keys move focus between menus and items; <kbd>Enter</kbd> or
+  <kbd>Space</kbd> activates the focused item.
+- <kbd>Esc</kbd> closes the open menu and returns focus to its trigger.
+- Typeahead lets you jump to an item by typing its label.
+- Checkbox and radio items expose the correct role and checked state to
+  assistive technology.

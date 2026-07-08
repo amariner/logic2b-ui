@@ -22,3 +22,30 @@ import { Input } from "@/components/ui/input"
 
 Supports every native input type including `file`. Invalid state styling via
 `aria-invalid`.
+
+## API
+
+`Input` renders a native `<input>` and forwards every standard attribute
+(`React.ComponentProps<"input">`).
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `type` | `string` — any native input type (`text`, `email`, `file`, …) | `text` |
+| `disabled` | `boolean` | `false` |
+| `aria-invalid` | `boolean` — applies the destructive ring/border | — |
+| `placeholder` | `string` | — |
+| `className` | `string` | — |
+
+## Examples
+
+### File
+
+<ComponentPreview name="input-file-demo" />
+
+### Disabled
+
+<ComponentPreview name="input-disabled-demo" />
+
+### Invalid
+
+<ComponentPreview name="input-invalid-demo" />
