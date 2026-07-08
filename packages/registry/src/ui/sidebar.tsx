@@ -6,6 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
 
 import { cn } from "@/registry/lib/utils"
+import { useIsMobile } from "@/registry/hooks/use-mobile"
 import { Button } from "@/registry/ui/button"
 import { Input } from "@/registry/ui/input"
 import { Separator } from "@/registry/ui/separator"
@@ -23,28 +24,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/registry/ui/tooltip"
-
-const MOBILE_BREAKPOINT = 768
-
-/** Sidebar-only viewport check: separate from any app-level media query hook
-    since this is the only registry component that needs it. */
-function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
-    undefined
-  )
-
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    }
-    mql.addEventListener("change", onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener("change", onChange)
-  }, [])
-
-  return !!isMobile
-}
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7

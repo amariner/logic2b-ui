@@ -69,6 +69,7 @@ export const items: RegistryItem[] = [
     dependencies: ["radix-ui", "lucide-react", "class-variance-authority"],
     registryDependencies: [
       "utils",
+      "use-mobile",
       "button",
       "input",
       "separator",

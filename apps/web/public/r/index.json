@@ -1,5 +1,17 @@
 [
   {
+    "name": "theme",
+    "type": "registry:style",
+    "title": "logic2b theme",
+    "description": "The logic2b design system: monochrome oklch token ladder (light + dark), the 5-stop chart palette, 0.625rem radius, and Space Grotesk / Inter font wiring. Install this once so every component renders as logic2b, not stock shadcn."
+  },
+  {
+    "name": "use-mobile",
+    "type": "registry:hook",
+    "title": "useIsMobile",
+    "description": "A React hook that tracks whether the viewport is below the mobile breakpoint (768px) via matchMedia. Used by sidebar and any responsive component."
+  },
+  {
     "name": "utils",
     "type": "registry:lib",
     "description": "The cn() helper that merges Tailwind classes with clsx and tailwind-merge. Required by every component."
