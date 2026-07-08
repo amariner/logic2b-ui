@@ -6,6 +6,8 @@ import { getSearchIndex } from "@/lib/search-index";
 interface Props {
   title: string;
   description?: string;
+  /** Social card image (absolute or root-relative). Defaults to the brand card. */
+  image?: string;
   /** Header CTA: "new" links to /create; "get-code" swaps in the creator
       actions (Shuffle + Get Code) that talk to the CreateStudio island. */
   cta?: "new" | "get-code";
@@ -14,12 +16,14 @@ interface Props {
 const {
   title,
   description = "logic2b ui — Build interfaces fast, AI-assisted. Beautifully designed components you copy into your project and make your own.",
+  image = "/og.svg",
   cta = "new",
 } = Astro.props;
 
 // Full-bleed header on every page (edge-to-edge with consistent padding).
 const headerInner = "flex h-14 w-full items-center gap-6 px-6";
 const searchItems = await getSearchIndex();
+const ogImage = new URL(image, Astro.site ?? Astro.url).href;
 ---
 
 <!doctype html>
@@ -28,12 +32,21 @@ const searchItems = await getSearchIndex();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta property="og:site_name" content="logic2b ui" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url.href} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="canonical" href={Astro.url.href} />
+    <link rel="icon" href="/logo-mark.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
     <title>{title}</title>
     <script is:inline>
       // Anti-flash dark mode: runs before paint. Dark is the brand default
@@ -43,6 +56,11 @@ const searchItems = await getSearchIndex();
     </script>
   </head>
   <body class="min-h-svh bg-background font-sans antialiased">
+    <a
+      href="#main"
+      class="sr-only rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[100]"
+      >Skip to content</a
+    >
     <header
       class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur"
     >
@@ -144,7 +162,7 @@ const searchItems = await getSearchIndex();
         <a href="/create" class="rounded-md px-2 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Create</a>
       </nav>
     </header>
-    <slot />
+    <div id="main"><slot /></div>
     <script is:inline>
       document.getElementById("theme-toggle")?.addEventListener("click", () => {
         const isDark = document.documentElement.classList.toggle("dark");

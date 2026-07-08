@@ -10,6 +10,9 @@ export default defineConfig({
   site: "https://ui.logic2b.com",
   output: "static",
   adapter: cloudflare(),
+  redirects: {
+    "/charts": "/charts/area",
+  },
   integrations: [react(), mdx()],
   vite: {
     plugins: [tailwindcss()],
