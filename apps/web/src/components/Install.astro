@@ -1,0 +1,109 @@
+---
+import { Code } from "astro:components";
+
+interface Props {
+  /** Registry item name, e.g. "button" or "theme". */
+  name: string;
+}
+
+const { name } = Astro.props;
+
+// Read the built registry payload so the Manual tab shows the real source —
+// same JSON the CLI installs. Kept in sync automatically at build time.
+const payloads = import.meta.glob<Record<string, any>>("../../public/r/*.json", {
+  eager: true,
+});
+const item = payloads[`../../public/r/${name}.json`] as
+  | {
+      dependencies?: string[];
+      registryDependencies?: string[];
+      files?: { path: string; content: string }[];
+    }
+  | undefined;
+
+const deps = item?.dependencies ?? [];
+const files = item?.files ?? [];
+const cli =
+  name === "theme" ? "npx logic2b@latest init" : `npx logic2b@latest add ${name}`;
+const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
+---
+
+<div class="install-tabs mt-4" data-uid={uid}>
+  <div class="flex items-center gap-1 border-b">
+    <button
+      class="itab -mb-px border-b-2 border-primary px-3 py-1.5 text-sm font-medium"
+      data-tab="cli">CLI</button
+    >
+    <button
+      class="itab -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground"
+      data-tab="manual">Manual</button
+    >
+  </div>
+
+  <div class="ipanel-cli pt-4">
+    <Code code={cli} lang="bash" theme="github-dark-default" />
+  </div>
+
+  <div class="ipanel-manual hidden pt-4">
+    {
+      deps.length > 0 && (
+        <>
+          <p class="mb-2 text-sm text-muted-foreground">
+            Install the dependencies:
+          </p>
+          <Code
+            code={`npm install ${deps.join(" ")}`}
+            lang="bash"
+            theme="github-dark-default"
+          />
+        </>
+      )
+    }
+    {
+      files.map((f) => (
+        <div class="mt-4">
+          <p class="mb-2 text-sm text-muted-foreground">
+            Copy into <code class="font-mono text-foreground">{f.path}</code>:
+          </p>
+          <div class="max-h-[420px] overflow-auto rounded-lg border [&_pre]:m-0 [&_pre]:rounded-none [&_pre]:border-0 [&_pre]:p-4">
+            <Code
+              code={f.content}
+              lang={f.path.endsWith(".css") ? "css" : "tsx"}
+              theme="github-dark-default"
+            />
+          </div>
+        </div>
+      ))
+    }
+    {
+      files.length === 0 && (
+        <p class="text-sm text-muted-foreground">
+          This item has no source files to copy — see the CLI tab.
+        </p>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll(".install-tabs").forEach((root) => {
+    const tabs = root.querySelectorAll<HTMLButtonElement>(".itab");
+    const panels: Record<string, Element | null> = {
+      cli: root.querySelector(".ipanel-cli"),
+      manual: root.querySelector(".ipanel-manual"),
+    };
+    tabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabs.forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle("border-primary", active);
+          b.classList.toggle("border-transparent", !active);
+          b.classList.toggle("text-muted-foreground", !active);
+        });
+        Object.entries(panels).forEach(([key, panel]) => {
+          panel?.classList.toggle("hidden", key !== btn.dataset.tab);
+        });
+      });
+    });
+  });
+</script>
