@@ -189,4 +189,41 @@ export const items: RegistryItem[] = [
       { path: "src/blocks/signup-02/signup-form.tsx", type: "registry:block" },
     ],
   },
+  {
+    name: "navbar-01",
+    type: "registry:block",
+    title: "Marketing navbar",
+    description:
+      "A sticky top navigation bar with a logo, inline links, sign-in and CTA buttons, and a mobile menu button. Use as a marketing site header.",
+    categories: ["marketing"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["button"],
+    files: [{ path: "src/blocks/navbar-01/navbar.tsx", type: "registry:block" }],
+  },
+  {
+    name: "feature-grid-01",
+    type: "registry:block",
+    title: "Feature grid",
+    description:
+      "A responsive grid of feature cards, each with an icon, title and description. Use to showcase product capabilities on a landing page.",
+    categories: ["marketing"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [],
+    files: [
+      {
+        path: "src/blocks/feature-grid-01/feature-grid.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "footer-01",
+    type: "registry:block",
+    title: "Site footer",
+    description:
+      "A multi-column site footer with a brand blurb, link columns, a copyright line and social icons. Use as the bottom of a marketing site.",
+    categories: ["marketing"],
+    registryDependencies: [],
+    files: [{ path: "src/blocks/footer-01/footer.tsx", type: "registry:block" }],
+  },
 ]

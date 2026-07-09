@@ -390,5 +390,32 @@
     "categories": [
       "authentication"
     ]
+  },
+  {
+    "name": "navbar-01",
+    "type": "registry:block",
+    "title": "Marketing navbar",
+    "description": "A sticky top navigation bar with a logo, inline links, sign-in and CTA buttons, and a mobile menu button. Use as a marketing site header.",
+    "categories": [
+      "marketing"
+    ]
+  },
+  {
+    "name": "feature-grid-01",
+    "type": "registry:block",
+    "title": "Feature grid",
+    "description": "A responsive grid of feature cards, each with an icon, title and description. Use to showcase product capabilities on a landing page.",
+    "categories": [
+      "marketing"
+    ]
+  },
+  {
+    "name": "footer-01",
+    "type": "registry:block",
+    "title": "Site footer",
+    "description": "A multi-column site footer with a brand blurb, link columns, a copyright line and social icons. Use as the bottom of a marketing site.",
+    "categories": [
+      "marketing"
+    ]
   }
 ]
