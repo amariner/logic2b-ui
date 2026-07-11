@@ -597,5 +597,32 @@
     "categories": [
       "marketing"
     ]
+  },
+  {
+    "name": "chat-01",
+    "type": "registry:block",
+    "title": "Chat",
+    "description": "A chat card with a contact header, a scrollable message thread with user/agent bubbles, and a working message input. Use for support chat or messaging UIs.",
+    "categories": [
+      "application"
+    ]
+  },
+  {
+    "name": "team-01",
+    "type": "registry:block",
+    "title": "Team members",
+    "description": "A team management card listing members with avatars and per-member role selects, plus an invite-by-email row. Use in settings or workspace admin pages.",
+    "categories": [
+      "application"
+    ]
+  },
+  {
+    "name": "products-01",
+    "type": "registry:block",
+    "title": "Products table",
+    "description": "A products data table with live search, status badges, per-row action menus and responsive columns. Use for catalog, inventory or CRUD list pages.",
+    "categories": [
+      "application"
+    ]
   }
 ]

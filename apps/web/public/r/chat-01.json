@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chat-01",
+  "type": "registry:block",
+  "title": "Chat",
+  "description": "A chat card with a contact header, a scrollable message thread with user/agent bubbles, and a working message input. Use for support chat or messaging UIs.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "avatar",
+    "button",
+    "card",
+    "input"
+  ],
+  "files": [
+    {
+      "path": "blocks/chat-01/chat.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { SendIcon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Avatar, AvatarFallback, AvatarImage } from \"@/components/ui/avatar\"\nimport { Button } from \"@/components/ui/button\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { Input } from \"@/components/ui/input\"\n\ntype Message = {\n  role: \"agent\" | \"user\"\n  content: string\n}\n\nconst initialMessages: Message[] = [\n  { role: \"agent\", content: \"Hi, how can I help you today?\" },\n  { role: \"user\", content: \"Hey, I'm having trouble with my account.\" },\n  { role: \"agent\", content: \"What seems to be the problem?\" },\n  { role: \"user\", content: \"I can't log in.\" },\n]\n\nexport function Chat({ className, ...props }: React.ComponentProps<\"div\">) {\n  const [messages, setMessages] = React.useState<Message[]>(initialMessages)\n  const [input, setInput] = React.useState(\"\")\n  const endRef = React.useRef<HTMLDivElement>(null)\n\n  React.useEffect(() => {\n    endRef.current?.scrollIntoView({ block: \"nearest\" })\n  }, [messages])\n\n  function send(event: React.FormEvent) {\n    event.preventDefault()\n    const content = input.trim()\n    if (!content) return\n    setMessages((prev) => [...prev, { role: \"user\", content }])\n    setInput(\"\")\n  }\n\n  return (\n    <div\n      className={cn(\n        \"mx-auto flex w-full max-w-lg flex-col px-6 py-16\",\n        className\n      )}\n      {...props}\n    >\n      <Card className=\"flex h-[560px] flex-col\">\n        <CardHeader className=\"flex flex-row items-center gap-3 space-y-0 border-b\">\n          <Avatar>\n            <AvatarImage src=\"https://github.com/shadcn.png\" alt=\"Support\" />\n            <AvatarFallback>SD</AvatarFallback>\n          </Avatar>\n          <div>\n            <CardTitle className=\"text-sm\">Sofia Davis</CardTitle>\n            <CardDescription>support@example.com</CardDescription>\n          </div>\n        </CardHeader>\n        <CardContent className=\"flex-1 space-y-4 overflow-y-auto py-4\">\n          {messages.map((message, index) => (\n            <div\n              key={index}\n              className={cn(\n                \"flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm\",\n                message.role === \"user\"\n                  ? \"ml-auto bg-primary text-primary-foreground\"\n                  : \"bg-muted\"\n              )}\n            >\n              {message.content}\n            </div>\n          ))}\n          <div ref={endRef} />\n        </CardContent>\n        <CardFooter className=\"border-t pt-6\">\n          <form onSubmit={send} className=\"flex w-full items-center gap-2\">\n            <Input\n              value={input}\n              onChange={(event) => setInput(event.target.value)}\n              placeholder=\"Type your message...\"\n              aria-label=\"Message\"\n            />\n            <Button type=\"submit\" size=\"icon\" disabled={!input.trim()}>\n              <SendIcon className=\"size-4\" />\n              <span className=\"sr-only\">Send</span>\n            </Button>\n          </form>\n        </CardFooter>\n      </Card>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "application"
+  ]
+}

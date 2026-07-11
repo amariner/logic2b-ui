@@ -19,12 +19,18 @@ export const GET: APIRoute = async () => {
     "/charts/bar",
     "/charts/line",
     "/charts/pie",
+    "/charts/radar",
+    "/charts/radial",
   ];
 
   const docRoutes = docs.map((d) => `/docs/${d.id}`);
 
+  // Charts are registry:block but live under /charts, not /blocks/preview.
   const blockRoutes = registryIndex
-    .filter((i: { type: string }) => i.type === "registry:block")
+    .filter(
+      (i: { type: string; categories?: string[] }) =>
+        i.type === "registry:block" && !i.categories?.includes("charts"),
+    )
     .map((i: { name: string }) => `/blocks/preview/${i.name}`);
 
   const urls = [...new Set([...staticRoutes, ...docRoutes, ...blockRoutes])];

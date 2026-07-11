@@ -226,4 +226,50 @@ export const items: RegistryItem[] = [
     registryDependencies: [],
     files: [{ path: "src/blocks/footer-01/footer.tsx", type: "registry:block" }],
   },
+  {
+    name: "chat-01",
+    type: "registry:block",
+    title: "Chat",
+    description:
+      "A chat card with a contact header, a scrollable message thread with user/agent bubbles, and a working message input. Use for support chat or messaging UIs.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["avatar", "button", "card", "input"],
+    files: [{ path: "src/blocks/chat-01/chat.tsx", type: "registry:block" }],
+  },
+  {
+    name: "team-01",
+    type: "registry:block",
+    title: "Team members",
+    description:
+      "A team management card listing members with avatars and per-member role selects, plus an invite-by-email row. Use in settings or workspace admin pages.",
+    categories: ["application"],
+    registryDependencies: ["avatar", "button", "card", "input", "select", "separator"],
+    files: [
+      { path: "src/blocks/team-01/team-members.tsx", type: "registry:block" },
+    ],
+  },
+  {
+    name: "products-01",
+    type: "registry:block",
+    title: "Products table",
+    description:
+      "A products data table with live search, status badges, per-row action menus and responsive columns. Use for catalog, inventory or CRUD list pages.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "badge",
+      "button",
+      "card",
+      "dropdown-menu",
+      "input",
+      "table",
+    ],
+    files: [
+      {
+        path: "src/blocks/products-01/products-table.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
 ]

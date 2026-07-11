@@ -2,7 +2,13 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import registryIndex from "../../../public/r/index.json";
 
-const blocks = registryIndex.filter((item) => item.type === "registry:block");
+// Charts are registry:block too (they install like blocks) but have their own
+// gallery at /charts — keep them off this page.
+const blocks = registryIndex.filter(
+  (item) =>
+    item.type === "registry:block" &&
+    !(item as { categories?: string[] }).categories?.includes("charts"),
+);
 ---
 
 <BaseLayout
