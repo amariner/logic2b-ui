@@ -8,6 +8,8 @@
     "strict": true,
     "skipLibCheck": true,
     "declaration": false,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "types": ["node"]
   },
   "include": ["src"]
