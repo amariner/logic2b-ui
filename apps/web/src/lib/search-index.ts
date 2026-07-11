@@ -10,17 +10,12 @@ export type SearchIndexItem = {
   group: SearchGroup;
 };
 
-const CHARTS: SearchIndexItem[] = [
-  ["area", "Area charts — filled line charts for trends over a range."],
-  ["bar", "Bar charts — compare values across categories."],
-  ["line", "Line charts — track a value over time."],
-  ["pie", "Pie & donut charts — show parts of a whole."],
-].map(([slug, description]) => ({
-  title: `${slug[0].toUpperCase()}${slug.slice(1)} Chart`,
-  description,
-  url: `/charts/${slug}`,
-  group: "Charts",
-}));
+/** Pull the "charts-<slug>" category off a registry item to build its URL. */
+function chartCategory(categories: string[] | undefined): string | undefined {
+  return categories
+    ?.find((c) => c.startsWith("charts-"))
+    ?.replace("charts-", "");
+}
 
 const EXTRA: SearchIndexItem[] = [
   {
@@ -42,16 +37,40 @@ export async function getSearchIndex(): Promise<SearchIndexItem[]> {
     group: d.id.startsWith("components/") ? "Components" : "Guides",
   }));
 
-  const blockItems: SearchIndexItem[] = registryIndex
-    .filter((i: { type: string }) => i.type === "registry:block")
-    .map((i: { name: string; title?: string; description: string }) => ({
+  type RegistryEntry = {
+    name: string;
+    type: string;
+    title?: string;
+    description: string;
+    categories?: string[];
+  };
+  const registryItems = registryIndex as RegistryEntry[];
+
+  const isChart = (i: RegistryEntry) => i.categories?.includes("charts");
+
+  const blockItems: SearchIndexItem[] = registryItems
+    .filter((i) => i.type === "registry:block" && !isChart(i))
+    .map((i) => ({
       title: i.title ?? i.name,
       description: i.description,
       url: `/blocks#${i.name}`,
       group: "Blocks" as const,
     }));
 
-  return [...docItems, ...blockItems, ...CHARTS, ...EXTRA].sort((a, b) => {
+  // Every installable chart is searchable and deep-links to its category page.
+  const chartItems: SearchIndexItem[] = registryItems
+    .filter((i) => i.type === "registry:block" && isChart(i))
+    .map((i) => {
+      const category = chartCategory(i.categories);
+      return {
+        title: i.title ?? i.name,
+        description: i.description,
+        url: category ? `/charts/${category}#${i.name}` : "/charts/area",
+        group: "Charts" as const,
+      };
+    });
+
+  return [...docItems, ...blockItems, ...chartItems, ...EXTRA].sort((a, b) => {
     const order: SearchGroup[] = ["Components", "Blocks", "Charts", "Guides"];
     const g = order.indexOf(a.group) - order.indexOf(b.group);
     return g !== 0 ? g : a.title.localeCompare(b.title);

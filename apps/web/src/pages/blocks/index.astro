@@ -26,7 +26,7 @@ const blocks = registryIndex.filter(
     <div class="grid gap-8">
       {
         blocks.map((block) => (
-          <div class="overflow-hidden rounded-xl border">
+          <div id={block.name} class="scroll-mt-24 overflow-hidden rounded-xl border">
             <div class="flex flex-wrap items-center justify-between gap-3 border-b bg-muted/40 px-4 py-3">
               <div>
                 <h2 class="font-semibold">{block.name}</h2>
