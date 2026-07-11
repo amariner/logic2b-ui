@@ -1,0 +1,52 @@
+{
+  "name": "@logic2b/mcp",
+  "version": "0.1.0",
+  "description": "MCP server that exposes the logic2b ui registry to coding agents.",
+  "type": "module",
+  "bin": {
+    "logic2b-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "logic2b",
+    "ui",
+    "registry",
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "agents"
+  ],
+  "homepage": "https://ui.logic2b.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amariner/logic2b-ui.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/amariner/logic2b-ui/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "test": "node --import tsx --test test/*.test.ts",
+    "prepublishOnly": "tsc -p tsconfig.json"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  }
+}

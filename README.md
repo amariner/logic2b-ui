@@ -14,6 +14,8 @@ LLMs and coding agents.
   Workers.
 - **`packages/cli`** — `npx logic2b add button`: fetches components from the
   registry and writes them into your project (resolving registry dependencies).
+- **`packages/mcp`** — an MCP server that exposes the registry to coding
+  agents (search, list and read components/blocks/charts with full source).
 
 ## LLM-first
 
@@ -22,6 +24,8 @@ LLMs and coding agents.
 - `/llms-full.txt` — the whole documentation in one Markdown file.
 - Every docs page is available as plain Markdown by appending `.md`.
 - `/r/index.json` + `/r/<name>.json` — machine-readable registry with full source.
+- **MCP server** (`packages/mcp`) — point an agent at it to search and read
+  every component, block and chart over the Model Context Protocol.
 
 ## Development
 
