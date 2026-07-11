@@ -624,5 +624,23 @@
     "categories": [
       "application"
     ]
+  },
+  {
+    "name": "dashboard-02",
+    "type": "registry:block",
+    "title": "Analytics dashboard",
+    "description": "An analytics overview: a KPI stat row above a responsive grid that composes the interactive area chart, a stacked bar chart, a donut and a KPI ring. Use as an analytics landing page.",
+    "categories": [
+      "dashboard"
+    ]
+  },
+  {
+    "name": "onboarding-01",
+    "type": "registry:block",
+    "title": "Onboarding wizard",
+    "description": "A multi-step onboarding card with a numbered step indicator, a progress bar and per-step form fields, plus Back/Continue navigation. Use as a first-run setup flow.",
+    "categories": [
+      "application"
+    ]
   }
 ]

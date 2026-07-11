@@ -272,4 +272,42 @@ export const items: RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "dashboard-02",
+    type: "registry:block",
+    title: "Analytics dashboard",
+    description:
+      "An analytics overview: a KPI stat row above a responsive grid that composes the interactive area chart, a stacked bar chart, a donut and a KPI ring. Use as an analytics landing page.",
+    categories: ["dashboard"],
+    dependencies: ["lucide-react", "recharts"],
+    registryDependencies: [
+      "card",
+      "chart-area-04",
+      "chart-bar-04",
+      "chart-pie-03",
+      "chart-radial-02",
+    ],
+    files: [
+      {
+        path: "src/blocks/dashboard-02/analytics-dashboard.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "onboarding-01",
+    type: "registry:block",
+    title: "Onboarding wizard",
+    description:
+      "A multi-step onboarding card with a numbered step indicator, a progress bar and per-step form fields, plus Back/Continue navigation. Use as a first-run setup flow.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["button", "card", "input", "label", "progress"],
+    files: [
+      {
+        path: "src/blocks/onboarding-01/onboarding.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
 ]

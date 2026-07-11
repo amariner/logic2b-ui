@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "onboarding-01",
+  "type": "registry:block",
+  "title": "Onboarding wizard",
+  "description": "A multi-step onboarding card with a numbered step indicator, a progress bar and per-step form fields, plus Back/Continue navigation. Use as a first-run setup flow.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "button",
+    "card",
+    "input",
+    "label",
+    "progress"
+  ],
+  "files": [
+    {
+      "path": "blocks/onboarding-01/onboarding.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { CheckIcon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Button } from \"@/components/ui/button\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { Input } from \"@/components/ui/input\"\nimport { Label } from \"@/components/ui/label\"\nimport { Progress } from \"@/components/ui/progress\"\n\nconst steps = [\n  { title: \"Account\", description: \"Tell us who you are.\" },\n  { title: \"Workspace\", description: \"Name your workspace.\" },\n  { title: \"Invite\", description: \"Bring your team along.\" },\n]\n\nexport function Onboarding({ className, ...props }: React.ComponentProps<\"div\">) {\n  const [step, setStep] = React.useState(0)\n  const isLast = step === steps.length - 1\n  const progress = ((step + 1) / steps.length) * 100\n  const current = steps[step]\n\n  return (\n    <div\n      className={cn(\"mx-auto flex w-full max-w-md flex-col px-6 py-16\", className)}\n      {...props}\n    >\n      <Card>\n        <CardHeader>\n          <div className=\"mb-4 flex items-center justify-between\">\n            {steps.map((s, index) => {\n              const done = index < step\n              const active = index === step\n              return (\n                <React.Fragment key={s.title}>\n                  <div className=\"flex flex-col items-center gap-1.5\">\n                    <div\n                      className={cn(\n                        \"flex size-8 items-center justify-center rounded-full border text-sm font-medium transition-colors\",\n                        done && \"border-primary bg-primary text-primary-foreground\",\n                        active && \"border-primary text-foreground\",\n                        !done && !active && \"text-muted-foreground\"\n                      )}\n                    >\n                      {done ? <CheckIcon className=\"size-4\" /> : index + 1}\n                    </div>\n                    <span\n                      className={cn(\n                        \"text-xs\",\n                        active ? \"text-foreground\" : \"text-muted-foreground\"\n                      )}\n                    >\n                      {s.title}\n                    </span>\n                  </div>\n                  {index < steps.length - 1 && (\n                    <div className=\"mx-2 mb-5 h-px flex-1 bg-border\" />\n                  )}\n                </React.Fragment>\n              )\n            })}\n          </div>\n          <Progress value={progress} className=\"h-1.5\" />\n          <CardTitle className=\"pt-4\">{current.title}</CardTitle>\n          <CardDescription>{current.description}</CardDescription>\n        </CardHeader>\n        <CardContent className=\"grid gap-4\">\n          {step === 0 && (\n            <>\n              <div className=\"grid gap-2\">\n                <Label htmlFor=\"name\">Full name</Label>\n                <Input id=\"name\" placeholder=\"Ada Lovelace\" />\n              </div>\n              <div className=\"grid gap-2\">\n                <Label htmlFor=\"email\">Email</Label>\n                <Input id=\"email\" type=\"email\" placeholder=\"ada@example.com\" />\n              </div>\n            </>\n          )}\n          {step === 1 && (\n            <>\n              <div className=\"grid gap-2\">\n                <Label htmlFor=\"workspace\">Workspace name</Label>\n                <Input id=\"workspace\" placeholder=\"Acme Inc.\" />\n              </div>\n              <div className=\"grid gap-2\">\n                <Label htmlFor=\"url\">Workspace URL</Label>\n                <Input id=\"url\" placeholder=\"acme\" />\n              </div>\n            </>\n          )}\n          {step === 2 && (\n            <div className=\"grid gap-2\">\n              <Label htmlFor=\"invite\">Invite teammates</Label>\n              <Input id=\"invite\" type=\"email\" placeholder=\"teammate@example.com\" />\n              <p className=\"text-muted-foreground text-xs\">\n                Separate multiple emails with a comma. You can skip this and do it\n                later.\n              </p>\n            </div>\n          )}\n        </CardContent>\n        <CardFooter className=\"justify-between\">\n          <Button\n            variant=\"ghost\"\n            onClick={() => setStep((s) => Math.max(0, s - 1))}\n            disabled={step === 0}\n          >\n            Back\n          </Button>\n          <Button\n            onClick={() => {\n              if (!isLast) setStep((s) => s + 1)\n            }}\n          >\n            {isLast ? \"Finish\" : \"Continue\"}\n          </Button>\n        </CardFooter>\n      </Card>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "application"
+  ]
+}
