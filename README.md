@@ -17,7 +17,8 @@ LLMs and coding agents.
 
 ## LLM-first
 
-- `/llms.txt` — index of all docs with absolute URLs.
+- `/llms.txt` — index of all docs, blocks and charts with absolute URLs
+  (blocks and charts link straight to their installable JSON payloads).
 - `/llms-full.txt` — the whole documentation in one Markdown file.
 - Every docs page is available as plain Markdown by appending `.md`.
 - `/r/index.json` + `/r/<name>.json` — machine-readable registry with full source.

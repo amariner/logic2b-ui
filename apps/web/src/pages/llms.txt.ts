@@ -13,6 +13,27 @@ export const GET: APIRoute = async ({ site }) => {
     return `- [${d.data.title}](${base}/docs/${d.id}.md): ${d.data.description}`;
   };
 
+  type RegistryEntry = {
+    name: string;
+    type: string;
+    title?: string;
+    description: string;
+    categories?: string[];
+  };
+  const registry = registryIndex as RegistryEntry[];
+  const isChart = (i: RegistryEntry) => i.categories?.includes("charts");
+
+  // Point agents at each item's installable JSON payload (metadata + source).
+  const registryLine = (i: RegistryEntry) =>
+    `- [${i.title ?? i.name}](${base}/r/${i.name}.json): ${i.description}`;
+
+  const blocks = registry.filter(
+    (i) => i.type === "registry:block" && !isChart(i),
+  );
+  const charts = registry.filter(
+    (i) => i.type === "registry:block" && isChart(i),
+  );
+
   const body = [
     "# logic2b ui",
     "",
@@ -30,6 +51,19 @@ export const GET: APIRoute = async ({ site }) => {
     "## Components",
     "",
     ...components.map(line),
+    "",
+    "## Blocks",
+    "",
+    "Full sections and layouts, installable with `npx logic2b add <name>`.",
+    "Each link is the item's JSON payload (metadata + source).",
+    "",
+    ...blocks.map(registryLine),
+    "",
+    "## Charts",
+    "",
+    "Recharts-based charts, installable with `npx logic2b add <name>`.",
+    "",
+    ...charts.map(registryLine),
     "",
     "## Optional",
     "",
