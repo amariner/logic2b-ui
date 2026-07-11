@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-radar-02",
+  "type": "registry:block",
+  "title": "Radar Chart - Multiple",
+  "description": "A radar chart overlaying two series with translucent fills on a polar grid. Use it to compare two profiles across the same dimensions.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-radar-02.tsx",
+      "type": "registry:block",
+      "content": "import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport {\n  ChartContainer,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from \"@/components/ui/chart\"\n\nconst chartData = [\n  { month: \"January\", desktop: 186, mobile: 80 },\n  { month: \"February\", desktop: 305, mobile: 200 },\n  { month: \"March\", desktop: 237, mobile: 120 },\n  { month: \"April\", desktop: 73, mobile: 190 },\n  { month: \"May\", desktop: 209, mobile: 130 },\n  { month: \"June\", desktop: 214, mobile: 140 },\n]\n\nconst chartConfig = {\n  desktop: {\n    label: \"Desktop\",\n    color: \"var(--chart-1)\",\n  },\n  mobile: {\n    label: \"Mobile\",\n    color: \"var(--chart-2)\",\n  },\n} satisfies ChartConfig\n\nexport default function ChartRadar02() {\n  return (\n    <Card>\n      <CardHeader className=\"items-center pb-4\">\n        <CardTitle>Radar Chart - Multiple</CardTitle>\n        <CardDescription>January - June 2024</CardDescription>\n      </CardHeader>\n      <CardContent className=\"pb-0\">\n        <ChartContainer\n          config={chartConfig}\n          className=\"mx-auto aspect-square max-h-[250px]\"\n        >\n          <RadarChart data={chartData}>\n            <ChartTooltip\n              cursor={false}\n              content={<ChartTooltipContent indicator=\"line\" />}\n            />\n            <PolarAngleAxis dataKey=\"month\" />\n            <PolarGrid />\n            <Radar\n              dataKey=\"desktop\"\n              fill=\"var(--color-desktop)\"\n              fillOpacity={0.6}\n            />\n            <Radar dataKey=\"mobile\" fill=\"var(--color-mobile)\" />\n          </RadarChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-radar"
+  ]
+}

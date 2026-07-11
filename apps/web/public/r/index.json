@@ -377,6 +377,86 @@
     ]
   },
   {
+    "name": "chart-area-03",
+    "type": "registry:block",
+    "title": "Area Chart - Legend",
+    "description": "A stacked area chart with two series and a theme-aware legend below the plot. Use it when readers need series names without hovering.",
+    "categories": [
+      "charts",
+      "charts-area"
+    ]
+  },
+  {
+    "name": "chart-bar-03",
+    "type": "registry:block",
+    "title": "Bar Chart - Label",
+    "description": "A single-series bar chart with the value printed above each bar. Use it when exact values matter as much as the comparison.",
+    "categories": [
+      "charts",
+      "charts-bar"
+    ]
+  },
+  {
+    "name": "chart-bar-04",
+    "type": "registry:block",
+    "title": "Bar Chart - Stacked + Legend",
+    "description": "A stacked bar chart with two series per month and a legend. Use it to show totals and their composition across discrete periods.",
+    "categories": [
+      "charts",
+      "charts-bar"
+    ]
+  },
+  {
+    "name": "chart-line-03",
+    "type": "registry:block",
+    "title": "Line Chart - Dots",
+    "description": "A single-series line chart with a visible dot on every point and a larger active dot on hover. Use it when individual data points matter.",
+    "categories": [
+      "charts",
+      "charts-line"
+    ]
+  },
+  {
+    "name": "chart-pie-03",
+    "type": "registry:block",
+    "title": "Pie Chart - Donut with Text",
+    "description": "A donut chart with the total rendered in the center via a custom Label. Use it to show proportions and the headline number at once.",
+    "categories": [
+      "charts",
+      "charts-pie"
+    ]
+  },
+  {
+    "name": "chart-radar-02",
+    "type": "registry:block",
+    "title": "Radar Chart - Multiple",
+    "description": "A radar chart overlaying two series with translucent fills on a polar grid. Use it to compare two profiles across the same dimensions.",
+    "categories": [
+      "charts",
+      "charts-radar"
+    ]
+  },
+  {
+    "name": "chart-radial-02",
+    "type": "registry:block",
+    "title": "Radial Chart - Text",
+    "description": "A single-value radial progress ring with the number rendered in the center. Use it for a KPI, quota or completion metric.",
+    "categories": [
+      "charts",
+      "charts-radial"
+    ]
+  },
+  {
+    "name": "chart-area-04",
+    "type": "registry:block",
+    "title": "Area Chart - Interactive",
+    "description": "An interactive stacked area chart over 3 months of daily data, with gradient fills, a legend and a select to switch between 7/30/90-day ranges. Use it as a dashboard's primary time-series panel.",
+    "categories": [
+      "charts",
+      "charts-area"
+    ]
+  },
+  {
     "name": "login-01",
     "type": "registry:block",
     "description": "A simple, centered login form with email and password fields. Use as the starting point for an authentication page."

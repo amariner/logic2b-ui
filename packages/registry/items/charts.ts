@@ -81,7 +81,69 @@ export const items: RegistryItem[] = [
       description:
         "A radial bar chart where each ring is a category colored via the chart config. Use it as a compact, decorative alternative to a bar chart.",
     },
+    {
+      name: "chart-area-03",
+      title: "Area Chart - Legend",
+      category: "area",
+      description:
+        "A stacked area chart with two series and a theme-aware legend below the plot. Use it when readers need series names without hovering.",
+    },
+    {
+      name: "chart-bar-03",
+      title: "Bar Chart - Label",
+      category: "bar",
+      description:
+        "A single-series bar chart with the value printed above each bar. Use it when exact values matter as much as the comparison.",
+    },
+    {
+      name: "chart-bar-04",
+      title: "Bar Chart - Stacked + Legend",
+      category: "bar",
+      description:
+        "A stacked bar chart with two series per month and a legend. Use it to show totals and their composition across discrete periods.",
+    },
+    {
+      name: "chart-line-03",
+      title: "Line Chart - Dots",
+      category: "line",
+      description:
+        "A single-series line chart with a visible dot on every point and a larger active dot on hover. Use it when individual data points matter.",
+    },
+    {
+      name: "chart-pie-03",
+      title: "Pie Chart - Donut with Text",
+      category: "pie",
+      description:
+        "A donut chart with the total rendered in the center via a custom Label. Use it to show proportions and the headline number at once.",
+    },
+    {
+      name: "chart-radar-02",
+      title: "Radar Chart - Multiple",
+      category: "radar",
+      description:
+        "A radar chart overlaying two series with translucent fills on a polar grid. Use it to compare two profiles across the same dimensions.",
+    },
+    {
+      name: "chart-radial-02",
+      title: "Radial Chart - Text",
+      category: "radial",
+      description:
+        "A single-value radial progress ring with the number rendered in the center. Use it for a KPI, quota or completion metric.",
+    },
   ]),
+  {
+    name: "chart-area-04",
+    type: "registry:block",
+    title: "Area Chart - Interactive",
+    description:
+      "An interactive stacked area chart over 3 months of daily data, with gradient fills, a legend and a select to switch between 7/30/90-day ranges. Use it as a dashboard's primary time-series panel.",
+    dependencies: ["recharts"],
+    registryDependencies: ["card", "chart", "select"],
+    categories: ["charts", "charts-area"],
+    files: [
+      { path: "src/charts/chart-area-04.tsx", type: "registry:block" },
+    ],
+  },
 ]
 
 /** All installable charts share the same shape: a single file, recharts, and

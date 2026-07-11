@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-radial-02",
+  "type": "registry:block",
+  "title": "Radial Chart - Text",
+  "description": "A single-value radial progress ring with the number rendered in the center. Use it for a KPI, quota or completion metric.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-radial-02.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\n\nimport { Label, PolarGrid, PolarRadiusAxis, RadialBar, RadialBarChart } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { ChartContainer, type ChartConfig } from \"@/components/ui/chart\"\n\nconst chartData = [\n  { browser: \"safari\", visitors: 1260, fill: \"var(--color-safari)\" },\n]\n\nconst chartConfig = {\n  visitors: { label: \"Visitors\" },\n  safari: { label: \"Safari\", color: \"var(--chart-2)\" },\n} satisfies ChartConfig\n\nexport default function ChartRadial02() {\n  return (\n    <Card className=\"flex flex-col\">\n      <CardHeader className=\"items-center pb-0\">\n        <CardTitle>Radial Chart - Text</CardTitle>\n        <CardDescription>January - June 2024</CardDescription>\n      </CardHeader>\n      <CardContent className=\"flex-1 pb-0\">\n        <ChartContainer\n          config={chartConfig}\n          className=\"mx-auto aspect-square max-h-[250px]\"\n        >\n          <RadialBarChart\n            data={chartData}\n            startAngle={90}\n            endAngle={250}\n            innerRadius={80}\n            outerRadius={110}\n          >\n            <PolarGrid\n              gridType=\"circle\"\n              radialLines={false}\n              stroke=\"none\"\n              className=\"first:fill-muted last:fill-background\"\n              polarRadius={[86, 74]}\n            />\n            <RadialBar dataKey=\"visitors\" background cornerRadius={10} />\n            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>\n              <Label\n                content={({ viewBox }) => {\n                  if (viewBox && \"cx\" in viewBox && \"cy\" in viewBox) {\n                    return (\n                      <text\n                        x={viewBox.cx}\n                        y={viewBox.cy}\n                        textAnchor=\"middle\"\n                        dominantBaseline=\"middle\"\n                      >\n                        <tspan\n                          x={viewBox.cx}\n                          y={viewBox.cy}\n                          className=\"fill-foreground text-4xl font-bold\"\n                        >\n                          {chartData[0].visitors.toLocaleString()}\n                        </tspan>\n                        <tspan\n                          x={viewBox.cx}\n                          y={(viewBox.cy || 0) + 24}\n                          className=\"fill-muted-foreground\"\n                        >\n                          Visitors\n                        </tspan>\n                      </text>\n                    )\n                  }\n                }}\n              />\n            </PolarRadiusAxis>\n          </RadialBarChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-radial"
+  ]
+}

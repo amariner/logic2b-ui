@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-line-03",
+  "type": "registry:block",
+  "title": "Line Chart - Dots",
+  "description": "A single-series line chart with a visible dot on every point and a larger active dot on hover. Use it when individual data points matter.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-line-03.tsx",
+      "type": "registry:block",
+      "content": "import { CartesianGrid, Line, LineChart, XAxis } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport {\n  ChartContainer,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from \"@/components/ui/chart\"\n\nconst chartData = [\n  { month: \"January\", desktop: 186 },\n  { month: \"February\", desktop: 305 },\n  { month: \"March\", desktop: 237 },\n  { month: \"April\", desktop: 73 },\n  { month: \"May\", desktop: 209 },\n  { month: \"June\", desktop: 214 },\n]\n\nconst chartConfig = {\n  desktop: {\n    label: \"Desktop\",\n    color: \"var(--chart-1)\",\n  },\n} satisfies ChartConfig\n\nexport default function ChartLine03() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>Line Chart - Dots</CardTitle>\n        <CardDescription>January - June 2024</CardDescription>\n      </CardHeader>\n      <CardContent>\n        <ChartContainer config={chartConfig}>\n          <LineChart\n            accessibilityLayer\n            data={chartData}\n            margin={{ left: 12, right: 12 }}\n          >\n            <CartesianGrid vertical={false} />\n            <XAxis\n              dataKey=\"month\"\n              tickLine={false}\n              axisLine={false}\n              tickMargin={8}\n              tickFormatter={(value) => value.slice(0, 3)}\n            />\n            <ChartTooltip\n              cursor={false}\n              content={<ChartTooltipContent hideLabel />}\n            />\n            <Line\n              dataKey=\"desktop\"\n              type=\"natural\"\n              stroke=\"var(--color-desktop)\"\n              strokeWidth={2}\n              dot={{ fill: \"var(--color-desktop)\" }}\n              activeDot={{ r: 6 }}\n            />\n          </LineChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-line"
+  ]
+}
