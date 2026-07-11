@@ -40,16 +40,16 @@ for (const item of registry) {
   }
 }
 
-// Every @/registry/{ui,hooks,lib} import in a shipped file must map to an item file.
+// Every @/registry/{ui,hooks,lib,charts} import in a shipped file must map to an item file.
 const allFilePaths = new Set(
   registry.flatMap((i) => (i.files ?? []).map((f) => f.path.replace(/^src\//, "")))
 )
-const importRe = /@\/registry\/(ui|hooks|lib)\/([a-z0-9-]+)/g
+const importRe = /@\/registry\/(ui|hooks|lib|charts)\/([a-z0-9-]+)/g
 for (const item of registry) {
   for (const file of item.files ?? []) {
     const content = await readFile(join(root, file.path), "utf8")
     for (const m of content.matchAll(importRe)) {
-      const rel = `${m[1]}/${m[2]}.${m[1] === "ui" ? "tsx" : "ts"}`
+      const rel = `${m[1]}/${m[2]}.${m[1] === "hooks" || m[1] === "lib" ? "ts" : "tsx"}`
       if (!allFilePaths.has(rel)) {
         errors.push(`"${item.name}" imports ${m[0]} but no item ships ${rel}`)
       }

@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
   Card,
@@ -34,18 +34,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function ChartAreaStackedDemo() {
+export default function ChartLine02() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
+        <CardTitle>Line Chart - Multiple</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart
+          <LineChart
             accessibilityLayer
             data={chartData}
             margin={{ left: 12, right: 12 }}
@@ -58,27 +56,22 @@ export default function ChartAreaStackedDemo() {
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dot" />}
-            />
-            <Area
-              dataKey="mobile"
-              type="natural"
-              fill="var(--color-mobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Line
               dataKey="desktop"
-              type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
+              type="monotone"
               stroke="var(--color-desktop)"
-              stackId="a"
+              strokeWidth={2}
+              dot={false}
             />
-          </AreaChart>
+            <Line
+              dataKey="mobile"
+              type="monotone"
+              stroke="var(--color-mobile)"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>

@@ -1,4 +1,4 @@
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
@@ -34,44 +34,31 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function ChartLineMultipleDemo() {
+export default function ChartBar01() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart - Multiple</CardTitle>
+        <CardTitle>Bar Chart</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{ left: 12, right: 12 }}
-          >
+          <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
               tickLine={false}
+              tickMargin={10}
               axisLine={false}
-              tickMargin={8}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Line
-              dataKey="desktop"
-              type="monotone"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={false}
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Line
-              dataKey="mobile"
-              type="monotone"
-              stroke="var(--color-mobile)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>

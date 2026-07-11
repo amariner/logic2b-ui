@@ -160,12 +160,15 @@ async function fetchItem(registry: string, name: string): Promise<RegistryItem> 
 function targetPath(config: Config, cwd: string, file: RegistryFile): string {
   const { srcDir, aliases } = config
   // Registry file paths: "ui/button.tsx", "blocks/login-01/x.tsx",
-  // "hooks/use-mobile.ts", "lib/utils.ts", "theme.css".
+  // "charts/chart-area-01.tsx", "hooks/use-mobile.ts", "lib/utils.ts", "theme.css".
   if (file.path.startsWith("ui/")) {
     return join(aliasToDir(cwd, srcDir, aliases.ui), file.path.slice(3))
   }
   if (file.path.startsWith("blocks/")) {
     return join(aliasToDir(cwd, srcDir, aliases.components), file.path.slice(7))
+  }
+  if (file.path.startsWith("charts/")) {
+    return join(aliasToDir(cwd, srcDir, aliases.components), file.path)
   }
   if (file.path.startsWith("hooks/")) {
     return join(aliasToDir(cwd, srcDir, aliases.hooks), file.path.slice(6))

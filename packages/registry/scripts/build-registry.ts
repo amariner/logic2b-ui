@@ -64,6 +64,7 @@ for (const item of registry) {
       const content = (await readFile(join(root, file.path), "utf8"))
         .replaceAll("@/registry/ui/", "@/components/ui/")
         .replaceAll("@/registry/blocks/", "@/components/")
+        .replaceAll("@/registry/charts/", "@/components/charts/")
         .replaceAll("@/registry/hooks/", "@/hooks/")
         .replaceAll("@/registry/lib/", "@/lib/")
       return { path: file.path.replace(/^src\//, ""), type: file.type, content }

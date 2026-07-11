@@ -48,7 +48,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function ChartPieDonutDemo() {
+export default function ChartPie02() {
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">

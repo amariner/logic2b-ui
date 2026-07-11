@@ -1,4 +1,4 @@
-import { Pie, PieChart } from "recharts"
+import { RadialBar, RadialBarChart } from "recharts"
 
 import {
   Card,
@@ -23,36 +23,19 @@ const chartData = [
 ]
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "var(--chart-1)",
-  },
-  safari: {
-    label: "Safari",
-    color: "var(--chart-2)",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "var(--chart-3)",
-  },
-  edge: {
-    label: "Edge",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Other",
-    color: "var(--chart-5)",
-  },
+  visitors: { label: "Visitors" },
+  chrome: { label: "Chrome", color: "var(--chart-1)" },
+  safari: { label: "Safari", color: "var(--chart-2)" },
+  firefox: { label: "Firefox", color: "var(--chart-3)" },
+  edge: { label: "Edge", color: "var(--chart-4)" },
+  other: { label: "Other", color: "var(--chart-5)" },
 } satisfies ChartConfig
 
-export default function ChartPieDemo() {
+export default function ChartRadial01() {
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart</CardTitle>
+        <CardTitle>Radial Chart</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -60,13 +43,19 @@ export default function ChartPieDemo() {
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
         >
-          <PieChart>
+          <RadialBarChart
+            data={chartData}
+            innerRadius={30}
+            outerRadius={110}
+            startAngle={-90}
+            endAngle={270}
+          >
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent hideLabel nameKey="browser" />}
             />
-            <Pie data={chartData} dataKey="visitors" nameKey="browser" />
-          </PieChart>
+            <RadialBar dataKey="visitors" background cornerRadius={6} />
+          </RadialBarChart>
         </ChartContainer>
       </CardContent>
     </Card>

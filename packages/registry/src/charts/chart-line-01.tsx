@@ -1,4 +1,4 @@
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
   Card,
@@ -18,7 +18,7 @@ const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
   { month: "March", desktop: 237 },
-  { month: "April", desktop: 273 },
+  { month: "April", desktop: 73 },
   { month: "May", desktop: 209 },
   { month: "June", desktop: 214 },
 ]
@@ -30,29 +30,37 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function ChartRadarDemo() {
+export default function ChartLine01() {
   return (
     <Card>
-      <CardHeader className="items-center pb-4">
-        <CardTitle>Radar Chart</CardTitle>
+      <CardHeader>
+        <CardTitle>Line Chart</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
-      <CardContent className="pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
-          <RadarChart data={chartData}>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <PolarGrid />
-            <PolarAngleAxis dataKey="month" />
-            <Radar
-              dataKey="desktop"
-              fill="var(--color-desktop)"
-              fillOpacity={0.6}
-              stroke="var(--color-desktop)"
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={{ left: 12, right: 12 }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
             />
-          </RadarChart>
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Line
+              dataKey="desktop"
+              type="natural"
+              stroke="var(--color-desktop)"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>

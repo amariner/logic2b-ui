@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import {
   Card,
@@ -30,42 +30,37 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function ChartAreaDemo() {
+export default function ChartBar02() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
+        <CardTitle>Bar Chart - Horizontal</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart
+          <BarChart
             accessibilityLayer
             data={chartData}
-            margin={{ left: 12, right: 12 }}
+            layout="vertical"
+            margin={{ left: -20 }}
           >
-            <CartesianGrid vertical={false} />
-            <XAxis
+            <CartesianGrid horizontal={false} />
+            <XAxis type="number" dataKey="desktop" hide />
+            <YAxis
               dataKey="month"
+              type="category"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              tickMargin={10}
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-            />
-          </AreaChart>
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>

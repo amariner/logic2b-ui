@@ -277,6 +277,106 @@
     "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend."
   },
   {
+    "name": "chart-area-01",
+    "type": "registry:block",
+    "title": "Area Chart",
+    "description": "A simple area chart with a single series, month labels on the X axis and a line-indicator tooltip. Use it to show one metric's trend over time.",
+    "categories": [
+      "charts",
+      "charts-area"
+    ]
+  },
+  {
+    "name": "chart-area-02",
+    "type": "registry:block",
+    "title": "Area Chart - Stacked",
+    "description": "A stacked area chart with two series (desktop and mobile) sharing one X axis. Use it to show how parts contribute to a total over time.",
+    "categories": [
+      "charts",
+      "charts-area"
+    ]
+  },
+  {
+    "name": "chart-bar-01",
+    "type": "registry:block",
+    "title": "Bar Chart",
+    "description": "A vertical bar chart with two series side by side per month and rounded bar tops. Use it to compare two metrics across discrete periods.",
+    "categories": [
+      "charts",
+      "charts-bar"
+    ]
+  },
+  {
+    "name": "chart-bar-02",
+    "type": "registry:block",
+    "title": "Bar Chart - Horizontal",
+    "description": "A horizontal bar chart with a single series and category labels on the Y axis. Use it when category names are long or there are many categories.",
+    "categories": [
+      "charts",
+      "charts-bar"
+    ]
+  },
+  {
+    "name": "chart-line-01",
+    "type": "registry:block",
+    "title": "Line Chart",
+    "description": "A single-series line chart with a smooth monotone curve and no dots. Use it for a clean view of one metric's trend.",
+    "categories": [
+      "charts",
+      "charts-line"
+    ]
+  },
+  {
+    "name": "chart-line-02",
+    "type": "registry:block",
+    "title": "Line Chart - Multiple",
+    "description": "A line chart with two series in different chart colors. Use it to compare trends between two metrics over the same period.",
+    "categories": [
+      "charts",
+      "charts-line"
+    ]
+  },
+  {
+    "name": "chart-pie-01",
+    "type": "registry:block",
+    "title": "Pie Chart",
+    "description": "A pie chart with per-slice colors driven by the chart config (--color-*) and a labelled tooltip. Use it to show proportions of a whole.",
+    "categories": [
+      "charts",
+      "charts-pie"
+    ]
+  },
+  {
+    "name": "chart-pie-02",
+    "type": "registry:block",
+    "title": "Pie Chart - Donut",
+    "description": "A donut chart (pie with inner radius) with per-slice colors and a hoverable tooltip. Use it when you want proportions plus room for a center label.",
+    "categories": [
+      "charts",
+      "charts-pie"
+    ]
+  },
+  {
+    "name": "chart-radar-01",
+    "type": "registry:block",
+    "title": "Radar Chart",
+    "description": "A radar chart plotting one series across categorical axes on a polar grid. Use it to compare a profile of values across dimensions.",
+    "categories": [
+      "charts",
+      "charts-radar"
+    ]
+  },
+  {
+    "name": "chart-radial-01",
+    "type": "registry:block",
+    "title": "Radial Chart",
+    "description": "A radial bar chart where each ring is a category colored via the chart config. Use it as a compact, decorative alternative to a bar chart.",
+    "categories": [
+      "charts",
+      "charts-radial"
+    ]
+  },
+  {
     "name": "login-01",
     "type": "registry:block",
     "description": "A simple, centered login form with email and password fields. Use as the starting point for an authentication page."

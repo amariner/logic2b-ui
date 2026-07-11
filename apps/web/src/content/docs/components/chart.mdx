@@ -6,7 +6,7 @@ description: Composable charts built on Recharts, themed through your CSS tokens
 import ComponentPreview from "@/components/ComponentPreview.astro";
 import Install from "@/components/Install.astro";
 
-<ComponentPreview name="chart-area-demo" wide />
+<ComponentPreview name="chart-area-01" wide install />
 
 Charts are a thin, composable layer over [Recharts](https://recharts.org). You
 bring the Recharts primitives; logic2b gives you `ChartContainer` (theme +
@@ -17,6 +17,11 @@ a color, and theme-aware `ChartTooltip` / `ChartLegend`. Colors come from the
 ## Installation
 
 <Install name="chart" />
+
+Prefer a ready-made chart? Every example on this page (and in the
+[charts gallery](/charts/area)) is an installable registry item — e.g.
+`npx logic2b@latest add chart-area-01` copies the full card-wrapped chart
+into `components/charts/`.
 
 ## Usage
 
@@ -61,27 +66,27 @@ container, so you reference `var(--color-desktop)` rather than hardcoding a hue.
 
 ### Bar
 
-<ComponentPreview name="chart-bar-demo" wide />
+<ComponentPreview name="chart-bar-01" wide install />
 
 ### Line (multiple series)
 
-<ComponentPreview name="chart-line-multiple-demo" wide />
+<ComponentPreview name="chart-line-02" wide install />
 
 ### Stacked area
 
-<ComponentPreview name="chart-area-stacked-demo" wide />
+<ComponentPreview name="chart-area-02" wide install />
 
 ### Radar
 
-<ComponentPreview name="chart-radar-demo" wide />
+<ComponentPreview name="chart-radar-01" wide install />
 
 ### Radial
 
-<ComponentPreview name="chart-radial-demo" wide />
+<ComponentPreview name="chart-radial-01" wide install />
 
 ### Donut
 
-<ComponentPreview name="chart-pie-donut-demo" wide />
+<ComponentPreview name="chart-pie-02" wide install />
 
 ## API
 

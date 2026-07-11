@@ -6,32 +6,32 @@ const categories = [
   {
     slug: "area",
     label: "Area",
-    demos: ["chart-area-demo", "chart-area-stacked-demo"],
+    demos: ["chart-area-01", "chart-area-02"],
   },
   {
     slug: "bar",
     label: "Bar",
-    demos: ["chart-bar-demo", "chart-bar-horizontal-demo"],
+    demos: ["chart-bar-01", "chart-bar-02"],
   },
   {
     slug: "line",
     label: "Line",
-    demos: ["chart-line-demo", "chart-line-multiple-demo"],
+    demos: ["chart-line-01", "chart-line-02"],
   },
   {
     slug: "pie",
     label: "Pie",
-    demos: ["chart-pie-demo", "chart-pie-donut-demo"],
+    demos: ["chart-pie-01", "chart-pie-02"],
   },
   {
     slug: "radar",
     label: "Radar",
-    demos: ["chart-radar-demo"],
+    demos: ["chart-radar-01"],
   },
   {
     slug: "radial",
     label: "Radial",
-    demos: ["chart-radial-demo"],
+    demos: ["chart-radial-01"],
   },
 ];
 
@@ -54,7 +54,8 @@ const current = categories.find((c) => c.slug === category)!;
   <div class="w-full px-6 py-10">
     <h1 class="text-3xl font-bold tracking-tight">Charts</h1>
     <p class="mt-2 text-muted-foreground">
-      A collection of chart components built using Recharts.
+      A collection of chart components built using Recharts. Every chart is
+      installable — copy the command under each preview.
     </p>
 
     <nav class="mt-6 flex items-center gap-1 border-b">
@@ -78,7 +79,7 @@ const current = categories.find((c) => c.slug === category)!;
     <div class="mt-8 grid gap-6 lg:grid-cols-2">
       {
         current.demos.map((demo) => (
-          <ComponentPreview name={demo} wide />
+          <ComponentPreview name={demo} wide install />
         ))
       }
     </div>
