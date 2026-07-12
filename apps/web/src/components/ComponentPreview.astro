@@ -1,6 +1,7 @@
 ---
 import { Code } from "astro:components";
 import { DemoRenderer } from "@/components/DemoRenderer";
+import { buildAddPrompt } from "@/lib/prompts";
 
 interface Props {
   name: string;
@@ -47,13 +48,22 @@ const source = rawSource
     >
     {
       install && (
-        <button
-          class="copy-install ml-auto mb-1 rounded-md border px-2 py-1 font-mono text-xs text-muted-foreground hover:text-foreground"
-          data-cmd={installCmd}
-          title="Copy install command"
-        >
-          {installCmd}
-        </button>
+        <>
+          <button
+            class="copy-install ml-auto mb-1 rounded-md border px-2 py-1 font-mono text-xs text-muted-foreground hover:text-foreground"
+            data-cmd={installCmd}
+            title="Copy install command"
+          >
+            {installCmd}
+          </button>
+          <button
+            class="copy-install mb-1 rounded-md border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+            data-cmd={buildAddPrompt(name)}
+            title="Copy a prompt for your AI assistant"
+          >
+            Prompt
+          </button>
+        </>
       )
     }
   </div>

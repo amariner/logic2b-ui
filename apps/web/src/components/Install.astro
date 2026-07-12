@@ -1,5 +1,7 @@
 ---
 import { Code } from "astro:components";
+import { buildAddPrompt, buildInitPrompt } from "@/lib/prompts";
+import { DEFAULT_CONFIG, encodePreset } from "@/lib/themes";
 
 interface Props {
   /** Registry item name, e.g. "button" or "theme". */
@@ -25,6 +27,15 @@ const deps = item?.dependencies ?? [];
 const files = item?.files ?? [];
 const cli =
   name === "theme" ? "npx logic2b@latest init" : `npx logic2b@latest add ${name}`;
+// The Agent tab: a self-contained prompt to paste into a coding assistant.
+const prompt =
+  name === "theme"
+    ? buildInitPrompt({
+        cfg: DEFAULT_CONFIG,
+        presetId: encodePreset(DEFAULT_CONFIG),
+        mode: "existing",
+      })
+    : buildAddPrompt(name);
 const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
 ---
 
@@ -38,10 +49,35 @@ const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
       class="itab -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground"
       data-tab="manual">Manual</button
     >
+    <button
+      class="itab -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground"
+      data-tab="agent">Agent</button
+    >
   </div>
 
   <div class="ipanel-cli pt-4">
     <Code code={cli} lang="bash" theme="github-dark-default" />
+  </div>
+
+  <div class="ipanel-agent hidden pt-4">
+    <p class="mb-2 text-sm text-muted-foreground">
+      Working with an AI assistant? Copy this prompt into Claude Code, Cursor or
+      Copilot — it carries the install steps, a no-CLI fallback and a
+      verification checklist.
+    </p>
+    <div class="overflow-hidden rounded-lg border bg-muted/40">
+      <div class="flex items-center justify-between border-b px-3 py-1.5">
+        <span class="text-xs text-muted-foreground">prompt.md</span>
+        <button
+          class="copy-prompt rounded-md border px-2 py-1 text-xs font-medium hover:bg-accent"
+          data-prompt={prompt}
+        >
+          Copy prompt
+        </button>
+      </div>
+      <pre
+        class="max-h-72 overflow-auto whitespace-pre-wrap px-3 py-2.5 font-mono text-xs leading-relaxed">{prompt}</pre>
+    </div>
   </div>
 
   <div class="ipanel-manual hidden pt-4">
@@ -86,11 +122,21 @@ const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
 </div>
 
 <script>
+  document.querySelectorAll<HTMLButtonElement>(".copy-prompt").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(btn.dataset.prompt ?? "");
+      const original = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+  });
+
   document.querySelectorAll(".install-tabs").forEach((root) => {
     const tabs = root.querySelectorAll<HTMLButtonElement>(".itab");
     const panels: Record<string, Element | null> = {
       cli: root.querySelector(".ipanel-cli"),
       manual: root.querySelector(".ipanel-manual"),
+      agent: root.querySelector(".ipanel-agent"),
     };
     tabs.forEach((btn) => {
       btn.addEventListener("click", () => {

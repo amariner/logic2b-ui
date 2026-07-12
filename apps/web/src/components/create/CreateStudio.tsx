@@ -38,6 +38,7 @@ import {
   type Mode,
   type ThemeConfig,
 } from "@/lib/themes"
+import { buildInitPrompt } from "@/lib/prompts"
 import {
   siAstro,
   siLaravel,
@@ -574,49 +575,87 @@ function useCopy(text: string) {
   return { copied, copy }
 }
 
-/* Command box: package-manager switcher + copy icon in the header row,
-   the command itself below (reference: shadcn /create dialog). */
-function CommandBlock({
+/* Install box: Command | Prompt switch, package-manager tabs and copy icon in
+   the header row, the payload below (reference: shadcn /create dialog).
+   "Prompt" is a self-contained brief for an AI assistant — paste it into
+   Claude Code, Cursor or Copilot instead of running the command yourself. */
+function InstallBox({
   cmd,
+  prompt,
   pm,
   onPmChange,
 }: {
   cmd: string
+  prompt: string
   pm: string
   onPmChange: (p: string) => void
 }) {
-  const { copied, copy } = useCopy(cmd)
+  const [view, setView] = React.useState<"command" | "prompt">("command")
+  const text = view === "command" ? cmd : prompt
+  const { copied, copy } = useCopy(text)
   return (
-    <div className="overflow-hidden rounded-lg border bg-muted/40">
-      <div className="flex items-center justify-between border-b px-2 py-1.5">
-        <div className="flex items-center gap-1 font-mono text-xs">
-          {Object.keys(PMS).map((p) => (
+    <div className="grid gap-4">
+      <div className="overflow-hidden rounded-lg border bg-muted/40">
+        <div className="flex items-center justify-between gap-2 border-b px-2 py-1.5">
+          <div className="flex items-center gap-1 text-xs">
+            {(["command", "prompt"] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className={
+                  v === view
+                    ? "rounded-md border bg-background px-2 py-0.5 font-medium"
+                    : "px-2 py-0.5 text-muted-foreground transition-colors hover:text-foreground"
+                }
+              >
+                {v === "command" ? "Command" : "Prompt"}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-1">
+            {view === "command" ? (
+              <div className="flex items-center gap-1 font-mono text-xs">
+                {Object.keys(PMS).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => onPmChange(p)}
+                    className={
+                      p === pm
+                        ? "rounded-md border bg-background px-2 py-0.5 font-medium"
+                        : "px-2 py-0.5 text-muted-foreground transition-colors hover:text-foreground"
+                    }
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <span className="hidden text-xs text-muted-foreground sm:inline">
+                for your AI assistant
+              </span>
+            )}
             <button
-              key={p}
-              onClick={() => onPmChange(p)}
-              className={
-                p === pm
-                  ? "rounded-md border bg-background px-2 py-0.5 font-medium"
-                  : "px-2 py-0.5 text-muted-foreground transition-colors hover:text-foreground"
-              }
+              aria-label={view === "command" ? "Copy command" : "Copy prompt"}
+              onClick={copy}
+              className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
-              {p}
+              {copied ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+              )}
             </button>
-          ))}
+          </div>
         </div>
-        <button
-          aria-label="Copy command"
-          onClick={copy}
-          className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-        >
-          {copied ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
-          )}
-        </button>
+        {view === "command" ? (
+          <pre className="overflow-x-auto px-3 py-2.5 font-mono text-xs leading-relaxed">{cmd}</pre>
+        ) : (
+          <pre className="max-h-44 overflow-auto whitespace-pre-wrap px-3 py-2.5 font-mono text-xs leading-relaxed">{prompt}</pre>
+        )}
       </div>
-      <pre className="overflow-x-auto px-3 py-2.5 font-mono text-xs leading-relaxed">{cmd}</pre>
+      <Button className="w-full" onClick={copy}>
+        {copied ? "Copied!" : view === "command" ? "Copy Command" : "Copy Prompt"}
+      </Button>
     </div>
   )
 }
@@ -737,6 +776,14 @@ function GetCodeDialog({
     monorepo ? " --monorepo" : ""
   } --preset ${presetId}`
   const existingCmd = `${PMS[pm]} logic2b@latest init --preset ${presetId}`
+  const newPrompt = buildInitPrompt({
+    cfg,
+    presetId,
+    mode: "new",
+    template: tpl,
+    monorepo,
+  })
+  const existingPrompt = buildInitPrompt({ cfg, presetId, mode: "existing" })
   const themeText =
     themeView === "css"
       ? buildCss(cfg)
@@ -793,8 +840,7 @@ function GetCodeDialog({
               Create a monorepo
               <Switch checked={monorepo} onCheckedChange={setMonorepo} />
             </label>
-            <CommandBlock cmd={newCmd} pm={pm} onPmChange={setPm} />
-            <BigCopyButton text={newCmd} label="Copy Command" />
+            <InstallBox cmd={newCmd} prompt={newPrompt} pm={pm} onPmChange={setPm} />
           </TabsContent>
 
           <TabsContent value="existing" className="mt-4 grid gap-4">
@@ -803,8 +849,12 @@ function GetCodeDialog({
               <code>components.json</code> and applies this exact theme via the
               preset.
             </p>
-            <CommandBlock cmd={existingCmd} pm={pm} onPmChange={setPm} />
-            <BigCopyButton text={existingCmd} label="Copy Command" />
+            <InstallBox
+              cmd={existingCmd}
+              prompt={existingPrompt}
+              pm={pm}
+              onPmChange={setPm}
+            />
           </TabsContent>
 
           <TabsContent value="theme" className="mt-4 grid gap-4">
