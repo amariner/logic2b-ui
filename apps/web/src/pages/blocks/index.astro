@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildAddPrompt } from "@/lib/prompts";
 import registryIndex from "../../../public/r/index.json";
 
 // Charts are registry:block too (they install like blocks) but have their own
@@ -54,6 +55,13 @@ const blocks = registryIndex.filter(
                   data-command={`npx logic2b@latest add ${block.name}`}
                 >
                   Copy install command
+                </button>
+                <button
+                  class="copy-btn rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                  data-command={buildAddPrompt(block.name)}
+                  title="Copy a prompt for your AI assistant"
+                >
+                  Copy prompt
                 </button>
               </div>
             </div>
