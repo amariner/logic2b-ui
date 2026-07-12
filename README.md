@@ -14,11 +14,17 @@ LLMs and coding agents.
   Workers.
 - **`packages/cli`** — `npx logic2b add button`: fetches components from the
   registry and writes them into your project (resolving registry dependencies).
+  `init --preset <id>` applies any theme built in `/create` exactly.
 - **`packages/mcp`** — an MCP server that exposes the registry to coding
   agents (search, list and read components/blocks/charts with full source).
 
 ## LLM-first
 
+- **Copy Prompt everywhere** — every install surface (docs, blocks, charts and
+  the `/create` studio) can copy a self-contained prompt for Claude Code,
+  Cursor or Copilot instead of a shell command: CLI steps, a no-CLI fallback
+  against the raw registry JSON, the exact theme CSS and a verification
+  checklist in one paste.
 - `/llms.txt` — index of all docs, blocks and charts with absolute URLs
   (blocks and charts link straight to their installable JSON payloads).
 - `/llms-full.txt` — the whole documentation in one Markdown file.
@@ -49,6 +55,12 @@ or environment variables required.
 - **Other hosts (Vercel, Netlify, a static server):** the site builds to static
   files, so just swap the adapter in `apps/web/astro.config.mjs` for your
   platform. `wrangler.jsonc` is Cloudflare-only and ignored everywhere else.
+
+## Roadmap
+
+See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (CLI template
+scaffolding, remote MCP, custom accents, contrast audit) and what we're
+exploring.
 
 ## Contributing
 

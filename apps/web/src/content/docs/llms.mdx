@@ -35,6 +35,23 @@ npx logic2b@latest add button
 or write `files[].content` to `src/components/ui/<name>.tsx` yourself, install
 the listed `dependencies`, and recurse into `registryDependencies`.
 
+## Copy Prompt
+
+Every install surface on this site (component docs, blocks, charts and the
+[/create](/create) theme studio) has a **Copy Prompt** action next to the CLI
+command. It copies a self-contained brief for a coding agent: the CLI happy
+path, a manual fallback against the raw registry JSON, the exact theme CSS when
+a preset is involved, the path-mapping table, and a verification checklist.
+Paste it into Claude Code, Cursor or Copilot and the agent has everything it
+needs — no scraping, no guessing.
+
+## MCP server
+
+Prefer a live connection? `@logic2b/mcp` exposes the whole registry over the
+Model Context Protocol — search, list and read components, blocks and charts
+with full source. See the [repo](https://github.com/amariner/logic2b-ui) for
+setup.
+
 ## Conventions an agent can rely on
 
 - Every component uses the `cn()` helper from `@/lib/utils`.
