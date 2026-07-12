@@ -15,21 +15,56 @@ import {
   loadConfig,
   targetPath,
 } from "./lib.ts"
+import { applyPresetToCss, decodePreset } from "./themes.ts"
+
+const SCAFFOLDERS: Record<string, string> = {
+  next: "npx create-next-app@latest my-app --typescript --tailwind --eslint --app",
+  vite: "npm create vite@latest my-app -- --template react-ts",
+  "react-router": "npx create-react-router@latest my-app",
+  tanstack: "npm create @tanstack/start@latest my-app",
+  astro: "npm create astro@latest my-app",
+  laravel: "composer create-project laravel/laravel my-app",
+}
 
 const program = new Command()
 
 program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
-  .version("0.2.0")
+  .version("0.3.0")
 
 program
   .command("init")
   .description("Create components.json, install cn(), and write the logic2b theme.")
   .option("-c, --cwd <path>", "working directory")
   .option("-r, --registry <url>", "registry base URL", DEFAULT_REGISTRY)
+  .option("-p, --preset <id>", "theme preset id from ui.logic2b.com/create")
+  .option("-t, --template <name>", "target framework (next, vite, astro, …)")
+  .option("--monorepo", "reserved for template scaffolding", false)
   .action(async (opts) => {
     const cwd = resolve(opts.cwd ?? process.cwd())
+
+    // Validate the preset up front — fail before touching any file.
+    const preset = opts.preset ? decodePreset(opts.preset) : null
+    if (opts.preset && !preset) {
+      throw new Error(
+        `Invalid preset id "${opts.preset}". Grab one from https://ui.logic2b.com/create (Get Code).`
+      )
+    }
+
+    // `--template` on an empty directory: full scaffolding is on the roadmap;
+    // until then, point to the framework's own scaffolder instead of failing
+    // halfway through.
+    if (opts.template && !existsSync(join(cwd, "package.json"))) {
+      const scaffold = SCAFFOLDERS[opts.template]
+      throw new Error(
+        `No package.json found — create the ${opts.template} app first, then re-run init inside it:\n\n` +
+          (scaffold ? `  ${scaffold}\n  cd my-app\n` : "") +
+          `  npx logic2b@latest init${opts.preset ? ` --preset ${opts.preset}` : ""}\n\n` +
+          `Tip: on ui.logic2b.com/create, "Copy Prompt" gives an AI assistant the full recipe (scaffold + theme) in one paste.`
+      )
+    }
+
     const srcDir = existsSync(join(cwd, "src")) ? "src" : "."
     const cssPath = detectCssPath(cwd, srcDir)
     const configPath = join(cwd, "components.json")
@@ -41,9 +76,16 @@ program
           {
             $schema: "https://ui.logic2b.com/schema.json",
             style: "default",
-            tailwind: { css: cssPath, baseColor: "neutral", cssVariables: true },
+            tailwind: {
+              css: cssPath,
+              baseColor: preset?.base ?? "neutral",
+              cssVariables: true,
+            },
             aliases: DEFAULT_ALIASES,
-            logic2b: { registry: opts.registry },
+            logic2b: {
+              registry: opts.registry,
+              ...(opts.preset ? { preset: opts.preset } : {}),
+            },
           },
           null,
           2
@@ -57,10 +99,26 @@ program
     // Install cn() and the design system so components look like logic2b.
     await addComponents(["utils", "theme"], { registry: opts.registry, cwd })
 
-    const themeTarget = join(dirname(cssPath), "theme.css")
+    const themeTarget = join(cwd, dirname(cssPath), "theme.css")
+    if (preset) {
+      if (existsSync(themeTarget)) {
+        const css = await readFile(themeTarget, "utf8")
+        await writeFile(themeTarget, applyPresetToCss(css, preset))
+        console.log(
+          `✓ applied preset — base: ${preset.base}, accent: ${preset.theme}, ` +
+            `chart: ${preset.chart}, radius: ${preset.radius}, ` +
+            `font: ${preset.font}/${preset.heading}`
+        )
+      } else {
+        console.log(
+          `! theme.css not found at ${themeTarget} — preset not applied.`
+        )
+      }
+    }
+
     console.log(
-      `\nDesign system installed → ${themeTarget}\n` +
-        `  • Fresh project: make ${themeTarget} your app's stylesheet entry.\n` +
+      `\nDesign system installed → ${join(dirname(cssPath), "theme.css")}\n` +
+        `  • Fresh project: make theme.css your app's stylesheet entry.\n` +
         `  • Existing globals.css: it already @imports tailwindcss, so either\n` +
         `    replace your entry with theme.css or copy its :root/.dark tokens over.\n` +
         `  • Dark mode is class-based — toggle ".dark" on <html>.`

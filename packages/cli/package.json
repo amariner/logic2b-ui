@@ -1,6 +1,6 @@
 {
   "name": "logic2b",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "CLI for logic2b ui — add copy-paste components to your project.",
   "type": "module",
   "bin": {
