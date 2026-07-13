@@ -18,6 +18,28 @@ agent can read a component's source or hand it to you to drop into a project.
 
 ## Usage
 
+### Remote endpoint (zero install)
+
+The same tools are served over streamable HTTP at
+`https://ui.logic2b.com/mcp` — nothing to run locally, which also works for
+web-based assistants and sandboxed agents without a shell. With Claude Code:
+
+```bash
+claude mcp add --transport http logic2b https://ui.logic2b.com/mcp
+```
+
+Or in any client that takes a JSON config:
+
+```json
+{
+  "mcpServers": {
+    "logic2b": { "type": "http", "url": "https://ui.logic2b.com/mcp" }
+  }
+}
+```
+
+### Local (stdio)
+
 The server speaks stdio and needs no configuration. Add it to any MCP client.
 
 **Claude Desktop / Claude Code** (`claude_desktop_config.json` or `.mcp.json`):

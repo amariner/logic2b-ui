@@ -17,6 +17,7 @@ LLMs and coding agents.
   `init --preset <id>` applies any theme built in `/create` exactly.
 - **`packages/mcp`** — an MCP server that exposes the registry to coding
   agents (search, list and read components/blocks/charts with full source).
+  Also served remotely at `https://ui.logic2b.com/mcp` — no install, no shell.
 
 ## LLM-first
 
@@ -30,8 +31,10 @@ LLMs and coding agents.
 - `/llms-full.txt` — the whole documentation in one Markdown file.
 - Every docs page is available as plain Markdown by appending `.md`.
 - `/r/index.json` + `/r/<name>.json` — machine-readable registry with full source.
-- **MCP server** (`packages/mcp`) — point an agent at it to search and read
-  every component, block and chart over the Model Context Protocol.
+- **MCP server** — point an agent at the remote endpoint
+  (`https://ui.logic2b.com/mcp`, streamable HTTP, zero install) or run
+  `npx -y @logic2b/mcp` locally to search and read every component, block and
+  chart over the Model Context Protocol.
 
 ## Development
 
@@ -58,8 +61,8 @@ or environment variables required.
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (CLI template
-scaffolding, remote MCP, custom accents, contrast audit) and what we're
+See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (MCP tools that
+act, AGENTS.md generator, custom accents, contrast audit) and what we're
 exploring.
 
 ## Contributing
