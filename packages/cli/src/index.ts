@@ -16,7 +16,7 @@ import {
   loadConfig,
   targetPath,
 } from "./lib.ts"
-import { applyPresetToCss, decodePreset } from "./themes.ts"
+import { applyPresetToCss, decodePreset } from "@logic2b/tokens"
 
 const SCAFFOLDERS: Record<string, string> = {
   next: "npx create-next-app@latest my-app --typescript --tailwind --eslint --app",

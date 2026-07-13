@@ -5,9 +5,10 @@ import {
   applyPresetToCss,
   decodePreset,
   DEFAULT_CONFIG,
+  encodePreset,
   presetDeclarations,
   resolveTokens,
-} from "../src/themes.ts"
+} from "../src/index.ts"
 
 const encode = (raw: string) =>
   Buffer.from(raw, "utf8")
@@ -49,25 +50,35 @@ const SAMPLE_CSS = `@import "tailwindcss";
 }
 `
 
-describe("decodePreset", () => {
+describe("encodePreset / decodePreset", () => {
   it("round-trips the default config", () => {
+    assert.equal(encodePreset(DEFAULT_CONFIG), DEFAULT_ID)
     assert.deepEqual(decodePreset(DEFAULT_ID), DEFAULT_CONFIG)
   })
 
-  it("decodes a fully custom preset", () => {
-    const cfg = decodePreset(encode("slate|blue|violet|lg|system|grotesk"))
-    assert.deepEqual(cfg, {
+  it("round-trips a fully custom preset", () => {
+    const cfg = {
       base: "slate",
       theme: "blue",
       chart: "violet",
       radius: "lg",
       font: "system",
       heading: "grotesk",
+    }
+    assert.deepEqual(decodePreset(encodePreset(cfg)), cfg)
+  })
+
+  it("ids are URL-safe (no +, / or padding)", () => {
+    const id = encodePreset({
+      base: "stone", theme: "rose", chart: "rose",
+      radius: "sm", font: "serif", heading: "inter",
     })
+    assert.doesNotMatch(id, /[+/=]/)
   })
 
   it("rejects malformed and unknown ids", () => {
     assert.equal(decodePreset("not-base64!!"), null)
+    assert.equal(decodePreset("%%%"), null)
     assert.equal(decodePreset(encode("only|three|parts")), null)
     assert.equal(decodePreset(encode("bogus|base|default|default|inter|inter")), null)
     assert.equal(decodePreset(encode("neutral|base|default|huge|inter|inter")), null)
@@ -127,6 +138,8 @@ describe("applyPresetToCss", () => {
     const out = applyPresetToCss(SAMPLE_CSS, cfg)
     // SAMPLE_CSS has no --card in :root; the preset adds it.
     assert.match(out, /:root \{[^}]*--card: oklch\(1 0 0\);/)
+    // Sidebar tokens the stylesheet lacks get appended too.
+    assert.match(out, /--sidebar: oklch\(0\.985 0 0\);/)
   })
 
   it("replaces --ring without clobbering --sidebar-ring", () => {
@@ -151,6 +164,14 @@ describe("custom accents (h<hue>c<chroma>)", () => {
     assert.ok(cfg)
     assert.equal(cfg!.theme, "h250c0.2")
     assert.equal(cfg!.chart, "h250c0.2")
+  })
+
+  it("round-trips custom keys through encodePreset", () => {
+    const cfg = {
+      base: "slate", theme: "h250c0.2", chart: "h200c0.15",
+      radius: "lg", font: "inter", heading: "inter",
+    }
+    assert.deepEqual(decodePreset(encodePreset(cfg)), cfg)
   })
 
   it("rejects out-of-range custom keys", () => {

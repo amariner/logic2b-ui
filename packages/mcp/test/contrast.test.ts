@@ -10,7 +10,7 @@ import {
   parseOklch,
   wcagRatio,
 } from "../src/contrast.ts"
-import { DEFAULT_CONFIG, presetDeclarations } from "../src/themes.ts"
+import { DEFAULT_CONFIG, presetDeclarations } from "@logic2b/tokens"
 
 const WHITE = oklchToRgb("oklch(1 0 0)")!
 const BLACK = oklchToRgb("oklch(0 0 0)")!

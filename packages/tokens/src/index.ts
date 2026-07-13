@@ -1,30 +1,46 @@
 /**
- * Theme presets for `logic2b init --preset <id>`.
+ * @logic2b/tokens — the single source of truth for the logic2b ui theme data.
  *
- * A preset id is base64url("base|theme|chart|radius|font|heading") — the same
- * format /create generates and shares via URL. This module mirrors the data in
- * apps/web/src/lib/themes.ts; keep the two in sync (extracting a shared
- * @logic2b/tokens package is on the roadmap).
+ * Base color scales, accents, chart ramps, radii, fonts, the preset codec
+ * (base64url of "base|theme|chart|radius|font|heading") and the CSS emitters.
+ * Consumed by the /create studio (apps/web), the CLI preset engine
+ * (packages/cli, bundled into the published `logic2b` dist) and the MCP theme
+ * tools (packages/mcp, bundled into `@logic2b/mcp` and the remote worker).
+ *
+ * Portability: this module runs in the browser, in Node (>=18) and inside the
+ * Cloudflare worker behind ui.logic2b.com/mcp — no Buffer, no node: imports,
+ * no DOM. Preset ids use the atob/btoa globals available in all three.
  */
 
 export type Mode = "light" | "dark"
 
-export interface ThemeConfig {
-  base: string
-  theme: string
-  chart: string
-  radius: string
-  font: string
-  heading: string
+export interface TokenSet {
+  background: string
+  foreground: string
+  card: string
+  "card-foreground": string
+  popover: string
+  "popover-foreground": string
+  primary: string
+  "primary-foreground": string
+  secondary: string
+  "secondary-foreground": string
+  muted: string
+  "muted-foreground": string
+  accent: string
+  "accent-foreground": string
+  destructive: string
+  "destructive-foreground": string
+  border: string
+  input: string
+  ring: string
 }
 
-export const DEFAULT_CONFIG: ThemeConfig = {
-  base: "neutral",
-  theme: "base",
-  chart: "default",
-  radius: "default",
-  font: "inter",
-  heading: "inter",
+export interface BaseColor {
+  label: string
+  swatch: string
+  light: TokenSet
+  dark: TokenSet
 }
 
 const WHITE = "oklch(1 0 0)"
@@ -32,15 +48,11 @@ const NEAR_WHITE = "oklch(0.985 0 0)"
 const DESTRUCTIVE_L = "oklch(0.577 0.245 27.325)"
 const DESTRUCTIVE_D = "oklch(0.704 0.191 22.216)"
 
-type TokenSet = Record<string, string>
-
-interface BaseColor {
-  light: TokenSet
-  dark: TokenSet
-}
-
+/* -- Base colors (the neutral scale). Selecting one swaps every gray token. -- */
 export const BASE_COLORS: Record<string, BaseColor> = {
   neutral: {
+    label: "Neutral",
+    swatch: "oklch(0.205 0 0)",
     light: {
       background: WHITE, foreground: "oklch(0.145 0 0)", card: WHITE,
       "card-foreground": "oklch(0.145 0 0)", popover: WHITE, "popover-foreground": "oklch(0.145 0 0)",
@@ -63,6 +75,8 @@ export const BASE_COLORS: Record<string, BaseColor> = {
     },
   },
   stone: {
+    label: "Stone",
+    swatch: "oklch(0.216 0.006 56.043)",
     light: {
       background: WHITE, foreground: "oklch(0.147 0.004 49.25)", card: WHITE,
       "card-foreground": "oklch(0.147 0.004 49.25)", popover: WHITE, "popover-foreground": "oklch(0.147 0.004 49.25)",
@@ -85,6 +99,8 @@ export const BASE_COLORS: Record<string, BaseColor> = {
     },
   },
   zinc: {
+    label: "Zinc",
+    swatch: "oklch(0.21 0.006 285.885)",
     light: {
       background: WHITE, foreground: "oklch(0.141 0.005 285.823)", card: WHITE,
       "card-foreground": "oklch(0.141 0.005 285.823)", popover: WHITE, "popover-foreground": "oklch(0.141 0.005 285.823)",
@@ -107,6 +123,8 @@ export const BASE_COLORS: Record<string, BaseColor> = {
     },
   },
   slate: {
+    label: "Slate",
+    swatch: "oklch(0.208 0.042 265.755)",
     light: {
       background: WHITE, foreground: "oklch(0.129 0.042 264.695)", card: WHITE,
       "card-foreground": "oklch(0.129 0.042 264.695)", popover: WHITE, "popover-foreground": "oklch(0.129 0.042 264.695)",
@@ -129,6 +147,8 @@ export const BASE_COLORS: Record<string, BaseColor> = {
     },
   },
   gray: {
+    label: "Gray",
+    swatch: "oklch(0.21 0.034 264.665)",
     light: {
       background: WHITE, foreground: "oklch(0.13 0.028 261.692)", card: WHITE,
       "card-foreground": "oklch(0.13 0.028 261.692)", popover: WHITE, "popover-foreground": "oklch(0.13 0.028 261.692)",
@@ -152,66 +172,46 @@ export const BASE_COLORS: Record<string, BaseColor> = {
   },
 }
 
-interface AccentColor {
+/* -- Accent themes: override primary/ring. "base" defers to the base color. -- */
+export interface AccentColor {
+  label: string
+  swatch: string
   light?: { primary: string; fg: string }
   dark?: { primary: string; fg: string }
 }
 
 export const ACCENTS: Record<string, AccentColor> = {
-  base: {},
+  base: { label: "Base", swatch: "oklch(0.205 0 0)" },
   blue: {
+    label: "Blue", swatch: "oklch(0.546 0.245 262.881)",
     light: { primary: "oklch(0.546 0.245 262.881)", fg: NEAR_WHITE },
     dark: { primary: "oklch(0.623 0.214 259.815)", fg: NEAR_WHITE },
   },
   green: {
+    label: "Green", swatch: "oklch(0.548 0.166 156.743)",
     light: { primary: "oklch(0.548 0.166 156.743)", fg: NEAR_WHITE },
     dark: { primary: "oklch(0.696 0.17 162.48)", fg: "oklch(0.145 0 0)" },
   },
   rose: {
+    label: "Rose", swatch: "oklch(0.586 0.222 17.585)",
     light: { primary: "oklch(0.586 0.222 17.585)", fg: NEAR_WHITE },
     dark: { primary: "oklch(0.645 0.246 16.439)", fg: NEAR_WHITE },
   },
   violet: {
+    label: "Violet", swatch: "oklch(0.541 0.281 293.009)",
     light: { primary: "oklch(0.541 0.281 293.009)", fg: NEAR_WHITE },
     dark: { primary: "oklch(0.606 0.25 292.717)", fg: NEAR_WHITE },
   },
   orange: {
+    label: "Orange", swatch: "oklch(0.646 0.222 41.116)",
     light: { primary: "oklch(0.646 0.222 41.116)", fg: NEAR_WHITE },
     dark: { primary: "oklch(0.705 0.213 47.604)", fg: "oklch(0.145 0 0)" },
   },
 }
 
-type ChartRamp = [string, string, string, string, string]
-
-function ramp(hue: number, chroma: number): ChartRamp {
-  const ls = [0.55, 0.63, 0.7, 0.78, 0.85]
-  return ls.map(
-    (l, i) => `oklch(${l} ${(chroma * (1 - i * 0.12)).toFixed(3)} ${hue})`
-  ) as ChartRamp
-}
-
-export const CHARTS: Record<string, { light: ChartRamp; dark: ChartRamp }> = {
-  default: {
-    light: [
-      "oklch(0.646 0.222 41.116)", "oklch(0.6 0.118 184.704)", "oklch(0.398 0.07 227.392)",
-      "oklch(0.828 0.189 84.429)", "oklch(0.769 0.188 70.08)",
-    ],
-    dark: [
-      "oklch(0.488 0.243 264.376)", "oklch(0.696 0.17 162.48)", "oklch(0.769 0.188 70.08)",
-      "oklch(0.627 0.265 303.9)", "oklch(0.645 0.246 16.439)",
-    ],
-  },
-  blue: { light: ramp(262.881, 0.2), dark: ramp(262.881, 0.2) },
-  green: { light: ramp(156.743, 0.16), dark: ramp(156.743, 0.16) },
-  violet: { light: ramp(293.009, 0.2), dark: ramp(293.009, 0.2) },
-  rose: { light: ramp(17.585, 0.19), dark: ramp(17.585, 0.19) },
-  orange: { light: ramp(41.116, 0.19), dark: ramp(41.116, 0.19) },
-}
-
-
-/* -- Custom accents/charts: a free oklch hue/chroma serialized as
-      "h<hue>c<chroma>" in the preset's theme or chart slot. Same 6-field id
-      format; same math as apps/web/src/lib/themes.ts. -- */
+/* -- Custom accents: a free oklch hue/chroma, serialized as "h<hue>c<chroma>"
+      in the preset's theme (and chart) slot — the 6-field id format is
+      unchanged, so studio links, the CLI and the MCP all round-trip it. -- */
 
 export const CUSTOM_KEY_RE = /^h(\d{1,3}(?:\.\d{1,3})?)c(0(?:\.\d{1,3})?|0?\.\d{1,3})$/
 
@@ -230,12 +230,14 @@ export function customKey(hue: number, chroma: number): string {
   return `h${h}c${c}`
 }
 
-/** Lightness anchors for custom accents, in family with the six presets.
- *  Near-white text wins the APCA comparison for every hue at these anchors
- *  (oklch is perceptually uniform), so the fg is fixed. */
+/** Lightness anchors for custom accents, in family with the six presets
+ *  (light primaries sit at L ≈ 0.54–0.65, dark ones at ≈ 0.61–0.71). oklch is
+ *  perceptually uniform, so at these anchors near-white text wins the APCA
+ *  comparison for every hue — the fg is fixed, and borderline dark-mode
+ *  pairs surface in the contrast audit. */
 const CUSTOM_L = { light: 0.55, dark: 0.65 } as const
 
-/** AccentColor for a custom "h<hue>c<chroma>" key (null if not one). */
+/** Build the AccentColor for a custom "h<hue>c<chroma>" key (null if not one). */
 export function customAccent(key: string): AccentColor | null {
   const parsed = parseCustomKey(key)
   if (!parsed) return null
@@ -243,16 +245,58 @@ export function customAccent(key: string): AccentColor | null {
   const light = `oklch(${CUSTOM_L.light} ${chroma} ${hue})`
   const dark = `oklch(${CUSTOM_L.dark} ${chroma} ${hue})`
   return {
+    label: "Custom",
+    swatch: light,
     light: { primary: light, fg: NEAR_WHITE },
     dark: { primary: dark, fg: NEAR_WHITE },
   }
 }
 
-/** Chart ramp pair for a custom "h<hue>c<chroma>" key (null if not one). */
-export function customChart(key: string): { light: ChartRamp; dark: ChartRamp } | null {
+/* -- Chart palettes: 5-stop ramps generated from a hue, or the default mix. -- */
+export type ChartRamp = [string, string, string, string, string]
+
+export interface ChartPalette {
+  label: string
+  swatch: string
+  light: ChartRamp
+  dark: ChartRamp
+}
+
+function ramp(hue: number, chroma: number): ChartRamp {
+  const ls = [0.55, 0.63, 0.7, 0.78, 0.85]
+  return ls.map((l, i) => `oklch(${l} ${(chroma * (1 - i * 0.12)).toFixed(3)} ${hue})`) as ChartRamp
+}
+
+/** ChartPalette for a custom "h<hue>c<chroma>" key (null if not one). */
+export function customChart(key: string): ChartPalette | null {
   const parsed = parseCustomKey(key)
   if (!parsed) return null
-  return { light: ramp(parsed.hue, parsed.chroma), dark: ramp(parsed.hue, parsed.chroma) }
+  const { hue, chroma } = parsed
+  return {
+    label: "Custom",
+    swatch: `oklch(0.55 ${chroma} ${hue})`,
+    light: ramp(hue, chroma),
+    dark: ramp(hue, chroma),
+  }
+}
+
+export const CHARTS: Record<string, ChartPalette> = {
+  default: {
+    label: "Default", swatch: "oklch(0.646 0.222 41.116)",
+    light: [
+      "oklch(0.646 0.222 41.116)", "oklch(0.6 0.118 184.704)", "oklch(0.398 0.07 227.392)",
+      "oklch(0.828 0.189 84.429)", "oklch(0.769 0.188 70.08)",
+    ],
+    dark: [
+      "oklch(0.488 0.243 264.376)", "oklch(0.696 0.17 162.48)", "oklch(0.769 0.188 70.08)",
+      "oklch(0.627 0.265 303.9)", "oklch(0.645 0.246 16.439)",
+    ],
+  },
+  blue: { label: "Blue", swatch: "oklch(0.546 0.245 262.881)", light: ramp(262.881, 0.2), dark: ramp(262.881, 0.2) },
+  green: { label: "Green", swatch: "oklch(0.548 0.166 156.743)", light: ramp(156.743, 0.16), dark: ramp(156.743, 0.16) },
+  violet: { label: "Violet", swatch: "oklch(0.541 0.281 293.009)", light: ramp(293.009, 0.2), dark: ramp(293.009, 0.2) },
+  rose: { label: "Rose", swatch: "oklch(0.586 0.222 17.585)", light: ramp(17.585, 0.19), dark: ramp(17.585, 0.19) },
+  orange: { label: "Orange", swatch: "oklch(0.646 0.222 41.116)", light: ramp(41.116, 0.19), dark: ramp(41.116, 0.19) },
 }
 
 export const RADII: Record<string, string> = {
@@ -273,6 +317,26 @@ export const FONTS: Record<string, string> = {
   mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
 }
 
+/* -- Config + serialization -- */
+export interface ThemeConfig {
+  base: string
+  theme: string
+  chart: string
+  radius: string
+  font: string
+  heading: string
+}
+
+export const DEFAULT_CONFIG: ThemeConfig = {
+  base: "neutral",
+  theme: "base",
+  chart: "default",
+  radius: "default",
+  font: "inter",
+  heading: "inter",
+}
+
+/** Compact, URL-safe preset id: base64url of the ordered config values. */
 const ORDER: (keyof ThemeConfig)[] = [
   "base",
   "theme",
@@ -282,12 +346,17 @@ const ORDER: (keyof ThemeConfig)[] = [
   "heading",
 ]
 
-/** Decode a /create preset id. Returns null when malformed or unknown. */
+export function encodePreset(cfg: ThemeConfig): string {
+  const raw = ORDER.map((k) => cfg[k]).join("|")
+  const b64 = btoa(raw)
+  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")
+}
+
 export function decodePreset(id: string): ThemeConfig | null {
   let raw: string
   try {
     const b64 = id.replace(/-/g, "+").replace(/_/g, "/")
-    raw = Buffer.from(b64, "base64").toString("utf8")
+    raw = atob(b64)
   } catch {
     return null
   }
@@ -295,6 +364,8 @@ export function decodePreset(id: string): ThemeConfig | null {
   if (parts.length !== ORDER.length) return null
   const cfg = { ...DEFAULT_CONFIG }
   ORDER.forEach((k, i) => (cfg[k] = parts[i]))
+  // Validate against known tables; theme and chart also accept a custom
+  // "h<hue>c<chroma>" key.
   if (!BASE_COLORS[cfg.base]) return null
   if (!ACCENTS[cfg.theme] && !parseCustomKey(cfg.theme)) return null
   if (!CHARTS[cfg.chart] && !parseCustomKey(cfg.chart)) return null
@@ -304,7 +375,7 @@ export function decodePreset(id: string): ThemeConfig | null {
   return cfg
 }
 
-/** Effective token set + chart ramp for one mode. */
+/** Resolve the effective token set + chart palette for a mode. */
 export function resolveTokens(cfg: ThemeConfig, mode: Mode) {
   const base = BASE_COLORS[cfg.base] ?? BASE_COLORS.neutral
   const tokens: Record<string, string> = { ...base[mode] }
@@ -318,25 +389,33 @@ export function resolveTokens(cfg: ThemeConfig, mode: Mode) {
   return { tokens, chart: chart[mode] }
 }
 
+/** Sidebar tokens derived from the config — the surface ladder every consumer
+ *  writes: near-white of the scale in light (the base's primary-foreground),
+ *  the card surface in dark. */
+export function sidebarTokens(cfg: ThemeConfig, mode: Mode): Record<string, string> {
+  const base = (BASE_COLORS[cfg.base] ?? BASE_COLORS.neutral)[mode]
+  const { tokens } = resolveTokens(cfg, mode)
+  return {
+    sidebar: mode === "light" ? base["primary-foreground"] : base.card,
+    "sidebar-foreground": tokens.foreground,
+    "sidebar-primary": tokens.primary,
+    "sidebar-primary-foreground": tokens["primary-foreground"],
+    "sidebar-accent": tokens.accent,
+    "sidebar-accent-foreground": tokens["accent-foreground"],
+    "sidebar-border": tokens.border,
+    "sidebar-ring": tokens.ring,
+  }
+}
+
 /** All custom-property declarations a preset pins for one mode. */
 export function presetDeclarations(
   cfg: ThemeConfig,
-  mode: Mode
+  mode: Mode,
 ): Record<string, string> {
   const { tokens, chart } = resolveTokens(cfg, mode)
   const decls: Record<string, string> = { ...tokens }
   chart.forEach((c, i) => (decls[`chart-${i + 1}`] = c))
-  // Sidebar tokens follow the surface ladder: near-white of the scale in
-  // light (the base's primary-foreground), the card surface in dark.
-  const base = (BASE_COLORS[cfg.base] ?? BASE_COLORS.neutral)[mode]
-  decls["sidebar"] = mode === "light" ? base["primary-foreground"] : base.card
-  decls["sidebar-foreground"] = tokens.foreground
-  decls["sidebar-primary"] = tokens.primary
-  decls["sidebar-primary-foreground"] = tokens["primary-foreground"]
-  decls["sidebar-accent"] = tokens.accent
-  decls["sidebar-accent-foreground"] = tokens["accent-foreground"]
-  decls["sidebar-border"] = tokens.border
-  decls["sidebar-ring"] = tokens.ring
+  Object.assign(decls, sidebarTokens(cfg, mode))
   if (mode === "light") {
     decls["radius"] = RADII[cfg.radius] ?? RADII.default
     decls["font-sans"] = FONTS[cfg.font] ?? FONTS.sans
@@ -345,11 +424,37 @@ export function presetDeclarations(
   return decls
 }
 
+/** Full CSS the studio exports — :root + .dark with every token. */
+export function buildCss(cfg: ThemeConfig): string {
+  const radius = RADII[cfg.radius] ?? RADII.default
+  const font = FONTS[cfg.font] ?? FONTS.sans
+  const heading = FONTS[cfg.heading] ?? FONTS.sans
+  const block = (mode: Mode) => {
+    const { tokens, chart } = resolveTokens(cfg, mode)
+    const lines = Object.entries(tokens).map(([k, v]) => `  --${k}: ${v};`)
+    chart.forEach((c, i) => lines.push(`  --chart-${i + 1}: ${c};`))
+    for (const [k, v] of Object.entries(sidebarTokens(cfg, mode))) {
+      lines.push(`  --${k}: ${v};`)
+    }
+    return lines.join("\n")
+  }
+  return `:root {
+  --radius: ${radius};
+  --font-sans: ${font};
+  --font-heading: ${heading};
+${block("light")}
+}
+
+.dark {
+${block("dark")}
+}`
+}
+
 /** Replace (or append) `--key: value;` declarations inside one selector block. */
 function patchBlock(
   css: string,
   selector: string,
-  decls: Record<string, string>
+  decls: Record<string, string>,
 ): string {
   const start = css.indexOf(`${selector} {`)
   if (start === -1) return css
