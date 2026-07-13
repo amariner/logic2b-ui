@@ -59,13 +59,14 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   docs' Agent tab inject alias, stylesheet-entry and islands/Inertia guidance,
   and the `/create` scaffold prompts derive the same notes from the chosen
   template.
+- ✅ **Shareable theme links** — `/create?preset=…` loads any theme, the URL
+  tracks every edit (no history spam), and Copy Link in the studio rail hands
+  out the address.
 
 ## Now (🔜) — in priority order
 
 ### 1. Theme studio
 
-- 🔜 Load a preset from the URL (`/create?preset=…`) so themes are shareable
-  links, not just ids.
 - 🔜 Contrast audit in the studio (WCAG 2.2 + APCA) with warnings on failing
   token pairs — and expose the same audit as an MCP tool so agents can verify
   the themes they generate.
