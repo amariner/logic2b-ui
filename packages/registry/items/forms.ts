@@ -108,4 +108,13 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils", "label", "separator"],
     files: [{ path: "src/ui/field.tsx", type: "registry:ui" }],
   },
+  {
+    name: "tags-input",
+    type: "registry:ui",
+    description:
+      "Free-form multi-value input rendered as removable chips: Enter or comma commits, paste splits on commas, Backspace on an empty field removes the last tag, duplicates are ignored and max caps the list. Controlled or uncontrolled via value/defaultValue + onValueChange.",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/tags-input.tsx", type: "registry:ui" }],
+  },
 ]
