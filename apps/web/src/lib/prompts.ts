@@ -32,6 +32,78 @@ const TEMPLATE_LABELS: Record<string, string> = {
   laravel: "Laravel (with Inertia + React)",
 }
 
+/** Stacks the prompt copier can specialize for. "auto" = stack-agnostic. */
+export const STACKS = ["auto", "next", "vite", "astro", "laravel"] as const
+export type Stack = (typeof STACKS)[number]
+
+export const STACK_LABELS: Record<Stack, string> = {
+  auto: "Auto",
+  next: "Next.js",
+  vite: "Vite",
+  astro: "Astro",
+  laravel: "Laravel",
+}
+
+/** Per-stack install guidance, appended to prompts as a "Stack notes"
+ *  section. Every note is actionable — where the alias lives, where the
+ *  stylesheet is imported, what the framework needs for interactivity. */
+export function stackNotes(stack: Stack): string {
+  switch (stack) {
+    case "next":
+      return `## Stack notes (Next.js, App Router)
+
+- The \`@/*\` alias maps to \`./src/*\` (or the repo root without \`src/\`) in
+  \`tsconfig.json\` — create-next-app sets this up.
+- Import the theme stylesheet once from \`app/layout.tsx\` (replace the
+  default \`globals.css\` import or \`@import\` it from there).
+- Interactive components already carry \`"use client"\` — server components
+  can render them directly; don't add the directive to your own wrappers
+  unless they use hooks themselves.`
+    case "vite":
+      return `## Stack notes (Vite + React)
+
+- The \`@/*\` alias must exist in BOTH \`tsconfig.json\` (\`compilerOptions.paths\`)
+  and \`vite.config.ts\` (\`resolve.alias: { "@": "/src" }\`).
+- Tailwind v4 runs through the \`@tailwindcss/vite\` plugin — no PostCSS config.
+- Import the theme stylesheet from the entry (\`src/main.tsx\`); the \`"use client"\`
+  directives in components are inert in Vite and safe to keep.`
+    case "astro":
+      return `## Stack notes (Astro)
+
+- Components are React islands: the project needs \`@astrojs/react\`, and any
+  interactive component must be mounted with a client directive
+  (\`client:load\` or \`client:visible\`) from an .astro file — either directly
+  or via a React wrapper that is itself an island.
+- Add Tailwind v4 with the \`@tailwindcss/vite\` plugin in \`astro.config.mjs\`
+  (\`vite: { plugins: [tailwindcss()] }\`).
+- Import the theme stylesheet from the base layout. Set the \`@/*\` alias in
+  \`tsconfig.json\` — Astro picks it up automatically.`
+    case "laravel":
+      return `## Stack notes (Laravel + Inertia + React)
+
+- The source root is \`resources/js\`, so map \`@/*\` to \`./resources/js/*\` in
+  both \`tsconfig.json\` and the Vite config alias — components then live in
+  \`resources/js/components/ui\`.
+- Import the theme stylesheet from \`resources/css/app.css\` (or the Inertia
+  entry \`resources/js/app.tsx\`); Tailwind v4 uses the \`@tailwindcss/vite\`
+  plugin already present in Laravel's Vite setup.
+- Pages render through Inertia, so components behave like a plain React SPA —
+  the \`"use client"\` directives are inert and safe.`
+    default:
+      return ""
+  }
+}
+
+/** Template keys (from the /create scaffolds) → prompt stack. */
+const TEMPLATE_STACK: Record<string, Stack> = {
+  next: "next",
+  vite: "vite",
+  tanstack: "vite",
+  "react-router": "vite",
+  astro: "astro",
+  laravel: "laravel",
+}
+
 /** Shared closing sections: registry map, conventions, verification. */
 function commonSections(): string {
   return `## Registry reference
@@ -74,6 +146,8 @@ export interface InitPromptOptions {
   /** Template key (next, vite, …) — only used when mode is "new". */
   template?: string
   monorepo?: boolean
+  /** Stack flavor for "existing" mode ("new" derives it from the template). */
+  stack?: Stack
 }
 
 /**
@@ -86,10 +160,14 @@ export function buildInitPrompt({
   mode,
   template = "next",
   monorepo = false,
+  stack,
 }: InitPromptOptions): string {
   const css = buildCss(cfg)
   const scaffold = SCAFFOLD_COMMANDS[template] ?? SCAFFOLD_COMMANDS.next
   const templateLabel = TEMPLATE_LABELS[template] ?? template
+  const notes = stackNotes(
+    mode === "new" ? (TEMPLATE_STACK[template] ?? "auto") : (stack ?? "auto")
+  )
 
   const newProjectSteps = `1. Scaffold a ${templateLabel} project${
     monorepo ? " inside a pnpm workspace monorepo (apps/web + packages/*)" : ""
@@ -143,14 +221,16 @@ theme.css with the exact CSS in the next section.
 ${css}
 \`\`\`
 
-${commonSections()}`
+${notes ? `${notes}\n\n` : ""}${commonSections()}`
 }
 
 /**
  * Prompt for a single registry item (component, block or chart): install it
- * with the CLI, or by hand from the registry JSON.
+ * with the CLI, or by hand from the registry JSON. Pass a stack for
+ * framework-specific guidance.
  */
-export function buildAddPrompt(name: string): string {
+export function buildAddPrompt(name: string, stack: Stack = "auto"): string {
+  const notes = stackNotes(stack)
   return `Add the "${name}" item from the logic2b ui registry (${SITE}) to this project. Follow every step and verify at the end.
 
 ## Steps
@@ -178,5 +258,5 @@ Do it manually from the registry payload:
 3. Repeat (recursively) for each name in \`registryDependencies\`.
 4. Install every package listed in \`dependencies\` across those payloads.
 
-${commonSections()}`
+${notes ? `${notes}\n\n` : ""}${commonSections()}`
 }
