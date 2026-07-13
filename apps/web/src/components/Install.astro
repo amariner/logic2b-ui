@@ -1,6 +1,12 @@
 ---
 import { Code } from "astro:components";
-import { buildAddPrompt, buildInitPrompt } from "@/lib/prompts";
+import {
+  buildAddPrompt,
+  buildInitPrompt,
+  STACK_LABELS,
+  STACKS,
+  stackNotes,
+} from "@/lib/prompts";
 import { DEFAULT_CONFIG, encodePreset } from "@/lib/themes";
 
 interface Props {
@@ -37,6 +43,11 @@ const prompt =
       })
     : buildAddPrompt(name);
 const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
+// Per-stack guidance, composed into the prompt client-side: each note slots
+// in right before "## Registry reference" (present in every prompt).
+const notesByStack = Object.fromEntries(
+  STACKS.filter((s) => s !== "auto").map((s) => [s, stackNotes(s)])
+);
 ---
 
 <div class="install-tabs mt-4" data-uid={uid}>
@@ -66,8 +77,23 @@ const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
       verification checklist.
     </p>
     <div class="overflow-hidden rounded-lg border bg-muted/40">
-      <div class="flex items-center justify-between border-b px-3 py-1.5">
-        <span class="text-xs text-muted-foreground">prompt.md</span>
+      <div class="flex items-center justify-between gap-2 border-b px-3 py-1.5">
+        <div class="stack-pills flex items-center gap-1" role="group" aria-label="Stack">
+          {
+            STACKS.map((s) => (
+              <button
+                class={`stack-pill rounded-md px-2 py-0.5 text-xs font-medium transition-colors ${
+                  s === "auto"
+                    ? "bg-accent text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                data-stack={s}
+              >
+                {STACK_LABELS[s]}
+              </button>
+            ))
+          }
+        </div>
         <button
           class="copy-prompt rounded-md border px-2 py-1 text-xs font-medium hover:bg-accent"
           data-prompt={prompt}
@@ -76,7 +102,9 @@ const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
         </button>
       </div>
       <pre
-        class="max-h-72 overflow-auto whitespace-pre-wrap px-3 py-2.5 font-mono text-xs leading-relaxed">{prompt}</pre>
+        class="prompt-body max-h-72 overflow-auto whitespace-pre-wrap px-3 py-2.5 font-mono text-xs leading-relaxed"
+        data-base={prompt}>{prompt}</pre>
+      <script type="application/json" class="stack-notes" set:html={JSON.stringify(notesByStack)} />
     </div>
   </div>
 
@@ -128,6 +156,35 @@ const uid = `install-${name.replace(/[^a-z0-9]/gi, "-")}`;
       const original = btn.textContent;
       btn.textContent = "Copied!";
       setTimeout(() => (btn.textContent = original), 1500);
+    });
+  });
+
+  // Stack pills: recompose the prompt with the chosen stack's notes slotted
+  // in before "## Registry reference".
+  document.querySelectorAll(".install-tabs").forEach((root) => {
+    const pills = root.querySelectorAll<HTMLButtonElement>(".stack-pill");
+    if (pills.length === 0) return;
+    const pre = root.querySelector<HTMLPreElement>(".prompt-body");
+    const copy = root.querySelector<HTMLButtonElement>(".copy-prompt");
+    const notesEl = root.querySelector(".stack-notes");
+    if (!pre || !copy || !notesEl) return;
+    const notes: Record<string, string> = JSON.parse(notesEl.textContent ?? "{}");
+    const base = pre.dataset.base ?? "";
+    pills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        pills.forEach((p) => {
+          const active = p === pill;
+          p.classList.toggle("bg-accent", active);
+          p.classList.toggle("text-foreground", active);
+          p.classList.toggle("text-muted-foreground", !active);
+        });
+        const note = notes[pill.dataset.stack ?? ""];
+        const next = note
+          ? base.replace("## Registry reference", `${note}\n\n## Registry reference`)
+          : base;
+        pre.textContent = next;
+        copy.dataset.prompt = next;
+      });
     });
   });
 

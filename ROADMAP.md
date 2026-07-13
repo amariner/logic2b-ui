@@ -54,17 +54,15 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   machine-readable data (`/r/demos/*.json`, imports rewritten to project
   paths) and `add_command` returns validated per-package-manager CLI
   invocations.
+- ✅ **Per-stack prompt flavors** — the Copy Prompt surfaces speak the
+  consumer's framework: stack pills (Next.js / Vite / Astro / Laravel) on the
+  docs' Agent tab inject alias, stylesheet-entry and islands/Inertia guidance,
+  and the `/create` scaffold prompts derive the same notes from the chosen
+  template.
 
 ## Now (🔜) — in priority order
 
-### 1. AI & agents — the differentiating lane
-
-Ordered: each step builds on the previous one.
-
-- 🔜 Per-stack prompt flavors (Next.js / Vite / Astro / Laravel) in the prompt
-  copier.
-
-### 2. Theme studio
+### 1. Theme studio
 
 - 🔜 Load a preset from the URL (`/create?preset=…`) so themes are shareable
   links, not just ids.
@@ -75,7 +73,7 @@ Ordered: each step builds on the previous one.
   derives them; the studio CSS export should match).
 - 🔜 Custom accent: free oklch hue/chroma picker, not just the six presets.
 
-### 3. CLI — only what the lane needs
+### 2. CLI — only what the lane needs
 
 We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI
