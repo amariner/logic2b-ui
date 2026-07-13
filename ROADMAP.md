@@ -69,14 +69,14 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 - ✅ **Sidebar tokens in the studio CSS export** — the exported `:root`/`.dark`
   blocks carry the same derived sidebar ladder the CLI preset patch writes,
   and the studio's contrast audit covers those pairs too.
+- ✅ **Custom accent** — a free oklch hue/chroma picker in the studio, not
+  just the six presets. Serialized as `h<hue>c<chroma>` inside the same
+  6-field preset id (charts accept it too), so custom themes travel through
+  share links, `init --preset` and the MCP theme tools unchanged.
 
 ## Now (🔜) — in priority order
 
-### 1. Theme studio
-
-- 🔜 Custom accent: free oklch hue/chroma picker, not just the six presets.
-
-### 2. CLI — only what the lane needs
+### 1. CLI — only what the lane needs
 
 We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI

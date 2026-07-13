@@ -213,6 +213,53 @@ export const CHARTS: Record<string, { light: ChartRamp; dark: ChartRamp }> = {
   orange: { light: ramp(41.116, 0.19), dark: ramp(41.116, 0.19) },
 }
 
+
+/* -- Custom accents/charts: a free oklch hue/chroma serialized as
+      "h<hue>c<chroma>" in the preset's theme or chart slot. Same 6-field id
+      format; same math as apps/web/src/lib/themes.ts. -- */
+
+export const CUSTOM_KEY_RE = /^h(\d{1,3}(?:\.\d{1,3})?)c(0(?:\.\d{1,3})?|0?\.\d{1,3})$/
+
+export function parseCustomKey(key: string): { hue: number; chroma: number } | null {
+  const m = CUSTOM_KEY_RE.exec(key)
+  if (!m) return null
+  const hue = parseFloat(m[1])
+  const chroma = parseFloat(m[2])
+  if (hue > 360 || chroma > 0.4) return null
+  return { hue, chroma }
+}
+
+export function customKey(hue: number, chroma: number): string {
+  const h = Math.round(hue * 10) / 10
+  const c = Math.round(chroma * 1000) / 1000
+  return `h${h}c${c}`
+}
+
+/** Lightness anchors for custom accents, in family with the six presets.
+ *  Near-white text wins the APCA comparison for every hue at these anchors
+ *  (oklch is perceptually uniform), so the fg is fixed. */
+const CUSTOM_L = { light: 0.55, dark: 0.65 } as const
+
+/** AccentColor for a custom "h<hue>c<chroma>" key (null if not one). */
+export function customAccent(key: string): AccentColor | null {
+  const parsed = parseCustomKey(key)
+  if (!parsed) return null
+  const { hue, chroma } = parsed
+  const light = `oklch(${CUSTOM_L.light} ${chroma} ${hue})`
+  const dark = `oklch(${CUSTOM_L.dark} ${chroma} ${hue})`
+  return {
+    light: { primary: light, fg: NEAR_WHITE },
+    dark: { primary: dark, fg: NEAR_WHITE },
+  }
+}
+
+/** Chart ramp pair for a custom "h<hue>c<chroma>" key (null if not one). */
+export function customChart(key: string): { light: ChartRamp; dark: ChartRamp } | null {
+  const parsed = parseCustomKey(key)
+  if (!parsed) return null
+  return { light: ramp(parsed.hue, parsed.chroma), dark: ramp(parsed.hue, parsed.chroma) }
+}
+
 export const RADII: Record<string, string> = {
   none: "0rem",
   sm: "0.3rem",
@@ -261,8 +308,8 @@ export function decodePreset(id: string): ThemeConfig | null {
   const cfg = { ...DEFAULT_CONFIG }
   ORDER.forEach((k, i) => (cfg[k] = parts[i]))
   if (!BASE_COLORS[cfg.base]) return null
-  if (!ACCENTS[cfg.theme]) return null
-  if (!CHARTS[cfg.chart]) return null
+  if (!ACCENTS[cfg.theme] && !parseCustomKey(cfg.theme)) return null
+  if (!CHARTS[cfg.chart] && !parseCustomKey(cfg.chart)) return null
   if (!RADII[cfg.radius]) return null
   if (!FONTS[cfg.font]) return null
   if (!FONTS[cfg.heading]) return null
@@ -273,13 +320,13 @@ export function decodePreset(id: string): ThemeConfig | null {
 export function resolveTokens(cfg: ThemeConfig, mode: Mode) {
   const base = BASE_COLORS[cfg.base] ?? BASE_COLORS.neutral
   const tokens: Record<string, string> = { ...base[mode] }
-  const accent = ACCENTS[cfg.theme]
+  const accent = ACCENTS[cfg.theme] ?? customAccent(cfg.theme)
   if (accent?.[mode]) {
     tokens.primary = accent[mode]!.primary
     tokens["primary-foreground"] = accent[mode]!.fg
     tokens.ring = accent[mode]!.primary
   }
-  const chart = CHARTS[cfg.chart] ?? CHARTS.default
+  const chart = CHARTS[cfg.chart] ?? customChart(cfg.chart) ?? CHARTS.default
   return { tokens, chart: chart[mode] }
 }
 

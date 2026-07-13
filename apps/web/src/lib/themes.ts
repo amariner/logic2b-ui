@@ -201,6 +201,49 @@ export const ACCENTS: Record<string, AccentColor> = {
   },
 }
 
+/* -- Custom accents: a free oklch hue/chroma, serialized as "h<hue>c<chroma>"
+      in the preset's theme (and chart) slot — the 6-field id format is
+      unchanged, so studio links, the CLI and the MCP all round-trip it. -- */
+
+export const CUSTOM_KEY_RE = /^h(\d{1,3}(?:\.\d{1,3})?)c(0(?:\.\d{1,3})?|0?\.\d{1,3})$/
+
+export function parseCustomKey(key: string): { hue: number; chroma: number } | null {
+  const m = CUSTOM_KEY_RE.exec(key)
+  if (!m) return null
+  const hue = parseFloat(m[1])
+  const chroma = parseFloat(m[2])
+  if (hue > 360 || chroma > 0.4) return null
+  return { hue, chroma }
+}
+
+export function customKey(hue: number, chroma: number): string {
+  const h = Math.round(hue * 10) / 10
+  const c = Math.round(chroma * 1000) / 1000
+  return `h${h}c${c}`
+}
+
+/** Lightness anchors for custom accents, in family with the six presets
+ *  (light primaries sit at L ≈ 0.54–0.65, dark ones at ≈ 0.61–0.71). oklch is
+ *  perceptually uniform, so at these anchors near-white text wins the APCA
+ *  comparison for every hue — the fg is fixed, and borderline dark-mode
+ *  pairs surface in the contrast audit. */
+const CUSTOM_L = { light: 0.55, dark: 0.65 } as const
+
+/** Build the AccentColor for a custom "h<hue>c<chroma>" key (null if not one). */
+export function customAccent(key: string): AccentColor | null {
+  const parsed = parseCustomKey(key)
+  if (!parsed) return null
+  const { hue, chroma } = parsed
+  const light = `oklch(${CUSTOM_L.light} ${chroma} ${hue})`
+  const dark = `oklch(${CUSTOM_L.dark} ${chroma} ${hue})`
+  return {
+    label: "Custom",
+    swatch: light,
+    light: { primary: light, fg: NEAR_WHITE },
+    dark: { primary: dark, fg: NEAR_WHITE },
+  }
+}
+
 /* -- Chart palettes: 5-stop ramps generated from a hue, or the default mix. -- */
 export interface ChartPalette {
   label: string
@@ -214,6 +257,19 @@ function ramp(hue: number, chroma: number): [string, string, string, string, str
     string, string, string, string, string,
   ]
 }
+/** ChartPalette for a custom "h<hue>c<chroma>" key (null if not one). */
+export function customChart(key: string): ChartPalette | null {
+  const parsed = parseCustomKey(key)
+  if (!parsed) return null
+  const { hue, chroma } = parsed
+  return {
+    label: "Custom",
+    swatch: `oklch(0.55 ${chroma} ${hue})`,
+    light: ramp(hue, chroma),
+    dark: ramp(hue, chroma),
+  }
+}
+
 export const CHARTS: Record<string, ChartPalette> = {
   default: {
     label: "Default", swatch: "oklch(0.646 0.222 41.116)",
@@ -274,13 +330,13 @@ export const DEFAULT_CONFIG: ThemeConfig = {
 export function resolveTokens(cfg: ThemeConfig, mode: Mode) {
   const base = BASE_COLORS[cfg.base] ?? BASE_COLORS.neutral
   const tokens: Record<string, string> = { ...base[mode] }
-  const accent = ACCENTS[cfg.theme]
+  const accent = ACCENTS[cfg.theme] ?? customAccent(cfg.theme)
   if (accent && cfg.theme !== "base" && accent[mode]) {
     tokens.primary = accent[mode]!.primary
     tokens["primary-foreground"] = accent[mode]!.fg
     tokens.ring = accent[mode]!.primary
   }
-  const chart = CHARTS[cfg.chart] ?? CHARTS.default
+  const chart = CHARTS[cfg.chart] ?? customChart(cfg.chart) ?? CHARTS.default
   return { tokens, chart: chart[mode] }
 }
 
@@ -344,7 +400,10 @@ export function buildDesignMd(cfg: ThemeConfig): string {
     .map((c, i) => `| \`--chart-${i + 1}\` | \`${c}\` | \`${dark.chart[i]}\` |`)
     .join("\n")
   const baseLabel = BASE_COLORS[cfg.base]?.label ?? cfg.base
-  const accentLabel = ACCENTS[cfg.theme]?.label ?? cfg.theme
+  const custom = parseCustomKey(cfg.theme)
+  const accentLabel =
+    ACCENTS[cfg.theme]?.label ??
+    (custom ? `Custom (hue ${custom.hue}, chroma ${custom.chroma})` : cfg.theme)
   return `# Design Tokens — Style Reference
 > generated with logic2b ui · preset \`${preset}\`
 
@@ -437,10 +496,11 @@ export function decodePreset(id: string): ThemeConfig | null {
     if (parts.length !== ORDER.length) return null
     const cfg = { ...DEFAULT_CONFIG }
     ORDER.forEach((k, i) => (cfg[k] = parts[i]))
-    // Validate against known tables; unknown values fall back to defaults.
+    // Validate against known tables; theme and chart also accept a custom
+    // "h<hue>c<chroma>" key.
     if (!BASE_COLORS[cfg.base]) return null
-    if (!ACCENTS[cfg.theme]) return null
-    if (!CHARTS[cfg.chart]) return null
+    if (!ACCENTS[cfg.theme] && !parseCustomKey(cfg.theme)) return null
+    if (!CHARTS[cfg.chart] && !parseCustomKey(cfg.chart)) return null
     if (!RADII[cfg.radius]) return null
     if (!FONTS[cfg.font]) return null
     if (!FONTS[cfg.heading]) return null
