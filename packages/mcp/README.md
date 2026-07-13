@@ -14,12 +14,14 @@ block and chart — without leaving the conversation and without a shell.
 | `list_components` | List registry items. Filter by `kind` (`component` \| `block` \| `chart` \| `theme`) or `category`. |
 | `search_components` | Keyword search ranked by name/title/description, e.g. `"login form"`, `"donut chart"`. |
 | `get_component` | Fetch an item's full payload by `name`: dependencies, registry dependencies and the complete source of every file. |
+| `get_demo` | Usage examples for an item — the demo components the docs render, with imports rewritten to installed-project paths. |
 
 ### Act on a project
 
 | Tool | What it does |
 | --- | --- |
 | `install_plan` | Resolve items into an executable plan: every file to write (project-relative path + full content, registry dependencies resolved) and the npm dependencies to add. No command to run — write the files, add the deps, done. |
+| `add_command` | The exact `logic2b add` invocation (npm/pnpm/yarn/bun, names validated) for when a shell **is** available. |
 | `get_theme` | The theme.css stylesheet, its npm deps, and the customization catalog (base scales, accents, chart palettes, radii, fonts). |
 | `decode_preset` | Decode a `/create` preset id into its config and the exact token values it pins for light and dark. |
 | `apply_preset` | Build a themed theme.css from a preset id or explicit choices; optionally patch a stylesheet you pass in. Returns the CSS and the canonical preset id. |

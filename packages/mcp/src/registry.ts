@@ -38,6 +38,48 @@ export function itemUrl(base: string, name: string): string {
   return `${base.replace(/\/$/, "")}/r/${name}.json`
 }
 
+export function demosIndexUrl(base: string): string {
+  return `${base.replace(/\/$/, "")}/r/demos/index.json`
+}
+
+export function demoUrl(base: string, name: string): string {
+  return `${base.replace(/\/$/, "")}/r/demos/${name}.json`
+}
+
+export interface DemoIndexEntry {
+  item: string
+  demos: string[]
+}
+
+export interface DemoEntry {
+  name: string
+  item: string
+  content: string
+}
+
+export async function fetchDemoIndex(
+  base: string,
+  fetchImpl: FetchLike = fetch as unknown as FetchLike
+): Promise<DemoIndexEntry[]> {
+  const data = await fetchJson(demosIndexUrl(base), fetchImpl)
+  if (!Array.isArray(data)) {
+    throw new Error("Demo index is malformed (expected an array).")
+  }
+  return data as DemoIndexEntry[]
+}
+
+export async function fetchDemo(
+  base: string,
+  name: string,
+  fetchImpl: FetchLike = fetch as unknown as FetchLike
+): Promise<DemoEntry> {
+  const data = await fetchJson(demoUrl(base, name), fetchImpl)
+  if (typeof data !== "object" || data === null) {
+    throw new Error(`Demo "${name}" is malformed.`)
+  }
+  return data as DemoEntry
+}
+
 export function isChart(item: IndexItem): boolean {
   return item.categories?.includes("charts") ?? false
 }

@@ -38,6 +38,7 @@ function commonSections(): string {
 
 - Index of every item: ${SITE}/r/index.json
 - Item payload (full source): ${SITE}/r/<name>.json
+- Usage examples per item: ${SITE}/r/demos/index.json → ${SITE}/r/demos/<demo>.json
 - Docs index for agents: ${SITE}/llms.txt (full docs: ${SITE}/llms-full.txt)
 - Every docs page is Markdown when you append \`.md\` to its URL.
 

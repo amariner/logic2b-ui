@@ -1,6 +1,8 @@
 import { buildInstallPlan } from "./plan.ts"
 import {
   DEFAULT_REGISTRY,
+  fetchDemo,
+  fetchDemoIndex,
   fetchIndex,
   fetchItem,
   filterIndex,
@@ -80,6 +82,37 @@ export const TOOLS = [
         },
       },
       required: ["name"],
+    },
+  },
+  {
+    name: "get_demo",
+    description:
+      "Fetch usage examples for a registry item: real demo components (the ones rendered in the docs) with imports rewritten to installed-project paths. Pass an item name for all of its demos, or a specific demo name (e.g. \"accordion-controlled-demo\") for just that one. Use it to see how a component is meant to be composed before writing code with it.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+          description: 'An item name ("accordion") or demo name ("accordion-controlled-demo").',
+        },
+      },
+      required: ["name"],
+    },
+  },
+  {
+    name: "add_command",
+    description:
+      "Build the exact CLI command to install registry items in a project with a shell: `logic2b add` invocations for npm, pnpm, yarn and bun (names validated against the registry). For agents without a shell, use install_plan instead.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        items: {
+          type: "array",
+          items: { type: "string" },
+          description: 'Registry item names, e.g. ["button", "login-01"].',
+        },
+      },
+      required: ["items"],
     },
   },
   {
@@ -259,6 +292,63 @@ export async function runTool(
       if (!itemName.trim()) return errorResult('The "name" argument is required.')
       const item = await fetchItem(base, itemName, fetchImpl)
       return textResult(item)
+    }
+
+    if (name === "get_demo") {
+      const query = String(args.name ?? "").trim()
+      if (!query) return errorResult('The "name" argument is required.')
+      const index = await fetchDemoIndex(base, fetchImpl)
+      const byItem = index.find((e) => e.item === query)
+      const asDemo = index.find((e) => e.demos.includes(query))
+      const demoNames = byItem ? byItem.demos : asDemo ? [query] : []
+      if (demoNames.length === 0) {
+        return errorResult(
+          `No demos found for "${query}". Items with demos: ${index.map((e) => e.item).join(", ")}.`
+        )
+      }
+      const demos = []
+      for (const demoName of demoNames) {
+        demos.push(await fetchDemo(base, demoName, fetchImpl))
+      }
+      return textResult({
+        registry: base,
+        item: byItem?.item ?? asDemo!.item,
+        count: demos.length,
+        demos,
+      })
+    }
+
+    if (name === "add_command") {
+      const items = Array.isArray(args.items)
+        ? args.items.map(String).filter((s) => s.trim())
+        : []
+      if (items.length === 0) {
+        return errorResult('The "items" argument must be a non-empty array of item names.')
+      }
+      const index = await fetchIndex(base, fetchImpl)
+      const known = new Set(index.map((i) => i.name))
+      const unknown = items.filter((i) => !known.has(i))
+      if (unknown.length > 0) {
+        return errorResult(
+          `Unknown item(s): ${unknown.join(", ")}. Use search_components or list_components to find the right names.`
+        )
+      }
+      const names = items.join(" ")
+      return textResult({
+        registry: base,
+        items,
+        commands: {
+          npm: `npx logic2b@latest add ${names}`,
+          pnpm: `pnpm dlx logic2b@latest add ${names}`,
+          yarn: `yarn dlx logic2b@latest add ${names}`,
+          bun: `bunx logic2b@latest add ${names}`,
+        },
+        notes: [
+          "If the project has no components.json yet, run `npx logic2b@latest init` first (add --preset <id> to apply a /create theme).",
+          "The command resolves registry dependencies and prints the npm packages to install.",
+          "No shell available? Use the install_plan tool instead — it returns the file writes directly.",
+        ],
+      })
     }
 
     if (name === "install_plan") {
