@@ -19,6 +19,7 @@ export default defineConfig({
     ssr: {
       // Force linked/monorepo React libs through Vite so dev SSR uses a single React copy.
       noExternal: [
+        "@logic2b/tokens",
         "radix-ui",
         /^@radix-ui\//,
         "cmdk",

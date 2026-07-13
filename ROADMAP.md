@@ -82,6 +82,12 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   when the registry didn't move, merges non-overlapping changes and marks
   true conflicts with git-style markers. Pre-snapshot installs are left
   untouched with a clear message.
+- ✅ **Shared `@logic2b/tokens` package** — the theme data (base scales,
+  accents, chart ramps, radii, fonts, the preset codec and the CSS emitters)
+  has one source of truth: a private workspace package consumed by the
+  studio, bundled into the published CLI and MCP dists, and running inside
+  the remote MCP worker. The three hand-synced mirrors (and their drift
+  tests) are gone.
 
 ## Now (🔜) — in priority order
 
@@ -91,9 +97,6 @@ We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI
 work we keep is what the agent lane and real installs depend on:
 
-- 🔜 Shared `@logic2b/tokens` package so the theme data in
-  `apps/web/src/lib/themes.ts`, `packages/cli/src/themes.ts` and the MCP theme
-  tools has one source of truth (a prerequisite for `apply_preset`).
 - 💡 `init --template <next|vite|astro|…>` real scaffolding and `--monorepo`
   workspaces — useful, but parity work; demoted until the lane above ships.
 

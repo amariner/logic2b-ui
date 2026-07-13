@@ -1,0 +1,20 @@
+{
+  "name": "@logic2b/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Single source of truth for the logic2b ui theme data: base scales, accents, chart ramps, radii, fonts, the preset codec and the CSS emitters.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  }
+}

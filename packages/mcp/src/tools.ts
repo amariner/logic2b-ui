@@ -25,7 +25,7 @@ import {
   presetDeclarations,
   RADII,
   type ThemeConfig,
-} from "./themes.ts"
+} from "@logic2b/tokens"
 
 export const SERVER_INFO = { name: "logic2b-ui", version: "0.2.0" } as const
 
