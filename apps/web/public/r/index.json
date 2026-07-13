@@ -197,6 +197,11 @@
     "description": "Composable primitives for laying out a form field (label, control slot, description, validation error) without requiring react-hook-form. Use for simple forms or to wrap a single control; use the form component instead when you need react-hook-form + zod wiring. Parts: FieldSet, FieldLegend, FieldGroup, Field (orientation vertical | horizontal | responsive), FieldContent, FieldLabel, FieldTitle, FieldDescription, FieldSeparator, FieldError."
   },
   {
+    "name": "tags-input",
+    "type": "registry:ui",
+    "description": "Free-form multi-value input rendered as removable chips: Enter or comma commits, paste splits on commas, Backspace on an empty field removes the last tag, duplicates are ignored and max caps the list. Controlled or uncontrolled via value/defaultValue + onValueChange."
+  },
+  {
     "name": "table",
     "type": "registry:ui",
     "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions."

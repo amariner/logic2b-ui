@@ -1,0 +1,59 @@
+---
+title: Tags Input
+description: Free-form multi-value input rendered as removable chips — add with Enter or comma, remove with Backspace or the chip's close button.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="tags-input-demo" />
+
+## Installation
+
+<Install name="tags-input" />
+
+## Usage
+
+```tsx
+import { TagsInput } from "@/components/ui/tags-input"
+
+const [tags, setTags] = React.useState<string[]>([])
+
+<TagsInput
+  value={tags}
+  onValueChange={setTags}
+  placeholder="Add a tag…"
+/>
+```
+
+Enter or comma commits the draft, pasted comma-separated text is split into
+tags, Backspace on an empty field removes the last tag, and blur commits
+whatever is pending. Duplicates are ignored.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` / `defaultValue` | `string[]` — controlled/uncontrolled tag list | `[]` |
+| `onValueChange` | `(value: string[]) => void` | — |
+| `placeholder` | `string` — hint shown in the free-text field | — |
+| `max` | `number` — cap the list; the field locks at the limit | — |
+| `disabled` | `boolean` | `false` |
+| `id` / `aria-label` / `aria-labelledby` | forwarded to the inner text field for labeling | — |
+
+## Examples
+
+### Max tags
+
+Cap the list with `max` — extra pasted values are dropped and the field
+disables until a tag is removed.
+
+<ComponentPreview name="tags-input-max-demo" />
+
+## Accessibility
+
+- The editable part is a real `<input>`: label it with `<Label htmlFor>` (the
+  `id` is forwarded) or `aria-label`.
+- Each chip's close button exposes `aria-label="Remove <tag>"`.
+- <kbd>Backspace</kbd> on an empty field removes the last tag, so the whole
+  control works without a pointer.
