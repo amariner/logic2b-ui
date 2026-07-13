@@ -49,8 +49,12 @@ needs — no scraping, no guessing.
 ## MCP server
 
 Prefer a live connection? The registry speaks the Model Context Protocol two
-ways — both expose the same tools: `list_components`, `search_components` and
-`get_component` (full source of every file, ready to write into a project).
+ways — both expose the same tools. Three read the registry: `list_components`,
+`search_components` and `get_component` (full source of every file). Four act
+on a project, no shell required: `install_plan` (the exact files to write and
+npm deps to add for any set of items, registry dependencies resolved),
+`get_theme`, `decode_preset` and `apply_preset` (rebuilds theme.css for any
+`/create` preset, or patches the stylesheet you pass in).
 
 **Remote (zero install, no shell needed)** — connect any streamable-HTTP MCP
 client to:
