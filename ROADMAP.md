@@ -66,13 +66,14 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   light and dark, with role-aware baselines (body vs. muted text). Lives in
   the studio rail (warnings + per-pair dialog) and as the `contrast_audit`
   MCP tool so agents verify the themes they generate.
+- ✅ **Sidebar tokens in the studio CSS export** — the exported `:root`/`.dark`
+  blocks carry the same derived sidebar ladder the CLI preset patch writes,
+  and the studio's contrast audit covers those pairs too.
 
 ## Now (🔜) — in priority order
 
 ### 1. Theme studio
 
-- 🔜 Emit sidebar tokens in the exported CSS (the CLI preset patch already
-  derives them; the studio CSS export should match).
 - 🔜 Custom accent: free oklch hue/chroma picker, not just the six presets.
 
 ### 2. CLI — only what the lane needs
