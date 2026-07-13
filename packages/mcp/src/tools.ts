@@ -21,6 +21,7 @@ import {
   DEFAULT_CONFIG,
   encodePreset,
   FONTS,
+  parseCustomKey,
   presetDeclarations,
   RADII,
   type ThemeConfig,
@@ -172,8 +173,8 @@ export const TOOLS = [
             "A preset id from /create. Omit it to compose a theme from the explicit options below.",
         },
         base: { type: "string", description: 'Base gray scale: "neutral", "stone", "zinc", "slate" or "gray".' },
-        accent: { type: "string", description: 'Accent color: "base" (monochrome), "blue", "green", "rose", "violet" or "orange".' },
-        chart: { type: "string", description: 'Chart palette: "default", "blue", "green", "violet", "rose" or "orange".' },
+        accent: { type: "string", description: 'Accent color: "base" (monochrome), "blue", "green", "rose", "violet", "orange" — or a custom oklch hue/chroma as "h<hue>c<chroma>" (hue 0-360, chroma 0-0.4), e.g. "h250c0.2". Text color is picked by contrast automatically.' },
+        chart: { type: "string", description: 'Chart palette: "default", "blue", "green", "violet", "rose", "orange" — or a custom "h<hue>c<chroma>" ramp.' },
         radius: { type: "string", description: 'Corner radius: "none", "sm", "md", "default", "lg" or "xl".' },
         font: { type: "string", description: 'Body font: "inter", "grotesk", "sans", "system", "serif" or "mono".' },
         heading: { type: "string", description: "Heading font (same options as font)." },
@@ -267,10 +268,20 @@ function resolveThemeArgs(args: Record<string, unknown>): ThemeConfig | string {
   for (const [key, arg, table] of tables) {
     const value = args[arg]
     if (value === undefined) continue
-    if (typeof value !== "string" || !table[value]) {
-      return `Unknown ${arg} "${String(value)}". Valid values: ${Object.keys(table).join(", ")}.`
+    // accent and chart also accept a custom "h<hue>c<chroma>" key
+    // (hue 0-360, chroma 0-0.4), e.g. "h250c0.2".
+    const customOk =
+      (arg === "accent" || arg === "chart") &&
+      typeof value === "string" &&
+      parseCustomKey(value) !== null
+    if (!customOk && (typeof value !== "string" || !table[value])) {
+      return `Unknown ${arg} "${String(value)}". Valid values: ${Object.keys(table).join(", ")}${
+        arg === "accent" || arg === "chart"
+          ? ', or a custom "h<hue>c<chroma>" key (hue 0-360, chroma 0-0.4), e.g. "h250c0.2"'
+          : ""
+      }.`
     }
-    cfg[key] = value
+    cfg[key] = value as string
   }
   return cfg
 }
@@ -407,6 +418,7 @@ export async function runTool(
         notes: [
           "Every option combination is addressable as a preset id — use apply_preset to get the patched stylesheet, decode_preset to inspect one.",
           'The config key for the accent is "theme" (historical); the apply_preset argument is "accent".',
+          'Beyond the named accents/charts, any oklch hue/chroma works as a custom key: "h<hue>c<chroma>" (hue 0-360, chroma 0-0.4), e.g. accent "h250c0.2". The readable text color is derived by contrast.',
         ],
       })
     }

@@ -34,6 +34,10 @@ import {
   buildDesignMd,
   decodePreset,
   encodePreset,
+  customAccent,
+  customChart,
+  customKey,
+  parseCustomKey,
   resolveTokens,
   sidebarTokens,
   type Mode,
@@ -351,16 +355,24 @@ export function CreateStudio() {
           />
           <ControlRow
             label="Theme"
-            valueLabel={ACCENTS[cfg.theme].label}
-            swatch={ACCENTS[cfg.theme].swatch}
-            options={accentOpts}
-            value={cfg.theme}
-            onChange={(k) => set({ theme: k })}
+            valueLabel={(ACCENTS[cfg.theme] ?? customAccent(cfg.theme))?.label ?? cfg.theme}
+            swatch={(ACCENTS[cfg.theme] ?? customAccent(cfg.theme))?.swatch}
+            options={[...accentOpts, { key: "custom", label: "Custom…" }]}
+            value={ACCENTS[cfg.theme] ? cfg.theme : "custom"}
+            onChange={(k) =>
+              set({ theme: k === "custom" ? DEFAULT_CUSTOM_ACCENT : k })
+            }
           />
+          {parseCustomKey(cfg.theme) && (
+            <CustomAccentSliders
+              value={cfg.theme}
+              onChange={(key) => set({ theme: key })}
+            />
+          )}
           <ControlRow
             label="Chart Color"
-            valueLabel={CHARTS[cfg.chart].label}
-            swatch={CHARTS[cfg.chart].swatch}
+            valueLabel={(CHARTS[cfg.chart] ?? customChart(cfg.chart))?.label ?? cfg.chart}
+            swatch={(CHARTS[cfg.chart] ?? customChart(cfg.chart))?.swatch}
             options={chartOpts}
             value={cfg.chart}
             onChange={(k) => set({ chart: k })}
@@ -722,6 +734,75 @@ function DownloadButton({
     <Button className="w-full" onClick={download}>
       {label}
     </Button>
+  )
+}
+
+/** Default starting point when "Custom…" is picked: a saturated azure. */
+const DEFAULT_CUSTOM_ACCENT = "h250c0.2"
+
+/** Hue + chroma sliders for the custom accent. The value is the serialized
+ *  "h<hue>c<chroma>" key so every edit round-trips through the preset id. */
+function CustomAccentSliders({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (key: string) => void
+}) {
+  const parsed = parseCustomKey(value) ?? { hue: 250, chroma: 0.2 }
+  const swatch = customAccent(value)?.swatch
+  const Slider = ({
+    label,
+    min,
+    max,
+    step,
+    val,
+    onVal,
+  }: {
+    label: string
+    min: number
+    max: number
+    step: number
+    val: number
+    onVal: (n: number) => void
+  }) => (
+    <label className="grid gap-1">
+      <span className="flex items-center justify-between text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+        {label}
+        <span className="font-mono normal-case">{val}</span>
+      </span>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={val}
+        aria-label={label}
+        onChange={(e) => onVal(Number(e.target.value))}
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-[var(--slider-accent)]"
+        style={{ "--slider-accent": swatch } as React.CSSProperties}
+      />
+    </label>
+  )
+  return (
+    <div className="grid gap-3 rounded-lg border bg-card p-3">
+      <Slider
+        label="Hue"
+        min={0}
+        max={360}
+        step={1}
+        val={parsed.hue}
+        onVal={(h) => onChange(customKey(h, parsed.chroma))}
+      />
+      <Slider
+        label="Chroma"
+        min={0}
+        max={0.4}
+        step={0.005}
+        val={parsed.chroma}
+        onVal={(c) => onChange(customKey(parsed.hue, c))}
+      />
+    </div>
   )
 }
 

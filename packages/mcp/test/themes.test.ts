@@ -94,3 +94,27 @@ describe("applyPresetToCss", () => {
     assert.match(out, /--font-heading:/)
   })
 })
+
+describe("custom accents stay in sync with the CLI", () => {
+  const id = encodePreset({
+    base: "slate", theme: "h250c0.2", chart: "h200c0.15",
+    radius: "lg", font: "inter", heading: "inter",
+  })
+
+  test("custom preset decodes identically", () => {
+    assert.deepEqual(decodePreset(id), cli.decodePreset(id))
+    assert.ok(decodePreset(id))
+  })
+
+  test("custom declarations agree in both modes", () => {
+    const cfg = decodePreset(id)!
+    assert.deepEqual(presetDeclarations(cfg, "light"), cli.presetDeclarations(cfg, "light"))
+    assert.deepEqual(presetDeclarations(cfg, "dark"), cli.presetDeclarations(cfg, "dark"))
+  })
+
+  test("custom accents keep the fixed near-white foreground", () => {
+    const lime = decodePreset(encodePreset({ ...decodePreset(id)!, theme: "h110c0.25" }))!
+    assert.equal(presetDeclarations(lime, "dark")["primary-foreground"], "oklch(0.985 0 0)")
+    assert.equal(presetDeclarations(decodePreset(id)!, "dark")["primary-foreground"], "oklch(0.985 0 0)")
+  })
+})

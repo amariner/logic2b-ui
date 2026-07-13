@@ -258,3 +258,38 @@ describe("runTool — acting tools", () => {
     assert.match(r.content[0].text, /Unknown accent "neon"/)
   })
 })
+
+describe("runTool — custom accents", () => {
+  const fetchImpl = fakeFetch({
+    [itemUrl(base, "theme")]: {
+      name: "theme", type: "registry:style", description: "the theme",
+      files: [{ path: "theme.css", type: "registry:style", content: THEME_CSS }],
+    },
+  })
+
+  test("apply_preset accepts a custom accent key and round-trips it", async () => {
+    const r = await runTool("apply_preset", { accent: "h250c0.2" }, { base, fetchImpl })
+    assert.ok(!r.isError)
+    const out = parseText(r)
+    assert.equal(out.config.theme, "h250c0.2")
+    assert.match(out.file.content, /--primary: oklch\(0\.55 0\.2 250\);/)
+    const decoded = await runTool("decode_preset", { preset: out.preset }, { base, fetchImpl })
+    assert.equal(parseText(decoded).config.theme, "h250c0.2")
+  })
+
+  test("apply_preset still rejects malformed custom keys", async () => {
+    const r = await runTool("apply_preset", { accent: "h400c0.2" }, { base, fetchImpl })
+    assert.ok(r.isError)
+    assert.match(r.content[0].text, /h<hue>c<chroma>/)
+  })
+
+  test("contrast_audit audits a custom accent", async () => {
+    const r = await runTool("contrast_audit", { accent: "h250c0.2" }, { base, fetchImpl })
+    assert.ok(!r.isError)
+    const out = parseText(r)
+    const pair = out.light.find(
+      (p: { fg: string; bg: string }) => p.bg === "primary"
+    )
+    assert.ok(pair, "primary pair audited")
+  })
+})
