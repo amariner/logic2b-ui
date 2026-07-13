@@ -10,6 +10,8 @@ import {
   DEFAULT_ALIASES,
   DEFAULT_REGISTRY,
   detectCssPath,
+  detectPackageManager,
+  installCommand,
   indexUrl,
   itemUrl,
   loadConfig,
@@ -313,5 +315,47 @@ describe("detectCssPath", () => {
     await writeFile(join(dir, "app/globals.css"), "")
     assert.equal(detectCssPath(dir, "src"), "app/globals.css")
     assert.ok(existsSync(join(dir, "app/globals.css")))
+  })
+})
+
+describe("detectPackageManager / installCommand", () => {
+  const tmp = () => mkdtemp(join(tmpdir(), "l2b-pm-"))
+
+  test("defaults to npm with no signals", async () => {
+    assert.equal(detectPackageManager(await tmp()), "npm")
+  })
+
+  test("prefers the packageManager field over lockfiles", async () => {
+    const dir = await tmp()
+    await writeFile(join(dir, "package.json"), JSON.stringify({ packageManager: "yarn@4.1.0" }))
+    await writeFile(join(dir, "pnpm-lock.yaml"), "")
+    assert.equal(detectPackageManager(dir), "yarn")
+  })
+
+  test("detects each lockfile", async () => {
+    for (const [file, pm] of [
+      ["pnpm-lock.yaml", "pnpm"],
+      ["yarn.lock", "yarn"],
+      ["bun.lockb", "bun"],
+      ["package-lock.json", "npm"],
+    ] as const) {
+      const dir = await tmp()
+      await writeFile(join(dir, file), "")
+      assert.equal(detectPackageManager(dir), pm)
+    }
+  })
+
+  test("ignores a malformed package.json", async () => {
+    const dir = await tmp()
+    await writeFile(join(dir, "package.json"), "{nope")
+    await writeFile(join(dir, "yarn.lock"), "")
+    assert.equal(detectPackageManager(dir), "yarn")
+  })
+
+  test("builds the right install invocation per pm", () => {
+    assert.deepEqual(installCommand("npm", ["a", "b"]), ["npm", "install", "a", "b"])
+    assert.deepEqual(installCommand("pnpm", ["a"]), ["pnpm", "add", "a"])
+    assert.deepEqual(installCommand("yarn", ["a"]), ["yarn", "add", "a"])
+    assert.deepEqual(installCommand("bun", ["a"]), ["bun", "add", "a"])
   })
 })

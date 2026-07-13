@@ -31,7 +31,7 @@ const program = new Command()
 program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
-  .version("0.3.0")
+  .version("0.4.0")
 
 program
   .command("init")
@@ -40,6 +40,7 @@ program
   .option("-r, --registry <url>", "registry base URL", DEFAULT_REGISTRY)
   .option("-p, --preset <id>", "theme preset id from ui.logic2b.com/create")
   .option("-t, --template <name>", "target framework (next, vite, astro, …)")
+  .option("--no-install", "skip installing npm dependencies")
   .option("--monorepo", "reserved for template scaffolding", false)
   .action(async (opts) => {
     const cwd = resolve(opts.cwd ?? process.cwd())
@@ -97,7 +98,11 @@ program
     }
 
     // Install cn() and the design system so components look like logic2b.
-    await addComponents(["utils", "theme"], { registry: opts.registry, cwd })
+    await addComponents(["utils", "theme"], {
+      registry: opts.registry,
+      cwd,
+      install: opts.install,
+    })
 
     const themeTarget = join(cwd, dirname(cssPath), "theme.css")
     if (preset) {
@@ -133,6 +138,7 @@ program
   .option("-r, --registry <url>", "registry base URL")
   .option("-o, --overwrite", "overwrite existing files", false)
   .option("-a, --all", "add every component in the registry", false)
+  .option("--no-install", "skip installing npm dependencies")
   .action(async (components: string[], opts) => {
     let names = components
     if (opts.all) {
