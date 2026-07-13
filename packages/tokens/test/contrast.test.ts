@@ -1,37 +1,17 @@
 import assert from "node:assert/strict"
 import { describe, test } from "node:test"
 
-import * as web from "../../../apps/web/src/lib/contrast.ts"
 import {
   apcaContrast,
   auditTokens,
-  CONTRAST_PAIRS,
   oklchToRgb,
   parseOklch,
   wcagRatio,
 } from "../src/contrast.ts"
-import { DEFAULT_CONFIG, presetDeclarations } from "@logic2b/tokens"
+import { DEFAULT_CONFIG, presetDeclarations } from "../src/index.ts"
 
 const WHITE = oklchToRgb("oklch(1 0 0)")!
 const BLACK = oklchToRgb("oklch(0 0 0)")!
-
-describe("mirror of apps/web/src/lib/contrast.ts", () => {
-  test("pair table and math agree with the web module", () => {
-    assert.deepEqual(CONTRAST_PAIRS, web.CONTRAST_PAIRS)
-    const samples = [
-      ["oklch(0.985 0 0)", "oklch(0.205 0 0)"],
-      ["oklch(0.577 0.245 27.325)", "oklch(1 0 0)"],
-      ["oklch(1 0 0 / 10%)", "oklch(0.145 0 0)"],
-    ] as const
-    for (const [a, b] of samples) {
-      assert.deepEqual(oklchToRgb(a), web.oklchToRgb(a))
-      const fg = oklchToRgb(a)!
-      const bg = oklchToRgb(b)!
-      assert.equal(wcagRatio(fg, bg), web.wcagRatio(fg, bg))
-      assert.equal(apcaContrast(fg, bg), web.apcaContrast(fg, bg))
-    }
-  })
-})
 
 describe("color math", () => {
   test("parses oklch with and without alpha", () => {

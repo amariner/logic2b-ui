@@ -44,7 +44,7 @@ import {
   type ThemeConfig,
 } from "@/lib/themes"
 import { buildAgentsMd } from "@/lib/agents-md"
-import { auditTokens, type PairResult } from "@/lib/contrast"
+import { auditTokens, type PairResult } from "@logic2b/tokens/contrast"
 import { buildInitPrompt } from "@/lib/prompts"
 import {
   siAstro,

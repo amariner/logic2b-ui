@@ -6,7 +6,8 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./contrast": "./src/contrast.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",

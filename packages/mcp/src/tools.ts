@@ -1,4 +1,4 @@
-import { auditTokens } from "./contrast.ts"
+import { auditTokens } from "@logic2b/tokens/contrast"
 import { buildInstallPlan } from "./plan.ts"
 import {
   DEFAULT_REGISTRY,
