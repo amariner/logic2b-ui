@@ -284,6 +284,24 @@ export function resolveTokens(cfg: ThemeConfig, mode: Mode) {
   return { tokens, chart: chart[mode] }
 }
 
+/** Sidebar tokens derived from the config — same ladder the CLI preset patch
+ *  writes: near-white of the scale in light (the base's primary-foreground),
+ *  the card surface in dark. */
+export function sidebarTokens(cfg: ThemeConfig, mode: Mode): Record<string, string> {
+  const base = (BASE_COLORS[cfg.base] ?? BASE_COLORS.neutral)[mode]
+  const { tokens } = resolveTokens(cfg, mode)
+  return {
+    sidebar: mode === "light" ? base["primary-foreground"] : base.card,
+    "sidebar-foreground": tokens.foreground,
+    "sidebar-primary": tokens.primary,
+    "sidebar-primary-foreground": tokens["primary-foreground"],
+    "sidebar-accent": tokens.accent,
+    "sidebar-accent-foreground": tokens["accent-foreground"],
+    "sidebar-border": tokens.border,
+    "sidebar-ring": tokens.ring,
+  }
+}
+
 /** Full CSS the user copies — :root + .dark with every token. */
 export function buildCss(cfg: ThemeConfig): string {
   const radius = RADII[cfg.radius] ?? RADII.default
@@ -293,6 +311,9 @@ export function buildCss(cfg: ThemeConfig): string {
     const { tokens, chart } = resolveTokens(cfg, mode)
     const lines = Object.entries(tokens).map(([k, v]) => `  --${k}: ${v};`)
     chart.forEach((c, i) => lines.push(`  --chart-${i + 1}: ${c};`))
+    for (const [k, v] of Object.entries(sidebarTokens(cfg, mode))) {
+      lines.push(`  --${k}: ${v};`)
+    }
     return lines.join("\n")
   }
   return `:root {

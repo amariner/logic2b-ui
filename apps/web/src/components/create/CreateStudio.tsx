@@ -35,6 +35,7 @@ import {
   decodePreset,
   encodePreset,
   resolveTokens,
+  sidebarTokens,
   type Mode,
   type ThemeConfig,
 } from "@/lib/themes"
@@ -729,8 +730,12 @@ function DownloadButton({
  *  every pair per mode with both metrics. */
 function ContrastDialog({ cfg }: { cfg: ThemeConfig }) {
   const { light, dark, warnings } = React.useMemo(() => {
-    const light = auditTokens(resolveTokens(cfg, "light").tokens)
-    const dark = auditTokens(resolveTokens(cfg, "dark").tokens)
+    const decls = (mode: Mode) => ({
+      ...resolveTokens(cfg, mode).tokens,
+      ...sidebarTokens(cfg, mode),
+    })
+    const light = auditTokens(decls("light"))
+    const dark = auditTokens(decls("dark"))
     return { light, dark, warnings: [...light, ...dark].filter((r) => r.warn).length }
   }, [cfg])
 
