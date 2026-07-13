@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from "node:fs"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 
+import { merge3 } from "./merge.ts"
+
 export const DEFAULT_REGISTRY = "https://ui.logic2b.com"
 export const FETCH_TIMEOUT_MS = 15_000
 
@@ -276,6 +278,19 @@ function installDeps(cwd: string, deps: string[]): boolean {
   return true
 }
 
+/** Where the registry content of an installed file is snapshotted at install
+ *  time — the "base" side of update's three-way merge. Keyed by registry
+ *  path, so it never collides with project files. */
+export function basePath(cwd: string, registryPath: string): string {
+  return join(cwd, ".logic2b", "base", registryPath)
+}
+
+async function writeBase(cwd: string, registryPath: string, content: string) {
+  const target = basePath(cwd, registryPath)
+  await mkdir(dirname(target), { recursive: true })
+  await writeFile(target, content)
+}
+
 export async function addComponents(
   names: string[],
   opts: { registry?: string; cwd?: string; overwrite?: boolean; install?: boolean }
@@ -303,6 +318,7 @@ export async function addComponents(
       }
       await mkdir(dirname(target), { recursive: true })
       await writeFile(target, file.content)
+      await writeBase(cwd, file.path, file.content)
       console.log(`  write ${target}`)
       written++
     }
@@ -318,4 +334,100 @@ export async function addComponents(
     }
   }
   return resolved
+}
+
+export interface UpdateSummary {
+  updated: number
+  merged: number
+  conflicts: number
+  unchanged: number
+  keptLocal: number
+  noBase: number
+}
+
+/**
+ * Pull upstream changes into installed files without clobbering local edits:
+ * a three-way merge of base (install-time snapshot), local file and current
+ * registry content. Files installed before bases existed fall back to a
+ * warning when they differ from the registry.
+ */
+export async function updateComponents(
+  names: string[],
+  opts: { registry?: string; cwd?: string; install?: boolean }
+): Promise<UpdateSummary> {
+  const { resolve } = await import("node:path")
+  const cwd = resolve(opts.cwd ?? process.cwd())
+  const config = await loadConfig(cwd, opts.registry)
+
+  const resolved = await resolveGraph(names, (name) =>
+    fetchItem(config.registry, name)
+  )
+
+  const summary: UpdateSummary = {
+    updated: 0, merged: 0, conflicts: 0, unchanged: 0, keptLocal: 0, noBase: 0,
+  }
+  const npmDeps = new Set<string>()
+
+  for (const item of resolved.values()) {
+    for (const dep of item.dependencies ?? []) npmDeps.add(dep)
+    for (const file of item.files ?? []) {
+      const target = targetPath(config, cwd, file)
+      if (!existsSync(target)) continue // not installed — update touches nothing new
+      const local = await readFile(target, "utf8")
+      const remote = file.content
+      const bPath = basePath(cwd, file.path)
+
+      if (local === remote) {
+        summary.unchanged++
+        await writeBase(cwd, file.path, remote) // heal a missing/stale base
+        continue
+      }
+      if (!existsSync(bPath)) {
+        summary.noBase++
+        console.log(
+          `  ! ${target} differs but has no install snapshot (pre-0.4 install) — ` +
+            `left untouched. Re-add with --overwrite to take the registry version.`
+        )
+        continue
+      }
+      const base = await readFile(bPath, "utf8")
+      if (local === base) {
+        await writeFile(target, remote)
+        await writeBase(cwd, file.path, remote)
+        summary.updated++
+        console.log(`  update ${target}`)
+        continue
+      }
+      if (remote === base) {
+        summary.keptLocal++ // registry unchanged; local edits stay
+        continue
+      }
+      const { merged, conflicts } = merge3(base, local, remote)
+      await writeFile(target, merged)
+      await writeBase(cwd, file.path, remote)
+      summary.merged++
+      if (conflicts > 0) {
+        summary.conflicts += conflicts
+        console.log(`  merge ${target} — ${conflicts} conflict(s), look for <<<<<<< markers`)
+      } else {
+        console.log(`  merge ${target} — local edits kept`)
+      }
+    }
+  }
+
+  const parts = [
+    `${summary.updated} updated`,
+    `${summary.merged} merged`,
+    `${summary.unchanged} already current`,
+  ]
+  if (summary.keptLocal > 0) parts.push(`${summary.keptLocal} kept local (registry unchanged)`)
+  if (summary.noBase > 0) parts.push(`${summary.noBase} skipped (no snapshot)`)
+  console.log(`\n✓ ${parts.join(", ")}.`)
+  if (summary.conflicts > 0) {
+    console.log(`⚠ ${summary.conflicts} conflict(s) need manual resolution.`)
+  }
+  if (npmDeps.size > 0 && (summary.updated > 0 || summary.merged > 0) && opts.install !== false) {
+    installDeps(cwd, [...npmDeps].sort())
+  }
+  return summary
 }

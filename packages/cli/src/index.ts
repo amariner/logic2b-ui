@@ -6,6 +6,7 @@ import { dirname, join, resolve } from "node:path"
 
 import {
   addComponents,
+  updateComponents,
   DEFAULT_ALIASES,
   DEFAULT_REGISTRY,
   detectCssPath,
@@ -155,6 +156,27 @@ program
       throw new Error("Nothing to add. Pass component names or use --all.")
     }
     await addComponents(names, opts)
+  })
+
+program
+  .command("update")
+  .description("Pull registry changes into installed components (3-way merge, keeps local edits).")
+  .argument("[components...]", "components to update (default: all installed)")
+  .option("-c, --cwd <path>", "working directory")
+  .option("-r, --registry <url>", "registry base URL")
+  .option("--no-install", "skip installing npm dependencies")
+  .action(async (components: string[], opts) => {
+    let names = components
+    if (names.length === 0) {
+      const cwd = resolve(opts.cwd ?? process.cwd())
+      const config = await loadConfig(cwd, opts.registry)
+      const index = (await fetchJson(indexUrl(config.registry))) as {
+        name: string
+        type: string
+      }[]
+      names = index.filter((i) => i.type === "registry:ui").map((i) => i.name)
+    }
+    await updateComponents(names, opts)
   })
 
 program

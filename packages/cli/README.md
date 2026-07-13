@@ -29,7 +29,14 @@ npx logic2b@latest list
 | --- | --- |
 | `init` | Create `components.json` and install the `cn()` helper. |
 | `add <components...>` | Add one or more components and their dependencies. |
+| `update [components...]` | Pull registry changes into installed components with a 3-way merge — local edits survive; overlapping edits get git-style conflict markers. |
+| `diff [components...]` | Show which installed components differ from the registry. |
 | `list` | List all components available in the registry. |
+
+`add` snapshots what it installs under `.logic2b/base/` — that snapshot is the
+base side of `update`'s merge, so keep the directory (committing it is fine).
+Files installed by older CLI versions have no snapshot; `update` leaves them
+untouched and says so.
 
 `init` and `add` install the required npm packages automatically, using
 whichever package manager the project already uses (`packageManager` field or

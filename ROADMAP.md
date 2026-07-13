@@ -76,6 +76,12 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 - ✅ **CLI auto-install** — `init` and `add` install the npm dependencies
   themselves, detecting pnpm/npm/yarn/bun from the `packageManager` field or
   lockfile; `--no-install` keeps the old print-only behavior.
+- ✅ **`logic2b update`** — pulls upstream changes into installed components
+  with a real 3-way merge: `add` snapshots what it installed
+  (`.logic2b/base/`), update fast-forwards pristine files, keeps local edits
+  when the registry didn't move, merges non-overlapping changes and marks
+  true conflicts with git-style markers. Pre-snapshot installs are left
+  untouched with a clear message.
 
 ## Now (🔜) — in priority order
 
@@ -85,8 +91,6 @@ We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI
 work we keep is what the agent lane and real installs depend on:
 
-- 🔜 `logic2b update` — 3-way merge from the registry (diff exists; update
-  should apply upstream changes without clobbering local edits).
 - 🔜 Shared `@logic2b/tokens` package so the theme data in
   `apps/web/src/lib/themes.ts`, `packages/cli/src/themes.ts` and the MCP theme
   tools has one source of truth (a prerequisite for `apply_preset`).
