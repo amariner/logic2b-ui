@@ -2,9 +2,9 @@
  * Contrast audit — WCAG 2.2 ratios and APCA (SAPC-4 0.0.98G) Lc values for
  * the theme's foreground/background token pairs.
  *
- * Pure color math over the oklch token strings the themes emit; no DOM. The
- * same module ships in packages/mcp/src/contrast.ts for the `contrast_audit`
- * tool — packages/mcp/test/contrast.test.ts fails if the two drift.
+ * Pure color math over the oklch token strings the themes emit; no DOM.
+ * Shared by the studio rail and the MCP `contrast_audit` tool via the
+ * "@logic2b/tokens/contrast" subpath.
  */
 
 export interface Rgb {
