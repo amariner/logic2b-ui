@@ -277,6 +277,11 @@
     "description": "A hierarchical tree for browsing nested items (files, folders, categories) following the WAI-ARIA tree pattern: expand/collapse, single selection, roving focus and full keyboard navigation. Parts: TreeView (root, expanded/selected state), TreeItem (value, label, icon; nest items to make a branch)."
   },
   {
+    "name": "stepper",
+    "type": "registry:ui",
+    "description": "A multi-step progress indicator for wizards, checkouts and onboarding flows, horizontal or vertical. Steps derive completed/active/upcoming state from the root value; the active step carries aria-current. Parts: Stepper (root, value/orientation), StepperItem (step), StepperTrigger, StepperIndicator (number/check), StepperTitle, StepperDescription, StepperSeparator."
+  },
+  {
     "name": "chart",
     "type": "registry:ui",
     "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend."

@@ -1,0 +1,76 @@
+---
+title: Stepper
+description: A multi-step progress indicator for wizards, checkouts and onboarding flows, horizontal or vertical.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="stepper-demo" />
+
+## Installation
+
+<Install name="stepper" />
+
+## Usage
+
+```tsx
+import {
+  Stepper,
+  StepperIndicator,
+  StepperItem,
+  StepperSeparator,
+  StepperTitle,
+  StepperTrigger,
+} from "@/components/ui/stepper"
+
+<Stepper defaultValue={1}>
+  <StepperItem step={1}>
+    <StepperTrigger>
+      <StepperIndicator />
+      <StepperTitle>Account</StepperTitle>
+    </StepperTrigger>
+    <StepperSeparator />
+  </StepperItem>
+  <StepperItem step={2}>
+    <StepperTrigger>
+      <StepperIndicator />
+      <StepperTitle>Confirm</StepperTitle>
+    </StepperTrigger>
+  </StepperItem>
+</Stepper>
+```
+
+Each step derives its state from the root value: steps below it are
+`completed` (the indicator swaps to a check), the matching step is `active`
+(and carries `aria-current="step"`), the rest are `upcoming`.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` / `defaultValue` (Stepper) | `number` — controlled/uncontrolled active step | `1` |
+| `onValueChange` (Stepper) | `(step: number) => void` | — |
+| `orientation` (Stepper) | `horizontal \| vertical` | `horizontal` |
+| `step` (StepperItem) | `number` — the step this item represents (required) | — |
+| `disabled` (StepperItem) | `boolean` — disables the item's trigger | `false` |
+| `children` (StepperIndicator) | `ReactNode` — override the number/check content | — |
+
+## Examples
+
+### Vertical
+
+Set `orientation="vertical"` for tall flows — separators become connector
+lines between the indicators, with room for descriptions.
+
+<ComponentPreview name="stepper-vertical-demo" />
+
+## Accessibility
+
+- Rendered as an ordered list (`<ol>`/`<li>`), so the step count and order
+  are announced natively.
+- The active step exposes `aria-current="step"`.
+- Triggers are real buttons: focusable, disabled when the item is
+  `disabled`, and the completed/active/upcoming state rides on `data-state`
+  for styling only.
+- Separators are `aria-hidden` — purely decorative.
