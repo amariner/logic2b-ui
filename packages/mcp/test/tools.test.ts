@@ -38,10 +38,18 @@ function parseText(result: { content: { text: string }[] }) {
 }
 
 describe("TOOLS", () => {
-  test("exposes the three registry tools", () => {
+  test("exposes the registry and theme tools", () => {
     assert.deepEqual(
       TOOLS.map((t) => t.name),
-      ["list_components", "search_components", "get_component"]
+      [
+        "list_components",
+        "search_components",
+        "get_component",
+        "install_plan",
+        "get_theme",
+        "decode_preset",
+        "apply_preset",
+      ]
     )
   })
 })
@@ -96,5 +104,95 @@ describe("runTool", () => {
     const r = await runTool("nope", {}, { base, fetchImpl })
     assert.ok(r.isError)
     assert.match(r.content[0].text, /Unknown tool/)
+  })
+})
+
+const THEME_CSS = `:root {
+  --radius: 0.625rem;
+  --primary: oklch(0.205 0 0);
+}
+
+.dark {
+  --primary: oklch(0.922 0 0);
+}`
+
+describe("runTool — acting tools", () => {
+  const fetchImpl = fakeFetch({
+    [itemUrl(base, "button")]: {
+      name: "button", type: "registry:ui", description: "x",
+      dependencies: ["radix-ui"],
+      files: [{ path: "ui/button.tsx", type: "registry:ui", content: "// button" }],
+    },
+    [itemUrl(base, "theme")]: {
+      name: "theme", type: "registry:style", description: "the theme",
+      dependencies: ["tw-animate-css"],
+      files: [{ path: "theme.css", type: "registry:style", content: THEME_CSS }],
+      docs: "Import it.",
+    },
+  })
+
+  test("install_plan returns files, deps and notes", async () => {
+    const r = await runTool("install_plan", { items: ["button"] }, { base, fetchImpl })
+    assert.ok(!r.isError)
+    const plan = parseText(r)
+    assert.deepEqual(plan.files, [{ path: "src/components/ui/button.tsx", content: "// button" }])
+    assert.deepEqual(plan.npmDependencies, ["radix-ui"])
+    assert.ok(plan.notes.some((n: string) => n.includes('"@/*"')))
+  })
+
+  test("install_plan requires a non-empty items array", async () => {
+    const r = await runTool("install_plan", { items: [] }, { base, fetchImpl })
+    assert.ok(r.isError)
+  })
+
+  test("get_theme returns the stylesheet and the option catalog", async () => {
+    const r = await runTool("get_theme", {}, { base, fetchImpl })
+    assert.ok(!r.isError)
+    const theme = parseText(r)
+    assert.equal(theme.file.path, "src/styles/theme.css")
+    assert.match(theme.file.content, /--primary/)
+    assert.ok(theme.options.base.includes("slate"))
+    assert.ok(theme.options.accent.includes("violet"))
+    assert.equal(theme.defaults.base, "neutral")
+  })
+
+  test("decode_preset explains an invalid id", async () => {
+    const r = await runTool("decode_preset", { preset: "???" }, { base, fetchImpl })
+    assert.ok(r.isError)
+    assert.match(r.content[0].text, /not a valid preset id/)
+  })
+
+  test("apply_preset patches the registry stylesheet from explicit options", async () => {
+    const r = await runTool(
+      "apply_preset",
+      { accent: "blue", radius: "xl" },
+      { base, fetchImpl }
+    )
+    assert.ok(!r.isError)
+    const out = parseText(r)
+    assert.match(out.file.content, /--primary: oklch\(0\.546 0\.245 262\.881\);/)
+    assert.match(out.file.content, /--radius: 1rem;/)
+    assert.deepEqual(out.npmDependencies, ["tw-animate-css"])
+    // The id round-trips through decode_preset.
+    const decoded = await runTool("decode_preset", { preset: out.preset }, { base, fetchImpl })
+    assert.equal(parseText(decoded).config.theme, "blue")
+  })
+
+  test("apply_preset patches caller-provided css without fetching", async () => {
+    const r = await runTool(
+      "apply_preset",
+      { accent: "green", css: THEME_CSS },
+      { base, fetchImpl: fakeFetch({}) }
+    )
+    assert.ok(!r.isError)
+    const out = parseText(r)
+    assert.match(out.file.content, /--primary: oklch\(0\.548 0\.166 156\.743\);/)
+    assert.equal(out.npmDependencies, undefined)
+  })
+
+  test("apply_preset rejects unknown option values", async () => {
+    const r = await runTool("apply_preset", { accent: "neon" }, { base, fetchImpl })
+    assert.ok(r.isError)
+    assert.match(r.content[0].text, /Unknown accent "neon"/)
   })
 })

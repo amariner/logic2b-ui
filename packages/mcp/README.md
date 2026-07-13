@@ -2,10 +2,12 @@
 
 An [MCP](https://modelcontextprotocol.io) server that exposes the
 [logic2b ui](https://ui.logic2b.com) registry to coding agents. Point your
-agent at it and it can discover and read every component, block and chart —
-including full source — without leaving the conversation.
+agent at it and it can discover, read, theme and **install** every component,
+block and chart — without leaving the conversation and without a shell.
 
 ## Tools
+
+### Read the registry
 
 | Tool | What it does |
 | --- | --- |
@@ -13,8 +15,17 @@ including full source — without leaving the conversation.
 | `search_components` | Keyword search ranked by name/title/description, e.g. `"login form"`, `"donut chart"`. |
 | `get_component` | Fetch an item's full payload by `name`: dependencies, registry dependencies and the complete source of every file. |
 
-`get_component` returns exactly what `npx logic2b add <name>` installs, so an
-agent can read a component's source or hand it to you to drop into a project.
+### Act on a project
+
+| Tool | What it does |
+| --- | --- |
+| `install_plan` | Resolve items into an executable plan: every file to write (project-relative path + full content, registry dependencies resolved) and the npm dependencies to add. No command to run — write the files, add the deps, done. |
+| `get_theme` | The theme.css stylesheet, its npm deps, and the customization catalog (base scales, accents, chart palettes, radii, fonts). |
+| `decode_preset` | Decode a `/create` preset id into its config and the exact token values it pins for light and dark. |
+| `apply_preset` | Build a themed theme.css from a preset id or explicit choices; optionally patch a stylesheet you pass in. Returns the CSS and the canonical preset id. |
+
+`get_component` returns exactly what `npx logic2b add <name>` installs;
+`install_plan` turns that into file writes an agent can execute directly.
 
 ## Usage
 
