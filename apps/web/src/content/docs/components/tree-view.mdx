@@ -1,0 +1,60 @@
+---
+title: Tree View
+description: A hierarchical list for browsing nested items — files, folders, categories — with expand/collapse, selection and full keyboard navigation.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="tree-view-demo" />
+
+## Installation
+
+<Install name="tree-view" />
+
+## Usage
+
+```tsx
+import { TreeItem, TreeView } from "@/components/ui/tree-view"
+
+<TreeView aria-label="Files" defaultExpanded={["src"]}>
+  <TreeItem value="src" label="src">
+    <TreeItem value="button" label="button.tsx" />
+    <TreeItem value="card" label="card.tsx" />
+  </TreeItem>
+  <TreeItem value="readme" label="README.md" />
+</TreeView>
+```
+
+Nesting `TreeItem` children turns an item into a branch — the chevron,
+`aria-expanded` state and indentation are derived automatically.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `expanded` / `defaultExpanded` (TreeView) | `string[]` — controlled/uncontrolled expanded branch values | `[]` |
+| `onExpandedChange` (TreeView) | `(expanded: string[]) => void` | — |
+| `selected` / `defaultSelected` (TreeView) | `string \| null` — controlled/uncontrolled selected value | `null` |
+| `onSelectedChange` (TreeView) | `(selected: string \| null) => void` | — |
+| `value` (TreeItem) | `string` — unique item id (required) | — |
+| `label` (TreeItem) | `ReactNode` — the row text (required) | — |
+| `icon` (TreeItem) | `ReactNode` — rendered before the label | — |
+| `disabled` (TreeItem) | `boolean` — skipped by pointer and keyboard | `false` |
+
+## Examples
+
+### Controlled
+
+Drive expansion and selection externally — expand/collapse everything from
+the outside and react to the selected value.
+
+<ComponentPreview name="tree-view-controlled-demo" />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Tree View pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/).
+- <kbd>Arrow Up</kbd> / <kbd>Arrow Down</kbd> move through visible items; <kbd>Home</kbd> / <kbd>End</kbd> jump to the first/last.
+- <kbd>Arrow Right</kbd> expands a collapsed branch (then steps into it); <kbd>Arrow Left</kbd> collapses an expanded branch or moves to the parent.
+- <kbd>Enter</kbd> or <kbd>Space</kbd> selects the focused item (and toggles branches).
+- Items expose `aria-level`, `aria-expanded` and `aria-selected`; disabled items are `aria-disabled` and skipped.
