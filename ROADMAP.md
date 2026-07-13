@@ -62,14 +62,15 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 - ✅ **Shareable theme links** — `/create?preset=…` loads any theme, the URL
   tracks every edit (no history spam), and Copy Link in the studio rail hands
   out the address.
+- ✅ **Contrast audit** — WCAG 2.2 ratios + APCA Lc for every text token pair,
+  light and dark, with role-aware baselines (body vs. muted text). Lives in
+  the studio rail (warnings + per-pair dialog) and as the `contrast_audit`
+  MCP tool so agents verify the themes they generate.
 
 ## Now (🔜) — in priority order
 
 ### 1. Theme studio
 
-- 🔜 Contrast audit in the studio (WCAG 2.2 + APCA) with warnings on failing
-  token pairs — and expose the same audit as an MCP tool so agents can verify
-  the themes they generate.
 - 🔜 Emit sidebar tokens in the exported CSS (the CLI preset patch already
   derives them; the studio CSS export should match).
 - 🔜 Custom accent: free oklch hue/chroma picker, not just the six presets.

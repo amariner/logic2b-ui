@@ -58,6 +58,7 @@ describe("TOOLS", () => {
         "get_theme",
         "decode_preset",
         "apply_preset",
+        "contrast_audit",
       ]
     )
   })

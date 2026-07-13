@@ -1,3 +1,4 @@
+import { auditTokens } from "./contrast.ts"
 import { buildInstallPlan } from "./plan.ts"
 import {
   DEFAULT_REGISTRY,
@@ -180,6 +181,28 @@ export const TOOLS = [
           type: "string",
           description:
             "Optional: an existing theme.css to patch in place. Defaults to the registry's theme.css.",
+        },
+      },
+    },
+  },
+  {
+    name: "contrast_audit",
+    description:
+      "Audit a theme's text contrast: WCAG 2.2 ratios and APCA Lc values for every foreground/background token pair, light and dark mode. Takes a preset id or explicit theme options (same as apply_preset), or raw token values via `tokens`. A pair warns when it misses WCAG AA (4.5:1) or |Lc| 60. Use it to verify a theme you generated before shipping it.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        preset: { type: "string", description: "A /create preset id to audit." },
+        base: { type: "string", description: "Base gray scale (see apply_preset)." },
+        accent: { type: "string", description: "Accent color (see apply_preset)." },
+        chart: { type: "string", description: "Chart palette (see apply_preset)." },
+        radius: { type: "string", description: "Corner radius (ignored by the audit)." },
+        font: { type: "string", description: "Body font (ignored by the audit)." },
+        heading: { type: "string", description: "Heading font (ignored by the audit)." },
+        tokens: {
+          type: "object",
+          description:
+            'Optional raw token map ({"primary": "oklch(…)", "primary-foreground": "oklch(…)", …}) to audit instead of a preset — audits just these values as one mode.',
         },
       },
     },
@@ -428,6 +451,33 @@ export async function runTool(
           "Write the file into the project (or overwrite the existing theme.css) — only the token values inside :root and .dark change.",
           "Reproduce this exact theme anywhere with `npx logic2b@latest init --preset <preset>` or the /create studio.",
         ],
+      })
+    }
+
+    if (name === "contrast_audit") {
+      if (args.tokens && typeof args.tokens === "object") {
+        const results = auditTokens(args.tokens as Record<string, string>)
+        return textResult({
+          results,
+          warnings: results.filter((r) => r.warn).length,
+        })
+      }
+      const cfg = resolveThemeArgs(args)
+      if (typeof cfg === "string") return errorResult(cfg)
+      const light = auditTokens(presetDeclarations(cfg, "light"))
+      const dark = auditTokens(presetDeclarations(cfg, "dark"))
+      const warnings = [...light, ...dark].filter((r) => r.warn)
+      return textResult({
+        preset: encodePreset(cfg),
+        config: cfg,
+        thresholds: { wcag: "AA 4.5:1 for body text", apca: "|Lc| ≥ 60" },
+        light,
+        dark,
+        warnings: warnings.length,
+        verdict:
+          warnings.length === 0
+            ? "Every audited pair meets WCAG AA and APCA |Lc| 60."
+            : `${warnings.length} pair(s) fall below the baseline — see "warn": true.`,
       })
     }
 

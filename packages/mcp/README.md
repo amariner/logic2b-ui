@@ -25,6 +25,7 @@ block and chart — without leaving the conversation and without a shell.
 | `get_theme` | The theme.css stylesheet, its npm deps, and the customization catalog (base scales, accents, chart palettes, radii, fonts). |
 | `decode_preset` | Decode a `/create` preset id into its config and the exact token values it pins for light and dark. |
 | `apply_preset` | Build a themed theme.css from a preset id or explicit choices; optionally patch a stylesheet you pass in. Returns the CSS and the canonical preset id. |
+| `contrast_audit` | WCAG 2.2 + APCA contrast of every text token pair (light + dark) for a preset, explicit options or raw token values — verify a generated theme before shipping it. |
 
 `get_component` returns exactly what `npx logic2b add <name>` installs;
 `install_plan` turns that into file writes an agent can execute directly.
