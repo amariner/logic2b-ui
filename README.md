@@ -30,6 +30,10 @@ LLMs and coding agents.
   (blocks and charts link straight to their installable JSON payloads).
 - `/llms-full.txt` — the whole documentation in one Markdown file.
 - Every docs page is available as plain Markdown by appending `.md`.
+- **`AGENTS.md` + `DESIGN.md` export** — the `/create` studio generates the
+  house rules (component inventory, token rules, what not to hand-roll) and
+  the style reference for any theme, ready to drop into a repo so agents
+  follow the design system.
 - `/r/index.json` + `/r/<name>.json` — machine-readable registry with full source.
 - **MCP server** — point an agent at the remote endpoint
   (`https://ui.logic2b.com/mcp`, streamable HTTP, zero install) or run
@@ -63,8 +67,8 @@ or environment variables required.
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (AGENTS.md
-generator, shareable preset links, custom accents, contrast audit) and what
+See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (MCP demo
+parity, shareable preset links, custom accents, contrast audit) and what
 we're exploring.
 
 ## Contributing

@@ -24,7 +24,7 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 - ✅ **Charts** — 18 installable Recharts variants across area/bar/line/pie/radar/radial.
 - ✅ **Theme studio (`/create`)** — base color, accent, chart palette, radius and
   fonts with a live two-page canvas; round-trippable preset ids; CSS,
-  `components.json` and generated `DESIGN.md` export.
+  `components.json` and generated `DESIGN.md` + `AGENTS.md` export.
 - ✅ **CLI (`logic2b`)** — `init`, `add` (with registry-dependency resolution),
   `diff`, `list`; unit-tested pure core.
 - ✅ **CLI presets** — `init --preset <id>` decodes a studio preset and rewrites
@@ -46,6 +46,10 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   agent with no terminal installs by itself; `get_theme`, `decode_preset` and
   `apply_preset` inspect and rebuild theme.css for any studio preset, including
   patching an existing stylesheet in place.
+- ✅ **`AGENTS.md` generator** next to `DESIGN.md` in the studio's Get Code —
+  house rules for agents working in a repo that consumes logic2b ui: the full
+  primitive/block/chart inventory, the token rules, what not to hand-roll, and
+  the no-shell install paths. The design system as executable context.
 
 ## Now (🔜) — in priority order
 
@@ -53,10 +57,6 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 Ordered: each step builds on the previous one.
 
-- 🔜 **`AGENTS.md` generator** next to `DESIGN.md` — house rules for agents
-  working in a repo that consumes logic2b ui: which primitives exist, how the
-  theme tokens work, what not to hand-roll. The design system as executable
-  context, not just components.
 - 🔜 **MCP baseline parity** (cheap, do alongside the above): expose demo
   examples per item and an add-command helper — the registry already has both,
   the MCP just doesn't serve them yet.

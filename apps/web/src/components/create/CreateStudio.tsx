@@ -38,6 +38,7 @@ import {
   type Mode,
   type ThemeConfig,
 } from "@/lib/themes"
+import { buildAgentsMd } from "@/lib/agents-md"
 import { buildInitPrompt } from "@/lib/prompts"
 import {
   siAstro,
@@ -768,9 +769,9 @@ function GetCodeDialog({
   const [tpl, setTpl] = React.useState("next")
   const [pm, setPm] = React.useState("pnpm")
   const [monorepo, setMonorepo] = React.useState(false)
-  const [themeView, setThemeView] = React.useState<"css" | "json" | "design">(
-    "css",
-  )
+  const [themeView, setThemeView] = React.useState<
+    "css" | "json" | "design" | "agents"
+  >("css")
 
   const newCmd = `${PMS[pm]} logic2b@latest init --template ${tpl}${
     monorepo ? " --monorepo" : ""
@@ -789,7 +790,9 @@ function GetCodeDialog({
       ? buildCss(cfg)
       : themeView === "json"
         ? buildComponentsJson(cfg)
-        : buildDesignMd(cfg)
+        : themeView === "design"
+          ? buildDesignMd(cfg)
+          : buildAgentsMd(cfg)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -859,7 +862,7 @@ function GetCodeDialog({
 
           <TabsContent value="theme" className="mt-4 grid gap-4">
             <div className="flex w-fit items-center gap-1 rounded-lg bg-muted p-1 text-xs">
-              {(["css", "json", "design"] as const).map((v) => (
+              {(["css", "json", "design", "agents"] as const).map((v) => (
                 <button
                   key={v}
                   onClick={() => setThemeView(v)}
@@ -873,20 +876,26 @@ function GetCodeDialog({
                     ? "CSS"
                     : v === "json"
                       ? "components.json"
-                      : "DESIGN.md"}
+                      : v === "design"
+                        ? "DESIGN.md"
+                        : "AGENTS.md"}
                 </button>
               ))}
             </div>
             <pre className="max-h-72 overflow-auto rounded-lg border bg-muted/40 p-3 text-xs leading-relaxed">
               {themeText}
             </pre>
-            {themeView === "design" ? (
+            {themeView === "design" || themeView === "agents" ? (
               <div className="grid grid-cols-2 gap-2">
                 <BigCopyButton text={themeText} label="Copy" variant="outline" />
                 <DownloadButton
                   text={themeText}
-                  filename="DESIGN.md"
-                  label="Download DESIGN.md"
+                  filename={themeView === "design" ? "DESIGN.md" : "AGENTS.md"}
+                  label={
+                    themeView === "design"
+                      ? "Download DESIGN.md"
+                      : "Download AGENTS.md"
+                  }
                 />
               </div>
             ) : (
