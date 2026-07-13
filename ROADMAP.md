@@ -37,6 +37,10 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   checklist.
 - ✅ **LLM-first surface** — `/llms.txt`, `/llms-full.txt`, `.md` twin of every
   docs page, `@logic2b/mcp` MCP server, cmd+K indexing every installable item.
+- ✅ **Remote MCP endpoint at `ui.logic2b.com/mcp`** (streamable HTTP) — the
+  registry tools with zero local install, no Node, no shell: the door for
+  web-based assistants, sandboxed agents and enterprise connectors that a
+  local `npx`-launched MCP can never reach.
 
 ## Now (🔜) — in priority order
 
@@ -44,10 +48,6 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 Ordered: each step builds on the previous one.
 
-- 🔜 **Remote MCP endpoint at `ui.logic2b.com/mcp`** (streamable HTTP) — zero
-  local install, no Node, no shell. This is the door for web-based assistants,
-  sandboxed agents and enterprise connectors that a local `npx`-launched MCP
-  can never reach.
 - 🔜 **MCP tools that act, not advise**: `install_plan` returns the exact file
   writes + npm deps for a set of items (an agent with no terminal can install
   by itself), plus theme tools — `get_theme`, `decode_preset`, `apply_preset`
