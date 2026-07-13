@@ -1,0 +1,55 @@
+---
+title: Rating
+description: A star rating input following the radio-group pattern — arrow keys move the value, hovering previews it, and a read-only mode renders static scores.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="rating-demo" />
+
+## Installation
+
+<Install name="rating" />
+
+## Usage
+
+```tsx
+import { Rating } from "@/components/ui/rating"
+
+const [value, setValue] = React.useState(0)
+
+<Rating value={value} onValueChange={setValue} aria-label="Rate this" />
+```
+
+Clicking the current value again clears the rating to `0`.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` / `defaultValue` | `number` — controlled/uncontrolled rating | `0` |
+| `onValueChange` | `(value: number) => void` | — |
+| `max` | `number` — number of steps | `5` |
+| `readOnly` | `boolean` — static display (`role="img"` with a text label) | `false` |
+| `disabled` | `boolean` | `false` |
+| `icon` | `ReactNode` — swap the star for any icon | — |
+| `aria-label` | `string` — group label | `"Rating"` |
+
+## Examples
+
+### Read-only
+
+For displaying scores: the group becomes `role="img"` labelled
+"<em>label</em>: n out of max", and any icon works.
+
+<ComponentPreview name="rating-readonly-demo" />
+
+## Accessibility
+
+- Follows the radio-group pattern: each step is a `role="radio"` button with
+  `aria-checked` and an `n out of max` label.
+- <kbd>Arrow</kbd> keys move the value (selection follows focus);
+  <kbd>Home</kbd> / <kbd>End</kbd> jump to 1 / max.
+- Read-only ratings are announced as a single image with the score in the
+  label, not as a disabled control.
