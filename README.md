@@ -33,8 +33,10 @@ LLMs and coding agents.
 - `/r/index.json` + `/r/<name>.json` — machine-readable registry with full source.
 - **MCP server** — point an agent at the remote endpoint
   (`https://ui.logic2b.com/mcp`, streamable HTTP, zero install) or run
-  `npx -y @logic2b/mcp` locally to search and read every component, block and
-  chart over the Model Context Protocol.
+  `npx -y @logic2b/mcp` locally. Beyond search and read, `install_plan`
+  returns the exact file writes + npm deps for any set of items, and
+  `apply_preset` rebuilds theme.css for any `/create` preset — an agent
+  with no shell can install and theme the whole system by itself.
 
 ## Development
 
@@ -61,9 +63,9 @@ or environment variables required.
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (MCP tools that
-act, AGENTS.md generator, custom accents, contrast audit) and what we're
-exploring.
+See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (AGENTS.md
+generator, shareable preset links, custom accents, contrast audit) and what
+we're exploring.
 
 ## Contributing
 
