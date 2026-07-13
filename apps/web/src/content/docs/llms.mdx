@@ -56,8 +56,9 @@ served raw at `/r/demos/index.json`). Acting on a project, no shell required:
 `install_plan` (the exact files to write and npm deps to add for any set of
 items, registry dependencies resolved), `get_theme`, `decode_preset` and
 `apply_preset` (rebuilds theme.css for any `/create` preset, or patches the
-stylesheet you pass in). With a shell, `add_command` returns the validated
-CLI invocation instead.
+stylesheet you pass in). `contrast_audit` verifies a theme's WCAG 2.2 and
+APCA contrast per token pair before you ship it. With a shell, `add_command`
+returns the validated CLI invocation instead.
 
 **Remote (zero install, no shell needed)** — connect any streamable-HTTP MCP
 client to:

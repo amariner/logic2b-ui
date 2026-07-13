@@ -39,6 +39,7 @@ import {
   type ThemeConfig,
 } from "@/lib/themes"
 import { buildAgentsMd } from "@/lib/agents-md"
+import { auditTokens, type PairResult } from "@/lib/contrast"
 import { buildInitPrompt } from "@/lib/prompts"
 import {
   siAstro,
@@ -421,6 +422,7 @@ export function CreateStudio() {
             <span className="truncate">--preset {presetId}</span>
             <CopyLinkButton />
           </div>
+          <ContrastDialog cfg={cfg} />
           <div className="grid grid-cols-2 gap-2">
             <OpenPresetDialog onApply={setCfg} />
             <Button variant="outline" size="sm" onClick={shuffle}>
@@ -719,6 +721,78 @@ function DownloadButton({
     <Button className="w-full" onClick={download}>
       {label}
     </Button>
+  )
+}
+
+/** Contrast audit (WCAG 2.2 + APCA) of the current theme's text pairs. The
+ *  rail button warns when any pair misses its baseline; the dialog lists
+ *  every pair per mode with both metrics. */
+function ContrastDialog({ cfg }: { cfg: ThemeConfig }) {
+  const { light, dark, warnings } = React.useMemo(() => {
+    const light = auditTokens(resolveTokens(cfg, "light").tokens)
+    const dark = auditTokens(resolveTokens(cfg, "dark").tokens)
+    return { light, dark, warnings: [...light, ...dark].filter((r) => r.warn).length }
+  }, [cfg])
+
+  const Row = ({ r }: { r: PairResult }) => (
+    <div className="flex items-center justify-between gap-2 py-1 font-mono text-xs">
+      <span className="flex min-w-0 items-center gap-2">
+        <span
+          className={`size-1.5 shrink-0 rounded-full ${
+            r.warn ? "bg-destructive" : "bg-[oklch(0.696_0.17_162.48)]"
+          }`}
+        />
+        <span className="truncate">
+          {r.fg} / {r.bg}
+        </span>
+      </span>
+      <span className={`shrink-0 tabular-nums ${r.warn ? "text-destructive" : "text-muted-foreground"}`}>
+        {r.wcag.toFixed(2)}:1 · Lc {Math.abs(r.apca).toFixed(0)}
+      </span>
+    </div>
+  )
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="w-full justify-between">
+          Contrast
+          <span
+            className={`font-mono text-xs ${
+              warnings > 0 ? "text-[oklch(0.769_0.188_70.08)]" : "text-muted-foreground"
+            }`}
+          >
+            {warnings > 0 ? `${warnings} warning${warnings > 1 ? "s" : ""}` : "✓ passes"}
+          </span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-popover sm:max-w-[440px]">
+        <DialogHeader>
+          <DialogTitle>Contrast audit</DialogTitle>
+          <DialogDescription>
+            WCAG 2.2 ratio and APCA Lc for every text pair. Body pairs need
+            4.5:1 / Lc 60; muted (secondary) pairs need 3:1 / Lc 45.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid max-h-80 gap-4 overflow-y-auto">
+          {(
+            [
+              ["Light", light],
+              ["Dark", dark],
+            ] as const
+          ).map(([label, results]) => (
+            <div key={label}>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {label}
+              </p>
+              {results.map((r) => (
+                <Row key={`${r.fg}/${r.bg}`} r={r} />
+              ))}
+            </div>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
