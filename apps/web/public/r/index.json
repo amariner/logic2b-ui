@@ -202,6 +202,11 @@
     "description": "Free-form multi-value input rendered as removable chips: Enter or comma commits, paste splits on commas, Backspace on an empty field removes the last tag, duplicates are ignored and max caps the list. Controlled or uncontrolled via value/defaultValue + onValueChange."
   },
   {
+    "name": "rating",
+    "type": "registry:ui",
+    "description": "A star rating input following the radio-group pattern: each step is a radio with aria-checked, arrow keys move the value (Home/End jump to the ends), hover previews, clicking the current value clears it, and readOnly renders a static labelled image. Swap the star for any icon via the icon prop."
+  },
+  {
     "name": "table",
     "type": "registry:ui",
     "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions."

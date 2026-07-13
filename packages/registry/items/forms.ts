@@ -117,4 +117,13 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/tags-input.tsx", type: "registry:ui" }],
   },
+  {
+    name: "rating",
+    type: "registry:ui",
+    description:
+      "A star rating input following the radio-group pattern: each step is a radio with aria-checked, arrow keys move the value (Home/End jump to the ends), hover previews, clicking the current value clears it, and readOnly renders a static labelled image. Swap the star for any icon via the icon prop.",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/rating.tsx", type: "registry:ui" }],
+  },
 ]
