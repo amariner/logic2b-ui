@@ -26,8 +26,9 @@ const SERVER_INSTRUCTIONS =
   "them without a shell. `install_plan` returns the exact files to write " +
   "(registry dependencies resolved) plus the npm deps to add; " +
   "`get_theme`/`decode_preset`/`apply_preset` inspect and rebuild theme.css " +
-  "for any /create preset. Prefer install_plan over hand-copying from " +
-  "`get_component` when the goal is to install.";
+  "for any /create preset; `get_demo` returns real usage examples and " +
+  "`add_command` the CLI equivalent. Prefer install_plan over hand-copying " +
+  "from `get_component` when the goal is to install.";
 
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",

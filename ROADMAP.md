@@ -50,6 +50,10 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   house rules for agents working in a repo that consumes logic2b ui: the full
   primitive/block/chart inventory, the token rules, what not to hand-roll, and
   the no-shell install paths. The design system as executable context.
+- ✅ **MCP baseline parity** — `get_demo` serves the docs' usage examples as
+  machine-readable data (`/r/demos/*.json`, imports rewritten to project
+  paths) and `add_command` returns validated per-package-manager CLI
+  invocations.
 
 ## Now (🔜) — in priority order
 
@@ -57,9 +61,6 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 Ordered: each step builds on the previous one.
 
-- 🔜 **MCP baseline parity** (cheap, do alongside the above): expose demo
-  examples per item and an add-command helper — the registry already has both,
-  the MCP just doesn't serve them yet.
 - 🔜 Per-stack prompt flavors (Next.js / Vite / Astro / Laravel) in the prompt
   copier.
 

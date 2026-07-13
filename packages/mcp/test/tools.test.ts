@@ -1,7 +1,14 @@
 import assert from "node:assert/strict"
 import { describe, test } from "node:test"
 
-import { indexUrl, itemUrl, type FetchLike, type IndexItem } from "../src/registry.ts"
+import {
+  demosIndexUrl,
+  demoUrl,
+  indexUrl,
+  itemUrl,
+  type FetchLike,
+  type IndexItem,
+} from "../src/registry.ts"
 import { runTool, TOOLS } from "../src/tools.ts"
 
 const index: IndexItem[] = [
@@ -45,6 +52,8 @@ describe("TOOLS", () => {
         "list_components",
         "search_components",
         "get_component",
+        "get_demo",
+        "add_command",
         "install_plan",
         "get_theme",
         "decode_preset",
@@ -104,6 +113,58 @@ describe("runTool", () => {
     const r = await runTool("nope", {}, { base, fetchImpl })
     assert.ok(r.isError)
     assert.match(r.content[0].text, /Unknown tool/)
+  })
+})
+
+describe("runTool — demos and add_command", () => {
+  const fetchImpl = fakeFetch({
+    [indexUrl(base)]: index,
+    [demosIndexUrl(base)]: [
+      { item: "button", demos: ["button-demo", "button-outline-demo"] },
+      { item: "login-01", demos: ["login-01-demo"] },
+    ],
+    [demoUrl(base, "button-demo")]: {
+      name: "button-demo", item: "button", content: 'import { Button } from "@/components/ui/button"',
+    },
+    [demoUrl(base, "button-outline-demo")]: {
+      name: "button-outline-demo", item: "button", content: "// outline",
+    },
+  })
+
+  test("get_demo by item returns every demo with source", async () => {
+    const r = await runTool("get_demo", { name: "button" }, { base, fetchImpl })
+    assert.ok(!r.isError)
+    const payload = parseText(r)
+    assert.equal(payload.count, 2)
+    assert.match(payload.demos[0].content, /@\/components\/ui\/button/)
+  })
+
+  test("get_demo by demo name returns just that demo", async () => {
+    const r = await runTool("get_demo", { name: "button-outline-demo" }, { base, fetchImpl })
+    const payload = parseText(r)
+    assert.equal(payload.count, 1)
+    assert.equal(payload.item, "button")
+  })
+
+  test("get_demo for an unknown name lists what has demos", async () => {
+    const r = await runTool("get_demo", { name: "ghost" }, { base, fetchImpl })
+    assert.ok(r.isError)
+    assert.match(r.content[0].text, /button, login-01/)
+  })
+
+  test("add_command builds per-PM commands for valid items", async () => {
+    const r = await runTool("add_command", { items: ["button", "login-01"] }, { base, fetchImpl })
+    assert.ok(!r.isError)
+    const payload = parseText(r)
+    assert.equal(payload.commands.npm, "npx logic2b@latest add button login-01")
+    assert.equal(payload.commands.pnpm, "pnpm dlx logic2b@latest add button login-01")
+    assert.ok(payload.notes.some((n: string) => n.includes("install_plan")))
+  })
+
+  test("add_command rejects unknown items", async () => {
+    const r = await runTool("add_command", { items: ["button", "ghost"] }, { base, fetchImpl })
+    assert.ok(r.isError)
+    assert.match(r.content[0].text, /Unknown item\(s\): ghost/)
   })
 })
 
