@@ -1,5 +1,7 @@
 export const DEFAULT_REGISTRY =
-  process.env.LOGIC2B_REGISTRY?.replace(/\/$/, "") ?? "https://ui.logic2b.com"
+  (typeof process !== "undefined"
+    ? process.env?.LOGIC2B_REGISTRY?.replace(/\/$/, "")
+    : undefined) ?? "https://ui.logic2b.com"
 
 export const FETCH_TIMEOUT_MS = 15_000
 
