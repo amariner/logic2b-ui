@@ -73,6 +73,9 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   just the six presets. Serialized as `h<hue>c<chroma>` inside the same
   6-field preset id (charts accept it too), so custom themes travel through
   share links, `init --preset` and the MCP theme tools unchanged.
+- ✅ **CLI auto-install** — `init` and `add` install the npm dependencies
+  themselves, detecting pnpm/npm/yarn/bun from the `packageManager` field or
+  lockfile; `--no-install` keeps the old print-only behavior.
 
 ## Now (🔜) — in priority order
 
@@ -82,8 +85,6 @@ We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI
 work we keep is what the agent lane and real installs depend on:
 
-- 🔜 Auto-install npm dependencies (detect pnpm/npm/yarn/bun) instead of
-  printing the install line.
 - 🔜 `logic2b update` — 3-way merge from the registry (diff exists; update
   should apply upstream changes without clobbering local edits).
 - 🔜 Shared `@logic2b/tokens` package so the theme data in

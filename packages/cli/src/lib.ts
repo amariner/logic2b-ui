@@ -1,4 +1,5 @@
-import { existsSync } from "node:fs"
+import { spawnSync } from "node:child_process"
+import { existsSync, readFileSync } from "node:fs"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 
@@ -222,9 +223,62 @@ export async function resolveGraph(
   return resolved
 }
 
+export type PackageManager = "pnpm" | "npm" | "yarn" | "bun"
+
+/** Detect the project's package manager: the `packageManager` field wins,
+ *  then the lockfile, then npm. */
+export function detectPackageManager(cwd: string): PackageManager {
+  const pkgPath = join(cwd, "package.json")
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as {
+        packageManager?: string
+      }
+      const declared = pkg.packageManager?.split("@")[0]
+      if (declared === "pnpm" || declared === "npm" || declared === "yarn" || declared === "bun") {
+        return declared
+      }
+    } catch {
+      // Malformed package.json — fall through to lockfile detection.
+    }
+  }
+  if (existsSync(join(cwd, "pnpm-lock.yaml"))) return "pnpm"
+  if (existsSync(join(cwd, "yarn.lock"))) return "yarn"
+  if (existsSync(join(cwd, "bun.lock")) || existsSync(join(cwd, "bun.lockb"))) return "bun"
+  return "npm"
+}
+
+/** The install invocation for a set of packages, per package manager. */
+export function installCommand(pm: PackageManager, deps: string[]): string[] {
+  const verb = pm === "npm" ? "install" : "add"
+  return [pm, verb, ...deps]
+}
+
+/** Run the package manager to install deps; false (with the manual command
+ *  printed) when the install can't run or fails. */
+function installDeps(cwd: string, deps: string[]): boolean {
+  const manual = () =>
+    console.log(`\nInstall the required dependencies:\n\n  npm install ${deps.join(" ")}\n`)
+  if (!existsSync(join(cwd, "package.json"))) {
+    console.log("\nNo package.json here — skipping dependency install.")
+    manual()
+    return false
+  }
+  const pm = detectPackageManager(cwd)
+  const [cmd, ...args] = installCommand(pm, deps)
+  console.log(`\nInstalling dependencies with ${pm}…\n`)
+  const res = spawnSync(cmd, args, { cwd, stdio: "inherit" })
+  if (res.status !== 0) {
+    console.log(`\n✗ ${pm} exited with ${res.status ?? "an error"}.`)
+    manual()
+    return false
+  }
+  return true
+}
+
 export async function addComponents(
   names: string[],
-  opts: { registry?: string; cwd?: string; overwrite?: boolean }
+  opts: { registry?: string; cwd?: string; overwrite?: boolean; install?: boolean }
 ): Promise<Map<string, RegistryItem>> {
   const { resolve } = await import("node:path")
   const cwd = resolve(opts.cwd ?? process.cwd())
@@ -256,8 +310,12 @@ export async function addComponents(
 
   console.log(`\n✓ ${written} file(s) written, ${skipped} skipped.`)
   if (npmDeps.size > 0) {
-    console.log(`\nInstall the required dependencies:\n`)
-    console.log(`  npm install ${[...npmDeps].join(" ")}\n`)
+    const deps = [...npmDeps].sort()
+    if (opts.install === false) {
+      console.log(`\nInstall the required dependencies:\n\n  npm install ${deps.join(" ")}\n`)
+    } else {
+      installDeps(cwd, deps)
+    }
   }
   return resolved
 }

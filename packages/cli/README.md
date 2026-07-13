@@ -31,6 +31,11 @@ npx logic2b@latest list
 | `add <components...>` | Add one or more components and their dependencies. |
 | `list` | List all components available in the registry. |
 
+`init` and `add` install the required npm packages automatically, using
+whichever package manager the project already uses (`packageManager` field or
+lockfile — pnpm, npm, yarn or bun). Pass `--no-install` to just print the
+install command instead.
+
 Run `npx logic2b@latest <command> --help` for options.
 
 ## Documentation
