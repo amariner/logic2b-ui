@@ -41,6 +41,11 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   registry tools with zero local install, no Node, no shell: the door for
   web-based assistants, sandboxed agents and enterprise connectors that a
   local `npx`-launched MCP can never reach.
+- ✅ **MCP tools that act, not advise** — `install_plan` returns the exact file
+  writes + npm deps for a set of items (registry dependencies resolved), so an
+  agent with no terminal installs by itself; `get_theme`, `decode_preset` and
+  `apply_preset` inspect and rebuild theme.css for any studio preset, including
+  patching an existing stylesheet in place.
 
 ## Now (🔜) — in priority order
 
@@ -48,11 +53,6 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 Ordered: each step builds on the previous one.
 
-- 🔜 **MCP tools that act, not advise**: `install_plan` returns the exact file
-  writes + npm deps for a set of items (an agent with no terminal can install
-  by itself), plus theme tools — `get_theme`, `decode_preset`, `apply_preset`
-  (returns the patched CSS). "Here's the command to run" assumes a human;
-  "here are the writes" serves an agent.
 - 🔜 **`AGENTS.md` generator** next to `DESIGN.md` — house rules for agents
   working in a repo that consumes logic2b ui: which primitives exist, how the
   theme tokens work, what not to hand-roll. The design system as executable
