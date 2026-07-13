@@ -15,6 +15,7 @@ LLM or building an agent, use these endpoints instead of scraping HTML.
 | `/docs/<page>.md` | Any docs page as plain Markdown (append `.md`) |
 | `/r/index.json` | Registry index: every component with its description |
 | `/r/<name>.json` | Full component payload: metadata + source code |
+| `/mcp` | Remote MCP endpoint (streamable HTTP): registry tools for agents |
 
 ## Installing components programmatically
 
@@ -47,10 +48,35 @@ needs — no scraping, no guessing.
 
 ## MCP server
 
-Prefer a live connection? `@logic2b/mcp` exposes the whole registry over the
-Model Context Protocol — search, list and read components, blocks and charts
-with full source. See the [repo](https://github.com/amariner/logic2b-ui) for
-setup.
+Prefer a live connection? The registry speaks the Model Context Protocol two
+ways — both expose the same tools: `list_components`, `search_components` and
+`get_component` (full source of every file, ready to write into a project).
+
+**Remote (zero install, no shell needed)** — connect any streamable-HTTP MCP
+client to:
+
+```
+https://ui.logic2b.com/mcp
+```
+
+With Claude Code:
+
+```bash
+claude mcp add --transport http logic2b https://ui.logic2b.com/mcp
+```
+
+Or in any client that takes a JSON config:
+
+```json
+{
+  "mcpServers": {
+    "logic2b": { "type": "http", "url": "https://ui.logic2b.com/mcp" }
+  }
+}
+```
+
+**Local (stdio)** — `npx -y @logic2b/mcp` runs the same tools as a local
+process. See the [repo](https://github.com/amariner/logic2b-ui) for details.
 
 ## Conventions an agent can rely on
 

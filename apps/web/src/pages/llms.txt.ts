@@ -68,6 +68,8 @@ export const GET: APIRoute = async ({ site }) => {
     "## Optional",
     "",
     `- [Full documentation in one file](${base}/llms-full.txt)`,
+    `- Remote MCP endpoint (streamable HTTP): ${base}/mcp — tools to list,`,
+    "  search and read every registry item with full source.",
     "",
   ].join("\n");
 
