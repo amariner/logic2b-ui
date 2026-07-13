@@ -4,7 +4,7 @@
   "description": "MCP server that exposes the logic2b ui registry to coding agents.",
   "type": "module",
   "bin": {
-    "logic2b-mcp": "./dist/index.js"
+    "logic2b-mcp": "dist/index.js"
   },
   "files": [
     "dist"
