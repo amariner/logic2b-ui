@@ -22,10 +22,12 @@ const LATEST_PROTOCOL_VERSION = SUPPORTED_PROTOCOL_VERSIONS[0];
 
 const SERVER_INSTRUCTIONS =
   "Registry tools for logic2b ui (https://ui.logic2b.com): list, search and " +
-  "read installable components, blocks, charts and the theme. " +
-  "`get_component` returns every file's full source plus npm and registry " +
-  "dependencies — write the files into the user's project (recursing into " +
-  "registryDependencies) or run `npx logic2b@latest add <name>`.";
+  "read installable components, blocks, charts and the theme — and install " +
+  "them without a shell. `install_plan` returns the exact files to write " +
+  "(registry dependencies resolved) plus the npm deps to add; " +
+  "`get_theme`/`decode_preset`/`apply_preset` inspect and rebuild theme.css " +
+  "for any /create preset. Prefer install_plan over hand-copying from " +
+  "`get_component` when the goal is to install.";
 
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
