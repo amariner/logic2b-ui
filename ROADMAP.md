@@ -6,6 +6,13 @@ copies a command; an agent gets a prompt, an MCP server and machine-readable
 everything. Exact themes travel as one preset id from the studio to the CLI to
 the agent.
 
+The sharpest version of that goal: **agents that don't have a terminal are
+users too.** Every install story that ends in "now run this command" excludes
+web-based assistants, sandboxed agents and enterprise connectors. Our lane is
+the registry an agent can browse, theme and install from **without a shell** —
+a remote MCP endpoint, tools that return file writes instead of commands, and
+the design system itself shipped as agent-readable context.
+
 Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 ## Shipped
@@ -31,42 +38,57 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 - ✅ **LLM-first surface** — `/llms.txt`, `/llms-full.txt`, `.md` twin of every
   docs page, `@logic2b/mcp` MCP server, cmd+K indexing every installable item.
 
-## Now (🔜)
+## Now (🔜) — in priority order
 
-### CLI
+### 1. AI & agents — the differentiating lane
 
-- 🔜 `init --template <next|vite|astro|…>` that actually scaffolds the app
-  (delegating to each framework's creator), then inits in place — today it
-  prints the recipe instead of failing mid-way.
-- 🔜 `--monorepo`: scaffold a pnpm workspace (`apps/web` + shared `packages/ui`).
+Ordered: each step builds on the previous one.
+
+- 🔜 **Remote MCP endpoint at `ui.logic2b.com/mcp`** (streamable HTTP) — zero
+  local install, no Node, no shell. This is the door for web-based assistants,
+  sandboxed agents and enterprise connectors that a local `npx`-launched MCP
+  can never reach.
+- 🔜 **MCP tools that act, not advise**: `install_plan` returns the exact file
+  writes + npm deps for a set of items (an agent with no terminal can install
+  by itself), plus theme tools — `get_theme`, `decode_preset`, `apply_preset`
+  (returns the patched CSS). "Here's the command to run" assumes a human;
+  "here are the writes" serves an agent.
+- 🔜 **`AGENTS.md` generator** next to `DESIGN.md` — house rules for agents
+  working in a repo that consumes logic2b ui: which primitives exist, how the
+  theme tokens work, what not to hand-roll. The design system as executable
+  context, not just components.
+- 🔜 **MCP baseline parity** (cheap, do alongside the above): expose demo
+  examples per item and an add-command helper — the registry already has both,
+  the MCP just doesn't serve them yet.
+- 🔜 Per-stack prompt flavors (Next.js / Vite / Astro / Laravel) in the prompt
+  copier.
+
+### 2. Theme studio
+
+- 🔜 Load a preset from the URL (`/create?preset=…`) so themes are shareable
+  links, not just ids.
+- 🔜 Contrast audit in the studio (WCAG 2.2 + APCA) with warnings on failing
+  token pairs — and expose the same audit as an MCP tool so agents can verify
+  the themes they generate.
+- 🔜 Emit sidebar tokens in the exported CSS (the CLI preset patch already
+  derives them; the studio CSS export should match).
+- 🔜 Custom accent: free oklch hue/chroma picker, not just the six presets.
+
+### 3. CLI — only what the lane needs
+
+We deliberately stopped chasing feature parity with the upstream CLI (search,
+view, eject, migrate… exist there and move faster than we can copy). The CLI
+work we keep is what the agent lane and real installs depend on:
+
 - 🔜 Auto-install npm dependencies (detect pnpm/npm/yarn/bun) instead of
   printing the install line.
 - 🔜 `logic2b update` — 3-way merge from the registry (diff exists; update
   should apply upstream changes without clobbering local edits).
 - 🔜 Shared `@logic2b/tokens` package so the theme data in
-  `apps/web/src/lib/themes.ts` and `packages/cli/src/themes.ts` has one source
-  of truth.
-
-### Theme studio
-
-- 🔜 Load a preset from the URL (`/create?preset=…`) so themes are shareable
-  links, not just ids.
-- 🔜 Custom accent: free oklch hue/chroma picker, not just the six presets.
-- 🔜 Contrast audit in the studio (WCAG 2.2 + APCA) with warnings on failing
-  token pairs.
-- 🔜 Emit sidebar tokens in the exported CSS (the CLI preset patch already
-  derives them; the studio CSS export should match).
-
-### AI & agents
-
-- 🔜 `AGENTS.md` generator next to `DESIGN.md` — house rules for agents working
-  in a repo that consumes logic2b ui.
-- 🔜 MCP: theme tools (`get_theme`, `decode_preset`, `apply_preset`) and
-  install-plan tool (returns file writes + deps for a set of items).
-- 🔜 Remote MCP endpoint at `ui.logic2b.com/mcp` (streamable HTTP) — zero
-  local install.
-- 🔜 Per-stack prompt flavors (Next.js / Vite / Astro / Laravel) in the prompt
-  copier.
+  `apps/web/src/lib/themes.ts`, `packages/cli/src/themes.ts` and the MCP theme
+  tools has one source of truth (a prerequisite for `apply_preset`).
+- 💡 `init --template <next|vite|astro|…>` real scaffolding and `--monorepo`
+  workspaces — useful, but parity work; demoted until the lane above ships.
 
 ## Next
 
@@ -110,6 +132,13 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 - 💡 Starter templates repo (SaaS dashboard, marketing site, docs site) wired
   to presets.
 - 💡 Theme marketplace / gallery of shared presets.
+
+## Watching
+
+- 👀 **`@shadcn/react`** — upstream is shipping its own unstyled primitives
+  ("Unstyled components for React"). If the ecosystem migrates from Radix to
+  those, "shadcn-compatible" changes meaning and our Radix-based ports need a
+  strategy. No action yet; re-evaluate as it matures.
 
 ---
 
