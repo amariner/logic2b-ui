@@ -4,7 +4,7 @@
   "description": "CLI for logic2b ui — add copy-paste components to your project.",
   "type": "module",
   "bin": {
-    "logic2b": "./dist/index.js"
+    "logic2b": "dist/index.js"
   },
   "files": [
     "dist"
