@@ -141,4 +141,13 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/input-otp.tsx", type: "registry:ui" }],
   },
+  {
+    name: "tree-view",
+    type: "registry:ui",
+    description:
+      "A hierarchical tree for browsing nested items (files, folders, categories) following the WAI-ARIA tree pattern: expand/collapse, single selection, roving focus and full keyboard navigation. Parts: TreeView (root, expanded/selected state), TreeItem (value, label, icon; nest items to make a branch).",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/tree-view.tsx", type: "registry:ui" }],
+  },
 ]

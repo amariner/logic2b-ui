@@ -104,9 +104,9 @@ work we keep is what the agent lane and real installs depend on:
 
 ### Registry & components
 
-- 💡 Components beyond shadcn parity: tree view, stepper/wizard, tags input,
+- 💡 Components beyond shadcn parity: stepper/wizard, tags input,
   autocomplete, rating, timeline, file dropzone, color picker, number field,
-  code block with copy, native select.
+  code block with copy, native select. (Tree view shipped ✅.)
 - 💡 More blocks: e-commerce (cart, checkout, product detail), mail client,
   calendar app, kanban board, AI chat with streaming states, marketing
   bundles (full landing in one install).
