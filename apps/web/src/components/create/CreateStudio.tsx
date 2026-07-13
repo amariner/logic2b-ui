@@ -278,6 +278,25 @@ export function CreateStudio() {
     return () => obs.disconnect()
   }, [])
 
+  // Shareable links: apply ?preset=… on load, then keep the URL in sync with
+  // the current theme (replaceState — no history spam) so the address bar is
+  // always a share link. The default config keeps a clean URL.
+  React.useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("preset")
+    if (!id) return
+    const fromUrl = decodePreset(id.trim())
+    if (fromUrl) setCfg(fromUrl)
+  }, [])
+  React.useEffect(() => {
+    const url = new URL(window.location.href)
+    if (presetId === encodePreset(DEFAULT_CONFIG)) {
+      url.searchParams.delete("preset")
+    } else {
+      url.searchParams.set("preset", presetId)
+    }
+    window.history.replaceState(null, "", url)
+  }, [presetId])
+
   const baseOpts = Object.entries(BASE_COLORS).map(([key, v]) => ({
     key,
     label: v.label,
@@ -398,8 +417,9 @@ export function CreateStudio() {
 
         {/* Pinned footer */}
         <div className="grid shrink-0 gap-2 border-t border-white/10 p-4">
-          <div className="flex min-w-0 items-center justify-between rounded-lg border bg-muted/40 px-3 py-2 font-mono text-xs">
+          <div className="flex min-w-0 items-center justify-between gap-2 rounded-lg border bg-muted/40 px-3 py-2 font-mono text-xs">
             <span className="truncate">--preset {presetId}</span>
+            <CopyLinkButton />
           </div>
           <div className="grid grid-cols-2 gap-2">
             <OpenPresetDialog onApply={setCfg} />
@@ -699,6 +719,24 @@ function DownloadButton({
     <Button className="w-full" onClick={download}>
       {label}
     </Button>
+  )
+}
+
+/** Copies the current address — the URL always carries ?preset=… (kept in
+ *  sync above), so it IS the share link. */
+function CopyLinkButton() {
+  const [copied, setCopied] = React.useState(false)
+  return (
+    <button
+      className="shrink-0 rounded-md border px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+      onClick={async () => {
+        await navigator.clipboard.writeText(window.location.href)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1500)
+      }}
+    >
+      {copied ? "Copied!" : "Copy Link"}
+    </button>
   )
 }
 
