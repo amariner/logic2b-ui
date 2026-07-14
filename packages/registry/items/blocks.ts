@@ -310,4 +310,52 @@ export const items: RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "hero-01-animated",
+    type: "registry:block",
+    title: "Marketing hero (animated)",
+    description:
+      "The animated twin of hero-01: the same centered marketing hero, revealed as a staggered fade-up on mount. Drop-in replacement — same Hero export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+    categories: ["marketing"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["badge", "button", "motion"],
+    files: [
+      {
+        path: "src/blocks/hero-01-animated/hero.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "stats-01-animated",
+    type: "registry:block",
+    title: "KPI stat cards (animated)",
+    description:
+      "The animated twin of stats-01: the KPI values count up on mount and the cards cascade in as a staggered fade-up. Drop-in replacement — same Stats export. Built on the motion engine and the useCountUp hook, respects prefers-reduced-motion.",
+    categories: ["dashboard"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["card", "motion", "use-count-up"],
+    files: [
+      {
+        path: "src/blocks/stats-01-animated/stats.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "feature-grid-01-animated",
+    type: "registry:block",
+    title: "Feature grid (animated)",
+    description:
+      "The animated twin of feature-grid-01: the heading reveals first, then the feature cards cascade in as a staggered fade-up on mount. Drop-in replacement — same FeatureGrid export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+    categories: ["marketing"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["motion"],
+    files: [
+      {
+        path: "src/blocks/feature-grid-01-animated/feature-grid.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
 ]

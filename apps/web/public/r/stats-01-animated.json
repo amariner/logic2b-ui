@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "stats-01-animated",
+  "type": "registry:block",
+  "title": "KPI stat cards (animated)",
+  "description": "The animated twin of stats-01: the KPI values count up on mount and the cards cascade in as a staggered fade-up. Drop-in replacement — same Stats export. Built on the motion engine and the useCountUp hook, respects prefers-reduced-motion.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "card",
+    "motion",
+    "use-count-up"
+  ],
+  "files": [
+    {
+      "path": "blocks/stats-01-animated/stats.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\nimport { TrendingDownIcon, TrendingUpIcon } from \"lucide-react\"\n\nimport { useCountUp } from \"@/hooks/use-count-up\"\nimport { cn } from \"@/lib/utils\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { Motion } from \"@/components/ui/motion\"\n\n// The animated twin of stats-01: the KPI values count up on mount and the\n// cards cascade in as a staggered fade-up. Values are stored as numbers with\n// format metadata so the count-up can animate them; the display is rebuilt each\n// frame with Intl.NumberFormat.\nconst stats = [\n  {\n    label: \"Total revenue\",\n    value: 45231.89,\n    prefix: \"$\",\n    decimals: 2,\n    delta: \"+20.1%\",\n    up: true,\n  },\n  { label: \"Subscriptions\", value: 2350, delta: \"+180.1%\", up: true },\n  { label: \"Active now\", value: 573, delta: \"+201\", up: true },\n  { label: \"Churn\", value: 1.2, suffix: \"%\", decimals: 1, delta: \"-0.4%\", up: false },\n]\n\nfunction StatValue({\n  value,\n  prefix = \"\",\n  suffix = \"\",\n  decimals = 0,\n}: {\n  value: number\n  prefix?: string\n  suffix?: string\n  decimals?: number\n}) {\n  const current = useCountUp(value, { duration: 1200 })\n  const formatted = new Intl.NumberFormat(\"en-US\", {\n    minimumFractionDigits: decimals,\n    maximumFractionDigits: decimals,\n  }).format(current)\n  return (\n    <>\n      {prefix}\n      {formatted}\n      {suffix}\n    </>\n  )\n}\n\nexport function Stats({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\"mx-auto w-full max-w-5xl px-6 py-16\", className)}\n      {...props}\n    >\n      <div className=\"mb-8\">\n        <h2 className=\"font-heading text-2xl font-bold tracking-tight\">\n          Overview\n        </h2>\n        <p className=\"text-muted-foreground mt-1 text-sm\">\n          Your key metrics for the last 30 days.\n        </p>\n      </div>\n      <div className=\"grid gap-4 sm:grid-cols-2 lg:grid-cols-4\">\n        {stats.map((stat, i) => {\n          const Icon = stat.up ? TrendingUpIcon : TrendingDownIcon\n          return (\n            <Motion asChild key={stat.label} preset=\"fade-up\" delay={i * 100}>\n              <Card>\n                <CardHeader className=\"pb-2\">\n                  <CardDescription>{stat.label}</CardDescription>\n                  <CardTitle className=\"font-heading text-2xl tracking-tight tabular-nums\">\n                    <StatValue\n                      value={stat.value}\n                      prefix={stat.prefix}\n                      suffix={stat.suffix}\n                      decimals={stat.decimals}\n                    />\n                  </CardTitle>\n                </CardHeader>\n                <CardContent>\n                  <p className=\"text-muted-foreground flex items-center gap-1 text-xs\">\n                    <Icon className=\"text-foreground size-3.5\" />\n                    <span className=\"text-foreground font-medium\">\n                      {stat.delta}\n                    </span>\n                    vs last month\n                  </p>\n                </CardContent>\n              </Card>\n            </Motion>\n          )\n        })}\n      </div>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "dashboard"
+  ]
+}
