@@ -159,4 +159,22 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/stepper.tsx", type: "registry:ui" }],
   },
+  {
+    name: "timeline",
+    type: "registry:ui",
+    description:
+      "A vertical timeline for activity feeds, changelogs and process histories. Composable: each TimelineItem holds a TimelineIndicator (dot + connector line, hidden on the last item) and a TimelineContent. Parts: Timeline (root ol), TimelineItem, TimelineIndicator, TimelineContent, TimelineTime, TimelineTitle, TimelineDescription.",
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/timeline.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "code-block",
+    type: "registry:ui",
+    title: "Code Block",
+    description:
+      "A styled code container with a one-click copy button. Dependency-free (no syntax highlighter): renders the code verbatim in a <pre> and copies it via the Clipboard API with a copied-state affordance. Optional language label in the header.",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/code-block.tsx", type: "registry:ui" }],
+  },
 ]

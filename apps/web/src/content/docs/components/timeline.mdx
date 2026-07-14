@@ -1,0 +1,54 @@
+---
+title: Timeline
+description: A vertical timeline for activity feeds, changelogs and process histories.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="timeline-demo" />
+
+## Installation
+
+<Install name="timeline" />
+
+## Usage
+
+```tsx
+import {
+  Timeline,
+  TimelineItem,
+  TimelineIndicator,
+  TimelineContent,
+  TimelineTime,
+  TimelineTitle,
+  TimelineDescription,
+} from "@/components/ui/timeline"
+
+<Timeline>
+  <TimelineItem>
+    <TimelineIndicator />
+    <TimelineContent>
+      <TimelineTime>Mar 2024</TimelineTime>
+      <TimelineTitle>Registry shipped</TimelineTitle>
+      <TimelineDescription>50+ components served as JSON.</TimelineDescription>
+    </TimelineContent>
+  </TimelineItem>
+</Timeline>
+```
+
+The connector line between items is drawn by `TimelineIndicator` and hidden on
+the last item automatically. Pass your own node into `TimelineIndicator` (an
+icon, a numbered badge) to replace the default dot.
+
+## Anatomy
+
+| Part | Role |
+| --- | --- |
+| `Timeline` | Root `<ol>` list |
+| `TimelineItem` | A single `<li>` event row |
+| `TimelineIndicator` | The dot and the connector line to the next item |
+| `TimelineContent` | Wraps the text column |
+| `TimelineTime` | Muted, tabular timestamp |
+| `TimelineTitle` | Event heading |
+| `TimelineDescription` | Supporting copy |
