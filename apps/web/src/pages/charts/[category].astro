@@ -34,6 +34,16 @@ const categories = [
     label: "Radial",
     demos: ["chart-radial-01", "chart-radial-02"],
   },
+  {
+    slug: "sparkline",
+    label: "Sparkline",
+    demos: ["chart-sparkline-01", "chart-sparkline-02", "chart-sparkline-03"],
+  },
+  {
+    slug: "kpi",
+    label: "KPI",
+    demos: ["chart-kpi-01", "chart-kpi-02"],
+  },
 ];
 
 export async function getStaticPaths() {
@@ -44,6 +54,8 @@ export async function getStaticPaths() {
     { params: { category: "pie" } },
     { params: { category: "radar" } },
     { params: { category: "radial" } },
+    { params: { category: "sparkline" } },
+    { params: { category: "kpi" } },
   ];
 }
 

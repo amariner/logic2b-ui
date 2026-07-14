@@ -566,6 +566,56 @@
     ]
   },
   {
+    "name": "chart-sparkline-01",
+    "type": "registry:block",
+    "title": "Sparkline - Line",
+    "description": "A compact line sparkline in a metric card (label + value, no axes/grid/tooltip). Use inline in tables, tiles or lists to show a trend at a glance.",
+    "categories": [
+      "charts",
+      "charts-sparkline"
+    ]
+  },
+  {
+    "name": "chart-sparkline-02",
+    "type": "registry:block",
+    "title": "Sparkline - Area",
+    "description": "A compact area sparkline in a metric card. Use for a filled trend indicator next to a value where a full chart would be too heavy.",
+    "categories": [
+      "charts",
+      "charts-sparkline"
+    ]
+  },
+  {
+    "name": "chart-sparkline-03",
+    "type": "registry:block",
+    "title": "Sparkline - Bar",
+    "description": "A compact bar sparkline in a metric card. Use for discrete per-period counts (orders, signups) shown as a tiny bar trend.",
+    "categories": [
+      "charts",
+      "charts-sparkline"
+    ]
+  },
+  {
+    "name": "chart-kpi-01",
+    "type": "registry:block",
+    "title": "KPI Tile - Up",
+    "description": "A KPI stat tile: a large value, a positive trend delta and an area sparkline underneath. Use as a dashboard headline metric.",
+    "categories": [
+      "charts",
+      "charts-kpi"
+    ]
+  },
+  {
+    "name": "chart-kpi-02",
+    "type": "registry:block",
+    "title": "KPI Tile - Down",
+    "description": "A KPI stat tile with a negative trend delta (destructive-toned) and a line sparkline. Use for a metric that is trending down.",
+    "categories": [
+      "charts",
+      "charts-kpi"
+    ]
+  },
+  {
     "name": "chart-area-04",
     "type": "registry:block",
     "title": "Area Chart - Interactive",

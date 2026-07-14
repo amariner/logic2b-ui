@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-kpi-01",
+  "type": "registry:block",
+  "title": "KPI Tile - Up",
+  "description": "A KPI stat tile: a large value, a positive trend delta and an area sparkline underneath. Use as a dashboard headline metric.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-kpi-01.tsx",
+      "type": "registry:block",
+      "content": "import { Area, AreaChart } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { ChartContainer, type ChartConfig } from \"@/components/ui/chart\"\n\nconst chartData = [\n  { month: 1, value: 3200 },\n  { month: 2, value: 3600 },\n  { month: 3, value: 3400 },\n  { month: 4, value: 4100 },\n  { month: 5, value: 4400 },\n  { month: 6, value: 5200 },\n]\n\nconst chartConfig = {\n  value: { label: \"Revenue\", color: \"var(--chart-1)\" },\n} satisfies ChartConfig\n\nexport default function ChartKpi01() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardDescription>Revenue</CardDescription>\n        <CardTitle className=\"text-3xl tabular-nums\">$45,231.89</CardTitle>\n        <p className=\"text-foreground text-xs font-medium\">\n          ↑ 20.1%{\" \"}\n          <span className=\"text-muted-foreground font-normal\">\n            vs last month\n          </span>\n        </p>\n      </CardHeader>\n      <CardContent>\n        <ChartContainer config={chartConfig} className=\"h-20 w-full\">\n          <AreaChart data={chartData} margin={{ top: 5, bottom: 5, left: 0, right: 0 }}>\n            <Area\n              dataKey=\"value\"\n              type=\"natural\"\n              stroke=\"var(--color-value)\"\n              strokeWidth={2}\n              fill=\"var(--color-value)\"\n              fillOpacity={0.15}\n            />\n          </AreaChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-kpi"
+  ]
+}
