@@ -1,0 +1,68 @@
+---
+title: Native Select
+description: A styled wrapper around the native <select> element — platform-native option list and behavior with a token-matched look.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="native-select-demo" />
+
+## Installation
+
+<Install name="native-select" />
+
+## Usage
+
+```tsx
+import { NativeSelect } from "@/components/ui/native-select"
+
+<NativeSelect defaultValue="apple" className="w-[180px]">
+  <option value="apple">Apple</option>
+  <option value="banana">Banana</option>
+</NativeSelect>
+```
+
+## Native Select vs. Select
+
+Use `NativeSelect` instead of [`Select`](/docs/components/select) when you
+want the browser's own picker rather than a custom listbox:
+
+- **Mobile** — opens the OS-native wheel/sheet picker instead of a popover,
+  which is what most users expect on touch devices.
+- **Long option lists** — native scrolling and type-ahead, no virtualization
+  needed.
+- **Forms without JS interactivity budget** — it's a real `<select>`, so it
+  works with native form submission and `<form>` validation out of the box.
+
+Reach for `Select` instead when you need custom option content (icons,
+descriptions, grouping headers) or a listbox that visually matches Radix's
+popover styling exactly.
+
+## Examples
+
+### Disabled
+
+<ComponentPreview name="native-select-disabled-demo" />
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `size` | `sm \| default` | `default` |
+| `disabled` | `boolean` | `false` |
+| `aria-invalid` | `boolean` | — |
+| ...props | `React.ComponentProps<"select">` | — |
+
+## Accessibility
+
+Renders a real `<select>` element, so it inherits the browser's built-in
+listbox semantics and keyboard support for free:
+
+- Opens with <kbd>Enter</kbd>/<kbd>Space</kbd>/<kbd>↓</kbd>, closes with
+  <kbd>Esc</kbd> or a selection.
+- Type-ahead jumps to the first matching option.
+- Assistive technology announces the control as a native select — no ARIA
+  wiring needed.
+- Pair with a `<label htmlFor>` (or wrap in a [`Field`](/docs/components/field))
+  for an accessible name.

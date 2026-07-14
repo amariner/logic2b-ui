@@ -47,6 +47,15 @@ export const items: RegistryItem[] = [
     files: [{ path: "src/ui/select.tsx", type: "registry:ui" }],
   },
   {
+    name: "native-select",
+    type: "registry:ui",
+    description:
+      "A styled wrapper around the native <select> element: platform-native option list and keyboard/touch behavior, with a token-matched border, focus ring and chevron. Use when you want OS-native select UX (mobile pickers, screen reader familiarity) instead of Select's custom listbox.",
+    dependencies: ["lucide-react", "class-variance-authority"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/native-select.tsx", type: "registry:ui" }],
+  },
+  {
     name: "slider",
     type: "registry:ui",
     description:

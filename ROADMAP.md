@@ -88,6 +88,11 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   studio, bundled into the published CLI and MCP dists, and running inside
   the remote MCP worker. The three hand-synced mirrors (and their drift
   tests) are gone.
+- ✅ **`native-select`** — a styled wrapper around the native `<select>`
+  element (token-matched border, focus ring and chevron) for OS-native
+  picker UX — mobile wheel/sheet pickers, native form submission, no custom
+  listbox JS. Documented alongside `Select` with guidance on when to reach
+  for which.
 
 ## Now (🔜) — in priority order
 
@@ -105,8 +110,10 @@ work we keep is what the agent lane and real installs depend on:
 ### Registry & components
 
 - 💡 Components beyond shadcn parity: autocomplete, timeline, file
-  dropzone, color picker, number field, code block with copy, native
-  select. (Tree view, stepper, tags input and rating shipped ✅.)
+  dropzone, color picker, number field, code block with copy. (Tree view,
+  stepper, tags input, rating and native select shipped ✅.)
+- 💡 `item` — the one remaining upstream shadcn/ui component we don't have
+  yet (generic list-item container); closes shadcn parity to 100%.
 - 💡 More blocks: e-commerce (cart, checkout, product detail), mail client,
   calendar app, kanban board, AI chat with streaming states, marketing
   bundles (full landing in one install).
