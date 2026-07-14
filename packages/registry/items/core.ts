@@ -62,6 +62,15 @@ export const items: RegistryItem[] = [
     files: [{ path: "src/ui/separator.tsx", type: "registry:ui" }],
   },
   {
+    name: "item",
+    type: "registry:ui",
+    description:
+      "A flex container for a title, description and actions, with media (icon/image) and grouping — for settings rows, notification lists, command results and any generic list of composite entries. Parts: Item (variant: default | outline | muted, size: default | sm), ItemGroup, ItemSeparator, ItemMedia (variant: default | icon | image), ItemContent, ItemTitle, ItemDescription, ItemActions, ItemHeader, ItemFooter.",
+    dependencies: ["radix-ui", "class-variance-authority"],
+    registryDependencies: ["utils", "separator"],
+    files: [{ path: "src/ui/item.tsx", type: "registry:ui" }],
+  },
+  {
     name: "avatar",
     type: "registry:ui",
     description:
