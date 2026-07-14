@@ -5,9 +5,9 @@
 
 logic2b ui reads as an instrument, not a decoration: a near-black canvas where
 content is carved out by luminance stepping, never by heavy shadows or
-gradients. Display type is set in Space Grotesk with tight tracking —
-confident, geometric, slightly futuristic — while Inter carries body copy and
-UI chrome. The interface itself is strictly monochrome: in dark mode the
+gradients. Type is set in Inter across the board — display and headings
+tighten their tracking and compress line-height for a confident, engineered
+voice, while regular weights carry body copy and UI chrome. The interface itself is strictly monochrome: in dark mode the
 primary action is a flash of white on the dark canvas; the only chromatic
 color belongs to data (charts) and status (destructive red). Components feel
 engineered: hairline 1px borders, minimal elevation, restraint everywhere.
@@ -50,17 +50,15 @@ comes from the luminance ladder and hairline borders.
 
 ## Tokens — Typography
 
-### Space Grotesk (`--font-heading`)
-- **Role:** display and headings (h1–h4). Geometric presence with tight
-  tracking (-0.025em baseline; up to -0.04em at display sizes) and compressed
-  line-height (0.95–1.1 at display sizes). This is the system's voice.
-- **Weights:** variable 300–700; headings default to 600–700.
-- Self-hosted via `@fontsource-variable/space-grotesk`.
-
-### Inter (`--font-sans`)
-- **Role:** body, navigation, UI controls, labels — the workhorse.
-- **Weights:** variable 100–900; UI text uses 400–600.
-- Self-hosted via `@fontsource-variable/inter`.
+### Inter (`--font-heading` and `--font-sans`)
+- **Role:** the whole interface. Headings (h1–h4) use tight tracking
+  (-0.025em baseline; up to -0.04em at display sizes) and compressed
+  line-height (0.95–1.1 at display sizes); body, navigation, controls and
+  labels use regular weights. One family, differentiated by weight/tracking.
+- **Weights:** variable 100–900; headings 600–700, UI text 400–600.
+- Self-hosted via `@fontsource-variable/inter`. `--font-heading` stays a
+  separate token so a project (or the theme studio) can swap in a display
+  family without touching components.
 
 ### Monospace (`--font-mono`)
 - **Role:** code blocks, install commands, technical metadata. System stack
@@ -73,9 +71,9 @@ comes from the luminance ladder and hairline borders.
 | caption | 12px | 1.2 | -0.01em | Inter |
 | body-sm | 14px | 1.4 | -0.006em | Inter |
 | body | 16px | 1.5 | -0.011em | Inter |
-| subheading | 20px | 1.3 | -0.02em | Space Grotesk 600 |
-| heading | 30–36px | 1.15 | -0.025em | Space Grotesk 700 |
-| display | 48–68px | 0.95–1.05 | -0.035em | Space Grotesk 700 |
+| subheading | 20px | 1.3 | -0.02em | Inter 600 |
+| heading | 30–36px | 1.15 | -0.025em | Inter 700 |
+| display | 48–68px | 0.95–1.05 | -0.035em | Inter 700 |
 
 ## Spacing, shape & elevation
 
@@ -98,7 +96,7 @@ comes from the luminance ladder and hairline borders.
 ## Do's and Don'ts
 
 ### Do
-- Use Space Grotesk 600–700 for every heading; keep tracking negative and
+- Use Inter 600–700 for every heading; keep tracking negative and
   line-height compressed at display sizes.
 - Keep the interface monochrome: white-on-dark primary, gray ladder for
   everything else.
@@ -111,8 +109,8 @@ comes from the luminance ladder and hairline borders.
   series and the destructive state.
 - Don't use box-shadows on standard cards — luminance stepping only.
 - Don't use warm or tinted grays; the neutral ramp is strictly achromatic.
-- Don't mix fonts inside a text block: Space Grotesk for headings, Inter for
-  everything else, mono for code only.
+- Don't mix fonts inside a text block: one family for text, mono for code
+  only.
 - Don't set body text below 12px.
 
 ## Component treatments
@@ -132,8 +130,8 @@ comes from the luminance ladder and hairline borders.
 - Page: `--background` · Card/overlay: `--card` / `--popover` · Hover: `--accent`
 - Primary action: `--primary` (near-white on dark, near-black on light)
 - Focus: `--ring` · Hairline: `--border`
-- Headings: `font-heading` (Space Grotesk), tracking tight
-- Example hero: 60px Space Grotesk 700, line-height 1, tracking -0.035em,
+- Headings: `font-heading` (Inter by default), tracking tight
+- Example hero: 60px Inter 700, line-height 1, tracking -0.035em,
   white on the dark canvas; below it one `bg-primary` CTA and one ghost button.
 
 ## Similar brands

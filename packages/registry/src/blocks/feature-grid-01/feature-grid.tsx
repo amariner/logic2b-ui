@@ -27,7 +27,7 @@ const features = [
     icon: PaletteIcon,
     title: "Theme that travels",
     description:
-      "The oklch token system installs with the CLI, so components look like you — not stock shadcn.",
+      "The oklch token system installs with the CLI, so components look like you — never like a stock template.",
   },
   {
     icon: TerminalIcon,

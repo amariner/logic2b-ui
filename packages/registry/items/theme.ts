@@ -2,9 +2,9 @@ import type { RegistryItem } from "../types.ts"
 
 /**
  * The logic2b design system, distributed. This is what makes an installed
- * logic2b component look like logic2b and not stock shadcn: the oklch
- * monochrome token ladder, chart palette, radius and the Space Grotesk / Inter
- * font wiring from DESIGN.md.
+ * logic2b component look like logic2b instead of an unthemed default: the
+ * oklch monochrome token ladder, chart palette, radius and the Inter font
+ * wiring from DESIGN.md (Space Grotesk stays available for --font-heading).
  *
  * Shipped two ways for maximum interop:
  *  - `files: [theme.css]` — a complete, drop-in stylesheet the logic2b CLI
@@ -18,7 +18,7 @@ export const items: RegistryItem[] = [
     type: "registry:style",
     title: "logic2b theme",
     description:
-      "The logic2b design system: monochrome oklch token ladder (light + dark), the 5-stop chart palette, 0.625rem radius, and Space Grotesk / Inter font wiring. Install this once so every component renders as logic2b, not stock shadcn.",
+      "The logic2b design system: monochrome oklch token ladder (light + dark), the 5-stop chart palette, 0.625rem radius, and Inter font wiring. Install this once so every component renders with the logic2b look.",
     dependencies: [
       "tw-animate-css",
       "@fontsource-variable/inter",
@@ -30,7 +30,7 @@ export const items: RegistryItem[] = [
         "font-sans":
           '"Inter Variable", ui-sans-serif, system-ui, sans-serif',
         "font-heading":
-          '"Space Grotesk Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif',
+          '"Inter Variable", ui-sans-serif, system-ui, sans-serif',
         "font-mono":
           "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
         radius: "0.625rem",
