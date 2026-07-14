@@ -1,0 +1,38 @@
+---
+title: Motion Blur
+description: Sharpen a mounting element in from an 8px blur while it fades — the preconfigured blur preset, built on tw-animate-css with zero runtime dependencies.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-blur-demo" />
+
+## Installation
+
+<Install name="motion-blur" />
+
+## Usage
+
+```tsx
+import { MotionBlur } from "@/components/ui/motion-blur"
+
+<MotionBlur duration={700}>
+  <h2>Sharpen in</h2>
+</MotionBlur>
+```
+
+`MotionBlur` is `<Motion preset="blur">` — see
+[Motion](/docs/components/motion) for the shared `duration`, `delay`, `hover`
+and `asChild` props, exit recipes and reduced-motion behavior. It pairs well
+with a longer `duration` on headings and hero copy.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `duration` | `number` (ms) | `500` |
+| `delay` | `number` (ms) | `0` |
+| `hover` | `lift \| sink \| scale \| glow` | — |
+| `asChild` | `boolean` | `false` |
+| ...props | `React.ComponentProps<"div">` | — |
