@@ -1,0 +1,82 @@
+---
+title: Item
+description: A flex container for a title, description and actions — group it with ItemGroup to build a list of composite entries.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="item-demo" />
+
+## Installation
+
+<Install name="item" />
+
+## Usage
+
+```tsx
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+import { Button } from "@/components/ui/button"
+
+<Item variant="outline">
+  <ItemContent>
+    <ItemTitle>Basic Item</ItemTitle>
+    <ItemDescription>A simple item with title and description.</ItemDescription>
+  </ItemContent>
+  <ItemActions>
+    <Button variant="outline" size="sm">Action</Button>
+  </ItemActions>
+</Item>
+```
+
+Pass `asChild` to render the item as its child element (e.g. an `<a>`) instead
+of a `div`, so the whole row becomes a link while keeping the same layout.
+
+## Examples
+
+### Grouped, with separators and icon media
+
+Wrap items in `ItemGroup` and drop an `ItemSeparator` between them for a
+settings-style list. `ItemMedia variant="icon"` gives the leading icon a
+muted square backdrop sized to match; `variant="image"` sizes and clips an
+`<img>` the same way for avatar-style media.
+
+<ComponentPreview name="item-group-demo" />
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `variant` (Item) | `default \| outline \| muted` | `default` |
+| `size` (Item) | `default \| sm` | `default` |
+| `asChild` (Item) | `boolean` | `false` |
+| `variant` (ItemMedia) | `default \| icon \| image` | `default` |
+
+## Parts
+
+| Component | Use for |
+| --- | --- |
+| `Item` | The row/card root — a flex container that wraps everything else. |
+| `ItemGroup` | Groups items into a list (`role="list"`), pair with `ItemSeparator`. |
+| `ItemSeparator` | A horizontal rule between grouped items. |
+| `ItemMedia` | Leading icon, image or avatar. |
+| `ItemContent` | Wraps `ItemTitle` + `ItemDescription`; multiple `ItemContent`s in one `Item` stay non-growing. |
+| `ItemTitle` | The item's title line. |
+| `ItemDescription` | Supporting text, clamped to 2 lines. |
+| `ItemActions` | Trailing buttons, switches or icons. |
+| `ItemHeader` / `ItemFooter` | Optional full-width rows above/below the main content. |
+
+## Accessibility
+
+`ItemGroup` renders `role="list"` so assistive technology announces grouped
+items as a list. When an `Item` is interactive (a settings row that
+navigates, for example), pass `asChild` and render a real `<a>` or `<button>`
+as the child — don't attach `onClick` to a bare `<div>`, which native input
+methods and screen readers won't treat as actionable.

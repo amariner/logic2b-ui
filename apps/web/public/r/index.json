@@ -47,6 +47,11 @@
     "description": "Visually or semantically separates content, horizontal or vertical, built on Radix Separator."
   },
   {
+    "name": "item",
+    "type": "registry:ui",
+    "description": "A flex container for a title, description and actions, with media (icon/image) and grouping — for settings rows, notification lists, command results and any generic list of composite entries. Parts: Item (variant: default | outline | muted, size: default | sm), ItemGroup, ItemSeparator, ItemMedia (variant: default | icon | image), ItemContent, ItemTitle, ItemDescription, ItemActions, ItemHeader, ItemFooter."
+  },
+  {
     "name": "avatar",
     "type": "registry:ui",
     "description": "An image element with a fallback for representing a user, built on Radix Avatar."

@@ -93,6 +93,12 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   picker UX — mobile wheel/sheet pickers, native form submission, no custom
   listbox JS. Documented alongside `Select` with guidance on when to reach
   for which.
+- ✅ **`item`** — the last component needed for 100% shadcn/ui parity: a
+  generic flex container (`Item`, variants default/outline/muted, sizes
+  default/sm) for settings rows, notification lists and command results,
+  with `ItemGroup`/`ItemSeparator` for lists, `ItemMedia` (icon/image),
+  `ItemContent`/`ItemTitle`/`ItemDescription`, `ItemActions` and optional
+  `ItemHeader`/`ItemFooter`.
 
 ## Now (🔜) — in priority order
 
@@ -111,9 +117,8 @@ work we keep is what the agent lane and real installs depend on:
 
 - 💡 Components beyond shadcn parity: autocomplete, timeline, file
   dropzone, color picker, number field, code block with copy. (Tree view,
-  stepper, tags input, rating and native select shipped ✅.)
-- 💡 `item` — the one remaining upstream shadcn/ui component we don't have
-  yet (generic list-item container); closes shadcn parity to 100%.
+  stepper, tags input, rating, native select and item shipped ✅ — item
+  closes shadcn/ui parity to 100%.)
 - 💡 More blocks: e-commerce (cart, checkout, product detail), mail client,
   calendar app, kanban board, AI chat with streaming states, marketing
   bundles (full landing in one install).
