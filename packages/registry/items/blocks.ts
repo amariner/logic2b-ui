@@ -385,4 +385,46 @@ export const items: RegistryItem[] = [
     ],
     files: [{ path: "src/blocks/cart-01/cart.tsx", type: "registry:block" }],
   },
+  {
+    name: "checkout-01",
+    type: "registry:block",
+    title: "Checkout",
+    description:
+      "A two-column checkout: contact, shipping address and payment form fields on one side, an order summary (line items, subtotal, shipping, tax, total) with a Pay button on the other. Use as the checkout page of a storefront.",
+    categories: ["ecommerce"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "utils",
+      "button",
+      "card",
+      "input",
+      "label",
+      "separator",
+    ],
+    files: [
+      { path: "src/blocks/checkout-01/checkout.tsx", type: "registry:block" },
+    ],
+  },
+  {
+    name: "product-detail-01",
+    type: "registry:block",
+    title: "Product detail",
+    description:
+      "A product detail page: an image gallery with selectable thumbnails, title, rating, price and description, a size selector, a quantity stepper and an add-to-cart button whose total updates with quantity. Use as a storefront product page.",
+    categories: ["ecommerce"],
+    registryDependencies: [
+      "utils",
+      "badge",
+      "button",
+      "number-field",
+      "rating",
+      "separator",
+    ],
+    files: [
+      {
+        path: "src/blocks/product-detail-01/product-detail.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
 ]

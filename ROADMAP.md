@@ -119,9 +119,9 @@ work we keep is what the agent lane and real installs depend on:
   copy, autocomplete, file dropzone and color picker shipped (on top of tree
   view, stepper, tags input, rating, native select and item, which closed
   shadcn/ui parity to 100%).
-- 💡 More blocks: e-commerce (checkout, product detail), mail client,
-  calendar app, AI chat with streaming states, marketing bundles (full
-  landing in one install). (Kanban board and an e-commerce cart shipped ✅.)
+- 💡 More blocks: mail client, calendar app, AI chat with streaming states,
+  marketing bundles (full landing in one install). (Kanban board and the
+  e-commerce set — cart, checkout, product detail — shipped ✅.)
 - 💡 Chart gallery expansion: streaming/real-time examples. (Sparklines —
   line/area/bar — KPI tiles, composed charts and an activity heatmap shipped ✅.)
 

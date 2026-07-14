@@ -886,5 +886,23 @@
     "categories": [
       "ecommerce"
     ]
+  },
+  {
+    "name": "checkout-01",
+    "type": "registry:block",
+    "title": "Checkout",
+    "description": "A two-column checkout: contact, shipping address and payment form fields on one side, an order summary (line items, subtotal, shipping, tax, total) with a Pay button on the other. Use as the checkout page of a storefront.",
+    "categories": [
+      "ecommerce"
+    ]
+  },
+  {
+    "name": "product-detail-01",
+    "type": "registry:block",
+    "title": "Product detail",
+    "description": "A product detail page: an image gallery with selectable thumbnails, title, rating, price and description, a size selector, a quantity stepper and an add-to-cart button whose total updates with quantity. Use as a storefront product page.",
+    "categories": [
+      "ecommerce"
+    ]
   }
 ]
