@@ -142,9 +142,12 @@ documented recipes, never a runtime framework of our own.
   and `stats-01-animated` (cards cascade + KPI values count up via the
   `use-count-up` hook). Drop-in replacements — same exports — respecting
   prefers-reduced-motion.
-- 💡 **Scroll & parallax recipes** — documented scroll-linked animations
-  (CSS scroll-driven animations where supported, IntersectionObserver
-  fallback) including image parallax sections for marketing pages.
+- ✅ **Scroll & parallax recipes** — `scroll-reveal` plays the motion engine's
+  enter recipes when an element scrolls into view (via the `use-in-view`
+  IntersectionObserver hook, SSR/no-JS safe), and `parallax` drifts a
+  marketing-image layer purely with CSS scroll-driven animations
+  (`animation-timeline: view()`), guarded by `@supports` for a static
+  fallback. Both honor `prefers-reduced-motion`.
 - 💡 **3D extras, documented** — guidance + copyable examples for
   react-three-fiber hero scenes and product viewers that respect the token
   system (lights/materials driven by theme tokens). Docs-first: heavy deps
