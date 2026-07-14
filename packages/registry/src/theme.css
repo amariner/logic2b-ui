@@ -11,8 +11,7 @@
    Color lives only in chart series and the destructive state. */
 :root {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Space Grotesk Variable", "Inter Variable", ui-sans-serif,
-    system-ui, sans-serif;
+  --font-heading: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -133,7 +132,8 @@
   body {
     @apply bg-background text-foreground;
   }
-  /* Headings speak Space Grotesk with tight tracking (DESIGN.md). Utility
+  /* Headings: Inter with tight tracking (DESIGN.md). Space Grotesk stays
+     imported above so a themed --font-heading can use it. Utility
      classes (tracking-*) on a page still win over this baseline. */
   h1,
   h2,

@@ -3,7 +3,7 @@
     "name": "theme",
     "type": "registry:style",
     "title": "logic2b theme",
-    "description": "The logic2b design system: monochrome oklch token ladder (light + dark), the 5-stop chart palette, 0.625rem radius, and Space Grotesk / Inter font wiring. Install this once so every component renders as logic2b, not stock shadcn."
+    "description": "The logic2b design system: monochrome oklch token ladder (light + dark), the 5-stop chart palette, 0.625rem radius, and Inter font wiring. Install this once so every component renders with the logic2b look."
   },
   {
     "name": "use-mobile",
