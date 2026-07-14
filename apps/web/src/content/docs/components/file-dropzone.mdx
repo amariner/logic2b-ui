@@ -1,0 +1,48 @@
+---
+title: File Dropzone
+description: A drag-and-drop file surface with click and keyboard to browse, built on native DnD.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="file-dropzone-demo" />
+
+## Installation
+
+<Install name="file-dropzone" />
+
+## Usage
+
+```tsx
+import { FileDropzone } from "@/components/ui/file-dropzone"
+
+<FileDropzone
+  multiple
+  accept="image/*"
+  onFiles={(files) => upload(files)}
+/>
+```
+
+It highlights while a file is dragged over it and calls `onFiles` with the
+dropped or selected `File[]`. Rendering the file list, previews and upload
+progress is left to you — pass your own content as `children` to replace the
+default icon and prompt.
+
+## Accessibility
+
+The surface is a `role="button"` region, focusable and operable with
+<kbd>Enter</kbd> / <kbd>Space</kbd> to open the file picker, so it works without
+a mouse. It wraps a real `<input type="file">`, so native file selection and
+`accept`/`multiple` behave as expected.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `onFiles` | `(files: File[]) => void` | — |
+| `accept` | `string` | — |
+| `multiple` | `boolean` | `false` |
+| `disabled` | `boolean` | `false` |
+| `children` | `React.ReactNode` | default icon + prompt |
+| ...props | `React.ComponentProps<"div">` | — |
