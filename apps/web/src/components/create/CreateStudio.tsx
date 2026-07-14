@@ -345,6 +345,9 @@ export function CreateStudio() {
         {/* Scrollable controls — hidden scrollbar */}
         <div className="min-h-0 flex-1 overflow-y-auto p-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="grid grid-cols-[minmax(0,1fr)] gap-3">
+          <p className="px-1 pt-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            Colors
+          </p>
           <ControlRow
             label="Base Color"
             valueLabel={BASE_COLORS[cfg.base].label}
@@ -377,6 +380,9 @@ export function CreateStudio() {
             value={cfg.chart}
             onChange={(k) => set({ chart: k })}
           />
+          <p className="px-1 pt-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            Typography
+          </p>
           <ControlRow
             label="Heading"
             valueLabel={FONT_LABELS[cfg.heading] ?? cfg.heading}
@@ -393,6 +399,9 @@ export function CreateStudio() {
             value={cfg.font}
             onChange={(k) => set({ font: k })}
           />
+          <p className="px-1 pt-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            Shape &amp; Icons
+          </p>
           <ControlRow
             label="Icon Library"
             valueLabel="Lucide"

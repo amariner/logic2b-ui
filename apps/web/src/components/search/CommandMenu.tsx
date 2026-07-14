@@ -44,12 +44,29 @@ export function CommandMenu({ items }: { items: SearchIndexItem[] }) {
 
   return (
     <>
+      {/* Desktop: a visible search field (like the reference docs sites);
+          mobile: the compact icon. Both open the same ⌘K dialog. */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Search docs"
         title="Search (⌘K)"
-        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        className="hidden h-8 w-56 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm text-muted-foreground shadow-xs transition-colors hover:bg-accent hover:text-foreground md:inline-flex lg:w-64"
+      >
+        <SearchIcon className="size-3.5 shrink-0" />
+        <span className="flex-1 truncate text-left text-xs">
+          Search documentation...
+        </span>
+        <kbd className="pointer-events-none flex h-5 items-center gap-0.5 rounded border bg-background px-1.5 font-mono text-[10px] font-medium">
+          ⌘K
+        </kbd>
+      </button>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Search docs"
+        title="Search (⌘K)"
+        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:hidden"
       >
         <SearchIcon className="size-4" />
       </button>
