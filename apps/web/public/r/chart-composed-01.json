@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-composed-01",
+  "type": "registry:block",
+  "title": "Composed Chart",
+  "description": "A composed chart overlaying revenue bars with an orders trend line on one axis, with a legend and tooltip. Use to compare a volume metric and a trend in a single panel.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-composed-01.tsx",
+      "type": "registry:block",
+      "content": "import {\n  Bar,\n  CartesianGrid,\n  ComposedChart,\n  Line,\n  XAxis,\n} from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport {\n  ChartContainer,\n  ChartLegend,\n  ChartLegendContent,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from \"@/components/ui/chart\"\n\nconst chartData = [\n  { month: \"January\", revenue: 186, orders: 120 },\n  { month: \"February\", revenue: 305, orders: 160 },\n  { month: \"March\", revenue: 237, orders: 140 },\n  { month: \"April\", revenue: 273, orders: 180 },\n  { month: \"May\", revenue: 309, orders: 210 },\n  { month: \"June\", revenue: 344, orders: 240 },\n]\n\nconst chartConfig = {\n  revenue: { label: \"Revenue\", color: \"var(--chart-1)\" },\n  orders: { label: \"Orders\", color: \"var(--chart-2)\" },\n} satisfies ChartConfig\n\nexport default function ChartComposed01() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>Composed Chart</CardTitle>\n        <CardDescription>Revenue bars with an orders trend line</CardDescription>\n      </CardHeader>\n      <CardContent>\n        <ChartContainer config={chartConfig}>\n          <ComposedChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>\n            <CartesianGrid vertical={false} />\n            <XAxis\n              dataKey=\"month\"\n              tickLine={false}\n              axisLine={false}\n              tickMargin={8}\n              tickFormatter={(value) => value.slice(0, 3)}\n            />\n            <ChartTooltip content={<ChartTooltipContent />} />\n            <ChartLegend content={<ChartLegendContent />} />\n            <Bar dataKey=\"revenue\" fill=\"var(--color-revenue)\" radius={4} />\n            <Line\n              dataKey=\"orders\"\n              type=\"natural\"\n              stroke=\"var(--color-orders)\"\n              strokeWidth={2}\n              dot={false}\n            />\n          </ComposedChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-composed"
+  ]
+}
