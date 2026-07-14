@@ -135,4 +135,14 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/rating.tsx", type: "registry:ui" }],
   },
+  {
+    name: "number-field",
+    type: "registry:ui",
+    title: "Number Field",
+    description:
+      "A numeric input with decrement/increment steppers, min/max clamping and step. Controlled via value/onValueChange or uncontrolled via defaultValue. Renders a real <input type=number> (native form submission + keyboard) with the native spinners hidden in favor of the styled buttons.",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/number-field.tsx", type: "registry:ui" }],
+  },
 ]

@@ -1,0 +1,52 @@
+---
+title: Number Field
+description: A numeric input with decrement/increment steppers, min/max clamping and step.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="number-field-demo" />
+
+## Installation
+
+<Install name="number-field" />
+
+## Usage
+
+```tsx
+import { NumberField } from "@/components/ui/number-field"
+
+<NumberField defaultValue={1} min={0} max={10} />
+```
+
+Controlled:
+
+```tsx
+const [value, setValue] = React.useState(3)
+
+<NumberField value={value} onValueChange={setValue} min={0} max={10} />
+```
+
+It renders a real `<input type="number">`, so it works with native form
+submission and keyboard entry; the browser's own spinners are hidden in favor of
+the styled buttons, which disable themselves at the `min`/`max` bounds.
+
+## Examples
+
+### Step
+
+<ComponentPreview name="number-field-step-demo" />
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` | `number` | — (controlled) |
+| `defaultValue` | `number` | `0` |
+| `onValueChange` | `(value: number) => void` | — |
+| `min` | `number` | — |
+| `max` | `number` | — |
+| `step` | `number` | `1` |
+| `disabled` | `boolean` | `false` |
+| ...props | `React.ComponentProps<"input">` | — |

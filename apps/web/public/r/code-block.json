@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "code-block",
+  "type": "registry:ui",
+  "title": "Code Block",
+  "description": "A styled code container with a one-click copy button. Dependency-free (no syntax highlighter): renders the code verbatim in a <pre> and copies it via the Clipboard API with a copied-state affordance. Optional language label in the header.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/code-block.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { CheckIcon, CopyIcon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport interface CodeBlockProps\n  extends Omit<React.ComponentProps<\"div\">, \"children\"> {\n  /** The code to render and copy. */\n  code: string\n  /** Optional language label shown in the header (display only — no highlighting). */\n  language?: string\n}\n\n/**\n * A styled code container with a one-click copy button. Dependency-free (no\n * syntax highlighter): renders the code verbatim in a `<pre>` and copies it via\n * the Clipboard API, with a copied-state affordance.\n */\nfunction CodeBlock({ className, code, language, ...props }: CodeBlockProps) {\n  const [copied, setCopied] = React.useState(false)\n  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(\n    undefined\n  )\n\n  React.useEffect(() => () => clearTimeout(timer.current), [])\n\n  const copy = async () => {\n    try {\n      await navigator.clipboard.writeText(code)\n      setCopied(true)\n      clearTimeout(timer.current)\n      timer.current = setTimeout(() => setCopied(false), 2000)\n    } catch {\n      // Clipboard unavailable (insecure context / denied) — no-op.\n    }\n  }\n\n  const CopyButton = (\n    <button\n      type=\"button\"\n      onClick={copy}\n      aria-label={copied ? \"Copied\" : \"Copy code\"}\n      className={cn(\n        \"text-muted-foreground hover:bg-accent hover:text-foreground inline-flex size-7 items-center justify-center rounded-md transition-colors outline-none\",\n        \"focus-visible:ring-ring/50 focus-visible:ring-[3px]\"\n      )}\n    >\n      {copied ? (\n        <CheckIcon className=\"size-3.5\" />\n      ) : (\n        <CopyIcon className=\"size-3.5\" />\n      )}\n    </button>\n  )\n\n  return (\n    <div\n      data-slot=\"code-block\"\n      className={cn(\n        \"bg-muted/40 relative overflow-hidden rounded-lg border\",\n        className\n      )}\n      {...props}\n    >\n      {language ? (\n        <div className=\"flex items-center justify-between border-b px-3 py-1.5\">\n          <span className=\"text-muted-foreground font-mono text-xs\">\n            {language}\n          </span>\n          {CopyButton}\n        </div>\n      ) : (\n        <div className=\"absolute top-1.5 right-1.5 z-10\">{CopyButton}</div>\n      )}\n      <pre\n        className={cn(\n          \"overflow-x-auto p-4 text-sm leading-relaxed\",\n          !language && \"pr-11\"\n        )}\n      >\n        <code className=\"font-mono\">{code}</code>\n      </pre>\n    </div>\n  )\n}\n\nexport { CodeBlock }\n"
+    }
+  ]
+}
