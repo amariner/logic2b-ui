@@ -1,0 +1,36 @@
+---
+title: Color Picker
+description: A self-contained HSV color picker with a saturation/value area, hue slider and hex input.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="color-picker-demo" />
+
+## Installation
+
+<Install name="color-picker" />
+
+## Usage
+
+```tsx
+import { ColorPicker } from "@/components/ui/color-picker"
+
+const [color, setColor] = React.useState("#3b82f6")
+
+<ColorPicker value={color} onValueChange={setColor} />
+```
+
+Drag inside the square to set saturation and brightness, drag the hue bar to set
+the hue, or type a hex value directly. It emits a `#rrggbb` string and is fully
+pointer-driven with zero dependencies.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `value` | `string` (`#rrggbb`) | — (controlled) |
+| `defaultValue` | `string` | `"#000000"` |
+| `onValueChange` | `(hex: string) => void` | — |
+| ...props | `React.ComponentProps<"div">` | — |
