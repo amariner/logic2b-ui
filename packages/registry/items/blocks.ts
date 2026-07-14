@@ -427,4 +427,56 @@ export const items: RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "admin-orders-01",
+    type: "registry:block",
+    title: "Orders admin dashboard",
+    description:
+      "An e-commerce back-office dashboard: a KPI row (revenue, orders, AOV, refunds with deltas) over an orders table with customer avatars, status badges, per-row actions, live search and status filter tabs. Use as the admin panel of a storefront.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "utils",
+      "avatar",
+      "badge",
+      "button",
+      "card",
+      "dropdown-menu",
+      "input",
+      "table",
+      "tabs",
+    ],
+    files: [
+      {
+        path: "src/blocks/admin-orders-01/admin-orders.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "admin-reservations-01",
+    type: "registry:block",
+    title: "Reservations admin dashboard",
+    description:
+      "A reservations back-office dashboard: a KPI row (today's bookings, guests, occupancy, no-shows) over a bookings table with guest avatars, resource, time, party size, confirmed/held/cancelled status badges, per-row actions, live search and status filter tabs. Use as the admin panel of a booking system.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "utils",
+      "avatar",
+      "badge",
+      "button",
+      "card",
+      "dropdown-menu",
+      "input",
+      "table",
+      "tabs",
+    ],
+    files: [
+      {
+        path: "src/blocks/admin-reservations-01/admin-reservations.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
 ]
