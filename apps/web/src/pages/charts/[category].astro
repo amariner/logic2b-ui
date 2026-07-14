@@ -6,7 +6,8 @@ const categories = [
   {
     slug: "area",
     label: "Area",
-    demos: ["chart-area-01", "chart-area-02", "chart-area-03", "chart-area-04"],
+    // The interactive variant leads as the full-width featured chart.
+    demos: ["chart-area-04", "chart-area-01", "chart-area-02", "chart-area-03"],
   },
   {
     slug: "bar",
@@ -51,35 +52,42 @@ const current = categories.find((c) => c.slug === category)!;
 ---
 
 <BaseLayout title={`${current.label} Charts`}>
-  <div class="w-full px-6 py-10">
-    <h1 class="text-3xl font-bold tracking-tight">Charts</h1>
-    <p class="mt-2 text-muted-foreground">
-      A collection of chart components built using Recharts. Every chart is
-      installable — copy the command under each preview.
-    </p>
+  <div class="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6">
+    <div class="flex flex-col items-center gap-4 text-center">
+      <h1 class="max-w-2xl text-balance text-3xl font-bold tracking-tighter md:text-5xl">
+        Beautiful Charts &amp; Graphs
+      </h1>
+      <p class="max-w-xl text-balance text-muted-foreground md:text-lg">
+        A collection of ready-to-use chart components built with Recharts.
+        From basic charts to rich data displays, copy and paste into your apps.
+      </p>
+    </div>
 
-    <nav class="mt-6 flex items-center gap-1 border-b">
+    <nav class="mt-10 flex items-center gap-1 overflow-x-auto border-b">
       {
         categories.map((c) => (
           <a
             href={`/charts/${c.slug}`}
             class:list={[
-              "-mb-px border-b-2 px-3 py-2 text-sm font-medium",
+              "-mb-px shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors",
               c.slug === category
                 ? "border-primary text-foreground"
                 : "border-transparent text-muted-foreground hover:text-foreground",
             ]}
           >
-            {c.label}
+            {c.label} Charts
           </a>
         ))
       }
     </nav>
 
-    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+    <!-- Featured chart full-width, the rest in a responsive grid. -->
+    <div class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
       {
-        current.demos.map((demo) => (
-          <ComponentPreview name={demo} wide install />
+        current.demos.map((demo, i) => (
+          <div class:list={[i === 0 && "md:col-span-2 xl:col-span-3"]}>
+            <ComponentPreview name={demo} wide install />
+          </div>
         ))
       }
     </div>

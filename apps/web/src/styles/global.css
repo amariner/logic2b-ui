@@ -8,11 +8,11 @@
 @custom-variant dark (&:is(.dark *));
 
 /* logic2b theme — normative reference in DESIGN.md (root of the repo).
-   Colors: the default neutral scale. Type: Inter body, Space Grotesk headings. */
+   Colors: the default neutral scale. Type: Inter everywhere (the studio can
+   still theme --font-heading per project; Space Grotesk stays loaded for it). */
 :root {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Space Grotesk Variable", "Inter Variable", ui-sans-serif,
-    system-ui, sans-serif;
+  --font-heading: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -133,14 +133,38 @@
   body {
     @apply bg-background text-foreground;
   }
-  /* Headings speak Space Grotesk with tight tracking (DESIGN.md). Utility
-     classes (tracking-*) on a page still win over this baseline. */
+  /* Headings: Inter with tight tracking (DESIGN.md). Utility classes
+     (tracking-*) on a page still win over this baseline. */
   h1,
   h2,
   h3,
   h4 {
     font-family: var(--font-heading);
     letter-spacing: -0.025em;
+  }
+}
+
+/* Site chrome buttons — ONE button language for every section of the site
+   (header, blocks toolbar, charts, install tabs). Mirrors the registry's
+   Button variants so the site and the product look the same. */
+@layer components {
+  .btn {
+    @apply inline-flex h-8 shrink-0 cursor-pointer select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-3 text-sm font-medium transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-sm {
+    @apply h-7 px-2.5 text-xs;
+  }
+  .btn-icon {
+    @apply size-8 px-0;
+  }
+  .btn-primary {
+    @apply bg-primary text-primary-foreground shadow-xs hover:bg-primary/90;
+  }
+  .btn-outline {
+    @apply border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground;
+  }
+  .btn-ghost {
+    @apply text-muted-foreground hover:bg-accent hover:text-foreground;
   }
 }
 

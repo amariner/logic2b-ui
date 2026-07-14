@@ -16,52 +16,56 @@ const blocks = registryIndex.filter(
   title="Blocks — logic2b/ui"
   description="Ready-made page sections and layouts, built from the components."
 >
-  <div class="w-full px-6 py-10">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold tracking-tight">Blocks</h1>
-      <p class="mt-2 text-muted-foreground">
-        Full sections and layouts built from the components. Copy the install
-        command or preview at different viewport sizes.
+  <div class="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6">
+    <div class="mb-10 flex flex-col items-center gap-4 text-center">
+      <h1 class="max-w-2xl text-balance text-3xl font-bold tracking-tighter md:text-5xl">
+        Building Blocks for the Web
+      </h1>
+      <p class="max-w-xl text-balance text-muted-foreground md:text-lg">
+        Clean, modern building blocks built from the components. Copy and
+        paste into your apps. Works with all frameworks. Open Source. Free
+        forever.
       </p>
     </div>
-    <div class="grid gap-8">
+    <div class="grid gap-10">
       {
         blocks.map((block) => (
           <div id={block.name} class="scroll-mt-24 overflow-hidden rounded-xl border">
             <div class="flex flex-wrap items-center justify-between gap-3 border-b bg-muted/40 px-4 py-3">
-              <div>
+              <div class="min-w-0">
                 <h2 class="font-semibold">{block.name}</h2>
-                <p class="text-sm text-muted-foreground">
+                <p class="truncate text-sm text-muted-foreground">
                   {block.description}
                 </p>
               </div>
-              <div class="flex items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2">
                 <div
-                  class="viewport-toggle flex items-center gap-1 rounded-md border p-0.5"
+                  class="viewport-toggle flex items-center gap-0.5 rounded-md border p-0.5"
                   data-target={block.name}
                 >
-                  <button data-width="100%" class="viewport-btn bg-accent rounded px-2 py-1 text-xs">
+                  <button data-width="100%" class="viewport-btn btn btn-sm h-6 rounded-sm bg-accent px-2">
                     Desktop
                   </button>
-                  <button data-width="768px" class="viewport-btn rounded px-2 py-1 text-xs">
+                  <button data-width="768px" class="viewport-btn btn btn-sm h-6 rounded-sm px-2">
                     Tablet
                   </button>
-                  <button data-width="375px" class="viewport-btn rounded px-2 py-1 text-xs">
+                  <button data-width="375px" class="viewport-btn btn btn-sm h-6 rounded-sm px-2">
                     Mobile
                   </button>
                 </div>
                 <button
-                  class="copy-btn rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                  class="copy-btn btn btn-sm btn-outline font-mono"
                   data-command={`npx logic2b@latest add ${block.name}`}
+                  title="Copy install command"
                 >
-                  Copy install command
+                  npx logic2b add {block.name}
                 </button>
                 <button
-                  class="copy-btn rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-accent"
+                  class="copy-btn btn btn-sm btn-outline"
                   data-command={buildAddPrompt(block.name)}
                   title="Copy a prompt for your AI assistant"
                 >
-                  Copy prompt
+                  Copy Prompt
                 </button>
               </div>
             </div>

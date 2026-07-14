@@ -50,18 +50,18 @@ const source = rawSource
       install && (
         <>
           <button
-            class="copy-install ml-auto mb-1 rounded-md border px-2 py-1 font-mono text-xs text-muted-foreground hover:text-foreground"
+            class="copy-install btn btn-sm btn-outline ml-auto mb-1 hidden font-mono sm:inline-flex"
             data-cmd={installCmd}
             title="Copy install command"
           >
             {installCmd}
           </button>
           <button
-            class="copy-install mb-1 rounded-md border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+            class="copy-install btn btn-sm btn-outline mb-1 ml-auto sm:ml-0"
             data-cmd={buildAddPrompt(name)}
             title="Copy a prompt for your AI assistant"
           >
-            Prompt
+            Copy Prompt
           </button>
         </>
       )
