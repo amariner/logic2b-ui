@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-heatmap-01",
+  "type": "registry:block",
+  "title": "Activity Heatmap",
+  "description": "A calendar-style activity heatmap (weekdays × weeks) built from token-colored cells — a single token ramped by opacity, no charting library. Use for contribution graphs, usage-by-day matrices or streak calendars.",
+  "registryDependencies": [
+    "utils",
+    "card"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-heatmap-01.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\n\nconst DAYS = [\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\", \"Sun\"]\nconst WEEKS = 18\n\n// Intensity buckets mapped to token colors (opacity ramps a single token — no\n// hardcoded colors). Index 0 = empty, 4 = most active.\nconst LEVELS = [\n  \"bg-muted\",\n  \"bg-primary/20\",\n  \"bg-primary/45\",\n  \"bg-primary/70\",\n  \"bg-primary\",\n]\n\n// Deterministic pattern (no Math.random — keeps SSR and client markup identical).\nconst level = (day: number, week: number) => (day * 3 + week * 2 + ((day + week) % 5)) % 5\n\nexport default function ChartHeatmap01() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>Activity Heatmap</CardTitle>\n        <CardDescription>Contributions over the last 18 weeks</CardDescription>\n      </CardHeader>\n      <CardContent>\n        <div className=\"overflow-x-auto\">\n          <div className=\"w-fit space-y-1\">\n            {DAYS.map((day, d) => (\n              <div key={day} className=\"flex items-center gap-1\">\n                <span className=\"text-muted-foreground w-8 shrink-0 text-xs\">\n                  {day}\n                </span>\n                {Array.from({ length: WEEKS }).map((_, w) => {\n                  const lv = level(d, w)\n                  return (\n                    <span\n                      key={w}\n                      data-slot=\"heatmap-cell\"\n                      className={cn(\"size-3 shrink-0 rounded-[2px]\", LEVELS[lv])}\n                      title={`${lv} contributions`}\n                    />\n                  )\n                })}\n              </div>\n            ))}\n          </div>\n        </div>\n        <div className=\"text-muted-foreground mt-4 flex items-center gap-1.5 text-xs\">\n          <span>Less</span>\n          {LEVELS.map((cls, i) => (\n            <span key={i} className={cn(\"size-3 rounded-[2px]\", cls)} />\n          ))}\n          <span>More</span>\n        </div>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-heatmap"
+  ]
+}

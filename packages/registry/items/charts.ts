@@ -165,7 +165,33 @@ export const items: RegistryItem[] = [
       description:
         "A KPI stat tile with a negative trend delta (destructive-toned) and a line sparkline. Use for a metric that is trending down.",
     },
+    {
+      name: "chart-composed-01",
+      title: "Composed Chart",
+      category: "composed",
+      description:
+        "A composed chart overlaying revenue bars with an orders trend line on one axis, with a legend and tooltip. Use to compare a volume metric and a trend in a single panel.",
+    },
+    {
+      name: "chart-composed-02",
+      title: "Composed Chart - Area + Line",
+      category: "composed",
+      description:
+        "A composed chart with a filled traffic area beneath a conversions line. Use to show a total alongside a derived rate over the same period.",
+    },
   ]),
+  {
+    name: "chart-heatmap-01",
+    type: "registry:block",
+    title: "Activity Heatmap",
+    description:
+      "A calendar-style activity heatmap (weekdays × weeks) built from token-colored cells — a single token ramped by opacity, no charting library. Use for contribution graphs, usage-by-day matrices or streak calendars.",
+    registryDependencies: ["utils", "card"],
+    categories: ["charts", "charts-heatmap"],
+    files: [
+      { path: "src/charts/chart-heatmap-01.tsx", type: "registry:block" },
+    ],
+  },
   {
     name: "chart-area-04",
     type: "registry:block",

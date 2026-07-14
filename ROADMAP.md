@@ -122,8 +122,8 @@ work we keep is what the agent lane and real installs depend on:
 - 💡 More blocks: e-commerce (checkout, product detail), mail client,
   calendar app, AI chat with streaming states, marketing bundles (full
   landing in one install). (Kanban board and an e-commerce cart shipped ✅.)
-- 💡 Chart gallery expansion: heatmaps, composed charts, streaming/real-time
-  examples. (Sparklines — line/area/bar — and KPI tiles shipped ✅.)
+- 💡 Chart gallery expansion: streaming/real-time examples. (Sparklines —
+  line/area/bar — KPI tiles, composed charts and an activity heatmap shipped ✅.)
 
 ### Design Plus kit (motion, icons, 3D — the "extras" lane)
 

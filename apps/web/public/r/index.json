@@ -616,6 +616,36 @@
     ]
   },
   {
+    "name": "chart-composed-01",
+    "type": "registry:block",
+    "title": "Composed Chart",
+    "description": "A composed chart overlaying revenue bars with an orders trend line on one axis, with a legend and tooltip. Use to compare a volume metric and a trend in a single panel.",
+    "categories": [
+      "charts",
+      "charts-composed"
+    ]
+  },
+  {
+    "name": "chart-composed-02",
+    "type": "registry:block",
+    "title": "Composed Chart - Area + Line",
+    "description": "A composed chart with a filled traffic area beneath a conversions line. Use to show a total alongside a derived rate over the same period.",
+    "categories": [
+      "charts",
+      "charts-composed"
+    ]
+  },
+  {
+    "name": "chart-heatmap-01",
+    "type": "registry:block",
+    "title": "Activity Heatmap",
+    "description": "A calendar-style activity heatmap (weekdays × weeks) built from token-colored cells — a single token ramped by opacity, no charting library. Use for contribution graphs, usage-by-day matrices or streak calendars.",
+    "categories": [
+      "charts",
+      "charts-heatmap"
+    ]
+  },
+  {
     "name": "chart-area-04",
     "type": "registry:block",
     "title": "Area Chart - Interactive",

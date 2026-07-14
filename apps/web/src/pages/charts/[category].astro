@@ -44,6 +44,16 @@ const categories = [
     label: "KPI",
     demos: ["chart-kpi-01", "chart-kpi-02"],
   },
+  {
+    slug: "composed",
+    label: "Composed",
+    demos: ["chart-composed-01", "chart-composed-02"],
+  },
+  {
+    slug: "heatmap",
+    label: "Heatmap",
+    demos: ["chart-heatmap-01"],
+  },
 ];
 
 export async function getStaticPaths() {
@@ -56,6 +66,8 @@ export async function getStaticPaths() {
     { params: { category: "radial" } },
     { params: { category: "sparkline" } },
     { params: { category: "kpi" } },
+    { params: { category: "composed" } },
+    { params: { category: "heatmap" } },
   ];
 }
 
