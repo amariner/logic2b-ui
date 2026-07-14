@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "use-count-up",
+  "type": "registry:hook",
+  "title": "useCountUp",
+  "description": "A React hook that animates a number from 0 up to a target with an ease-out curve (requestAnimationFrame). Format the returned value with Intl.NumberFormat. Gates on a `start` flag and jumps straight to the target under prefers-reduced-motion. Powers the count-up in the animated stats block.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "hooks/use-count-up.ts",
+      "type": "registry:hook",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nexport interface UseCountUpOptions {\n  /** Animation length in milliseconds. Default `1200`. */\n  duration?: number\n  /** Gate the animation — pass `false` to hold at `0` until you flip it true\n   *  (e.g. once the element scrolls into view). Default `true`. */\n  start?: boolean\n}\n\nconst prefersReducedMotion = () =>\n  typeof window !== \"undefined\" &&\n  window.matchMedia?.(\"(prefers-reduced-motion: reduce)\").matches\n\n/**\n * Animates a number from 0 up to `end` with an ease-out curve, driven by\n * `requestAnimationFrame`. Returns the current value to render (format it with\n * `Intl.NumberFormat` at the call site). Jumps straight to `end` when the user\n * prefers reduced motion.\n */\nexport function useCountUp(\n  end: number,\n  { duration = 1200, start = true }: UseCountUpOptions = {}\n): number {\n  const [value, setValue] = React.useState(() =>\n    start && !prefersReducedMotion() ? 0 : end\n  )\n\n  React.useEffect(() => {\n    if (!start) return\n    if (prefersReducedMotion()) {\n      setValue(end)\n      return\n    }\n\n    let raf = 0\n    let startTs: number | undefined\n\n    const tick = (ts: number) => {\n      if (startTs === undefined) startTs = ts\n      const progress = Math.min((ts - startTs) / duration, 1)\n      const eased = 1 - Math.pow(1 - progress, 3)\n      setValue(end * eased)\n      if (progress < 1) raf = requestAnimationFrame(tick)\n      else setValue(end)\n    }\n\n    raf = requestAnimationFrame(tick)\n    return () => cancelAnimationFrame(raf)\n  }, [end, duration, start])\n\n  return value\n}\n"
+    }
+  ]
+}

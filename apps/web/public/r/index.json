@@ -332,6 +332,12 @@
     "description": "Sharpen a mounting element in from an 8px blur while it fades — the <MotionBlur> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
   },
   {
+    "name": "use-count-up",
+    "type": "registry:hook",
+    "title": "useCountUp",
+    "description": "A React hook that animates a number from 0 up to a target with an ease-out curve (requestAnimationFrame). Format the returned value with Intl.NumberFormat. Gates on a `start` flag and jumps straight to the target under prefers-reduced-motion. Powers the count-up in the animated stats block."
+  },
+  {
     "name": "chart",
     "type": "registry:ui",
     "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend."
@@ -701,6 +707,33 @@
     "description": "A multi-step onboarding card with a numbered step indicator, a progress bar and per-step form fields, plus Back/Continue navigation. Use as a first-run setup flow.",
     "categories": [
       "application"
+    ]
+  },
+  {
+    "name": "hero-01-animated",
+    "type": "registry:block",
+    "title": "Marketing hero (animated)",
+    "description": "The animated twin of hero-01: the same centered marketing hero, revealed as a staggered fade-up on mount. Drop-in replacement — same Hero export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+    "categories": [
+      "marketing"
+    ]
+  },
+  {
+    "name": "stats-01-animated",
+    "type": "registry:block",
+    "title": "KPI stat cards (animated)",
+    "description": "The animated twin of stats-01: the KPI values count up on mount and the cards cascade in as a staggered fade-up. Drop-in replacement — same Stats export. Built on the motion engine and the useCountUp hook, respects prefers-reduced-motion.",
+    "categories": [
+      "dashboard"
+    ]
+  },
+  {
+    "name": "feature-grid-01-animated",
+    "type": "registry:block",
+    "title": "Feature grid (animated)",
+    "description": "The animated twin of feature-grid-01: the heading reveals first, then the feature cards cascade in as a staggered fade-up on mount. Drop-in replacement — same FeatureGrid export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+    "categories": [
+      "marketing"
     ]
   }
 ]

@@ -54,4 +54,13 @@ export const items: RegistryItem[] = [
     registryDependencies: ["motion"],
     files: [{ path: "src/ui/motion-blur.tsx", type: "registry:ui" }],
   },
+  {
+    name: "use-count-up",
+    type: "registry:hook",
+    title: "useCountUp",
+    description:
+      "A React hook that animates a number from 0 up to a target with an ease-out curve (requestAnimationFrame). Format the returned value with Intl.NumberFormat. Gates on a `start` flag and jumps straight to the target under prefers-reduced-motion. Powers the count-up in the animated stats block.",
+    registryDependencies: [],
+    files: [{ path: "src/hooks/use-count-up.ts", type: "registry:hook" }],
+  },
 ]

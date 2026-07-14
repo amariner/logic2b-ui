@@ -136,9 +136,12 @@ documented recipes, never a runtime framework of our own.
   (`logic2b add motion-fade`), exported recipe maps for Radix `data-[state]`
   exits, `prefers-reduced-motion` fallbacks, and the Framer Motion flavor
   documented as a copyable recipe for spring physics and layout animations.
-- 💡 **Animated block variants** — predefined animations for existing blocks
-  (staggered hero reveal, dashboard cards cascading in, count-up stats):
-  each block gains an `-animated` variant instead of a new API.
+- ✅ **Animated block variants** — `-animated` twins of existing blocks that
+  reveal on mount via the motion engine, no new API: `hero-01-animated`
+  (staggered fade-up), `feature-grid-01-animated` (heading then cards cascade)
+  and `stats-01-animated` (cards cascade + KPI values count up via the
+  `use-count-up` hook). Drop-in replacements — same exports — respecting
+  prefers-reduced-motion.
 - 💡 **Scroll & parallax recipes** — documented scroll-linked animations
   (CSS scroll-driven animations where supported, IntersectionObserver
   fallback) including image parallax sections for marketing pages.
