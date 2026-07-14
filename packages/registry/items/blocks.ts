@@ -358,4 +358,31 @@ export const items: RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "kanban-01",
+    type: "registry:block",
+    title: "Kanban board",
+    description:
+      "A three-column kanban board (to do / in progress / done) with cards you drag between columns, using native HTML5 drag-and-drop — no dependencies. Columns show a live count and highlight while a card is dragged over them. Use as the base for a task board or pipeline view.",
+    categories: ["application"],
+    registryDependencies: ["utils", "badge"],
+    files: [{ path: "src/blocks/kanban-01/kanban.tsx", type: "registry:block" }],
+  },
+  {
+    name: "cart-01",
+    type: "registry:block",
+    title: "Shopping cart",
+    description:
+      "An e-commerce cart: line items with a thumbnail, variant, per-line quantity stepper and remove action, plus an order summary card (subtotal, free-over-threshold shipping, total) and a checkout button. Totals recompute live. Use as the cart page of a storefront.",
+    categories: ["ecommerce"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "utils",
+      "button",
+      "card",
+      "number-field",
+      "separator",
+    ],
+    files: [{ path: "src/blocks/cart-01/cart.tsx", type: "registry:block" }],
+  },
 ]
