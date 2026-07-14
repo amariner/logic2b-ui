@@ -1,0 +1,78 @@
+---
+title: Scroll Reveal
+description: Play a motion enter recipe when an element scrolls into view — built on IntersectionObserver and the motion engine, with zero runtime dependencies.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="scroll-reveal-demo" />
+
+## Installation
+
+<Install name="scroll-reveal" />
+
+## Usage
+
+```tsx
+import { ScrollReveal } from "@/components/ui/scroll-reveal"
+
+<ScrollReveal preset="fade-up">
+  <Card>…</Card>
+</ScrollReveal>
+```
+
+`ScrollReveal` is the scroll-triggered counterpart to
+[`Motion`](/docs/components/motion): instead of playing on mount, it waits until
+the element scrolls into view (via the
+[`useInView`](#useinview) IntersectionObserver hook), then plays the same enter
+recipe. It shares every preset — `fade`, `fade-up/down/left/right`, `scale`,
+`blur` — and the same `duration`, `delay`, `asChild` props and
+`prefers-reduced-motion` fallback.
+
+It renders visible until it has mounted and armed, so search engines and clients
+without JavaScript always see the content — the reveal is pure progressive
+enhancement.
+
+## Staggering a group
+
+Give each item an increasing `delay` to cascade a list as it enters:
+
+```tsx
+{posts.map((post, i) => (
+  <ScrollReveal key={post.id} preset="fade-up" delay={i * 80}>
+    <PostCard {...post} />
+  </ScrollReveal>
+))}
+```
+
+## Revealing again on every pass
+
+By default a reveal fires once and stays. Pass `once={false}` to re-hide and
+replay the recipe every time the element leaves and re-enters view.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `preset` | `fade \| fade-up \| fade-down \| fade-left \| fade-right \| scale \| blur` | `fade-up` |
+| `duration` | `number` (ms) | `500` |
+| `delay` | `number` (ms) | `0` |
+| `once` | `boolean` | `true` |
+| `amount` | `number` (0–1 visible threshold) | `0.3` |
+| `margin` | `string` (rootMargin) | `"0px"` |
+| `root` | `RefObject<Element>` (scroll container) | viewport |
+| `asChild` | `boolean` | `false` |
+| ...props | `React.ComponentProps<"div">` | — |
+
+## useInView
+
+`scroll-reveal` installs the `useInView` hook, which you can use on its own to
+gate anything on visibility — a lazy-loaded chart, a
+[`useCountUp`](/docs/components/motion) counter, an autoplaying video:
+
+```tsx
+const [ref, inView] = useInView({ amount: 0.5 })
+
+<section ref={ref}>{inView && <Chart />}</section>
+```

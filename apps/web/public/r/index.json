@@ -338,6 +338,24 @@
     "description": "A React hook that animates a number from 0 up to a target with an ease-out curve (requestAnimationFrame). Format the returned value with Intl.NumberFormat. Gates on a `start` flag and jumps straight to the target under prefers-reduced-motion. Powers the count-up in the animated stats block."
   },
   {
+    "name": "use-in-view",
+    "type": "registry:hook",
+    "title": "useInView",
+    "description": "A React hook that tracks whether an element is scrolled into view via IntersectionObserver. Returns [ref, inView] with `once`, `amount` (threshold), `margin` (rootMargin) and a `root` scroll-container option. Falls back to visible when IntersectionObserver is unavailable. Powers scroll-reveal."
+  },
+  {
+    "name": "scroll-reveal",
+    "type": "registry:ui",
+    "title": "Scroll Reveal",
+    "description": "Plays a motion enter recipe when the element scrolls into view instead of on mount. Shares the motion engine's presets (fade, fade-up/down/left/right, scale, blur), timing (duration/delay) and prefers-reduced-motion fallback, with once/amount/margin/root controls from useInView. SSR- and no-JS-safe: renders visible until armed. Supports asChild."
+  },
+  {
+    "name": "parallax",
+    "type": "registry:ui",
+    "title": "Parallax",
+    "description": "A scroll-linked parallax layer for marketing sections: the inner layer drifts as the section passes through the viewport, driven entirely by CSS scroll-driven animations (animation-timeline: view()). Zero JS on the scroll path, zero runtime deps, and guarded by @supports so unsupported browsers render it static. Give the container a height and put an oversized object-cover image or gradient inside."
+  },
+  {
     "name": "chart",
     "type": "registry:ui",
     "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend."

@@ -1,0 +1,54 @@
+---
+title: Parallax
+description: A scroll-linked parallax layer for marketing sections, driven entirely by CSS scroll-driven animations with a graceful static fallback.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="parallax-demo" />
+
+## Installation
+
+<Install name="parallax" />
+
+## Usage
+
+Give the container a height and put an oversized, `object-cover` image (or a
+gradient) inside. The inner layer drifts as the section passes through the
+viewport:
+
+```tsx
+import { Parallax } from "@/components/ui/parallax"
+
+<Parallax range="16%" className="h-72 rounded-xl">
+  <img
+    src="/hero.jpg"
+    alt=""
+    className="size-full object-cover"
+  />
+</Parallax>
+```
+
+## How it works
+
+The drift is driven entirely by **CSS scroll-driven animations**
+(`animation-timeline: view()`) — there is no JavaScript on the scroll path and
+nothing to throttle. The layer is intentionally taller than the container (by
+`range` on each side) so the movement never reveals an edge, and the container
+clips it with `overflow-hidden`.
+
+## Progressive enhancement
+
+The animation lives inside `@supports (animation-timeline: view())`, so browsers
+that don't support scroll-driven animations simply render the layer **static** —
+the content is always visible, the motion is a bonus. It also honors
+`prefers-reduced-motion`, holding the layer still for users who ask for less
+motion.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `range` | `string` (any CSS length/percentage) | `"12%"` |
+| ...props | `React.ComponentProps<"div">` | — |
