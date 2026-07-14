@@ -130,6 +130,41 @@ export const items: RegistryItem[] = [
       description:
         "A single-value radial progress ring with the number rendered in the center. Use it for a KPI, quota or completion metric.",
     },
+    {
+      name: "chart-sparkline-01",
+      title: "Sparkline - Line",
+      category: "sparkline",
+      description:
+        "A compact line sparkline in a metric card (label + value, no axes/grid/tooltip). Use inline in tables, tiles or lists to show a trend at a glance.",
+    },
+    {
+      name: "chart-sparkline-02",
+      title: "Sparkline - Area",
+      category: "sparkline",
+      description:
+        "A compact area sparkline in a metric card. Use for a filled trend indicator next to a value where a full chart would be too heavy.",
+    },
+    {
+      name: "chart-sparkline-03",
+      title: "Sparkline - Bar",
+      category: "sparkline",
+      description:
+        "A compact bar sparkline in a metric card. Use for discrete per-period counts (orders, signups) shown as a tiny bar trend.",
+    },
+    {
+      name: "chart-kpi-01",
+      title: "KPI Tile - Up",
+      category: "kpi",
+      description:
+        "A KPI stat tile: a large value, a positive trend delta and an area sparkline underneath. Use as a dashboard headline metric.",
+    },
+    {
+      name: "chart-kpi-02",
+      title: "KPI Tile - Down",
+      category: "kpi",
+      description:
+        "A KPI stat tile with a negative trend delta (destructive-toned) and a line sparkline. Use for a metric that is trending down.",
+    },
   ]),
   {
     name: "chart-area-04",
