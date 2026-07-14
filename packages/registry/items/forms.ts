@@ -145,4 +145,23 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/number-field.tsx", type: "registry:ui" }],
   },
+  {
+    name: "autocomplete",
+    type: "registry:ui",
+    title: "Autocomplete",
+    description:
+      "A free-text input with a filtered suggestion list — the editable ARIA combobox pattern. Unlike a select-style combobox it accepts arbitrary text; the list just offers matches. Fully keyboard-driven (↑/↓ move, Enter picks, Esc closes), controlled or uncontrolled, dependency-free.",
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/autocomplete.tsx", type: "registry:ui" }],
+  },
+  {
+    name: "file-dropzone",
+    type: "registry:ui",
+    title: "File Dropzone",
+    description:
+      "A drag-and-drop file surface with click/keyboard to browse. Native DnD (no dependencies): highlights while a file is dragged over it and calls onFiles with the dropped or selected files. Supports accept, multiple and disabled; rendering the file list is left to the consumer.",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/file-dropzone.tsx", type: "registry:ui" }],
+  },
 ]

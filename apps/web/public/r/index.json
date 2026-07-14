@@ -223,6 +223,18 @@
     "description": "A numeric input with decrement/increment steppers, min/max clamping and step. Controlled via value/onValueChange or uncontrolled via defaultValue. Renders a real <input type=number> (native form submission + keyboard) with the native spinners hidden in favor of the styled buttons."
   },
   {
+    "name": "autocomplete",
+    "type": "registry:ui",
+    "title": "Autocomplete",
+    "description": "A free-text input with a filtered suggestion list — the editable ARIA combobox pattern. Unlike a select-style combobox it accepts arbitrary text; the list just offers matches. Fully keyboard-driven (↑/↓ move, Enter picks, Esc closes), controlled or uncontrolled, dependency-free."
+  },
+  {
+    "name": "file-dropzone",
+    "type": "registry:ui",
+    "title": "File Dropzone",
+    "description": "A drag-and-drop file surface with click/keyboard to browse. Native DnD (no dependencies): highlights while a file is dragged over it and calls onFiles with the dropped or selected files. Supports accept, multiple and disabled; rendering the file list is left to the consumer."
+  },
+  {
     "name": "table",
     "type": "registry:ui",
     "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions."

@@ -1,0 +1,51 @@
+---
+title: Autocomplete
+description: A free-text input with a filtered suggestion list — the editable ARIA combobox pattern.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="autocomplete-demo" />
+
+## Installation
+
+<Install name="autocomplete" />
+
+## Usage
+
+```tsx
+import { Autocomplete } from "@/components/ui/autocomplete"
+
+const [value, setValue] = React.useState("")
+
+<Autocomplete
+  options={["Next.js", "Vite", "Astro"]}
+  value={value}
+  onValueChange={setValue}
+  placeholder="Search framework..."
+/>
+```
+
+The list filters against what the user types (case-insensitive `includes`), but
+the input **accepts arbitrary text** — that's what separates it from the
+select-style [Combobox](/docs/components/combobox). Reach for `Autocomplete`
+when the suggestions are hints (a search box, a tag entry); reach for `Combobox`
+when the value must come from a fixed set.
+
+## Keyboard
+
+- <kbd>↓</kbd> / <kbd>↑</kbd> move the active suggestion.
+- <kbd>Enter</kbd> picks the active suggestion.
+- <kbd>Esc</kbd> closes the list, keeping what you typed.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `options` | `string[]` | — (required) |
+| `value` | `string` | — (controlled) |
+| `defaultValue` | `string` | `""` |
+| `onValueChange` | `(value: string) => void` | — |
+| `emptyMessage` | `string` | `"No results."` |
+| ...props | `React.ComponentProps<"input">` | — |
