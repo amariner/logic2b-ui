@@ -164,4 +164,13 @@ export const items: RegistryItem[] = [
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/file-dropzone.tsx", type: "registry:ui" }],
   },
+  {
+    name: "color-picker",
+    type: "registry:ui",
+    title: "Color Picker",
+    description:
+      "A self-contained HSV color picker: a draggable saturation/value area, a hue slider and a hex input. Controlled via value/onValueChange or uncontrolled via defaultValue; emits #rrggbb. Pointer-driven, zero dependencies.",
+    registryDependencies: ["utils"],
+    files: [{ path: "src/ui/color-picker.tsx", type: "registry:ui" }],
+  },
 ]
