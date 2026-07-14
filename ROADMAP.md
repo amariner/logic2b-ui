@@ -124,8 +124,44 @@ work we keep is what the agent lane and real installs depend on:
   bundles (full landing in one install).
 - 💡 Chart gallery expansion: sparklines, KPI tiles, heatmaps, composed charts,
   streaming/real-time examples.
-- 💡 Motion presets (enter/exit/hover recipes on tokens) built on
-  tw-animate-css.
+
+### Design Plus kit (motion, icons, 3D — the "extras" lane)
+
+Everything here ships the same way as components: installable items +
+documented recipes, never a runtime framework of our own.
+
+- 🔜 **Motion presets** — enter/exit/hover recipes on tokens, built on
+  tw-animate-css first (zero deps), with an optional `motion`
+  (Framer Motion) flavor per recipe for spring physics and layout
+  animations. Installable as `logic2b add motion-fade`, etc.
+- 💡 **Animated block variants** — predefined animations for existing blocks
+  (staggered hero reveal, dashboard cards cascading in, count-up stats):
+  each block gains an `-animated` variant instead of a new API.
+- 💡 **Scroll & parallax recipes** — documented scroll-linked animations
+  (CSS scroll-driven animations where supported, IntersectionObserver
+  fallback) including image parallax sections for marketing pages.
+- 💡 **3D extras, documented** — guidance + copyable examples for
+  react-three-fiber hero scenes and product viewers that respect the token
+  system (lights/materials driven by theme tokens). Docs-first: heavy deps
+  never enter the base registry.
+- 💡 **Icon libraries beyond Lucide** — make the studio's Icon Library
+  selector real: Tabler / Phosphor / Hugeicons mappings, with the CLI and
+  `install_plan` rewriting icon imports per choice.
+- 💡 **Typeset lane** — a type-scale studio (inspired by the upstream
+  typeset idea): pick display/body pairings, preview real docs pages,
+  export the `--font-*` tokens + fontsource imports as one preset.
+
+### Benchmarks (public, reproducible)
+
+- 💡 **Framework performance benchmarks** — the same blocks rendered in
+  Next.js / Vite / Astro / TanStack, measured (bundle size, hydration cost,
+  LCP on a throttled profile) with published methodology and scripts, for
+  backends/frontends/API-layer choices around a UI.
+- 💡 **Agent benchmark / leaderboard** — how fast and how correctly coding
+  agents (Claude, Cursor, Copilot…) install, theme and compose logic2b ui
+  vs. copy-paste baselines: tasks, scoring rubric and per-model execution
+  speed published as a living page. Doubles as our own regression suite for
+  the MCP/prompt surfaces.
 
 ### Site & docs
 
@@ -154,6 +190,39 @@ work we keep is what the agent lane and real installs depend on:
 - 💡 Starter templates repo (SaaS dashboard, marketing site, docs site) wired
   to presets.
 - 💡 Theme marketplace / gallery of shared presets.
+
+## Beyond the browser (💡 exploring)
+
+The registry is framework-agnostic React + tokens — that travels further
+than marketing sites:
+
+- 💡 **Business process UIs** — the blocks catalog grown toward internal
+  tooling: approval flows, audit trails, form-heavy admin screens, kanban
+  and scheduling blocks. The agent lane matters double here: enterprises
+  can point a sandboxed assistant at the remote MCP and get compliant,
+  on-brand internal tools without a design team.
+- 💡 **Industrial / HMI surfaces** — control-panel blocks (status boards,
+  gauge + threshold cards, alarm lists, e-stop-grade confirm dialogs) for
+  operator interfaces running on panel PCs and kiosks via embedded
+  browsers (webview on Linux ARM). High-contrast
+  themes, large touch targets and offline-first patterns as presets.
+- 💡 **Edge/device dashboards** — the Workers-native story extends to
+  fleets: device telemetry dashboards served from the edge, streaming
+  charts fed by MQTT/WebSocket bridges.
+
+## Path to v1.0 — launch plan (target: November 2026)
+
+The **Logic2b** trademark decision lands in November 2026; v1.0 launches on
+that green light. Working backwards:
+
+1. **Jul–Aug** — polish pass: unified UI language across sections, docs
+   quality, motion presets, visual regression + a11y suites in CI.
+2. **Sep** — trust pass: framework benchmarks published, Lighthouse CI,
+   bundle budgets, registry build validation in CI.
+3. **Oct** — release candidate: CLI/MCP at 1.0.0-rc, starter templates,
+   agent benchmark v1, launch content (demos, comparison pages).
+4. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
+   post, community namespace opens.
 
 ## Watching
 
