@@ -162,6 +162,11 @@
     "description": "Displays a list of options for the user to pick from, triggered by a button. Use for choosing one value from a longer or dropdown-style list, built on Radix Select."
   },
   {
+    "name": "native-select",
+    "type": "registry:ui",
+    "description": "A styled wrapper around the native <select> element: platform-native option list and keyboard/touch behavior, with a token-matched border, focus ring and chevron. Use when you want OS-native select UX (mobile pickers, screen reader familiarity) instead of Select's custom listbox."
+  },
+  {
     "name": "slider",
     "type": "registry:ui",
     "description": "An input where the user selects a value, or range of values, by dragging a handle within a track. Use for numeric ranges like volume or price, built on Radix Slider."
