@@ -479,4 +479,45 @@ export const items: RegistryItem[] = [
       },
     ],
   },
+  {
+    name: "admin-analytics-01",
+    type: "registry:block",
+    title: "Analytics admin dashboard",
+    description:
+      "An e-commerce analytics overview: a KPI row (revenue, orders, conversion, sessions), a monthly revenue area chart and a top-products-by-revenue breakdown with share bars. Use as the analytics tab of a store admin.",
+    categories: ["application"],
+    dependencies: ["recharts"],
+    registryDependencies: ["utils", "card", "chart"],
+    files: [
+      {
+        path: "src/blocks/admin-analytics-01/admin-analytics.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "admin-customers-01",
+    type: "registry:block",
+    title: "Customers admin dashboard",
+    description:
+      "A customers back-office view: a KPI row (total customers, new this month, repeat rate) over a customers table with avatars, order count, lifetime spend, last order, active/new/churned segment badges, per-row actions and live search. Use as the customers tab of a store admin.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "utils",
+      "avatar",
+      "badge",
+      "button",
+      "card",
+      "dropdown-menu",
+      "input",
+      "table",
+    ],
+    files: [
+      {
+        path: "src/blocks/admin-customers-01/admin-customers.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
 ]
