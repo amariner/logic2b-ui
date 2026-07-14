@@ -1,0 +1,37 @@
+---
+title: Motion Scale
+description: Zoom a mounting element in from 95% while it fades — the preconfigured scale preset, built on tw-animate-css with zero runtime dependencies.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-scale-demo" />
+
+## Installation
+
+<Install name="motion-scale" />
+
+## Usage
+
+```tsx
+import { MotionScale } from "@/components/ui/motion-scale"
+
+<MotionScale hover="lift">
+  <Card>…</Card>
+</MotionScale>
+```
+
+`MotionScale` is `<Motion preset="scale">` — see
+[Motion](/docs/components/motion) for the shared `duration`, `delay`, `hover`
+and `asChild` props, exit recipes and reduced-motion behavior.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `duration` | `number` (ms) | `500` |
+| `delay` | `number` (ms) | `0` |
+| `hover` | `lift \| sink \| scale \| glow` | — |
+| `asChild` | `boolean` | `false` |
+| ...props | `React.ComponentProps<"div">` | — |

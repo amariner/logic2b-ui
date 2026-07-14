@@ -302,6 +302,36 @@
     "description": "A multi-step progress indicator for wizards, checkouts and onboarding flows, horizontal or vertical. Steps derive completed/active/upcoming state from the root value; the active step carries aria-current. Parts: Stepper (root, value/orientation), StepperItem (step), StepperTrigger, StepperIndicator (number/check), StepperTitle, StepperDescription, StepperSeparator."
   },
   {
+    "name": "motion",
+    "type": "registry:ui",
+    "title": "Motion",
+    "description": "Enter/exit/hover animation recipes on tokens, built on tw-animate-css (zero runtime deps). Ships the <Motion> primitive (plays an enter preset on mount, with duration/delay/hover props and asChild) plus the recipe maps and helpers (motionEnter, motionExit, motionHover) to drop the same effects onto any element or a Radix data-[state] node. Presets: fade, fade-up/down/left/right, scale, blur. Respects prefers-reduced-motion."
+  },
+  {
+    "name": "motion-fade",
+    "type": "registry:ui",
+    "title": "Motion Fade",
+    "description": "Fade a mounting element in — the preconfigured <MotionFade> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+  },
+  {
+    "name": "motion-slide",
+    "type": "registry:ui",
+    "title": "Motion Slide",
+    "description": "Slide a mounting element in from a direction (up/down/left/right) while it fades — the <MotionSlide> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+  },
+  {
+    "name": "motion-scale",
+    "type": "registry:ui",
+    "title": "Motion Scale",
+    "description": "Zoom a mounting element in from 95% while it fades — the <MotionScale> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+  },
+  {
+    "name": "motion-blur",
+    "type": "registry:ui",
+    "title": "Motion Blur",
+    "description": "Sharpen a mounting element in from an 8px blur while it fades — the <MotionBlur> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+  },
+  {
     "name": "chart",
     "type": "registry:ui",
     "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend."

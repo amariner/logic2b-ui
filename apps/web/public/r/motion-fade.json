@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "motion-fade",
+  "type": "registry:ui",
+  "title": "Motion Fade",
+  "description": "Fade a mounting element in — the preconfigured <MotionFade> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+  "registryDependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "ui/motion-fade.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\"\n\nimport { Motion, type MotionProps } from \"@/components/ui/motion\"\n\nexport type MotionFadeProps = Omit<MotionProps, \"preset\">\n\n/** Fade a mounting element in. Preconfigured `<Motion preset=\"fade\">`. */\nfunction MotionFade(props: MotionFadeProps) {\n  return <Motion preset=\"fade\" {...props} />\n}\n\nexport { MotionFade }\n"
+    }
+  ]
+}

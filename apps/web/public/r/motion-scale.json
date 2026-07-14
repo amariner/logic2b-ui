@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "motion-scale",
+  "type": "registry:ui",
+  "title": "Motion Scale",
+  "description": "Zoom a mounting element in from 95% while it fades — the <MotionScale> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+  "registryDependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "ui/motion-scale.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\"\n\nimport { Motion, type MotionProps } from \"@/components/ui/motion\"\n\nexport type MotionScaleProps = Omit<MotionProps, \"preset\">\n\n/** Zoom a mounting element in from 95%. Preconfigured `<Motion preset=\"scale\">`. */\nfunction MotionScale(props: MotionScaleProps) {\n  return <Motion preset=\"scale\" {...props} />\n}\n\nexport { MotionScale }\n"
+    }
+  ]
+}

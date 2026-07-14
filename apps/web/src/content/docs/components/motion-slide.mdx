@@ -1,0 +1,38 @@
+---
+title: Motion Slide
+description: Slide a mounting element in from a direction while it fades — the preconfigured slide preset, built on tw-animate-css with zero runtime dependencies.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-slide-demo" />
+
+## Installation
+
+<Install name="motion-slide" />
+
+## Usage
+
+```tsx
+import { MotionSlide } from "@/components/ui/motion-slide"
+
+<MotionSlide direction="up" delay={80}>
+  <Card>…</Card>
+</MotionSlide>
+```
+
+`MotionSlide` maps `direction` onto the matching `fade-*` preset of
+[Motion](/docs/components/motion) (`up` → `fade-up`, and so on), so it shares
+the same `duration`, `delay`, `hover` and `asChild` props.
+
+## API
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `direction` | `up \| down \| left \| right` | `up` |
+| `duration` | `number` (ms) | `500` |
+| `delay` | `number` (ms) | `0` |
+| `hover` | `lift \| sink \| scale \| glow` | — |
+| `asChild` | `boolean` | `false` |
+| ...props | `React.ComponentProps<"div">` | — |

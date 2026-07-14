@@ -1,0 +1,178 @@
+---
+title: Motion
+description: Enter, exit and hover animation recipes on tokens — built on tw-animate-css with zero runtime dependencies, plus an optional Framer Motion flavor.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-demo" />
+
+## Installation
+
+<Install name="motion" />
+
+The `motion` engine ships the `<Motion>` primitive together with the recipe
+maps and helpers. Each named preset is also installable on its own —
+[`motion-fade`](/docs/components/motion-fade),
+[`motion-slide`](/docs/components/motion-slide),
+[`motion-scale`](/docs/components/motion-scale) and
+[`motion-blur`](/docs/components/motion-blur) — and each one pulls in `motion`
+automatically.
+
+## Usage
+
+```tsx
+import { Motion } from "@/components/ui/motion"
+
+<Motion preset="fade-up">
+  <Card>…</Card>
+</Motion>
+```
+
+`<Motion>` plays its enter recipe once, on mount, and then gets out of the way.
+It renders a `div` by default; pass `asChild` to animate the child element
+directly instead of adding a wrapper node:
+
+```tsx
+<Motion preset="scale" asChild>
+  <Card>…</Card>
+</Motion>
+```
+
+## Presets
+
+| Preset | Effect |
+| --- | --- |
+| `fade` | Opacity 0 → 1 |
+| `fade-up` | Fade while rising from below |
+| `fade-down` | Fade while dropping from above |
+| `fade-left` | Fade while entering from the right |
+| `fade-right` | Fade while entering from the left |
+| `scale` | Fade while zooming from 95% |
+| `blur` | Fade while sharpening from an 8px blur |
+
+## Timing
+
+Duration and delay are props — no arbitrary Tailwind class is generated at
+runtime, so any value works. `delay` is the knob for staggering a list:
+
+```tsx
+{items.map((item, i) => (
+  <Motion key={item.id} preset="fade-up" duration={500} delay={i * 80}>
+    <Item {...item} />
+  </Motion>
+))}
+```
+
+The default is a 500ms `ease-out` enter. Override the easing with a `className`
+(`ease-in-out`, `ease-linear`, …) — it merges over the default.
+
+## Hover
+
+Pass a `hover` recipe to add an interaction on top of the enter animation:
+
+```tsx
+<Motion preset="fade" hover="lift">
+  <Card>…</Card>
+</Motion>
+```
+
+| Hover | Effect |
+| --- | --- |
+| `lift` | Rises 4px |
+| `sink` | Presses down 2px |
+| `scale` | Grows to 103% |
+| `glow` | Raises the shadow |
+
+## Exit animations
+
+`<Motion>` covers the mount case. For an element that also animates *out* — a
+dialog, a popover, anything with a Radix `data-[state]` — reach for the recipe
+maps and drive both states off `data-state` instead:
+
+```tsx
+import {
+  motionEnterPresets,
+  motionExitPresets,
+} from "@/components/ui/motion"
+
+// Applied to a Radix content node:
+<DialogContent
+  className={cn(
+    "data-[state=open]:animate-in data-[state=closed]:animate-out",
+    "data-[state=open]:fade-in data-[state=open]:zoom-in-95",
+    "data-[state=closed]:fade-out data-[state=closed]:zoom-out-95",
+  )}
+/>
+```
+
+`motionEnterPresets` / `motionExitPresets` hold the exact class strings for
+every preset if you'd rather look them up than hand-write the pair. The
+`motionEnter`, `motionExit` and `motionHover` helpers build the full class
+string (animation utility + timing + reduced-motion guard) for you.
+
+## Reduced motion
+
+Every recipe degrades under `prefers-reduced-motion`: the enter animation is
+dropped so content appears immediately (`motion-reduce:animate-none`) and hover
+transitions are disabled (`motion-reduce:transition-none`). No extra wiring
+needed.
+
+## The Framer Motion flavor
+
+The presets above are deliberately CSS-only: they cost nothing at runtime and
+handle the enter/hover cases most interfaces need. When you want spring physics,
+shared-layout transitions or exit animations on plain (non-Radix) elements, drop
+in the optional **Framer Motion** flavor of the same recipe. Install
+`framer-motion`, then copy this alongside the CSS engine:
+
+```tsx
+"use client"
+
+import * as React from "react"
+import { AnimatePresence, motion, type Transition } from "framer-motion"
+
+const spring: Transition = { type: "spring", stiffness: 300, damping: 30 }
+
+const variants = {
+  fade: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+  "fade-up": {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0 },
+  },
+  scale: {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 },
+  },
+} as const
+
+export function MotionSpring({
+  preset = "fade-up",
+  show = true,
+  children,
+}: {
+  preset?: keyof typeof variants
+  show?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={variants[preset]}
+          transition={spring}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+```
+
+Same preset names, same tokens — spring feel and real exit animations when you
+need them, and nothing added to your bundle when you don't.

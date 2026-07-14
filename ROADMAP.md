@@ -130,10 +130,12 @@ work we keep is what the agent lane and real installs depend on:
 Everything here ships the same way as components: installable items +
 documented recipes, never a runtime framework of our own.
 
-- 🔜 **Motion presets** — enter/exit/hover recipes on tokens, built on
-  tw-animate-css first (zero deps), with an optional `motion`
-  (Framer Motion) flavor per recipe for spring physics and layout
-  animations. Installable as `logic2b add motion-fade`, etc.
+- ✅ **Motion presets** — enter/exit/hover recipes on tokens, built on
+  tw-animate-css (zero runtime deps): the `<Motion>` primitive plus the
+  `motion-fade` / `motion-slide` / `motion-scale` / `motion-blur` presets
+  (`logic2b add motion-fade`), exported recipe maps for Radix `data-[state]`
+  exits, `prefers-reduced-motion` fallbacks, and the Framer Motion flavor
+  documented as a copyable recipe for spring physics and layout animations.
 - 💡 **Animated block variants** — predefined animations for existing blocks
   (staggered hero reveal, dashboard cards cascading in, count-up stats):
   each block gains an `-animated` variant instead of a new API.

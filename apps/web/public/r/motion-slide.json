@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "motion-slide",
+  "type": "registry:ui",
+  "title": "Motion Slide",
+  "description": "Slide a mounting element in from a direction (up/down/left/right) while it fades — the <MotionSlide> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+  "registryDependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "ui/motion-slide.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\"\n\nimport { Motion, type MotionPreset, type MotionProps } from \"@/components/ui/motion\"\n\nexport type MotionSlideDirection = \"up\" | \"down\" | \"left\" | \"right\"\n\nexport interface MotionSlideProps extends Omit<MotionProps, \"preset\"> {\n  /** Direction the element travels from as it fades in. Default `\"up\"`. */\n  direction?: MotionSlideDirection\n}\n\nconst presetFor: Record<MotionSlideDirection, MotionPreset> = {\n  up: \"fade-up\",\n  down: \"fade-down\",\n  left: \"fade-left\",\n  right: \"fade-right\",\n}\n\n/** Slide a mounting element in from a direction while it fades. */\nfunction MotionSlide({ direction = \"up\", ...props }: MotionSlideProps) {\n  return <Motion preset={presetFor[direction]} {...props} />\n}\n\nexport { MotionSlide }\n"
+    }
+  ]
+}
