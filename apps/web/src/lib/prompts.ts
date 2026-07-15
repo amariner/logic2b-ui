@@ -9,7 +9,7 @@
  * network installs.
  */
 
-import { buildCss, type ThemeConfig } from "@/lib/themes"
+import { buildCss, buildTypesetCssExport, fontsourceImportsFor, type ThemeConfig } from "@/lib/themes"
 
 export const SITE = "https://ui.logic2b.com"
 
@@ -222,6 +222,59 @@ ${css}
 \`\`\`
 
 ${notes ? `${notes}\n\n` : ""}${commonSections()}`
+}
+
+/**
+ * Prompt for the /typeset studio: drop in this exact type scale
+ * (fonts + measure/size/leading/flow) as a standalone typeset.css.
+ */
+export function buildTypesetPrompt(cfg: ThemeConfig, presetId: string): string {
+  const css = buildTypesetCssExport(cfg, presetId)
+  const imports = fontsourceImportsFor(cfg)
+  const installStep =
+    imports.length > 0
+      ? `1. Install the fontsource packages this scale needs:
+
+   \`\`\`bash
+   npm install ${imports.join(" ")}
+   \`\`\`
+
+2. Create \`typeset.css\` next to your main stylesheet with the exact content below, and import it after your theme CSS:
+
+   \`\`\`css
+   @import "./typeset.css";
+   \`\`\``
+      : `1. Create \`typeset.css\` next to your main stylesheet with the exact content below, and import it after your theme CSS:
+
+   \`\`\`css
+   @import "./typeset.css";
+   \`\`\``
+
+  return `Apply this exact type scale (logic2b ui /typeset, ${SITE}) to my project. Follow every step and verify at the end.
+
+## Steps
+
+${installStep}
+
+${imports.length > 0 ? "3" : "2"}. Apply the \`.prose\` recipe from typeset.css to whatever wraps long-form
+   content (a docs article, a blog post, marketing copy) — it sets the
+   measure, base size, leading and paragraph rhythm from the tokens.
+
+## My typeset.css (preset \`${presetId}\` — this file is the source of truth)
+
+\`\`\`css
+${css}
+\`\`\`
+
+## Verify before finishing
+
+1. The heading font (\`--font-heading\`), body font (\`--font-sans\`) and
+   \`--font-mono\` render as specified — check a heading, a paragraph and an
+   inline \`code\` span.
+2. A block wrapped in \`.prose\` respects the measure (doesn't run edge to
+   edge) and has visible space between paragraphs.
+3. No console errors and the fonts don't flash unstyled text longer than the
+   page's other webfonts.`
 }
 
 /**

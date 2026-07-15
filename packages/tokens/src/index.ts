@@ -317,6 +317,35 @@ export const FONTS: Record<string, string> = {
   mono: "ui-monospace, SFMono-Regular, Menlo, monospace",
 }
 
+/* -- Typeset scales (the /typeset studio). Line length, base size, leading
+ *    and block rhythm — kept as small named tables, same shape as RADII, so
+ *    the studio's dropdowns and the preset codec work the same way. -- */
+export const MEASURES: Record<string, string> = {
+  narrow: "60ch",
+  default: "68ch",
+  relaxed: "75ch",
+  wide: "85ch",
+}
+
+export const SIZES: Record<string, string> = {
+  sm: "15px",
+  default: "16px",
+  lg: "17px",
+  xl: "18px",
+}
+
+export const LEADINGS: Record<string, string> = {
+  tight: "1.4",
+  default: "1.6",
+  relaxed: "1.75",
+}
+
+export const FLOWS: Record<string, string> = {
+  tight: "1em",
+  default: "1.15em",
+  relaxed: "1.25em",
+}
+
 /* -- Config + serialization -- */
 export interface ThemeConfig {
   base: string
@@ -325,6 +354,16 @@ export interface ThemeConfig {
   radius: string
   font: string
   heading: string
+  /** Monospace family — reuses the same FONTS table as font/heading. */
+  mono: string
+  /** Prose line length. */
+  measure: string
+  /** Base body font size. */
+  size: string
+  /** Base line-height. */
+  leading: string
+  /** Block rhythm (space between paragraphs/elements). */
+  flow: string
 }
 
 export const DEFAULT_CONFIG: ThemeConfig = {
@@ -334,9 +373,22 @@ export const DEFAULT_CONFIG: ThemeConfig = {
   radius: "default",
   font: "inter",
   heading: "inter",
+  mono: "mono",
+  measure: "default",
+  size: "default",
+  leading: "default",
+  flow: "default",
 }
 
-/** Compact, URL-safe preset id: base64url of the ordered config values. */
+/** Compact, URL-safe preset id: base64url of the ordered config values.
+ *
+ *  `ORDER` grew from 6 fields (color/radius/font) to 11 (added the /typeset
+ *  studio's mono/measure/size/leading/flow) without breaking preset ids
+ *  minted before the typeset fields existed: `decodePreset` accepts any
+ *  length from `LEGACY_LENGTH` up to `ORDER.length` and pads whatever's
+ *  missing from `DEFAULT_CONFIG`, so a 6-field id shared before this change
+ *  still decodes to a valid (default-typeset) config. Never shrink `ORDER`
+ *  or reorder existing entries — only append. */
 const ORDER: (keyof ThemeConfig)[] = [
   "base",
   "theme",
@@ -344,7 +396,14 @@ const ORDER: (keyof ThemeConfig)[] = [
   "radius",
   "font",
   "heading",
+  "mono",
+  "measure",
+  "size",
+  "leading",
+  "flow",
 ]
+
+const LEGACY_LENGTH = 6
 
 export function encodePreset(cfg: ThemeConfig): string {
   const raw = ORDER.map((k) => cfg[k]).join("|")
@@ -361,9 +420,11 @@ export function decodePreset(id: string): ThemeConfig | null {
     return null
   }
   const parts = raw.split("|")
-  if (parts.length !== ORDER.length) return null
+  if (parts.length < LEGACY_LENGTH || parts.length > ORDER.length) return null
   const cfg = { ...DEFAULT_CONFIG }
-  ORDER.forEach((k, i) => (cfg[k] = parts[i]))
+  ORDER.forEach((k, i) => {
+    if (parts[i] !== undefined) cfg[k] = parts[i]
+  })
   // Validate against known tables; theme and chart also accept a custom
   // "h<hue>c<chroma>" key.
   if (!BASE_COLORS[cfg.base]) return null
@@ -372,6 +433,11 @@ export function decodePreset(id: string): ThemeConfig | null {
   if (!RADII[cfg.radius]) return null
   if (!FONTS[cfg.font]) return null
   if (!FONTS[cfg.heading]) return null
+  if (!FONTS[cfg.mono]) return null
+  if (!MEASURES[cfg.measure]) return null
+  if (!SIZES[cfg.size]) return null
+  if (!LEADINGS[cfg.leading]) return null
+  if (!FLOWS[cfg.flow]) return null
   return cfg
 }
 
@@ -420,6 +486,7 @@ export function presetDeclarations(
     decls["radius"] = RADII[cfg.radius] ?? RADII.default
     decls["font-sans"] = FONTS[cfg.font] ?? FONTS.sans
     decls["font-heading"] = FONTS[cfg.heading] ?? FONTS.sans
+    decls["font-mono"] = FONTS[cfg.mono] ?? FONTS.mono
   }
   return decls
 }
@@ -429,6 +496,7 @@ export function buildCss(cfg: ThemeConfig): string {
   const radius = RADII[cfg.radius] ?? RADII.default
   const font = FONTS[cfg.font] ?? FONTS.sans
   const heading = FONTS[cfg.heading] ?? FONTS.sans
+  const mono = FONTS[cfg.mono] ?? FONTS.mono
   const block = (mode: Mode) => {
     const { tokens, chart } = resolveTokens(cfg, mode)
     const lines = Object.entries(tokens).map(([k, v]) => `  --${k}: ${v};`)
@@ -442,6 +510,7 @@ export function buildCss(cfg: ThemeConfig): string {
   --radius: ${radius};
   --font-sans: ${font};
   --font-heading: ${heading};
+  --font-mono: ${mono};
 ${block("light")}
 }
 
@@ -483,4 +552,105 @@ export function applyPresetToCss(css: string, cfg: ThemeConfig): string {
   let out = patchBlock(css, ":root", presetDeclarations(cfg, "light"))
   out = patchBlock(out, ".dark", presetDeclarations(cfg, "dark"))
   return out
+}
+
+/* -- /typeset studio: resolved values, CSS export, readability audit. -- */
+
+export interface ResolvedTypeset {
+  fontHeading: string
+  fontSans: string
+  fontMono: string
+  measure: string
+  size: string
+  leading: string
+  flow: string
+}
+
+export function resolveTypeset(cfg: ThemeConfig): ResolvedTypeset {
+  return {
+    fontHeading: FONTS[cfg.heading] ?? FONTS.sans,
+    fontSans: FONTS[cfg.font] ?? FONTS.sans,
+    fontMono: FONTS[cfg.mono] ?? FONTS.mono,
+    measure: MEASURES[cfg.measure] ?? MEASURES.default,
+    size: SIZES[cfg.size] ?? SIZES.default,
+    leading: LEADINGS[cfg.leading] ?? LEADINGS.default,
+    flow: FLOWS[cfg.flow] ?? FLOWS.default,
+  }
+}
+
+/** Custom-property declarations the /typeset studio exports as `typeset.css`
+ *  — mode-independent (no color), so unlike `presetDeclarations` there's no
+ *  light/dark split. Prefixed `type-*` for the rhythm scale so it can never
+ *  collide with Tailwind v4's own reserved `--text-*` namespace. */
+export function typesetDeclarations(cfg: ThemeConfig): Record<string, string> {
+  const t = resolveTypeset(cfg)
+  return {
+    "font-heading": t.fontHeading,
+    "font-sans": t.fontSans,
+    "font-mono": t.fontMono,
+    "type-measure": t.measure,
+    "type-size-base": t.size,
+    "type-leading-base": t.leading,
+    "type-flow": t.flow,
+  }
+}
+
+export function buildTypesetCss(cfg: ThemeConfig): string {
+  const decls = typesetDeclarations(cfg)
+  const lines = Object.entries(decls).map(([k, v]) => `  --${k}: ${v};`)
+  return `:root {\n${lines.join("\n")}\n}`
+}
+
+export interface ReadabilityCheck {
+  key: string
+  label: string
+  ok: boolean
+  message: string
+}
+
+/** Heuristic readability audit for a typeset config — measure/leading
+ *  warnings, the same "warn in the rail" pattern as the theme studio's
+ *  contrast audit (see `./contrast.ts`), but for typography instead of
+ *  color. Thresholds follow common prose-typesetting guidance (~45-80
+ *  characters per line, ≥1.4 leading for body text). */
+export function auditTypeset(cfg: ThemeConfig): ReadabilityCheck[] {
+  const t = resolveTypeset(cfg)
+  const measureCh = parseFloat(t.measure)
+  const leading = parseFloat(t.leading)
+
+  const checks: ReadabilityCheck[] = []
+
+  checks.push({
+    key: "measure",
+    label: "Measure",
+    ok: measureCh >= 45 && measureCh <= 80,
+    message:
+      measureCh > 80
+        ? `${t.measure} is long for prose — lines over ~80 characters get hard to track. Try Default or Narrow.`
+        : measureCh < 45
+          ? `${t.measure} is very narrow — long words and code wrap awkwardly. Try Default or Relaxed.`
+          : `${t.measure} is a comfortable reading width.`,
+  })
+
+  checks.push({
+    key: "leading",
+    label: "Leading",
+    ok: leading >= 1.4,
+    message:
+      leading < 1.4
+        ? `${t.leading} is tight for body text — lines start blurring together below 1.4. Try Default or Relaxed.`
+        : `${t.leading} gives body text room to breathe.`,
+  })
+
+  const wideAndTight = measureCh >= 75 && leading < 1.6
+  checks.push({
+    key: "measure-leading",
+    label: "Measure × leading",
+    ok: !wideAndTight,
+    message: wideAndTight
+      ? `A wide measure (${t.measure}) with tight leading (${t.leading}) makes it easy to lose your place at line-end. Raise leading to Relaxed.`
+      : "Measure and leading are balanced.",
+  })
+
+  return checks
 }

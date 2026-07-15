@@ -3,11 +3,14 @@ import { describe, it } from "node:test"
 
 import {
   applyPresetToCss,
+  auditTypeset,
+  buildTypesetCss,
   decodePreset,
   DEFAULT_CONFIG,
   encodePreset,
   presetDeclarations,
   resolveTokens,
+  resolveTypeset,
 } from "../src/index.ts"
 
 const encode = (raw: string) =>
@@ -18,7 +21,13 @@ const encode = (raw: string) =>
     .replace(/=+$/, "")
 
 // The default preset /create shows on load.
-const DEFAULT_ID = encode("neutral|base|default|default|inter|inter")
+const DEFAULT_ID = encode(
+  "neutral|base|default|default|inter|inter|mono|default|default|default|default",
+)
+// A preset id in the pre-/typeset 6-field format, shared before "mono",
+// "measure", "size", "leading" and "flow" existed — decodePreset must still
+// accept these (see the LEGACY_LENGTH comment on ORDER in src/index.ts).
+const LEGACY_DEFAULT_ID = encode("neutral|base|default|default|inter|inter")
 
 const SAMPLE_CSS = `@import "tailwindcss";
 
@@ -56,8 +65,13 @@ describe("encodePreset / decodePreset", () => {
     assert.deepEqual(decodePreset(DEFAULT_ID), DEFAULT_CONFIG)
   })
 
+  it("decodes a legacy 6-field id (pre-/typeset) to the default typeset fields", () => {
+    assert.deepEqual(decodePreset(LEGACY_DEFAULT_ID), DEFAULT_CONFIG)
+  })
+
   it("round-trips a fully custom preset", () => {
     const cfg = {
+      ...DEFAULT_CONFIG,
       base: "slate",
       theme: "blue",
       chart: "violet",
@@ -70,6 +84,7 @@ describe("encodePreset / decodePreset", () => {
 
   it("ids are URL-safe (no +, / or padding)", () => {
     const id = encodePreset({
+      ...DEFAULT_CONFIG,
       base: "stone", theme: "rose", chart: "rose",
       radius: "sm", font: "serif", heading: "inter",
     })
@@ -168,6 +183,7 @@ describe("custom accents (h<hue>c<chroma>)", () => {
 
   it("round-trips custom keys through encodePreset", () => {
     const cfg = {
+      ...DEFAULT_CONFIG,
       base: "slate", theme: "h250c0.2", chart: "h200c0.15",
       radius: "lg", font: "inter", heading: "inter",
     }
@@ -210,5 +226,39 @@ describe("custom accents (h<hue>c<chroma>)", () => {
     const out = applyPresetToCss(SAMPLE_CSS, cfg)
     assert.match(out, /:root \{[^}]*--primary: oklch\(0\.55 0\.2 250\);/)
     assert.match(out, /\.dark \{[^}]*--primary: oklch\(0\.65 0\.2 250\);/)
+  })
+})
+
+describe("/typeset studio", () => {
+  it("resolves the default typeset scale", () => {
+    const t = resolveTypeset(DEFAULT_CONFIG)
+    assert.equal(t.measure, "68ch")
+    assert.equal(t.size, "16px")
+    assert.equal(t.leading, "1.6")
+    assert.equal(t.flow, "1.15em")
+    assert.equal(t.fontMono, "ui-monospace, SFMono-Regular, Menlo, monospace")
+  })
+
+  it("buildTypesetCss emits a mode-independent :root block", () => {
+    const css = buildTypesetCss(DEFAULT_CONFIG)
+    assert.match(css, /--type-measure: 68ch;/)
+    assert.match(css, /--type-leading-base: 1\.6;/)
+    assert.ok(!css.includes(".dark"))
+  })
+
+  it("auditTypeset flags a wide measure with tight leading", () => {
+    // "tight" (1.4) clears the leading floor on its own, but paired with a
+    // wide (85ch) measure the combined check should still warn.
+    const cfg = { ...DEFAULT_CONFIG, measure: "wide", leading: "tight" }
+    const checks = auditTypeset(cfg)
+    const combo = checks.find((c) => c.key === "measure-leading")!
+    assert.equal(combo.ok, false)
+    const measure = checks.find((c) => c.key === "measure")!
+    assert.equal(measure.ok, false)
+  })
+
+  it("auditTypeset passes the default scale on every axis", () => {
+    const checks = auditTypeset(DEFAULT_CONFIG)
+    assert.ok(checks.every((c) => c.ok))
   })
 })

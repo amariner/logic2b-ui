@@ -134,28 +134,36 @@ pages but no side rail. Docs, blocks and charts should feel like one system:
   counts, active state, collapsible on mobile) — one consistent navigation
   language across Components, Blocks and Charts.
 
-### 2. Typeset studio (`/typeset`) — promoted from 💡
+### 2. Typeset studio (`/typeset`) — promoted from 💡, shipped ✅
 
-Typography is half of a design system and today it's a single dropdown in
+Typography is half of a design system and used to be a single dropdown in
 `/create`. A dedicated type studio, same philosophy as the theme studio
 (everything round-trips through a preset id):
 
-- 🔜 **The studio** — a rail with Measure (line length in `ch`), Heading /
-  Body / Mono family pickers (self-hostable fontsource catalog), base Size,
-  Leading, and Flow (block rhythm/spacing); Shuffle, Undo/Redo, Reset,
-  Light/Dark. The preview is a **real docs article**, not lorem ipsum, so
-  pairings are judged on actual UI copy, code blocks and lists.
-- 🔜 **Export** — a copyable `typeset.css` (the `--font-*` / size / leading
-  tokens) plus the exact fontsource imports, with Docs and Prompt tabs like
-  every other install surface (framework-flavored: next/font vs. fontsource
-  imports).
-- 🔜 **One preset, theme + type** — the typeset fields fold into the same
-  preset codec the studio, share links, `init --preset` and the MCP theme
-  tools already speak, so an exact theme *and* its typography travel as one
-  id. `@logic2b/tokens` is the single source of truth for the new fields.
-- 🔜 **Readability guardrails** — measure/leading warnings (too-long lines,
-  cramped body text) in the rail, the same way the theme studio audits
-  contrast.
+- ✅ **The studio** — a rail with Heading / Body / Mono family pickers (the
+  same fontsource-backed catalog as `/create`), Measure (line length,
+  60–85ch), Size, Leading and Flow (block rhythm); a Menu with Shuffle,
+  Light/Dark, Undo/Redo and Reset (keyboard shortcuts R / D / ⌘Z / ⇧⌘Z / ⇧R,
+  matching the reference). The preview is a **real docs page**
+  (`/docs/installation`, pre-rendered server-side and passed into the React
+  island as static children — Astro content collections only render inside
+  `.astro` files, so the island can't `getCollection`/`render` itself) —
+  headings, a list, inline code and fenced code blocks, not lorem ipsum.
+- ✅ **Export** — a copyable `typeset.css` (`--font-heading`/`--font-sans`/
+  `--font-mono` + the `--type-*` scale, plus a `.prose` recipe) with the
+  exact fontsource `@import`s the config needs, in a Get Code dialog with
+  Docs and Prompt tabs (the prompt is a self-contained agent brief).
+- ✅ **One preset, theme + type** — `ThemeConfig` grew from 6 fields to 11
+  (`mono`, `measure`, `size`, `leading`, `flow`) in the shared
+  `@logic2b/tokens` codec; `decodePreset` stays backward-compatible with
+  every preset id minted before this change (accepts 6–11 fields, pads
+  missing ones from the defaults) so old share links keep working. A theme
+  built in `/create` and a type scale built in `/typeset` are the same
+  preset id — either studio reads and writes the other's fields.
+- ✅ **Readability guardrails** — `auditTypeset()` flags a too-wide measure
+  (>80ch), too-tight leading (<1.4) and the wide-measure-plus-tight-leading
+  combo, surfaced in the rail exactly like the theme studio's contrast audit
+  (pass/warning count on the trigger, a dialog with per-check detail).
 
 ### 3. Registry build validation in CI — promoted from 💡
 

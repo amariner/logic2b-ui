@@ -1,0 +1,23 @@
+---
+import { getEntry, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { TypesetStudio } from "@/components/create/TypesetStudio";
+
+// Real docs prose for the preview — headings, a list, inline code, fenced
+// code blocks and a link — so font/measure/leading pairings are judged on
+// actual UI copy, not lorem ipsum. Rendered here (Astro content collections
+// only render inside .astro files) and passed as static children into the
+// React island.
+const entry = await getEntry("docs", "installation");
+const { Content } = await render(entry!);
+---
+
+<BaseLayout
+  title="Typeset — logic2b/ui"
+  description="Design a type scale live: heading, body and mono fonts, measure, size, leading and flow. Preview against a real docs article and export typeset.css."
+  cta="get-code"
+>
+  <TypesetStudio client:load>
+    <Content />
+  </TypesetStudio>
+</BaseLayout>

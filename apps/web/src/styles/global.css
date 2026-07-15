@@ -173,6 +173,75 @@
   font-family: var(--font-heading, var(--font-sans));
 }
 
+/* /typeset preview: the config's fonts + measure/size/leading/flow scale
+ * applied to a real docs article. Mirrors DocsLayout's article utility
+ * classes but reads the tokens instead of hardcoded Tailwind values, since
+ * this article isn't wrapped in DocsLayout. */
+.typeset-canvas .prose {
+  max-width: var(--type-measure);
+  font-family: var(--font-sans);
+  font-size: var(--type-size-base);
+  line-height: var(--type-leading-base);
+}
+.typeset-canvas .prose > * + * {
+  margin-top: var(--type-flow);
+}
+.typeset-canvas .prose :is(h1, h2, h3, h4) {
+  margin-top: calc(var(--type-flow) * 2);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.typeset-canvas .prose h1 {
+  font-size: 1.875em;
+}
+.typeset-canvas .prose h2 {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4em;
+  font-size: 1.5em;
+}
+.typeset-canvas .prose h3 {
+  font-size: 1.2em;
+}
+.typeset-canvas .prose :is(ul, ol) {
+  padding-left: 1.5em;
+}
+.typeset-canvas .prose ul {
+  list-style: disc;
+}
+.typeset-canvas .prose ol {
+  list-style: decimal;
+}
+.typeset-canvas .prose li + li {
+  margin-top: calc(var(--type-flow) * 0.35);
+}
+.typeset-canvas .prose a {
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.typeset-canvas .prose :is(code, pre) {
+  font-family: var(--font-mono);
+}
+.typeset-canvas .prose code:not(pre code) {
+  border-radius: 0.25rem;
+  background: var(--muted);
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+}
+.typeset-canvas .prose pre {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 1em;
+  font-size: 0.8125em;
+  line-height: 1.6;
+}
+.typeset-canvas .prose pre code {
+  background: transparent;
+  padding: 0;
+}
+
 /* Home bento on phones: tighter card padding so two columns don't feel cramped. */
 @media (max-width: 639px) {
   .mosaic-compact

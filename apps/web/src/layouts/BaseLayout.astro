@@ -9,7 +9,9 @@ interface Props {
   /** Social card image (absolute or root-relative). Defaults to the brand card. */
   image?: string;
   /** Header CTA: "new" links to /create; "get-code" swaps in the creator
-      actions (Shuffle + Get Code) that talk to the CreateStudio island. */
+      actions (Shuffle + Get Code), read by whichever studio island is on
+      the page (CreateStudio on /create, TypesetStudio on /typeset) via the
+      `l2:shuffle` / `l2:get-code` window events. */
   cta?: "new" | "get-code";
 }
 
@@ -90,6 +92,7 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
             >Charts</a
           >
           <a href="/create" class="transition-colors hover:text-foreground">Create</a>
+          <a href="/typeset" class="transition-colors hover:text-foreground">Typeset</a>
         </nav>
         <div class="ml-auto flex items-center gap-1">
           <CommandMenu client:idle items={searchItems} />
@@ -155,6 +158,7 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
         <a href="/blocks" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Blocks</a>
         <a href="/charts/area" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Charts</a>
         <a href="/create" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Create</a>
+        <a href="/typeset" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Typeset</a>
         <div class="mt-2 border-t border-border/40 pt-3">
           <a href="/create" class="btn btn-primary w-full">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14" /></svg>
