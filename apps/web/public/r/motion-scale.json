@@ -13,5 +13,8 @@
       "type": "registry:ui",
       "content": "\"use client\"\n\nimport { Motion, type MotionProps } from \"@/components/ui/motion\"\n\nexport type MotionScaleProps = Omit<MotionProps, \"preset\">\n\n/** Zoom a mounting element in from 95%. Preconfigured `<Motion preset=\"scale\">`. */\nfunction MotionScale(props: MotionScaleProps) {\n  return <Motion preset=\"scale\" {...props} />\n}\n\nexport { MotionScale }\n"
     }
+  ],
+  "categories": [
+    "motion"
   ]
 }

@@ -19,6 +19,7 @@ export const items: RegistryItem[] = [
   {
     name: "scroll-reveal",
     type: "registry:ui",
+    categories: ["motion"],
     title: "Scroll Reveal",
     description:
       "Plays a motion enter recipe when the element scrolls into view instead of on mount. Shares the motion engine's presets (fade, fade-up/down/left/right, scale, blur), timing (duration/delay) and prefers-reduced-motion fallback, with once/amount/margin/root controls from useInView. SSR- and no-JS-safe: renders visible until armed. Supports asChild.",
@@ -29,6 +30,7 @@ export const items: RegistryItem[] = [
   {
     name: "parallax",
     type: "registry:ui",
+    categories: ["motion"],
     title: "Parallax",
     description:
       "A scroll-linked parallax layer for marketing sections: the inner layer drifts as the section passes through the viewport, driven entirely by CSS scroll-driven animations (animation-timeline: view()). Zero JS on the scroll path, zero runtime deps, and guarded by @supports so unsupported browsers render it static. Give the container a height and put an oversized object-cover image or gradient inside.",

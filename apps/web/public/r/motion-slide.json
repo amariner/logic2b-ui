@@ -13,5 +13,8 @@
       "type": "registry:ui",
       "content": "\"use client\"\n\nimport { Motion, type MotionPreset, type MotionProps } from \"@/components/ui/motion\"\n\nexport type MotionSlideDirection = \"up\" | \"down\" | \"left\" | \"right\"\n\nexport interface MotionSlideProps extends Omit<MotionProps, \"preset\"> {\n  /** Direction the element travels from as it fades in. Default `\"up\"`. */\n  direction?: MotionSlideDirection\n}\n\nconst presetFor: Record<MotionSlideDirection, MotionPreset> = {\n  up: \"fade-up\",\n  down: \"fade-down\",\n  left: \"fade-left\",\n  right: \"fade-right\",\n}\n\n/** Slide a mounting element in from a direction while it fades. */\nfunction MotionSlide({ direction = \"up\", ...props }: MotionSlideProps) {\n  return <Motion preset={presetFor[direction]} {...props} />\n}\n\nexport { MotionSlide }\n"
     }
+  ],
+  "categories": [
+    "motion"
   ]
 }

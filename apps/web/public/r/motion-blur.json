@@ -13,5 +13,8 @@
       "type": "registry:ui",
       "content": "\"use client\"\n\nimport { Motion, type MotionProps } from \"@/components/ui/motion\"\n\nexport type MotionBlurProps = Omit<MotionProps, \"preset\">\n\n/** Sharpen a mounting element in from an 8px blur. Preconfigured\n *  `<Motion preset=\"blur\">`. */\nfunction MotionBlur(props: MotionBlurProps) {\n  return <Motion preset=\"blur\" {...props} />\n}\n\nexport { MotionBlur }\n"
     }
+  ],
+  "categories": [
+    "motion"
   ]
 }

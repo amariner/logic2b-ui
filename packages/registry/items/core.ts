@@ -12,6 +12,7 @@ export const items: RegistryItem[] = [
   {
     name: "button",
     type: "registry:ui",
+    categories: ["form"],
     description:
       "Displays a button or a component that looks like a button. Variants: default, destructive, outline, secondary, ghost, link. Sizes: default, sm, lg, icon.",
     dependencies: ["radix-ui", "class-variance-authority"],
@@ -21,6 +22,7 @@ export const items: RegistryItem[] = [
   {
     name: "card",
     type: "registry:ui",
+    categories: ["data-display"],
     description:
       "Displays a card with header, title, description, action, content and footer sections.",
     registryDependencies: ["utils"],
@@ -29,6 +31,7 @@ export const items: RegistryItem[] = [
   {
     name: "input",
     type: "registry:ui",
+    categories: ["form"],
     description:
       "Displays a form input field. Supports all native input types, file inputs, invalid state styling.",
     registryDependencies: ["utils"],
@@ -37,6 +40,7 @@ export const items: RegistryItem[] = [
   {
     name: "label",
     type: "registry:ui",
+    categories: ["form"],
     description:
       "Renders an accessible label associated with form controls, built on Radix Label.",
     dependencies: ["radix-ui"],
@@ -46,6 +50,7 @@ export const items: RegistryItem[] = [
   {
     name: "badge",
     type: "registry:ui",
+    categories: ["data-display"],
     description:
       "Displays a badge or a component that looks like a badge. Variants: default, secondary, destructive, outline.",
     dependencies: ["radix-ui", "class-variance-authority"],
@@ -55,6 +60,7 @@ export const items: RegistryItem[] = [
   {
     name: "separator",
     type: "registry:ui",
+    categories: ["layout"],
     description:
       "Visually or semantically separates content, horizontal or vertical, built on Radix Separator.",
     dependencies: ["radix-ui"],
@@ -64,6 +70,7 @@ export const items: RegistryItem[] = [
   {
     name: "item",
     type: "registry:ui",
+    categories: ["data-display"],
     description:
       "A flex container for a title, description and actions, with media (icon/image) and grouping — for settings rows, notification lists, command results and any generic list of composite entries. Parts: Item (variant: default | outline | muted, size: default | sm), ItemGroup, ItemSeparator, ItemMedia (variant: default | icon | image), ItemContent, ItemTitle, ItemDescription, ItemActions, ItemHeader, ItemFooter.",
     dependencies: ["radix-ui", "class-variance-authority"],
@@ -73,6 +80,7 @@ export const items: RegistryItem[] = [
   {
     name: "avatar",
     type: "registry:ui",
+    categories: ["data-display"],
     description:
       "An image element with a fallback for representing a user, built on Radix Avatar.",
     dependencies: ["radix-ui"],
@@ -82,6 +90,7 @@ export const items: RegistryItem[] = [
   {
     name: "skeleton",
     type: "registry:ui",
+    categories: ["feedback"],
     description: "Use to show a placeholder while content is loading.",
     registryDependencies: ["utils"],
     files: [{ path: "src/ui/skeleton.tsx", type: "registry:ui" }],
@@ -89,6 +98,7 @@ export const items: RegistryItem[] = [
   {
     name: "alert",
     type: "registry:ui",
+    categories: ["feedback"],
     description:
       "Displays a callout for user attention with title and description. Variants: default, destructive.",
     dependencies: ["class-variance-authority"],
@@ -98,6 +108,7 @@ export const items: RegistryItem[] = [
   {
     name: "textarea",
     type: "registry:ui",
+    categories: ["form"],
     description:
       "Displays a form textarea that auto-sizes to its content (field-sizing).",
     registryDependencies: ["utils"],

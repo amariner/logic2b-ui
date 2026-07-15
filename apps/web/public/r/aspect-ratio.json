@@ -12,5 +12,8 @@
       "type": "registry:ui",
       "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { AspectRatio as AspectRatioPrimitive } from \"radix-ui\"\n\nfunction AspectRatio({\n  ...props\n}: React.ComponentProps<typeof AspectRatioPrimitive.Root>) {\n  return <AspectRatioPrimitive.Root data-slot=\"aspect-ratio\" {...props} />\n}\n\nexport { AspectRatio }\n"
     }
+  ],
+  "categories": [
+    "layout"
   ]
 }
