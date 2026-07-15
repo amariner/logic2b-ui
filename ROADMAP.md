@@ -122,10 +122,13 @@ pages but no side rail. Docs, blocks and charts should feel like one system:
   with a side rail (item counts, collapsible on mobile) instead of one long
   unsectioned grid. The nav regenerates itself as blocks land — no manual
   list to keep in sync.
-- 🔜 **Per-block pages** — each block gets a page: full-width live preview
-  with the viewport toggle, a code tab **per file**, the install command and
-  Copy Prompt. Blocks and charts join the cmd+K index and the docs sidebar
-  gains section links to both galleries.
+- ✅ **Per-block pages** — every block has its own page
+  (`/blocks/<category>/<name>`) with a full-width live preview (viewport
+  toggle), a code tab **per file** (reading straight from the built
+  `/r/<name>.json`, so it's always the exact installed source, import paths
+  rewritten the same way the docs do), the install command and Copy Prompt.
+  The category grid cards link there; the cmd+K index points at the page
+  instead of the old in-page anchor.
 - 🔜 **Charts side rail** — the existing category pages get the same rail
   treatment (Area / Bar / Line / Pie / Radar / Radial / KPI / Composed /
   Heatmap) instead of horizontal tabs alone.
