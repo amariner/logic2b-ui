@@ -129,9 +129,10 @@ pages but no side rail. Docs, blocks and charts should feel like one system:
   rewritten the same way the docs do), the install command and Copy Prompt.
   The category grid cards link there; the cmd+K index points at the page
   instead of the old in-page anchor.
-- 🔜 **Charts side rail** — the existing category pages get the same rail
-  treatment (Area / Bar / Line / Pie / Radar / Radial / KPI / Composed /
-  Heatmap) instead of horizontal tabs alone.
+- ✅ **Charts side rail** — the category pages (`/charts/<category>`) trade
+  the horizontal tab strip for the same sticky rail as blocks and docs (item
+  counts, active state, collapsible on mobile) — one consistent navigation
+  language across Components, Blocks and Charts.
 
 ### 2. Typeset studio (`/typeset`) — promoted from 💡
 

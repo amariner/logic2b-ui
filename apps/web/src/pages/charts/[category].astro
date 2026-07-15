@@ -87,33 +87,65 @@ const current = categories.find((c) => c.slug === category)!;
       </p>
     </div>
 
-    <nav class="mt-10 flex items-center gap-1 overflow-x-auto border-b">
-      {
-        categories.map((c) => (
-          <a
-            href={`/charts/${c.slug}`}
-            class:list={[
-              "-mb-px shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors",
-              c.slug === category
-                ? "border-primary text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground",
-            ]}
-          >
-            {c.label} Charts
-          </a>
-        ))
-      }
-    </nav>
+    <div class="mt-10 flex gap-8">
+      <aside class="sticky top-14 hidden h-[calc(100svh-3.5rem)] w-48 shrink-0 overflow-y-auto py-2 md:block">
+        <nav class="grid gap-0.5">
+          {
+            categories.map((c) => (
+              <a
+                href={`/charts/${c.slug}`}
+                class:list={[
+                  "flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors",
+                  c.slug === category
+                    ? "bg-accent font-medium text-accent-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                ]}
+              >
+                {c.label}
+                <span class="text-xs text-muted-foreground">{c.demos.length}</span>
+              </a>
+            ))
+          }
+        </nav>
+      </aside>
 
-    <!-- Featured chart full-width, the rest in a responsive grid. -->
-    <div class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-      {
-        current.demos.map((demo, i) => (
-          <div class:list={[i === 0 && "md:col-span-2 xl:col-span-3"]}>
-            <ComponentPreview name={demo} wide install />
-          </div>
-        ))
-      }
+      <div class="min-w-0 flex-1">
+        <details class="mb-6 rounded-lg border border-border/40 md:hidden">
+          <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-medium">
+            {current.label} categories
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </summary>
+          <nav class="grid gap-0.5 border-t border-border/40 px-4 py-4">
+            {
+              categories.map((c) => (
+                <a
+                  href={`/charts/${c.slug}`}
+                  class:list={[
+                    "flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors",
+                    c.slug === category
+                      ? "bg-accent font-medium text-accent-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  ]}
+                >
+                  {c.label}
+                  <span class="text-xs text-muted-foreground">{c.demos.length}</span>
+                </a>
+              ))
+            }
+          </nav>
+        </details>
+
+        <!-- Featured chart full-width, the rest in a responsive grid. -->
+        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {
+            current.demos.map((demo, i) => (
+              <div class:list={[i === 0 && "md:col-span-2 xl:col-span-3"]}>
+                <ComponentPreview name={demo} wide install />
+              </div>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </div>
 </BaseLayout>
