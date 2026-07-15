@@ -6,6 +6,7 @@ export const items: RegistryItem[] = [
     type: "registry:block",
     description:
       "A simple, centered login form with email and password fields. Use as the starting point for an authentication page.",
+    categories: ["authentication"],
     registryDependencies: ["button", "card", "input", "label"],
     files: [
       { path: "src/blocks/login-01/login-form.tsx", type: "registry:block" },
@@ -16,6 +17,7 @@ export const items: RegistryItem[] = [
     type: "registry:block",
     description:
       "A simple sidebar with navigation links grouped by section. Use as the starting point for a dashboard's app-shell navigation.",
+    categories: ["application"],
     dependencies: ["lucide-react"],
     registryDependencies: ["sidebar"],
     files: [
@@ -30,6 +32,7 @@ export const items: RegistryItem[] = [
     type: "registry:block",
     description:
       "A two-column login page: form on one side, a decorative panel on the other. Use as an alternative, more spacious authentication page layout.",
+    categories: ["authentication"],
     dependencies: ["lucide-react"],
     registryDependencies: ["button", "input", "label"],
     files: [
@@ -41,6 +44,7 @@ export const items: RegistryItem[] = [
     type: "registry:block",
     description:
       "A simple, centered signup form with name, email, password and confirm password fields. Use as the starting point for a registration page.",
+    categories: ["authentication"],
     registryDependencies: ["button", "card", "input", "label"],
     files: [
       {
@@ -54,6 +58,7 @@ export const items: RegistryItem[] = [
     type: "registry:block",
     description:
       "A dashboard with a sidebar, stat cards, an interactive area chart and a data table. Use as the starting point for an admin or analytics app-shell.",
+    categories: ["dashboard"],
     dependencies: ["recharts", "lucide-react"],
     registryDependencies: ["sidebar-01", "card", "badge", "chart", "table"],
     files: [
