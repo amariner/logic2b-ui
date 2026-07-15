@@ -11,6 +11,7 @@ export const items: RegistryItem[] = [
   {
     name: "motion",
     type: "registry:ui",
+    categories: ["motion"],
     title: "Motion",
     description:
       "Enter/exit/hover animation recipes on tokens, built on tw-animate-css (zero runtime deps). Ships the <Motion> primitive (plays an enter preset on mount, with duration/delay/hover props and asChild) plus the recipe maps and helpers (motionEnter, motionExit, motionHover) to drop the same effects onto any element or a Radix data-[state] node. Presets: fade, fade-up/down/left/right, scale, blur. Respects prefers-reduced-motion.",
@@ -21,6 +22,7 @@ export const items: RegistryItem[] = [
   {
     name: "motion-fade",
     type: "registry:ui",
+    categories: ["motion"],
     title: "Motion Fade",
     description:
       "Fade a mounting element in — the preconfigured <MotionFade> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
@@ -30,6 +32,7 @@ export const items: RegistryItem[] = [
   {
     name: "motion-slide",
     type: "registry:ui",
+    categories: ["motion"],
     title: "Motion Slide",
     description:
       "Slide a mounting element in from a direction (up/down/left/right) while it fades — the <MotionSlide> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
@@ -39,6 +42,7 @@ export const items: RegistryItem[] = [
   {
     name: "motion-scale",
     type: "registry:ui",
+    categories: ["motion"],
     title: "Motion Scale",
     description:
       "Zoom a mounting element in from 95% while it fades — the <MotionScale> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
@@ -48,6 +52,7 @@ export const items: RegistryItem[] = [
   {
     name: "motion-blur",
     type: "registry:ui",
+    categories: ["motion"],
     title: "Motion Blur",
     description:
       "Sharpen a mounting element in from an 8px blur while it fades — the <MotionBlur> preset built on the motion engine. Zero runtime deps (tw-animate-css).",

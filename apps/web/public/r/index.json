@@ -19,352 +19,556 @@
   {
     "name": "button",
     "type": "registry:ui",
-    "description": "Displays a button or a component that looks like a button. Variants: default, destructive, outline, secondary, ghost, link. Sizes: default, sm, lg, icon."
+    "description": "Displays a button or a component that looks like a button. Variants: default, destructive, outline, secondary, ghost, link. Sizes: default, sm, lg, icon.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "card",
     "type": "registry:ui",
-    "description": "Displays a card with header, title, description, action, content and footer sections."
+    "description": "Displays a card with header, title, description, action, content and footer sections.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "input",
     "type": "registry:ui",
-    "description": "Displays a form input field. Supports all native input types, file inputs, invalid state styling."
+    "description": "Displays a form input field. Supports all native input types, file inputs, invalid state styling.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "label",
     "type": "registry:ui",
-    "description": "Renders an accessible label associated with form controls, built on Radix Label."
+    "description": "Renders an accessible label associated with form controls, built on Radix Label.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "badge",
     "type": "registry:ui",
-    "description": "Displays a badge or a component that looks like a badge. Variants: default, secondary, destructive, outline."
+    "description": "Displays a badge or a component that looks like a badge. Variants: default, secondary, destructive, outline.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "separator",
     "type": "registry:ui",
-    "description": "Visually or semantically separates content, horizontal or vertical, built on Radix Separator."
+    "description": "Visually or semantically separates content, horizontal or vertical, built on Radix Separator.",
+    "categories": [
+      "layout"
+    ]
   },
   {
     "name": "item",
     "type": "registry:ui",
-    "description": "A flex container for a title, description and actions, with media (icon/image) and grouping — for settings rows, notification lists, command results and any generic list of composite entries. Parts: Item (variant: default | outline | muted, size: default | sm), ItemGroup, ItemSeparator, ItemMedia (variant: default | icon | image), ItemContent, ItemTitle, ItemDescription, ItemActions, ItemHeader, ItemFooter."
+    "description": "A flex container for a title, description and actions, with media (icon/image) and grouping — for settings rows, notification lists, command results and any generic list of composite entries. Parts: Item (variant: default | outline | muted, size: default | sm), ItemGroup, ItemSeparator, ItemMedia (variant: default | icon | image), ItemContent, ItemTitle, ItemDescription, ItemActions, ItemHeader, ItemFooter.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "avatar",
     "type": "registry:ui",
-    "description": "An image element with a fallback for representing a user, built on Radix Avatar."
+    "description": "An image element with a fallback for representing a user, built on Radix Avatar.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "skeleton",
     "type": "registry:ui",
-    "description": "Use to show a placeholder while content is loading."
+    "description": "Use to show a placeholder while content is loading.",
+    "categories": [
+      "feedback"
+    ]
   },
   {
     "name": "alert",
     "type": "registry:ui",
-    "description": "Displays a callout for user attention with title and description. Variants: default, destructive."
+    "description": "Displays a callout for user attention with title and description. Variants: default, destructive.",
+    "categories": [
+      "feedback"
+    ]
   },
   {
     "name": "textarea",
     "type": "registry:ui",
-    "description": "Displays a form textarea that auto-sizes to its content (field-sizing)."
+    "description": "Displays a form textarea that auto-sizes to its content (field-sizing).",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "accordion",
     "type": "registry:ui",
-    "description": "A vertically stacked set of interactive headings that each reveal a section of content, built on Radix Accordion. Use it for FAQs or collapsible content groups. Parts: Accordion (root, supports type 'single' or 'multiple'), AccordionItem, AccordionTrigger, AccordionContent."
+    "description": "A vertically stacked set of interactive headings that each reveal a section of content, built on Radix Accordion. Use it for FAQs or collapsible content groups. Parts: Accordion (root, supports type 'single' or 'multiple'), AccordionItem, AccordionTrigger, AccordionContent.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "collapsible",
     "type": "registry:ui",
-    "description": "An interactive component which expands and collapses a panel of content, built on Radix Collapsible. Use it for simple show/hide sections without the multi-item semantics of an accordion. Parts: Collapsible (root), CollapsibleTrigger, CollapsibleContent."
+    "description": "An interactive component which expands and collapses a panel of content, built on Radix Collapsible. Use it for simple show/hide sections without the multi-item semantics of an accordion. Parts: Collapsible (root), CollapsibleTrigger, CollapsibleContent.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "dialog",
     "type": "registry:ui",
-    "description": "A window overlaid on the primary window, rendering content that requires the user's attention, built on Radix Dialog. Use it for modal forms or confirmations that block interaction with the page. Parts: Dialog (root), DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose, DialogOverlay, DialogPortal."
+    "description": "A window overlaid on the primary window, rendering content that requires the user's attention, built on Radix Dialog. Use it for modal forms or confirmations that block interaction with the page. Parts: Dialog (root), DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose, DialogOverlay, DialogPortal.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "alert-dialog",
     "type": "registry:ui",
-    "description": "A modal dialog that interrupts the user with important content and expects an explicit confirmation, built on Radix Alert Dialog. Use it for destructive actions (e.g. delete) that need a yes/no confirmation, unlike a regular Dialog it cannot be dismissed by clicking outside. Parts: AlertDialog (root), AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel."
+    "description": "A modal dialog that interrupts the user with important content and expects an explicit confirmation, built on Radix Alert Dialog. Use it for destructive actions (e.g. delete) that need a yes/no confirmation, unlike a regular Dialog it cannot be dismissed by clicking outside. Parts: AlertDialog (root), AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "dropdown-menu",
     "type": "registry:ui",
-    "description": "Displays a menu of actions or options triggered by a button, built on Radix Dropdown Menu. Use it for contextual action lists, with support for items, checkboxes, radio groups, submenus, labels, separators and shortcuts. Parts: DropdownMenu (root), DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuPortal."
+    "description": "Displays a menu of actions or options triggered by a button, built on Radix Dropdown Menu. Use it for contextual action lists, with support for items, checkboxes, radio groups, submenus, labels, separators and shortcuts. Parts: DropdownMenu (root), DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuPortal.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "popover",
     "type": "registry:ui",
-    "description": "Displays rich content in a portal, triggered by a button, built on Radix Popover. Use it for non-modal floating panels such as pickers or extra details that stay open until dismissed. Parts: Popover (root), PopoverTrigger, PopoverContent, PopoverAnchor."
+    "description": "Displays rich content in a portal, triggered by a button, built on Radix Popover. Use it for non-modal floating panels such as pickers or extra details that stay open until dismissed. Parts: Popover (root), PopoverTrigger, PopoverContent, PopoverAnchor.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "tooltip",
     "type": "registry:ui",
-    "description": "A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it, built on Radix Tooltip. Use it for short contextual hints on icons or truncated labels. Parts: TooltipProvider, Tooltip (root), TooltipTrigger, TooltipContent."
+    "description": "A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it, built on Radix Tooltip. Use it for short contextual hints on icons or truncated labels. Parts: TooltipProvider, Tooltip (root), TooltipTrigger, TooltipContent.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "sheet",
     "type": "registry:ui",
-    "description": "Extends the Dialog component to display content that complements the main content of the screen, sliding in from an edge, built on Radix Dialog. Use it for side panels, filters or mobile navigation drawers. Variant: side (top, bottom, left, right). Parts: Sheet (root), SheetTrigger, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, SheetClose."
+    "description": "Extends the Dialog component to display content that complements the main content of the screen, sliding in from an edge, built on Radix Dialog. Use it for side panels, filters or mobile navigation drawers. Variant: side (top, bottom, left, right). Parts: Sheet (root), SheetTrigger, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, SheetClose.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "tabs",
     "type": "registry:ui",
-    "description": "A set of layered sections of content, only one of which is displayed at a time, built on Radix Tabs. Use it to switch between related views without navigation. Parts: Tabs (root), TabsList, TabsTrigger, TabsContent."
+    "description": "A set of layered sections of content, only one of which is displayed at a time, built on Radix Tabs. Use it to switch between related views without navigation. Parts: Tabs (root), TabsList, TabsTrigger, TabsContent.",
+    "categories": [
+      "navigation"
+    ]
   },
   {
     "name": "hover-card",
     "type": "registry:ui",
-    "description": "For sighted users to preview content available behind a link, shown after a short hover delay, built on Radix Hover Card. Use it for user profile previews or link previews, unlike Tooltip it supports rich interactive content. Parts: HoverCard (root), HoverCardTrigger, HoverCardContent."
+    "description": "For sighted users to preview content available behind a link, shown after a short hover delay, built on Radix Hover Card. Use it for user profile previews or link previews, unlike Tooltip it supports rich interactive content. Parts: HoverCard (root), HoverCardTrigger, HoverCardContent.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "context-menu",
     "type": "registry:ui",
-    "description": "Displays a menu of actions or options triggered by right-clicking an element, built on Radix Context Menu. Use it for contextual actions on a table row, card or canvas item. Parts: ContextMenu (root), ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuGroup, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuPortal."
+    "description": "Displays a menu of actions or options triggered by right-clicking an element, built on Radix Context Menu. Use it for contextual actions on a table row, card or canvas item. Parts: ContextMenu (root), ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuGroup, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuPortal.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "menubar",
     "type": "registry:ui",
-    "description": "A horizontal bar of menus, like a desktop application's menu bar, built on Radix Menubar. Use for app-shell top-level command menus (File, Edit, View...). Parts: Menubar (root), MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarLabel, MenubarSeparator, MenubarShortcut, MenubarGroup, MenubarSub, MenubarSubTrigger, MenubarSubContent, MenubarPortal."
+    "description": "A horizontal bar of menus, like a desktop application's menu bar, built on Radix Menubar. Use for app-shell top-level command menus (File, Edit, View...). Parts: Menubar (root), MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarLabel, MenubarSeparator, MenubarShortcut, MenubarGroup, MenubarSub, MenubarSubTrigger, MenubarSubContent, MenubarPortal.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "navigation-menu",
     "type": "registry:ui",
-    "description": "A collection of links and dropdown panels for site or app navigation, built on Radix Navigation Menu. Use for a primary site nav with dropdown mega-menus, unlike menubar it's meant for navigation links, not commands. Parts: NavigationMenu (root, viewport), NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, NavigationMenuIndicator, NavigationMenuViewport, navigationMenuTriggerStyle (cva for plain link items)."
+    "description": "A collection of links and dropdown panels for site or app navigation, built on Radix Navigation Menu. Use for a primary site nav with dropdown mega-menus, unlike menubar it's meant for navigation links, not commands. Parts: NavigationMenu (root, viewport), NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, NavigationMenuIndicator, NavigationMenuViewport, navigationMenuTriggerStyle (cva for plain link items).",
+    "categories": [
+      "navigation"
+    ]
   },
   {
     "name": "drawer",
     "type": "registry:ui",
-    "description": "Extends the Dialog component to display content sliding in from an edge with a drag handle, built on vaul. Use for mobile-friendly bottom sheets, unlike sheet it supports drag-to-dismiss. Parts: Drawer (root, direction top | bottom | left | right), DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter, DrawerTitle, DrawerDescription, DrawerClose, DrawerOverlay, DrawerPortal."
+    "description": "Extends the Dialog component to display content sliding in from an edge with a drag handle, built on vaul. Use for mobile-friendly bottom sheets, unlike sheet it supports drag-to-dismiss. Parts: Drawer (root, direction top | bottom | left | right), DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter, DrawerTitle, DrawerDescription, DrawerClose, DrawerOverlay, DrawerPortal.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "form",
     "type": "registry:ui",
-    "description": "A set of composable components (built on react-hook-form + zod) for building accessible forms with labels, descriptions and validation messages wired to field state. Use for any form that needs validation."
+    "description": "A set of composable components (built on react-hook-form + zod) for building accessible forms with labels, descriptions and validation messages wired to field state. Use for any form that needs validation.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "checkbox",
     "type": "registry:ui",
-    "description": "A control that allows the user to toggle between checked, unchecked and indeterminate states. Use for boolean options in forms, built on Radix Checkbox."
+    "description": "A control that allows the user to toggle between checked, unchecked and indeterminate states. Use for boolean options in forms, built on Radix Checkbox.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "radio-group",
     "type": "registry:ui",
-    "description": "A set of checkable buttons where no more than one can be checked at a time. Use when the user must pick exactly one option from a visible list, built on Radix Radio Group."
+    "description": "A set of checkable buttons where no more than one can be checked at a time. Use when the user must pick exactly one option from a visible list, built on Radix Radio Group.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "switch",
     "type": "registry:ui",
-    "description": "A control that toggles between checked and unchecked states, presented as a physical switch. Use for on/off settings, built on Radix Switch."
+    "description": "A control that toggles between checked and unchecked states, presented as a physical switch. Use for on/off settings, built on Radix Switch.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "select",
     "type": "registry:ui",
-    "description": "Displays a list of options for the user to pick from, triggered by a button. Use for choosing one value from a longer or dropdown-style list, built on Radix Select."
+    "description": "Displays a list of options for the user to pick from, triggered by a button. Use for choosing one value from a longer or dropdown-style list, built on Radix Select.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "native-select",
     "type": "registry:ui",
-    "description": "A styled wrapper around the native <select> element: platform-native option list and keyboard/touch behavior, with a token-matched border, focus ring and chevron. Use when you want OS-native select UX (mobile pickers, screen reader familiarity) instead of Select's custom listbox."
+    "description": "A styled wrapper around the native <select> element: platform-native option list and keyboard/touch behavior, with a token-matched border, focus ring and chevron. Use when you want OS-native select UX (mobile pickers, screen reader familiarity) instead of Select's custom listbox.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "slider",
     "type": "registry:ui",
-    "description": "An input where the user selects a value, or range of values, by dragging a handle within a track. Use for numeric ranges like volume or price, built on Radix Slider."
+    "description": "An input where the user selects a value, or range of values, by dragging a handle within a track. Use for numeric ranges like volume or price, built on Radix Slider.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "progress",
     "type": "registry:ui",
-    "description": "Displays an indicator showing the completion progress of a task. Use to communicate long-running operations, built on Radix Progress."
+    "description": "Displays an indicator showing the completion progress of a task. Use to communicate long-running operations, built on Radix Progress.",
+    "categories": [
+      "feedback"
+    ]
   },
   {
     "name": "toggle",
     "type": "registry:ui",
-    "description": "A two-state button that can be either on or off. Use for a single toggleable action like bold formatting, built on Radix Toggle."
+    "description": "A two-state button that can be either on or off. Use for a single toggleable action like bold formatting, built on Radix Toggle.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "toggle-group",
     "type": "registry:ui",
-    "description": "A set of two-state buttons that can be toggled on or off, grouped together with shared variant and size. Use for grouped exclusive or multiple selection toggles like text alignment, built on Radix Toggle Group."
+    "description": "A set of two-state buttons that can be toggled on or off, grouped together with shared variant and size. Use for grouped exclusive or multiple selection toggles like text alignment, built on Radix Toggle Group.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "button-group",
     "type": "registry:ui",
-    "description": "Groups related buttons (and optionally a text label or select) together edge-to-edge, horizontal or vertical. Use for segmented actions like a split button or a toolbar. Parts: ButtonGroup (root, orientation), ButtonGroupText, ButtonGroupSeparator."
+    "description": "Groups related buttons (and optionally a text label or select) together edge-to-edge, horizontal or vertical. Use for segmented actions like a split button or a toolbar. Parts: ButtonGroup (root, orientation), ButtonGroupText, ButtonGroupSeparator.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "input-group",
     "type": "registry:ui",
-    "description": "Wraps an input or textarea with addons (icons, text, buttons) aligned to either edge, sharing one bordered container. Use for search boxes with an icon, inputs with a unit suffix, or inline actions. Parts: InputGroup (root), InputGroupAddon (align inline-start | inline-end | block-start | block-end), InputGroupButton, InputGroupText, InputGroupInput, InputGroupTextarea."
+    "description": "Wraps an input or textarea with addons (icons, text, buttons) aligned to either edge, sharing one bordered container. Use for search boxes with an icon, inputs with a unit suffix, or inline actions. Parts: InputGroup (root), InputGroupAddon (align inline-start | inline-end | block-start | block-end), InputGroupButton, InputGroupText, InputGroupInput, InputGroupTextarea.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "field",
     "type": "registry:ui",
-    "description": "Composable primitives for laying out a form field (label, control slot, description, validation error) without requiring react-hook-form. Use for simple forms or to wrap a single control; use the form component instead when you need react-hook-form + zod wiring. Parts: FieldSet, FieldLegend, FieldGroup, Field (orientation vertical | horizontal | responsive), FieldContent, FieldLabel, FieldTitle, FieldDescription, FieldSeparator, FieldError."
+    "description": "Composable primitives for laying out a form field (label, control slot, description, validation error) without requiring react-hook-form. Use for simple forms or to wrap a single control; use the form component instead when you need react-hook-form + zod wiring. Parts: FieldSet, FieldLegend, FieldGroup, Field (orientation vertical | horizontal | responsive), FieldContent, FieldLabel, FieldTitle, FieldDescription, FieldSeparator, FieldError.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "tags-input",
     "type": "registry:ui",
-    "description": "Free-form multi-value input rendered as removable chips: Enter or comma commits, paste splits on commas, Backspace on an empty field removes the last tag, duplicates are ignored and max caps the list. Controlled or uncontrolled via value/defaultValue + onValueChange."
+    "description": "Free-form multi-value input rendered as removable chips: Enter or comma commits, paste splits on commas, Backspace on an empty field removes the last tag, duplicates are ignored and max caps the list. Controlled or uncontrolled via value/defaultValue + onValueChange.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "rating",
     "type": "registry:ui",
-    "description": "A star rating input following the radio-group pattern: each step is a radio with aria-checked, arrow keys move the value (Home/End jump to the ends), hover previews, clicking the current value clears it, and readOnly renders a static labelled image. Swap the star for any icon via the icon prop."
+    "description": "A star rating input following the radio-group pattern: each step is a radio with aria-checked, arrow keys move the value (Home/End jump to the ends), hover previews, clicking the current value clears it, and readOnly renders a static labelled image. Swap the star for any icon via the icon prop.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "number-field",
     "type": "registry:ui",
     "title": "Number Field",
-    "description": "A numeric input with decrement/increment steppers, min/max clamping and step. Controlled via value/onValueChange or uncontrolled via defaultValue. Renders a real <input type=number> (native form submission + keyboard) with the native spinners hidden in favor of the styled buttons."
+    "description": "A numeric input with decrement/increment steppers, min/max clamping and step. Controlled via value/onValueChange or uncontrolled via defaultValue. Renders a real <input type=number> (native form submission + keyboard) with the native spinners hidden in favor of the styled buttons.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "autocomplete",
     "type": "registry:ui",
     "title": "Autocomplete",
-    "description": "A free-text input with a filtered suggestion list — the editable ARIA combobox pattern. Unlike a select-style combobox it accepts arbitrary text; the list just offers matches. Fully keyboard-driven (↑/↓ move, Enter picks, Esc closes), controlled or uncontrolled, dependency-free."
+    "description": "A free-text input with a filtered suggestion list — the editable ARIA combobox pattern. Unlike a select-style combobox it accepts arbitrary text; the list just offers matches. Fully keyboard-driven (↑/↓ move, Enter picks, Esc closes), controlled or uncontrolled, dependency-free.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "file-dropzone",
     "type": "registry:ui",
     "title": "File Dropzone",
-    "description": "A drag-and-drop file surface with click/keyboard to browse. Native DnD (no dependencies): highlights while a file is dragged over it and calls onFiles with the dropped or selected files. Supports accept, multiple and disabled; rendering the file list is left to the consumer."
+    "description": "A drag-and-drop file surface with click/keyboard to browse. Native DnD (no dependencies): highlights while a file is dragged over it and calls onFiles with the dropped or selected files. Supports accept, multiple and disabled; rendering the file list is left to the consumer.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "color-picker",
     "type": "registry:ui",
     "title": "Color Picker",
-    "description": "A self-contained HSV color picker: a draggable saturation/value area, a hue slider and a hex input. Controlled via value/onValueChange or uncontrolled via defaultValue; emits #rrggbb. Pointer-driven, zero dependencies."
+    "description": "A self-contained HSV color picker: a draggable saturation/value area, a hue slider and a hex input. Controlled via value/onValueChange or uncontrolled via defaultValue; emits #rrggbb. Pointer-driven, zero dependencies.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "table",
     "type": "registry:ui",
-    "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions."
+    "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "breadcrumb",
     "type": "registry:ui",
-    "description": "Displays the path to the current resource using a hierarchy of links. Use for navigation showing the user's location within a site."
+    "description": "Displays the path to the current resource using a hierarchy of links. Use for navigation showing the user's location within a site.",
+    "categories": [
+      "navigation"
+    ]
   },
   {
     "name": "pagination",
     "type": "registry:ui",
-    "description": "Renders page navigation links for paginated content, such as tables or search results."
+    "description": "Renders page navigation links for paginated content, such as tables or search results.",
+    "categories": [
+      "navigation"
+    ]
   },
   {
     "name": "scroll-area",
     "type": "registry:ui",
-    "description": "Augments native scroll functionality with custom, cross-browser styled scrollbars. Use to control overflow inside a fixed-size container."
+    "description": "Augments native scroll functionality with custom, cross-browser styled scrollbars. Use to control overflow inside a fixed-size container.",
+    "categories": [
+      "layout"
+    ]
   },
   {
     "name": "aspect-ratio",
     "type": "registry:ui",
-    "description": "Displays content, such as images or videos, within a fixed, desired ratio."
+    "description": "Displays content, such as images or videos, within a fixed, desired ratio.",
+    "categories": [
+      "layout"
+    ]
   },
   {
     "name": "command",
     "type": "registry:ui",
-    "description": "A fast, composable command menu for building command palettes (cmd+k style search-and-run interfaces), built on cmdk."
+    "description": "A fast, composable command menu for building command palettes (cmd+k style search-and-run interfaces), built on cmdk.",
+    "categories": [
+      "overlays"
+    ]
   },
   {
     "name": "sonner",
     "type": "registry:ui",
-    "description": "An opinionated toast notification component. Use to show brief, auto-dismissing messages to the user."
+    "description": "An opinionated toast notification component. Use to show brief, auto-dismissing messages to the user.",
+    "categories": [
+      "feedback"
+    ]
   },
   {
     "name": "sidebar",
     "type": "registry:ui",
-    "description": "A composable, themeable app-shell sidebar with a provider (state, mobile sheet, cookie-persisted collapse, ⌘B shortcut), collapsible variants (offcanvas/icon/none) and menu primitives (group, menu, submenu, skeleton). Use as the base layout for dashboards."
+    "description": "A composable, themeable app-shell sidebar with a provider (state, mobile sheet, cookie-persisted collapse, ⌘B shortcut), collapsible variants (offcanvas/icon/none) and menu primitives (group, menu, submenu, skeleton). Use as the base layout for dashboards.",
+    "categories": [
+      "navigation"
+    ]
   },
   {
     "name": "kbd",
     "type": "registry:ui",
-    "description": "Displays a keyboard shortcut or key combination, e.g. a ⌘K hint next to a menu item. Parts: Kbd, KbdGroup (wraps multiple keys with a separator-free gap)."
+    "description": "Displays a keyboard shortcut or key combination, e.g. a ⌘K hint next to a menu item. Parts: Kbd, KbdGroup (wraps multiple keys with a separator-free gap).",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "spinner",
     "type": "registry:ui",
-    "description": "A spinning loading indicator built on lucide-react's Loader2 icon. Use inline in buttons or standalone to signal a pending async operation."
+    "description": "A spinning loading indicator built on lucide-react's Loader2 icon. Use inline in buttons or standalone to signal a pending async operation.",
+    "categories": [
+      "feedback"
+    ]
   },
   {
     "name": "empty",
     "type": "registry:ui",
-    "description": "Displays an empty state placeholder with an icon, title, description and actions. Use for empty lists, search results with no matches or first-run states. Parts: Empty (root), EmptyHeader, EmptyMedia (variant default | icon), EmptyTitle, EmptyDescription, EmptyContent."
+    "description": "Displays an empty state placeholder with an icon, title, description and actions. Use for empty lists, search results with no matches or first-run states. Parts: Empty (root), EmptyHeader, EmptyMedia (variant default | icon), EmptyTitle, EmptyDescription, EmptyContent.",
+    "categories": [
+      "feedback"
+    ]
   },
   {
     "name": "calendar",
     "type": "registry:ui",
-    "description": "A date field with a calendar grid for picking a single day, multiple days or a date range, built on react-day-picker. Use it standalone or compose it with popover for a date-picker input."
+    "description": "A date field with a calendar grid for picking a single day, multiple days or a date range, built on react-day-picker. Use it standalone or compose it with popover for a date-picker input.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "carousel",
     "type": "registry:ui",
-    "description": "A carousel of slides with previous/next controls and keyboard navigation, built on embla-carousel-react. Use for image galleries, testimonial rotators or onboarding steps. Parts: Carousel (root, orientation), CarouselContent, CarouselItem, CarouselPrevious, CarouselNext."
+    "description": "A carousel of slides with previous/next controls and keyboard navigation, built on embla-carousel-react. Use for image galleries, testimonial rotators or onboarding steps. Parts: Carousel (root, orientation), CarouselContent, CarouselItem, CarouselPrevious, CarouselNext.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "resizable",
     "type": "registry:ui",
-    "description": "Resizable split panels the user can drag to resize, horizontal or vertical, built on react-resizable-panels. Use for split views like a code editor's sidebar/pane layout. Parts: ResizablePanelGroup (root, direction), ResizablePanel, ResizableHandle (withHandle for a visible grip)."
+    "description": "Resizable split panels the user can drag to resize, horizontal or vertical, built on react-resizable-panels. Use for split views like a code editor's sidebar/pane layout. Parts: ResizablePanelGroup (root, direction), ResizablePanel, ResizableHandle (withHandle for a visible grip).",
+    "categories": [
+      "layout"
+    ]
   },
   {
     "name": "input-otp",
     "type": "registry:ui",
-    "description": "An accessible one-time-password input with individual character slots and a fake caret, built on input-otp. Use for verification codes (SMS/email/2FA). Parts: InputOTP (root), InputOTPGroup, InputOTPSlot (index), InputOTPSeparator."
+    "description": "An accessible one-time-password input with individual character slots and a fake caret, built on input-otp. Use for verification codes (SMS/email/2FA). Parts: InputOTP (root), InputOTPGroup, InputOTPSlot (index), InputOTPSeparator.",
+    "categories": [
+      "form"
+    ]
   },
   {
     "name": "tree-view",
     "type": "registry:ui",
-    "description": "A hierarchical tree for browsing nested items (files, folders, categories) following the WAI-ARIA tree pattern: expand/collapse, single selection, roving focus and full keyboard navigation. Parts: TreeView (root, expanded/selected state), TreeItem (value, label, icon; nest items to make a branch)."
+    "description": "A hierarchical tree for browsing nested items (files, folders, categories) following the WAI-ARIA tree pattern: expand/collapse, single selection, roving focus and full keyboard navigation. Parts: TreeView (root, expanded/selected state), TreeItem (value, label, icon; nest items to make a branch).",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "stepper",
     "type": "registry:ui",
-    "description": "A multi-step progress indicator for wizards, checkouts and onboarding flows, horizontal or vertical. Steps derive completed/active/upcoming state from the root value; the active step carries aria-current. Parts: Stepper (root, value/orientation), StepperItem (step), StepperTrigger, StepperIndicator (number/check), StepperTitle, StepperDescription, StepperSeparator."
+    "description": "A multi-step progress indicator for wizards, checkouts and onboarding flows, horizontal or vertical. Steps derive completed/active/upcoming state from the root value; the active step carries aria-current. Parts: Stepper (root, value/orientation), StepperItem (step), StepperTrigger, StepperIndicator (number/check), StepperTitle, StepperDescription, StepperSeparator.",
+    "categories": [
+      "navigation"
+    ]
   },
   {
     "name": "timeline",
     "type": "registry:ui",
-    "description": "A vertical timeline for activity feeds, changelogs and process histories. Composable: each TimelineItem holds a TimelineIndicator (dot + connector line, hidden on the last item) and a TimelineContent. Parts: Timeline (root ol), TimelineItem, TimelineIndicator, TimelineContent, TimelineTime, TimelineTitle, TimelineDescription."
+    "description": "A vertical timeline for activity feeds, changelogs and process histories. Composable: each TimelineItem holds a TimelineIndicator (dot + connector line, hidden on the last item) and a TimelineContent. Parts: Timeline (root ol), TimelineItem, TimelineIndicator, TimelineContent, TimelineTime, TimelineTitle, TimelineDescription.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "code-block",
     "type": "registry:ui",
     "title": "Code Block",
-    "description": "A styled code container with a one-click copy button. Dependency-free (no syntax highlighter): renders the code verbatim in a <pre> and copies it via the Clipboard API with a copied-state affordance. Optional language label in the header."
+    "description": "A styled code container with a one-click copy button. Dependency-free (no syntax highlighter): renders the code verbatim in a <pre> and copies it via the Clipboard API with a copied-state affordance. Optional language label in the header.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "motion",
     "type": "registry:ui",
     "title": "Motion",
-    "description": "Enter/exit/hover animation recipes on tokens, built on tw-animate-css (zero runtime deps). Ships the <Motion> primitive (plays an enter preset on mount, with duration/delay/hover props and asChild) plus the recipe maps and helpers (motionEnter, motionExit, motionHover) to drop the same effects onto any element or a Radix data-[state] node. Presets: fade, fade-up/down/left/right, scale, blur. Respects prefers-reduced-motion."
+    "description": "Enter/exit/hover animation recipes on tokens, built on tw-animate-css (zero runtime deps). Ships the <Motion> primitive (plays an enter preset on mount, with duration/delay/hover props and asChild) plus the recipe maps and helpers (motionEnter, motionExit, motionHover) to drop the same effects onto any element or a Radix data-[state] node. Presets: fade, fade-up/down/left/right, scale, blur. Respects prefers-reduced-motion.",
+    "categories": [
+      "motion"
+    ]
   },
   {
     "name": "motion-fade",
     "type": "registry:ui",
     "title": "Motion Fade",
-    "description": "Fade a mounting element in — the preconfigured <MotionFade> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+    "description": "Fade a mounting element in — the preconfigured <MotionFade> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+    "categories": [
+      "motion"
+    ]
   },
   {
     "name": "motion-slide",
     "type": "registry:ui",
     "title": "Motion Slide",
-    "description": "Slide a mounting element in from a direction (up/down/left/right) while it fades — the <MotionSlide> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+    "description": "Slide a mounting element in from a direction (up/down/left/right) while it fades — the <MotionSlide> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+    "categories": [
+      "motion"
+    ]
   },
   {
     "name": "motion-scale",
     "type": "registry:ui",
     "title": "Motion Scale",
-    "description": "Zoom a mounting element in from 95% while it fades — the <MotionScale> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+    "description": "Zoom a mounting element in from 95% while it fades — the <MotionScale> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+    "categories": [
+      "motion"
+    ]
   },
   {
     "name": "motion-blur",
     "type": "registry:ui",
     "title": "Motion Blur",
-    "description": "Sharpen a mounting element in from an 8px blur while it fades — the <MotionBlur> preset built on the motion engine. Zero runtime deps (tw-animate-css)."
+    "description": "Sharpen a mounting element in from an 8px blur while it fades — the <MotionBlur> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+    "categories": [
+      "motion"
+    ]
   },
   {
     "name": "use-count-up",
@@ -382,18 +586,27 @@
     "name": "scroll-reveal",
     "type": "registry:ui",
     "title": "Scroll Reveal",
-    "description": "Plays a motion enter recipe when the element scrolls into view instead of on mount. Shares the motion engine's presets (fade, fade-up/down/left/right, scale, blur), timing (duration/delay) and prefers-reduced-motion fallback, with once/amount/margin/root controls from useInView. SSR- and no-JS-safe: renders visible until armed. Supports asChild."
+    "description": "Plays a motion enter recipe when the element scrolls into view instead of on mount. Shares the motion engine's presets (fade, fade-up/down/left/right, scale, blur), timing (duration/delay) and prefers-reduced-motion fallback, with once/amount/margin/root controls from useInView. SSR- and no-JS-safe: renders visible until armed. Supports asChild.",
+    "categories": [
+      "motion"
+    ]
   },
   {
     "name": "parallax",
     "type": "registry:ui",
     "title": "Parallax",
-    "description": "A scroll-linked parallax layer for marketing sections: the inner layer drifts as the section passes through the viewport, driven entirely by CSS scroll-driven animations (animation-timeline: view()). Zero JS on the scroll path, zero runtime deps, and guarded by @supports so unsupported browsers render it static. Give the container a height and put an oversized object-cover image or gradient inside."
+    "description": "A scroll-linked parallax layer for marketing sections: the inner layer drifts as the section passes through the viewport, driven entirely by CSS scroll-driven animations (animation-timeline: view()). Zero JS on the scroll path, zero runtime deps, and guarded by @supports so unsupported browsers render it static. Give the container a height and put an oversized object-cover image or gradient inside.",
+    "categories": [
+      "motion"
+    ]
   },
   {
     "name": "chart",
     "type": "registry:ui",
-    "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend."
+    "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend.",
+    "categories": [
+      "data-display"
+    ]
   },
   {
     "name": "chart-area-01",

@@ -108,12 +108,13 @@ The catalog outgrew the site: 71 UI components render as one flat alphabetical
 sidebar, 34 blocks live in a single unsectioned grid, and charts have category
 pages but no side rail. Docs, blocks and charts should feel like one system:
 
-- 🔜 **Grouped components sidebar** — populate the `categories` field the
-  registry item schema already has, emit it into `/r/index.json`, and group
-  the docs nav from it: Form, Overlays, Navigation, Data Display, Feedback,
-  Layout, Motion & Scroll. Collapsible sections (current section expanded,
-  active item highlighted) plus a quick-filter input pinned at the top of the
-  rail so a long catalog stays scannable.
+- ✅ **Grouped components sidebar** — the `categories` field on every
+  `registry:ui` item is populated (Form, Data Display, Overlays, Navigation,
+  Feedback, Layout, Motion & Scroll, Guides) and emitted into `/r/index.json`;
+  the docs sidebar groups from it in collapsible sections (the active item's
+  section open, the rest collapsed) with a quick-filter input that searches
+  across every group and auto-expands matches, on both desktop and the
+  mobile menu.
 - 🔜 **Blocks categories** — the grid splits into category pages with their
   own side rail: Marketing (hero, pricing, FAQ, CTA, testimonials, navbar,
   footer, feature grid), Application (dashboards, sidebar, kanban, settings,
