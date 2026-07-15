@@ -53,7 +53,7 @@ export async function getSearchIndex(): Promise<SearchIndexItem[]> {
     .map((i) => ({
       title: i.title ?? i.name,
       description: i.description,
-      url: `/blocks#${i.name}`,
+      url: `/blocks/${i.categories?.[0] ?? "application"}/${i.name}`,
       group: "Blocks" as const,
     }));
 

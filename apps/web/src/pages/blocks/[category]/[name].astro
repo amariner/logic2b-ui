@@ -1,0 +1,190 @@
+---
+import { Code } from "astro:components";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildAddPrompt } from "@/lib/prompts";
+import registryIndex from "../../../../public/r/index.json";
+
+type RegistryBlock = {
+  name: string;
+  type: string;
+  title?: string;
+  description: string;
+  categories?: string[];
+};
+
+type RegistryFile = { path: string; type: string; content: string };
+type RegistryDetail = { name: string; files?: RegistryFile[] };
+
+const blocks = (registryIndex as RegistryBlock[]).filter(
+  (item) => item.type === "registry:block" && !item.categories?.includes("charts"),
+);
+
+const detailModules = import.meta.glob<RegistryDetail>("../../../../public/r/*.json", {
+  import: "default",
+  eager: true,
+});
+
+export async function getStaticPaths() {
+  const registry = (await import("../../../../public/r/index.json")).default as RegistryBlock[];
+  return registry
+    .filter((item) => item.type === "registry:block" && !item.categories?.includes("charts"))
+    .map((block) => ({
+      params: { category: block.categories?.[0] ?? "application", name: block.name },
+    }));
+}
+
+const { category, name } = Astro.params;
+const block = blocks.find((b) => b.name === name)!;
+const detail = detailModules[`../../../../public/r/${name}.json`];
+const files = detail?.files ?? [];
+
+// Shown code should read like the user's own file — same mapping build-registry.ts
+// used going the other way (ui/ and blocks/ live under components/, lib/ doesn't).
+const displayPath = (path: string) =>
+  path
+    .replace(/^ui\//, "components/ui/")
+    .replace(/^blocks\//, "components/")
+    .replace(/^lib\//, "lib/");
+
+const installCmd = `npx logic2b@latest add ${name}`;
+---
+
+<BaseLayout
+  title={`${block.title ?? block.name} — logic2b/ui`}
+  description={block.description}
+>
+  <div class="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6">
+    <a href={`/blocks/${category}`} class="text-sm text-muted-foreground hover:text-foreground">
+      ← Back to {category} blocks
+    </a>
+
+    <div class="mt-4 flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">{block.name}</h1>
+        <p class="mt-1 max-w-2xl text-muted-foreground">{block.description}</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <div
+          class="viewport-toggle flex items-center gap-0.5 rounded-md border p-0.5"
+          data-target={block.name}
+        >
+          <button data-width="100%" class="viewport-btn btn btn-sm h-7 rounded-sm bg-accent px-2">
+            Desktop
+          </button>
+          <button data-width="768px" class="viewport-btn btn btn-sm h-7 rounded-sm px-2">
+            Tablet
+          </button>
+          <button data-width="375px" class="viewport-btn btn btn-sm h-7 rounded-sm px-2">
+            Mobile
+          </button>
+        </div>
+        <button
+          class="copy-btn btn btn-sm btn-outline font-mono"
+          data-command={installCmd}
+          title="Copy install command"
+        >
+          {installCmd}
+        </button>
+        <button
+          class="copy-btn btn btn-sm btn-outline"
+          data-command={buildAddPrompt(name)}
+          title="Copy a prompt for your AI assistant"
+        >
+          Copy Prompt
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-center overflow-hidden rounded-xl border bg-muted/20 p-4">
+      <iframe
+        id={`frame-${block.name}`}
+        src={`/blocks/preview/${block.name}`}
+        class="h-[720px] w-full rounded-lg border bg-background transition-[width] duration-200"
+        loading="lazy"
+      />
+    </div>
+
+    {
+      files.length > 0 && (
+        <div class="mt-10">
+          <h2 class="mb-3 text-lg font-semibold">Code</h2>
+          <div class="flex items-center gap-1 overflow-x-auto border-b">
+            {files.map((file, i) => (
+              <button
+                class:list={[
+                  "file-tab -mb-px shrink-0 border-b-2 px-3 py-1.5 font-mono text-xs",
+                  i === 0
+                    ? "border-primary text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground",
+                ]}
+                data-file={file.path}
+              >
+                {displayPath(file.path)}
+              </button>
+            ))}
+          </div>
+          {files.map((file, i) => (
+            <div
+              class:list={["file-panel", i !== 0 && "hidden"]}
+              data-file={file.path}
+            >
+              <div class="max-h-[520px] overflow-auto rounded-b-lg border border-t-0 [&_pre]:m-0 [&_pre]:rounded-none [&_pre]:border-0 [&_pre]:p-4">
+                <Code code={file.content} lang="tsx" theme="github-dark-default" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const command = btn.dataset.command;
+      if (!command) return;
+      await navigator.clipboard.writeText(command);
+      const original = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => {
+        btn.textContent = original;
+      }, 1500);
+    });
+  });
+
+  document
+    .querySelectorAll<HTMLDivElement>(".viewport-toggle")
+    .forEach((group) => {
+      const target = group.dataset.target;
+      const frame = document.getElementById(
+        `frame-${target}`
+      ) as HTMLIFrameElement | null;
+      const buttons = group.querySelectorAll<HTMLButtonElement>(".viewport-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (!frame) return;
+          frame.style.width = btn.dataset.width ?? "100%";
+          buttons.forEach((b) => b.classList.remove("bg-accent"));
+          btn.classList.add("bg-accent");
+        });
+      });
+    });
+
+  const fileTabs = document.querySelectorAll<HTMLButtonElement>(".file-tab");
+  const filePanels = document.querySelectorAll<HTMLDivElement>(".file-panel");
+  fileTabs.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      fileTabs.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle("border-primary", active);
+        b.classList.toggle("text-foreground", active);
+        b.classList.toggle("border-transparent", !active);
+        b.classList.toggle("text-muted-foreground", !active);
+      });
+      filePanels.forEach((panel) => {
+        panel.classList.toggle("hidden", panel.dataset.file !== btn.dataset.file);
+      });
+    });
+  });
+</script>
