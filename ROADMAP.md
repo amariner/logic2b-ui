@@ -159,10 +159,16 @@ Typography is half of a design system and today it's a single dropdown in
 
 ### 3. Registry build validation in CI — promoted from 💡
 
-With concurrent sessions landing items daily, this is the safety net and it
-should exist **before** more catalog growth: every `registryDependencies`
-resolvable, every `@/` import mapped to a real file, every `/r/*.json`
-payload parseable, every demo compiling. Enforced on every push.
+- ✅ **CI workflow** (`.github/workflows/ci.yml`) on every push to `main` and
+  every PR: `pnpm build` (renders every docs/blocks/charts page — exercises
+  every demo and every registry item end to end), `pnpm lint` (registry
+  integrity check — `registryDependencies` resolve, declared files exist,
+  every `@/registry/*` import maps to a shipped file, no duplicate item
+  names — plus `tsc --noEmit` on the non-Astro packages) and `pnpm test`
+  (unit suites). The registry-integrity checker itself
+  (`packages/registry/scripts/check-registry.ts`) already existed; what was
+  missing was a gate that actually *ran* it on every push instead of relying
+  on whoever's coding to remember `pnpm lint` locally.
 
 ### 4. Scope cleanup — the registry ships UI, not services
 
