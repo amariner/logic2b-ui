@@ -102,7 +102,73 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 ## Now (🔜) — in priority order
 
-### 1. CLI — only what the lane needs
+### 1. Site information architecture — one navigation system for everything
+
+The catalog outgrew the site: 71 UI components render as one flat alphabetical
+sidebar, 34 blocks live in a single unsectioned grid, and charts have category
+pages but no side rail. Docs, blocks and charts should feel like one system:
+
+- 🔜 **Grouped components sidebar** — populate the `categories` field the
+  registry item schema already has, emit it into `/r/index.json`, and group
+  the docs nav from it: Form, Overlays, Navigation, Data Display, Feedback,
+  Layout, Motion & Scroll. Collapsible sections (current section expanded,
+  active item highlighted) plus a quick-filter input pinned at the top of the
+  rail so a long catalog stays scannable.
+- 🔜 **Blocks categories** — the grid splits into category pages with their
+  own side rail: Marketing (hero, pricing, FAQ, CTA, testimonials, navbar,
+  footer, feature grid), Application (dashboards, sidebar, kanban, settings,
+  stats, admin screens), Auth (login, signup), E-commerce (cart, checkout,
+  product detail, products), Communication (chat, contact, team, onboarding).
+  Categories come from the same registry metadata, so the nav regenerates
+  itself as blocks land.
+- 🔜 **Per-block pages** — each block gets a page: full-width live preview
+  with the viewport toggle, a code tab **per file**, the install command and
+  Copy Prompt. Blocks and charts join the cmd+K index and the docs sidebar
+  gains section links to both galleries.
+- 🔜 **Charts side rail** — the existing category pages get the same rail
+  treatment (Area / Bar / Line / Pie / Radar / Radial / KPI / Composed /
+  Heatmap) instead of horizontal tabs alone.
+
+### 2. Typeset studio (`/typeset`) — promoted from 💡
+
+Typography is half of a design system and today it's a single dropdown in
+`/create`. A dedicated type studio, same philosophy as the theme studio
+(everything round-trips through a preset id):
+
+- 🔜 **The studio** — a rail with Measure (line length in `ch`), Heading /
+  Body / Mono family pickers (self-hostable fontsource catalog), base Size,
+  Leading, and Flow (block rhythm/spacing); Shuffle, Undo/Redo, Reset,
+  Light/Dark. The preview is a **real docs article**, not lorem ipsum, so
+  pairings are judged on actual UI copy, code blocks and lists.
+- 🔜 **Export** — a copyable `typeset.css` (the `--font-*` / size / leading
+  tokens) plus the exact fontsource imports, with Docs and Prompt tabs like
+  every other install surface (framework-flavored: next/font vs. fontsource
+  imports).
+- 🔜 **One preset, theme + type** — the typeset fields fold into the same
+  preset codec the studio, share links, `init --preset` and the MCP theme
+  tools already speak, so an exact theme *and* its typography travel as one
+  id. `@logic2b/tokens` is the single source of truth for the new fields.
+- 🔜 **Readability guardrails** — measure/leading warnings (too-long lines,
+  cramped body text) in the rail, the same way the theme studio audits
+  contrast.
+
+### 3. Registry build validation in CI — promoted from 💡
+
+With concurrent sessions landing items daily, this is the safety net and it
+should exist **before** more catalog growth: every `registryDependencies`
+resolvable, every `@/` import mapped to a real file, every `/r/*.json`
+payload parseable, every demo compiling. Enforced on every push.
+
+### 4. Scope cleanup — the registry ships UI, not services
+
+- 🔜 **Retire `packages/reservations`** (the booking/payments Worker + D1
+  backend). Decision: logic2b ui is a **visual** system — blocks are pure UI
+  with static sample data, and backends are the consumer's job. The admin
+  blocks (orders, reservations, customers, analytics) stay: they don't import
+  the backend. Its schema/API sketch moves into the admin blocks' docs as a
+  "bring your own backend" wiring guide, then the package goes.
+
+### 5. CLI — only what the lane needs
 
 We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI
@@ -110,6 +176,15 @@ work we keep is what the agent lane and real installs depend on:
 
 - 💡 `init --template <next|vite|astro|…>` real scaffolding and `--monorepo`
   workspaces — useful, but parity work; demoted until the lane above ships.
+
+## Deliberately out of scope (for now)
+
+- **Framework ports (Svelte, Vue, …)** — porting 70+ Radix-based components
+  to another ecosystem doubles maintenance forever and dilutes the real
+  differentiator (the agent lane). The token/theme layer is already
+  framework-agnostic — the studio's CSS export works in any stack today, and
+  a framework note on the export surfaces is cheap. Re-evaluate after v1.0.
+- **Backend/service code** — see scope cleanup above: UI only.
 
 ## Next
 
@@ -155,9 +230,7 @@ documented recipes, never a runtime framework of our own.
 - 💡 **Icon libraries beyond Lucide** — make the studio's Icon Library
   selector real: Tabler / Phosphor / Hugeicons mappings, with the CLI and
   `install_plan` rewriting icon imports per choice.
-- 💡 **Typeset lane** — a type-scale studio (inspired by the upstream
-  typeset idea): pick display/body pairings, preview real docs pages,
-  export the `--font-*` tokens + fontsource imports as one preset.
+- 🔜 **Typeset lane** — promoted to the Now section above (Typeset studio).
 
 ### Benchmarks (public, reproducible)
 
@@ -223,8 +296,9 @@ than marketing sites:
 The **Logic2b** trademark decision lands in November 2026; v1.0 launches on
 that green light. Working backwards:
 
-1. **Jul–Aug** — polish pass: unified UI language across sections, docs
-   quality, motion presets, visual regression + a11y suites in CI.
+1. **Jul–Aug** — polish pass: the information architecture above (grouped
+   sidebar, block categories, per-block pages), the typeset studio, registry
+   validation in CI, scope cleanup; then visual regression + a11y suites.
 2. **Sep** — trust pass: framework benchmarks published, Lighthouse CI,
    bundle budgets, registry build validation in CI.
 3. **Oct** — release candidate: CLI/MCP at 1.0.0-rc, starter templates,
