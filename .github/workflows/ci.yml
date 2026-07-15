@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build, lint & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Full site build: renders every docs/blocks/charts page, which
+      # exercises every demo and every registry item end to end — the
+      # strongest signal that the registry is actually installable.
+      - run: pnpm build
+
+      # Registry integrity (registryDependencies resolve, declared files
+      # exist, every @/registry/* import maps to a shipped file, no
+      # duplicate item names) + tsc --noEmit on the non-Astro packages.
+      - run: pnpm lint
+
+      - run: pnpm test
