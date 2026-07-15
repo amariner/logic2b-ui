@@ -25,6 +25,13 @@ const EXTRA: SearchIndexItem[] = [
     url: "/create",
     group: "Guides",
   },
+  {
+    title: "Typeset — Type Scale Studio",
+    description:
+      "Design a type scale live: heading, body and mono fonts, measure, size, leading and flow. Preview against a real docs article and export typeset.css.",
+    url: "/typeset",
+    group: "Guides",
+  },
 ];
 
 export async function getSearchIndex(): Promise<SearchIndexItem[]> {
