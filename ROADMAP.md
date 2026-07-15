@@ -115,13 +115,13 @@ pages but no side rail. Docs, blocks and charts should feel like one system:
   section open, the rest collapsed) with a quick-filter input that searches
   across every group and auto-expands matches, on both desktop and the
   mobile menu.
-- 🔜 **Blocks categories** — the grid splits into category pages with their
-  own side rail: Marketing (hero, pricing, FAQ, CTA, testimonials, navbar,
-  footer, feature grid), Application (dashboards, sidebar, kanban, settings,
-  stats, admin screens), Auth (login, signup), E-commerce (cart, checkout,
-  product detail, products), Communication (chat, contact, team, onboarding).
-  Categories come from the same registry metadata, so the nav regenerates
-  itself as blocks land.
+- ✅ **Blocks categories** — every non-chart block carries a `categories`
+  entry (Marketing, Application, Dashboard, E-commerce, Auth — the taxonomy
+  already in use, extended to the 5 blocks that predated it) and `/blocks`
+  is a category-routed page (`/blocks/<category>`, plus `/blocks` as "All")
+  with a side rail (item counts, collapsible on mobile) instead of one long
+  unsectioned grid. The nav regenerates itself as blocks land — no manual
+  list to keep in sync.
 - 🔜 **Per-block pages** — each block gets a page: full-width live preview
   with the viewport toggle, a code tab **per file**, the install command and
   Copy Prompt. Blocks and charts join the cmd+K index and the docs sidebar

@@ -1,0 +1,232 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buildAddPrompt } from "@/lib/prompts";
+import registryIndex from "../../../public/r/index.json";
+
+interface BlockCategory {
+  slug: string;
+  label: string;
+}
+
+// Registry category slug -> sidebar label, in display order. Blocks carry
+// this in their `categories` field (packages/registry/items/blocks.ts);
+// charts are `registry:block` too but live in their own gallery at /charts.
+const CATEGORIES: BlockCategory[] = [
+  { slug: "marketing", label: "Marketing" },
+  { slug: "application", label: "Application" },
+  { slug: "dashboard", label: "Dashboard" },
+  { slug: "ecommerce", label: "E-commerce" },
+  { slug: "authentication", label: "Auth" },
+];
+
+type RegistryBlock = {
+  name: string;
+  type: string;
+  description: string;
+  categories?: string[];
+};
+
+const allBlocks = (registryIndex as RegistryBlock[]).filter(
+  (item) => item.type === "registry:block" && !item.categories?.includes("charts"),
+);
+
+const countFor = (slug: string) =>
+  allBlocks.filter((b) => b.categories?.[0] === slug).length;
+
+export async function getStaticPaths() {
+  return [
+    { params: { category: undefined } },
+    { params: { category: "marketing" } },
+    { params: { category: "application" } },
+    { params: { category: "dashboard" } },
+    { params: { category: "ecommerce" } },
+    { params: { category: "authentication" } },
+  ];
+}
+
+const { category } = Astro.params;
+const current = CATEGORIES.find((c) => c.slug === category);
+const blocks = current
+  ? allBlocks.filter((b) => b.categories?.[0] === current.slug)
+  : allBlocks;
+---
+
+<BaseLayout
+  title={current ? `${current.label} Blocks — logic2b/ui` : "Blocks — logic2b/ui"}
+  description="Ready-made page sections and layouts, built from the components."
+>
+  <div class="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6">
+    <div class="mb-10 flex flex-col items-center gap-4 text-center">
+      <h1 class="max-w-2xl text-balance text-3xl font-bold tracking-tighter md:text-5xl">
+        Building Blocks for the Web
+      </h1>
+      <p class="max-w-xl text-balance text-muted-foreground md:text-lg">
+        Clean, modern building blocks built from the components. Copy and
+        paste into your apps. Works with all frameworks. Open Source. Free
+        forever.
+      </p>
+    </div>
+
+    <div class="flex gap-8">
+      <aside class="sticky top-14 hidden h-[calc(100svh-3.5rem)] w-48 shrink-0 overflow-y-auto py-2 md:block">
+        <nav class="grid gap-0.5">
+          <a
+            href="/blocks"
+            class:list={[
+              "flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors",
+              !current
+                ? "bg-accent font-medium text-accent-foreground"
+                : "text-muted-foreground hover:text-foreground",
+            ]}
+          >
+            All
+            <span class="text-xs text-muted-foreground">{allBlocks.length}</span>
+          </a>
+          {
+            CATEGORIES.map((c) => (
+              <a
+                href={`/blocks/${c.slug}`}
+                class:list={[
+                  "flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors",
+                  current?.slug === c.slug
+                    ? "bg-accent font-medium text-accent-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                ]}
+              >
+                {c.label}
+                <span class="text-xs text-muted-foreground">{countFor(c.slug)}</span>
+              </a>
+            ))
+          }
+        </nav>
+      </aside>
+
+      <div class="min-w-0 flex-1">
+        <details class="mb-6 rounded-lg border border-border/40 md:hidden">
+          <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-medium">
+            {current ? current.label : "All"} categories
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </summary>
+          <nav class="grid gap-0.5 border-t border-border/40 px-4 py-4">
+            <a
+              href="/blocks"
+              class:list={[
+                "flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors",
+                !current
+                  ? "bg-accent font-medium text-accent-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              ]}
+            >
+              All
+              <span class="text-xs text-muted-foreground">{allBlocks.length}</span>
+            </a>
+            {
+              CATEGORIES.map((c) => (
+                <a
+                  href={`/blocks/${c.slug}`}
+                  class:list={[
+                    "flex items-center justify-between rounded-md px-2 py-1.5 text-sm transition-colors",
+                    current?.slug === c.slug
+                      ? "bg-accent font-medium text-accent-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  ]}
+                >
+                  {c.label}
+                  <span class="text-xs text-muted-foreground">{countFor(c.slug)}</span>
+                </a>
+              ))
+            }
+          </nav>
+        </details>
+
+        <div class="grid gap-10">
+          {
+            blocks.map((block) => (
+              <div id={block.name} class="scroll-mt-24 overflow-hidden rounded-xl border">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b bg-muted/40 px-4 py-3">
+                  <div class="min-w-0">
+                    <h2 class="font-semibold">{block.name}</h2>
+                    <p class="truncate text-sm text-muted-foreground">
+                      {block.description}
+                    </p>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <div
+                      class="viewport-toggle flex items-center gap-0.5 rounded-md border p-0.5"
+                      data-target={block.name}
+                    >
+                      <button data-width="100%" class="viewport-btn btn btn-sm h-6 rounded-sm bg-accent px-2">
+                        Desktop
+                      </button>
+                      <button data-width="768px" class="viewport-btn btn btn-sm h-6 rounded-sm px-2">
+                        Tablet
+                      </button>
+                      <button data-width="375px" class="viewport-btn btn btn-sm h-6 rounded-sm px-2">
+                        Mobile
+                      </button>
+                    </div>
+                    <button
+                      class="copy-btn btn btn-sm btn-outline font-mono"
+                      data-command={`npx logic2b@latest add ${block.name}`}
+                      title="Copy install command"
+                    >
+                      npx logic2b add {block.name}
+                    </button>
+                    <button
+                      class="copy-btn btn btn-sm btn-outline"
+                      data-command={buildAddPrompt(block.name)}
+                      title="Copy a prompt for your AI assistant"
+                    >
+                      Copy Prompt
+                    </button>
+                  </div>
+                </div>
+                <div class="flex justify-center bg-muted/20 p-4">
+                  <iframe
+                    id={`frame-${block.name}`}
+                    src={`/blocks/preview/${block.name}`}
+                    class="h-[600px] w-full rounded-lg border bg-background transition-[width] duration-200"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const command = btn.dataset.command;
+      if (!command) return;
+      await navigator.clipboard.writeText(command);
+      const original = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => {
+        btn.textContent = original;
+      }, 1500);
+    });
+  });
+
+  document
+    .querySelectorAll<HTMLDivElement>(".viewport-toggle")
+    .forEach((group) => {
+      const target = group.dataset.target;
+      const frame = document.getElementById(
+        `frame-${target}`
+      ) as HTMLIFrameElement | null;
+      const buttons = group.querySelectorAll<HTMLButtonElement>(".viewport-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (!frame) return;
+          frame.style.width = btn.dataset.width ?? "100%";
+          buttons.forEach((b) => b.classList.remove("bg-accent"));
+          btn.classList.add("bg-accent");
+        });
+      });
+    });
+</script>
