@@ -67,9 +67,9 @@ or environment variables required.
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (MCP demo
-parity, shareable preset links, custom accents, contrast audit) and what
-we're exploring.
+See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (scope cleanup,
+visual-regression + a11y suites, framework benchmarks on the path to v1.0) and
+what we're exploring.
 
 ## Contributing
 
