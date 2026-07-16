@@ -17,11 +17,18 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 ## Shipped
 
-- ✅ **Registry** — 50+ shadcn-compatible components (React 19 + Tailwind v4,
+- ✅ **Registry** — 71 shadcn-compatible components (React 19 + Tailwind v4,
   `cva` variants, `data-slot`, strict TS) served as JSON at `/r/<name>.json`.
-- ✅ **Blocks** — login, signup, pricing, hero, dashboards, chat, onboarding,
-  settings, team, products, stats, FAQ, CTA, contact, navbar, footer…
-- ✅ **Charts** — 18 installable Recharts variants across area/bar/line/pie/radar/radial.
+  100% shadcn/ui parity plus components beyond it (tree view, stepper, tags
+  input, rating, native select, item, timeline, number field, code block,
+  autocomplete, file dropzone, color picker).
+- ✅ **Blocks** — 34 blocks: login, signup, pricing, hero, dashboards, chat,
+  onboarding, settings, team, products, stats, FAQ, CTA, contact, navbar,
+  footer, kanban, the e-commerce set (cart, checkout, product detail), the
+  admin set (orders, reservations, customers, analytics) and animated twins.
+- ✅ **Charts** — 26 installable Recharts variants across area/bar/line/pie/
+  radar/radial plus sparklines, KPI tiles, composed charts and an activity
+  heatmap.
 - ✅ **Theme studio (`/create`)** — base color, accent, chart palette, radius and
   fonts with a live two-page canvas; round-trippable preset ids; CSS,
   `components.json` and generated `DESIGN.md` + `AGENTS.md` export.
@@ -99,102 +106,71 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   with `ItemGroup`/`ItemSeparator` for lists, `ItemMedia` (icon/image),
   `ItemContent`/`ItemTitle`/`ItemDescription`, `ItemActions` and optional
   `ItemHeader`/`ItemFooter`.
+- ✅ **Site information architecture** — one navigation system across the
+  catalog: a grouped, quick-filterable components sidebar (driven by the
+  `categories` field on every `registry:ui` item, emitted into
+  `/r/index.json`), category-routed `/blocks/<category>` with a side rail and
+  a page per block (`/blocks/<category>/<name>`: full-width live preview with
+  viewport toggle, a code tab per file read straight from the built
+  `/r/<name>.json`, install command + Copy Prompt), and a matching sticky rail
+  on `/charts/<category>`. The nav regenerates itself as items land.
+- ✅ **Typeset studio (`/typeset`)** — a dedicated type studio, same
+  philosophy as the theme studio (everything round-trips through a preset id):
+  Heading/Body/Mono family pickers, Measure, Size, Leading and Flow; a real
+  docs page as the live preview; a copyable `typeset.css` export with the
+  exact fontsource `@import`s; and `auditTypeset()` readability guardrails in
+  the rail. `ThemeConfig` grew from 6 to 11 fields in the shared
+  `@logic2b/tokens` codec — one preset id now carries theme **and** type, and
+  `decodePreset` stays backward-compatible with every id minted before it.
+- ✅ **Registry build validation in CI** (`.github/workflows/ci.yml`) — on
+  every push to `main` and every PR: `pnpm build` (renders every
+  docs/blocks/charts page end to end), `pnpm lint` (registry integrity —
+  `registryDependencies` resolve, declared files exist, every `@/registry/*`
+  import maps to a shipped file, no duplicate names — plus `tsc --noEmit`) and
+  `pnpm test`. The gate now runs on every push instead of relying on memory.
 
-## Now (🔜) — in priority order
+## Now (🔜) — Jul–Aug polish, in priority order
 
-### 1. Site information architecture — one navigation system for everything
+The site IA, the typeset studio and CI validation (the previous Now lane) all
+shipped. What's left of the polish window before the September trust pass:
 
-The catalog outgrew the site: 71 UI components render as one flat alphabetical
-sidebar, 34 blocks live in a single unsectioned grid, and charts have category
-pages but no side rail. Docs, blocks and charts should feel like one system:
-
-- ✅ **Grouped components sidebar** — the `categories` field on every
-  `registry:ui` item is populated (Form, Data Display, Overlays, Navigation,
-  Feedback, Layout, Motion & Scroll, Guides) and emitted into `/r/index.json`;
-  the docs sidebar groups from it in collapsible sections (the active item's
-  section open, the rest collapsed) with a quick-filter input that searches
-  across every group and auto-expands matches, on both desktop and the
-  mobile menu.
-- ✅ **Blocks categories** — every non-chart block carries a `categories`
-  entry (Marketing, Application, Dashboard, E-commerce, Auth — the taxonomy
-  already in use, extended to the 5 blocks that predated it) and `/blocks`
-  is a category-routed page (`/blocks/<category>`, plus `/blocks` as "All")
-  with a side rail (item counts, collapsible on mobile) instead of one long
-  unsectioned grid. The nav regenerates itself as blocks land — no manual
-  list to keep in sync.
-- ✅ **Per-block pages** — every block has its own page
-  (`/blocks/<category>/<name>`) with a full-width live preview (viewport
-  toggle), a code tab **per file** (reading straight from the built
-  `/r/<name>.json`, so it's always the exact installed source, import paths
-  rewritten the same way the docs do), the install command and Copy Prompt.
-  The category grid cards link there; the cmd+K index points at the page
-  instead of the old in-page anchor.
-- ✅ **Charts side rail** — the category pages (`/charts/<category>`) trade
-  the horizontal tab strip for the same sticky rail as blocks and docs (item
-  counts, active state, collapsible on mobile) — one consistent navigation
-  language across Components, Blocks and Charts.
-
-### 2. Typeset studio (`/typeset`) — promoted from 💡, shipped ✅
-
-Typography is half of a design system and used to be a single dropdown in
-`/create`. A dedicated type studio, same philosophy as the theme studio
-(everything round-trips through a preset id):
-
-- ✅ **The studio** — a rail with Heading / Body / Mono family pickers (the
-  same fontsource-backed catalog as `/create`), Measure (line length,
-  60–85ch), Size, Leading and Flow (block rhythm); a Menu with Shuffle,
-  Light/Dark, Undo/Redo and Reset (keyboard shortcuts R / D / ⌘Z / ⇧⌘Z / ⇧R,
-  matching the reference). The preview is a **real docs page**
-  (`/docs/installation`, pre-rendered server-side and passed into the React
-  island as static children — Astro content collections only render inside
-  `.astro` files, so the island can't `getCollection`/`render` itself) —
-  headings, a list, inline code and fenced code blocks, not lorem ipsum.
-- ✅ **Export** — a copyable `typeset.css` (`--font-heading`/`--font-sans`/
-  `--font-mono` + the `--type-*` scale, plus a `.prose` recipe) with the
-  exact fontsource `@import`s the config needs, in a Get Code dialog with
-  Docs and Prompt tabs (the prompt is a self-contained agent brief).
-- ✅ **One preset, theme + type** — `ThemeConfig` grew from 6 fields to 11
-  (`mono`, `measure`, `size`, `leading`, `flow`) in the shared
-  `@logic2b/tokens` codec; `decodePreset` stays backward-compatible with
-  every preset id minted before this change (accepts 6–11 fields, pads
-  missing ones from the defaults) so old share links keep working. A theme
-  built in `/create` and a type scale built in `/typeset` are the same
-  preset id — either studio reads and writes the other's fields.
-- ✅ **Readability guardrails** — `auditTypeset()` flags a too-wide measure
-  (>80ch), too-tight leading (<1.4) and the wide-measure-plus-tight-leading
-  combo, surfaced in the rail exactly like the theme studio's contrast audit
-  (pass/warning count on the trigger, a dialog with per-check detail).
-
-### 3. Registry build validation in CI — promoted from 💡
-
-- ✅ **CI workflow** (`.github/workflows/ci.yml`) on every push to `main` and
-  every PR: `pnpm build` (renders every docs/blocks/charts page — exercises
-  every demo and every registry item end to end), `pnpm lint` (registry
-  integrity check — `registryDependencies` resolve, declared files exist,
-  every `@/registry/*` import maps to a shipped file, no duplicate item
-  names — plus `tsc --noEmit` on the non-Astro packages) and `pnpm test`
-  (unit suites). The registry-integrity checker itself
-  (`packages/registry/scripts/check-registry.ts`) already existed; what was
-  missing was a gate that actually *ran* it on every push instead of relying
-  on whoever's coding to remember `pnpm lint` locally.
-
-### 4. Scope cleanup — the registry ships UI, not services
+### 1. Scope cleanup — the registry ships UI, not services
 
 - 🔜 **Retire `packages/reservations`** (the booking/payments Worker + D1
   backend). Decision: logic2b ui is a **visual** system — blocks are pure UI
   with static sample data, and backends are the consumer's job. The admin
-  blocks (orders, reservations, customers, analytics) stay: they don't import
-  the backend. Its schema/API sketch moves into the admin blocks' docs as a
-  "bring your own backend" wiring guide, then the package goes.
+  blocks (orders, reservations, customers, analytics) stay: they render from
+  static sample data and don't import the backend. Its schema/API sketch moves
+  into the admin blocks' docs as a "bring your own backend" wiring guide, then
+  the package (and its `pnpm-workspace.yaml` entry) goes. This is the last
+  loose end from the "UI only" decision — everything else already honors it.
 
-### 5. CLI — only what the lane needs
+### 2. Visual regression suite — lock the look before launch
+
+- 🔜 **Playwright screenshots of every demo**, light + dark, run in CI. The
+  build already renders every docs/blocks/charts page (the CI `pnpm build`
+  step proves they compile); this adds *what they look like* to the gate so a
+  token or component change can't silently reflow a demo. Baselines committed,
+  diffs surfaced on the PR. Pairs naturally with the per-block pages and the
+  contrast audit already in place.
+
+### 3. Accessibility checks in CI
+
+- 🔜 **axe-core on every demo page** in the same CI run — no serious
+  violations allowed to merge. The contrast audit already covers token pairs;
+  this covers roles, names, focus order and ARIA contracts on the rendered
+  components, closing the loop between "the theme is accessible" and "the
+  markup is too."
+
+### 4. CLI — only what the lane needs
 
 We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI
 work we keep is what the agent lane and real installs depend on:
 
 - 💡 `init --template <next|vite|astro|…>` real scaffolding and `--monorepo`
-  workspaces — useful, but parity work; demoted until the lane above ships.
+  workspaces — useful, but parity work; stays demoted behind the polish and
+  trust passes.
 
 ## Deliberately out of scope (for now)
 
@@ -249,7 +225,7 @@ documented recipes, never a runtime framework of our own.
 - 💡 **Icon libraries beyond Lucide** — make the studio's Icon Library
   selector real: Tabler / Phosphor / Hugeicons mappings, with the CLI and
   `install_plan` rewriting icon imports per choice.
-- 🔜 **Typeset lane** — promoted to the Now section above (Typeset studio).
+- ✅ **Typeset lane** — the Typeset studio shipped (see Shipped above).
 
 ### Benchmarks (public, reproducible)
 
@@ -274,14 +250,18 @@ documented recipes, never a runtime framework of our own.
 
 ### Quality
 
-- 💡 Visual regression suite (Playwright screenshots of every demo, light +
-  dark, both themes).
-- 💡 axe-core a11y checks in CI for every demo page.
-- 💡 Bundle-size budgets per component payload; Lighthouse CI on the site.
-- 💡 Registry build validation: every `registryDependencies` resolvable, every
-  import mapped, every payload parseable — enforced in CI.
+- 🔜 Visual regression suite (Playwright screenshots of every demo, light +
+  dark, both themes) — promoted to the Now lane above.
+- 🔜 axe-core a11y checks in CI for every demo page — promoted to the Now lane
+  above.
+- 💡 Bundle-size budgets per component payload; Lighthouse CI on the site
+  (the September trust pass).
+- ✅ Registry build validation: every `registryDependencies` resolvable, every
+  import mapped, every payload parseable — enforced in CI (see Shipped).
 
 ## Later (💡)
+
+### Ecosystem & distribution
 
 - 💡 Figma library generated from the token tables.
 - 💡 VS Code extension: browse the registry, insert components, apply presets.
@@ -290,6 +270,31 @@ documented recipes, never a runtime framework of our own.
 - 💡 Starter templates repo (SaaS dashboard, marketing site, docs site) wired
   to presets.
 - 💡 Theme marketplace / gallery of shared presets.
+
+### Deepening the agent lane (the differentiator)
+
+The remote MCP, `install_plan` and the preset codec are the moat — the
+long-term bets keep widening the gap between "an agent can read our docs" and
+"an agent can build a real interface with us end to end":
+
+- 💡 **Project-scale MCP tools** — beyond per-item `install_plan`, a
+  `scaffold_plan` that returns the file writes for a whole screen or app
+  shell (blocks + theme + routing glue) from a one-line brief, so a shell-less
+  agent stands up a working page in a single tool call.
+- 💡 **Theme lint as a tool** — an MCP tool that takes a repo's `theme.css`
+  and reports drift from the token contract (missing derived tokens, hand-
+  edited scales, contrast regressions), so an agent maintaining a consumer
+  project can keep it on-system over time, not just at install.
+- 💡 **Registry versioning + changelogs** — pin an install to a registry
+  version, machine-readable changelogs per item, and `logic2b update` honoring
+  version ranges — the audit trail an enterprise agent needs to adopt updates
+  safely.
+- 💡 **Cross-platform token export** — the shared `@logic2b/tokens` data
+  emitted through Style Dictionary to CSS-in-JS, iOS and Android token
+  formats, so the same preset id themes more than the web.
+- 💡 **Agent telemetry (opt-in)** — anonymized signal on what agents install,
+  where prompts fail and which items get hand-edited after install, feeding
+  the agent benchmark and the prompt/MCP surfaces as a real feedback loop.
 
 ## Beyond the browser (💡 exploring)
 
@@ -315,15 +320,21 @@ than marketing sites:
 The **Logic2b** trademark decision lands in November 2026; v1.0 launches on
 that green light. Working backwards:
 
-1. **Jul–Aug** — polish pass: the information architecture above (grouped
-   sidebar, block categories, per-block pages), the typeset studio, registry
-   validation in CI, scope cleanup; then visual regression + a11y suites.
+1. **Jul–Aug** — polish pass: the information architecture (grouped sidebar,
+   block categories, per-block pages) ✅, the typeset studio ✅ and registry
+   validation in CI ✅ are done; **remaining**: scope cleanup (retire
+   reservations) and the visual-regression + a11y suites (the current Now
+   lane).
 2. **Sep** — trust pass: framework benchmarks published, Lighthouse CI,
-   bundle budgets, registry build validation in CI.
+   bundle budgets.
 3. **Oct** — release candidate: CLI/MCP at 1.0.0-rc, starter templates,
    agent benchmark v1, launch content (demos, comparison pages).
 4. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
    post, community namespace opens.
+
+_Status (mid-Jul 2026): on track — the polish pass is roughly two-thirds
+landed, with scope cleanup and the visual/a11y suites the only items between
+here and the September trust pass._
 
 ## Watching
 
