@@ -32,3 +32,12 @@ jobs:
       - run: pnpm lint
 
       - run: pnpm test
+
+      # Accessibility gate: axe-core over every shipped block preview
+      # (light + dark), asserting no serious/critical violations. Structural
+      # and semantic a11y — accessible names, roles, labels, valid ARIA.
+      # Color contrast is owned by the studio's WCAG 2.2 + APCA audit. Runs
+      # against the dist/client built above.
+      - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
+
+      - run: pnpm --filter @logic2b/web test:a11y

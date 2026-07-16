@@ -11,6 +11,11 @@ dist/
 .DS_Store
 *.log
 
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
 # Internal planning docs & editor tooling (never publish)
 # ROADMAP.md is public now and lives at the repo root.
 CLAUDE.md

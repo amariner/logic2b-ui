@@ -145,22 +145,27 @@ shipped. What's left of the polish window before the September trust pass:
   (`/docs/backend`) — as a platform-agnostic blueprint, and the package is
   gone. This was the last loose end from the "UI only" decision.
 
-### 2. Visual regression suite — lock the look before launch
+### 2. Accessibility checks in CI
 
-- 🔜 **Playwright screenshots of every demo**, light + dark, run in CI. The
-  build already renders every docs/blocks/charts page (the CI `pnpm build`
-  step proves they compile); this adds *what they look like* to the gate so a
-  token or component change can't silently reflow a demo. Baselines committed,
-  diffs surfaced on the PR. Pairs naturally with the per-block pages and the
-  contrast audit already in place.
+- ✅ **axe-core over every shipped block preview** (`/blocks/preview/<name>`),
+  light + dark, gated in CI (`apps/web/tests/a11y.spec.ts`, run after
+  `pnpm build` on the built `dist/client`): no serious/critical violations may
+  merge. Contrast stays owned by the studio's WCAG 2.2 + APCA audit, so this
+  gate covers the rest — accessible names, roles, labels and valid ARIA. The
+  first run surfaced and fixed real shipped-block defects: dangling
+  `aria-controls` on the admin filter tabs (they now render a real panel per
+  status so the tab semantics are honest), a role-bearing `<Separator>` inside
+  a `<dl>` in `cart-01`, an unnamed `<Progress>` in `onboarding-01`, and
+  missing `title`s on every block-preview iframe across the site.
 
-### 3. Accessibility checks in CI
+### 3. Visual regression suite — lock the look before launch
 
-- 🔜 **axe-core on every demo page** in the same CI run — no serious
-  violations allowed to merge. The contrast audit already covers token pairs;
-  this covers roles, names, focus order and ARIA contracts on the rendered
-  components, closing the loop between "the theme is accessible" and "the
-  markup is too."
+- 🔜 **Playwright screenshots of every demo**, light + dark. The a11y harness
+  above already builds the Playwright + static-serve plumbing this rides on;
+  what's deferred is the pixel-diff gate itself — committing baselines that
+  stay stable across the container and GitHub's runners (font/AA rendering
+  differences need a tolerance strategy) before it can block merges without
+  flaking. Next up in the polish window.
 
 ### 4. CLI — only what the lane needs
 
@@ -251,9 +256,11 @@ documented recipes, never a runtime framework of our own.
 ### Quality
 
 - 🔜 Visual regression suite (Playwright screenshots of every demo, light +
-  dark, both themes) — promoted to the Now lane above.
-- 🔜 axe-core a11y checks in CI for every demo page — promoted to the Now lane
-  above.
+  dark, both themes) — in the Now lane above (plumbing shipped with the a11y
+  gate; the pixel-diff baselines are what's left).
+- ✅ axe-core a11y checks in CI — shipped over every block preview (see the
+  Now lane). Extending the gate to the docs component demos (many are
+  intentionally minimal shadcn-style examples) is a possible follow-up.
 - 💡 Bundle-size budgets per component payload; Lighthouse CI on the site
   (the September trust pass).
 - ✅ Registry build validation: every `registryDependencies` resolvable, every
@@ -321,10 +328,10 @@ The **Logic2b** trademark decision lands in November 2026; v1.0 launches on
 that green light. Working backwards:
 
 1. **Jul–Aug** — polish pass: the information architecture (grouped sidebar,
-   block categories, per-block pages) ✅, the typeset studio ✅ and registry
-   validation in CI ✅ are done; **remaining**: scope cleanup (retire
-   reservations) and the visual-regression + a11y suites (the current Now
-   lane).
+   block categories, per-block pages) ✅, the typeset studio ✅, registry
+   validation in CI ✅, scope cleanup (reservations retired) ✅ and the
+   accessibility gate ✅ are done; **remaining**: the visual-regression suite
+   (the current Now lane).
 2. **Sep** — trust pass: framework benchmarks published, Lighthouse CI,
    bundle budgets.
 3. **Oct** — release candidate: CLI/MCP at 1.0.0-rc, starter templates,
@@ -332,9 +339,9 @@ that green light. Working backwards:
 4. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
    post, community namespace opens.
 
-_Status (mid-Jul 2026): on track — the polish pass is roughly two-thirds
-landed, with scope cleanup and the visual/a11y suites the only items between
-here and the September trust pass._
+_Status (mid-Jul 2026): on track — the polish pass is nearly complete
+(reservations retired, the accessibility gate live in CI), with the
+visual-regression suite the last item before the September trust pass._
 
 ## Watching
 

@@ -69,7 +69,11 @@ export function Onboarding({ className, ...props }: React.ComponentProps<"div">)
               )
             })}
           </div>
-          <Progress value={progress} className="h-1.5" />
+          <Progress
+            value={progress}
+            aria-label={`Onboarding progress: step ${step + 1} of ${steps.length}`}
+            className="h-1.5"
+          />
           <CardTitle className="pt-4">{current.title}</CardTitle>
           <CardDescription>{current.description}</CardDescription>
         </CardHeader>
