@@ -136,14 +136,14 @@ shipped. What's left of the polish window before the September trust pass:
 
 ### 1. Scope cleanup — the registry ships UI, not services
 
-- 🔜 **Retire `packages/reservations`** (the booking/payments Worker + D1
-  backend). Decision: logic2b ui is a **visual** system — blocks are pure UI
-  with static sample data, and backends are the consumer's job. The admin
-  blocks (orders, reservations, customers, analytics) stay: they render from
-  static sample data and don't import the backend. Its schema/API sketch moves
-  into the admin blocks' docs as a "bring your own backend" wiring guide, then
-  the package (and its `pnpm-workspace.yaml` entry) goes. This is the last
-  loose end from the "UI only" decision — everything else already honors it.
+- ✅ **Retired `packages/reservations`** (the booking/payments Worker + D1
+  backend). logic2b ui is a **visual** system — blocks are pure UI with static
+  sample data, and backends are the consumer's job. The admin blocks (orders,
+  reservations, customers, analytics) stay: they render from static sample
+  data and don't import the backend. The package's schema and REST API contract
+  moved into a native docs guide — **Bring your own backend**
+  (`/docs/backend`) — as a platform-agnostic blueprint, and the package is
+  gone. This was the last loose end from the "UI only" decision.
 
 ### 2. Visual regression suite — lock the look before launch
 

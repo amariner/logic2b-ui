@@ -1,0 +1,123 @@
+---
+title: Bring your own backend
+description: The admin and booking blocks are pure UI with sample data. Here's a reference backend contract — schema and REST API — to wire them to real data.
+---
+
+logic2b ui is a **visual** system. Every block — including the admin dashboards
+(orders, reservations, customers, analytics) and the e-commerce set (cart,
+checkout, product detail) — ships as pure React UI rendering from **static
+sample data**. There is no backend in the registry, and there never will be:
+the data layer is yours, so you can point these screens at whatever storage,
+auth and payments your stack already uses.
+
+This guide is a **reference contract** for the one block family that implies a
+stateful service — the reservations / booking flow behind
+`admin-reservations-01`. It's the schema and REST API we validated the block
+against, distilled so you can implement an equivalent backend on any platform
+(Cloudflare Workers + D1, Postgres + a Node/Bun API, Rails, Django, Supabase…).
+Treat it as a blueprint, not a dependency.
+
+## The domain
+
+A generic **bookings** model that fits restaurant tables, hotel rooms, class
+seats, equipment and service slots alike — anything with finite capacity booked
+over a time window:
+
+- A **resource** is anything bookable, with a `capacity` and an optional price.
+- A **booking** holds a slot on a resource for a party over `[start, end)`.
+- A booking is created **held**, then **confirmed** (with or without payment),
+  and can be **cancelled** (refunding any payment).
+- A held booking reserves its capacity for `holdMinutes` (default 15); expired
+  holds free their capacity automatically, so a resource is never
+  double-booked beyond `capacity` across overlapping bookings.
+
+## Schema
+
+A relational sketch (SQLite/D1 dialect; adapt types for Postgres/MySQL):
+
+```sql
+CREATE TABLE resources (
+  id          TEXT PRIMARY KEY,
+  name        TEXT NOT NULL,
+  kind        TEXT NOT NULL,              -- table | room | seat | service | …
+  capacity    INTEGER NOT NULL,
+  price_cents INTEGER NOT NULL DEFAULT 0,
+  currency    TEXT NOT NULL DEFAULT 'usd'
+);
+
+CREATE TABLE bookings (
+  id              TEXT PRIMARY KEY,
+  resource_id     TEXT NOT NULL REFERENCES resources(id),
+  start           TEXT NOT NULL,          -- ISO 8601
+  end             TEXT NOT NULL,          -- ISO 8601
+  party_size      INTEGER NOT NULL,
+  customer_name   TEXT NOT NULL,
+  customer_email  TEXT NOT NULL,
+  status          TEXT NOT NULL,          -- held | confirmed | cancelled
+  payment_id      TEXT,
+  hold_expires_at TEXT,
+  created_at      TEXT NOT NULL
+);
+CREATE INDEX idx_bookings_resource ON bookings(resource_id);
+
+CREATE TABLE payments (
+  id           TEXT PRIMARY KEY,
+  booking_id   TEXT NOT NULL REFERENCES bookings(id),
+  amount_cents INTEGER NOT NULL,
+  currency     TEXT NOT NULL,
+  status       TEXT NOT NULL,             -- pending | succeeded | failed | refunded
+  provider     TEXT NOT NULL,
+  provider_ref TEXT,
+  created_at   TEXT NOT NULL
+);
+CREATE INDEX idx_payments_booking ON payments(booking_id);
+```
+
+## REST API
+
+The endpoints the block's actions map to. Names and shapes are a suggestion —
+what matters is the state machine they drive.
+
+| Method & path | Purpose |
+| --- | --- |
+| `GET /health` | Liveness |
+| `GET /resources` | List bookable resources |
+| `GET /resources/:id` | One resource |
+| `GET /resources/:id/availability?from&to&slot&partySize` | Per-slot remaining capacity |
+| `POST /bookings` | Create a **held** booking (capacity-checked) |
+| `GET /bookings/:id` | Read a booking + its payment |
+| `POST /bookings/:id/pay` | Charge, and **confirm** on success |
+| `POST /bookings/:id/confirm` | Confirm a free booking without payment |
+| `POST /bookings/:id/cancel` | Cancel (and refund a paid booking) |
+
+## Design notes that keep it testable
+
+The reference implementation we built the block against followed four rules
+worth keeping whatever platform you choose:
+
+- **Pure core.** Keep the overlap/capacity math, availability slots and input
+  validation in functions with no I/O — that's the part with real logic, and
+  it's fully unit-testable in isolation.
+- **Injectable store.** Program against a `Store` interface, not your database
+  directly: a real store in production, an in-memory store in tests and local
+  dev. The router shouldn't know which it's talking to.
+- **Pluggable payments.** Put payments behind a `PaymentProvider` interface with
+  a deterministic **mock** as the default (no keys, safe for demos and CI) and a
+  real provider (e.g. Stripe PaymentIntents) swapped in when a secret key is
+  present.
+- **One request handler, injected dependencies.** Build the whole API from an
+  injected store, payment provider, clock and id generator, so the same handler
+  is deterministic in tests and live in production.
+
+## Wiring the block
+
+`admin-reservations-01` renders a KPI row and a bookings table from a local
+array. To make it live, replace that array with a fetch against your API and
+map each row to the table's expected shape (guest, resource, time, party size,
+`confirmed | held | cancelled` status). The per-row actions
+(confirm / cancel) become calls to the endpoints above. Everything else — the
+search, the status filter tabs, the badges — already works against whatever
+data you hand it.
+
+The same pattern applies to the other admin blocks: they are views over data
+you own. Point them at your API, keep the UI.
