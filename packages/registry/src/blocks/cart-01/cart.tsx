@@ -7,7 +7,6 @@ import { cn } from "@/registry/lib/utils"
 import { Button } from "@/registry/ui/button"
 import { Card, CardContent, CardFooter } from "@/registry/ui/card"
 import { NumberField } from "@/registry/ui/number-field"
-import { Separator } from "@/registry/ui/separator"
 
 type Line = {
   id: string
@@ -117,8 +116,7 @@ export function Cart({ className, ...props }: React.ComponentProps<"div">) {
                 {shipping === 0 ? "Free" : money(shipping)}
               </dd>
             </div>
-            <Separator />
-            <div className="flex justify-between font-medium">
+            <div className="mt-1 flex justify-between border-t pt-3 font-medium">
               <dt>Total</dt>
               <dd className="tabular-nums" data-slot="cart-total">
                 {money(total)}

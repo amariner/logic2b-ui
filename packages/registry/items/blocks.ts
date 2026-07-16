@@ -386,7 +386,6 @@ export const items: RegistryItem[] = [
       "button",
       "card",
       "number-field",
-      "separator",
     ],
     files: [{ path: "src/blocks/cart-01/cart.tsx", type: "registry:block" }],
   },

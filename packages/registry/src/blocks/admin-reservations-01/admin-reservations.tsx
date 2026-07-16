@@ -31,7 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/registry/ui/table"
-import { Tabs, TabsList, TabsTrigger } from "@/registry/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/ui/tabs"
 
 type BookingStatus = "confirmed" | "held" | "cancelled"
 type Reservation = {
@@ -123,17 +123,16 @@ export function AdminReservations({
         ))}
       </div>
 
+      <Tabs value={status} onValueChange={(v) => setStatus(v as BookingStatus | "all")}>
       <Card>
         <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <Tabs value={status} onValueChange={(v) => setStatus(v as BookingStatus | "all")}>
-            <TabsList>
-              {TABS.map((tab) => (
-                <TabsTrigger key={tab.value} value={tab.value}>
-                  {tab.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+          <TabsList>
+            {TABS.map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value}>
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
           <div className="relative">
             <SearchIcon className="text-muted-foreground absolute top-2.5 left-2.5 size-4" />
             <Input
@@ -146,6 +145,16 @@ export function AdminReservations({
           </div>
         </CardHeader>
         <CardContent>
+          {/* Filter tabs need a panel per value so each trigger's aria-controls
+              resolves; the filtered table lives in the active panel. */}
+          {TABS.map((tab) => (
+            <TabsContent
+              key={tab.value}
+              value={tab.value}
+              forceMount
+              className={cn("mt-0", tab.value !== status && "hidden")}
+            >
+              {tab.value === status && (
           <Table>
             <TableHeader>
               <TableRow>
@@ -216,8 +225,12 @@ export function AdminReservations({
               )}
             </TableBody>
           </Table>
+              )}
+            </TabsContent>
+          ))}
         </CardContent>
       </Card>
+      </Tabs>
     </div>
   )
 }
