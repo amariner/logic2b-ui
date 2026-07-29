@@ -7,6 +7,40 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* "Logic2B" wordmark — the brand runs in Poppins, not the site's Inter, so only
+   the logo's own glyphs are loaded. Poppins isn't variable: one file per weight.
+   The three faces cover disjoint unicode ranges so they never compete for the
+   same code points. The two `-logo` subsets are taken verbatim from
+   logic2b-norte — the lockup has to come out identical. */
+/* SemiBold: the letters of "Logic" only */
+@font-face {
+  font-family: "Poppins Logo";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/poppins-600-logo.woff2") format("woff2");
+  unicode-range: U+4C, U+63, U+67, U+69, U+6F;
+}
+/* ExtraBold: the "2B" only */
+@font-face {
+  font-family: "Poppins Logo";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/poppins-800-logo.woff2") format("woff2");
+  unicode-range: U+30-32, U+42;
+}
+/* SemiBold: the "UI" product suffix (not in norte's subset — generated here
+   from the same Poppins SemiBold) */
+@font-face {
+  font-family: "Poppins Logo";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/poppins-600-ui.woff2") format("woff2");
+  unicode-range: U+49, U+55;
+}
+
 /* logic2b theme — normative reference in DESIGN.md (root of the repo).
    Colors: the default neutral scale. Type: Inter everywhere (the studio can
    still theme --font-heading per project; Space Grotesk stays loaded for it). */
@@ -47,6 +81,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Logo "2B": near-black grey, a single step below "Logic" — just enough for
+     the lockup to read as two pieces (norte's value). */
+  --logo-2b: #2a2c30;
+  /* "UI": a frank grey, one step below the "2B". Closes the lockup's hierarchy
+     (brand at full ink → product suffix) without going dim. */
+  --logo-ui: #6b7178;
 }
 
 .dark {
@@ -82,6 +122,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  /* The mirror image in dark: near-white grey */
+  --logo-2b: #e6e8ea;
+  --logo-ui: #9099a1;
 }
 
 @theme inline {
@@ -165,6 +208,30 @@
   }
   .btn-ghost {
     @apply text-muted-foreground hover:bg-accent hover:text-foreground;
+  }
+
+  /* Logo: wordmark only, no isotype — same lockup as logic2b-norte. Poppins
+     with open tracking; the "UI" trails it as the product suffix. */
+  .wordmark {
+    font-family: "Poppins Logo", var(--font-heading);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.015em;
+    line-height: 1;
+    color: var(--foreground);
+  }
+  /* "2B": ExtraBold + grey against "Logic" in SemiBold at full ink. The weight
+     jump is part of the lockup and needs a real face (hence the dedicated 800
+     subset): synthetic bold smears the strokes on hidpi screens. */
+  .wm-2b {
+    font-weight: 800;
+    color: var(--logo-2b);
+  }
+  /* "UI" suffix: same size and weight as "Logic" but in a frank grey, set off
+     by an optical gap rather than a space character so it can be tuned. */
+  .wm-ui {
+    margin-left: 0.3em;
+    color: var(--logo-ui);
   }
 }
 
