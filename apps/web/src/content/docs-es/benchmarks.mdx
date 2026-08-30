@@ -1,0 +1,48 @@
+---
+title: Benchmarks de frameworks
+description: Comparación pública y reproducible del mismo bloque de logic2b en Next.js, Vite, Astro y TanStack Start.
+---
+
+import FrameworkBenchmarks from "@/components/FrameworkBenchmarks.astro";
+
+El benchmark renderiza exactamente el mismo bloque interactivo
+`stats-01-animated` con React 19.2.7 y Tailwind 4.3.2 en cuatro builds de
+producción. Mide el coste de entrega de un grafo real; no pretende ordenar todos
+los frameworks de forma universal.
+
+<FrameworkBenchmarks locale="es" />
+
+## Perfil
+
+Cada framework obtiene un build limpio y cinco contextos nuevos de Chromium.
+Chrome DevTools Protocol aplica una ralentización de CPU 4×, latencia de ida y
+vuelta de 150 ms, descarga de 195.3 KiB/s y subida de 91.6 KiB/s. La tabla
+muestra medianas.
+
+- **Cliente gzip** suma JS y CSS de producción comprimidos. Excluye el servidor.
+- **JS transferido** procede de Resource Timing con la caché desactivada.
+- **Hidratación lista** es `performance.now()` en el primer efecto React del
+  escenario común. En Vite incluye el primer render; en SSR/HTML estático marca
+  la hidratación.
+- **LCP** y **TTFB** vienen de las API Performance bajo el mismo perfil.
+
+## Reproducir
+
+El workspace aislado vive en `benchmarks/frameworks` y fija exactamente cada
+framework. Desde la raíz:
+
+```bash
+cd benchmarks/frameworks
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
+pnpm benchmark
+```
+
+Antes de cada ejecución, el harness copia el bloque actual y sus dependencias
+transitivas a un directorio generado ignorado. Los cuatro fixtures compilan así
+el mismo código sin copias divergentes. El perfil, host, versiones, muestras y
+resultados crudos quedan en `results/latest.json`.
+
+Compara cambios solo entre ejecuciones con el mismo host y perfil. Estos
+servidores locales no miden caché CDN, arranques fríos serverless, topología de
+red de producción ni experiencia de desarrollo.

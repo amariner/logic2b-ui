@@ -1,0 +1,41 @@
+---
+title: Campo de entrada
+description: Muestra un campo de entrada de formulario.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="input-demo" locale="es" />
+
+## Instalación
+
+<Install name="input" locale="es" />
+
+## Uso
+
+```tsx
+import { Input } from "@/components/ui/input"
+
+<Input type="email" placeholder="Correo electrónico" />
+```
+
+Admite todos los tipos de entrada nativos, incluido `file`, y aplica estilos de estado no válido mediante `aria-invalid`.
+
+## Notas de uso
+
+`Input` renderiza un `<input>` nativo y reenvía todos sus atributos estándar (`React.ComponentProps<"input">`).
+
+## Ejemplos
+
+### Archivo
+
+<ComponentPreview name="input-file-demo" locale="es" />
+
+### Desactivado
+
+<ComponentPreview name="input-disabled-demo" locale="es" />
+
+### No válido
+
+<ComponentPreview name="input-invalid-demo" locale="es" />

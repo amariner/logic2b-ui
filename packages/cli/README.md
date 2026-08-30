@@ -11,6 +11,22 @@ Initialize your project (creates `components.json` and the `cn()` helper):
 npx logic2b@latest init
 ```
 
+Or create a complete runnable project from the registry:
+
+```bash
+npx logic2b@latest init --template vite --starter marketing --cwd my-app
+```
+
+Templates are available for `next`, `vite` and `astro`; starters are
+`marketing`, `dashboard` and `auth`. Add `--monorepo` to create a Turbo
+workspace with the app under `apps/web`, `--preset <id>` to apply a theme from
+the `/create` studio, or `--no-install` to write files without installing.
+Generated projects use exact dependency pins and record the immutable registry
+release, item integrities and installed files in `.logic2b/manifest.json`.
+The `/create` preset also selects Lucide, Tabler, Phosphor or Hugeicons. The
+choice is stored in `components.json`; subsequent `add` and `update` operations
+rewrite icon imports, npm dependencies and merge snapshots consistently.
+
 Add components (registry dependencies are resolved automatically):
 
 ```bash
@@ -27,7 +43,7 @@ npx logic2b@latest list
 
 | Command | Description |
 | --- | --- |
-| `init` | Create `components.json` and install the `cn()` helper. |
+| `init` | Initialize an existing app, or generate a complete app with `--template`. |
 | `add <components...>` | Add one or more components and their dependencies. |
 | `update [components...]` | Pull registry changes into installed components with a 3-way merge — local edits survive; overlapping edits get git-style conflict markers. |
 | `diff [components...]` | Show which installed components differ from the registry. |

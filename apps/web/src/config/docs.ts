@@ -94,8 +94,32 @@ export const docsNav: NavSection[] = [
       { title: "Introduction", href: "/docs" },
       { title: "Installation", href: "/docs/installation" },
       { title: "Theming", href: "/docs/theming" },
+      { title: "Cross-platform tokens", href: "/docs/cross-platform-tokens" },
+      { title: "3D extras", href: "/docs/3d-extras" },
       { title: "Bring your own backend", href: "/docs/backend" },
       { title: "For LLMs & Agents", href: "/docs/llms" },
+      { title: "Compare Integration Paths", href: "/docs/integration-paths" },
+      { title: "Framework Benchmarks", href: "/docs/benchmarks" },
+      { title: "Agent Benchmarks", href: "/docs/agent-benchmarks" },
+    ],
+  },
+];
+
+export const docsNavEs: NavSection[] = [
+  {
+    title: "Primeros pasos",
+    items: [
+      { title: "Introducción", href: "/es/docs" },
+      { title: "Instalación", href: "/es/docs/installation" },
+      { title: "Temas", href: "/es/docs/theming" },
+      { title: "Tokens multiplataforma", href: "/es/docs/cross-platform-tokens" },
+      { title: "Extras 3D", href: "/es/docs/3d-extras" },
+      { title: "Conecta tu backend", href: "/es/docs/backend" },
+      { title: "Para LLM y agentes", href: "/es/docs/llms" },
+      { title: "Comparar integraciones", href: "/es/docs/integration-paths" },
+      { title: "Benchmarks de frameworks", href: "/es/docs/benchmarks" },
+      { title: "Benchmarks de agentes", href: "/es/docs/agent-benchmarks" },
+      { title: "Documentación completa (English)", href: "/docs" },
     ],
   },
 ];

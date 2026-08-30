@@ -7,11 +7,18 @@
   "exports": {
     "./ui/*": "./src/ui/*.tsx",
     "./lib/*": "./src/lib/*.ts",
-    "./registry": "./registry.ts"
+    "./registry": "./registry.ts",
+    "./accessibility": "./accessibility.ts",
+    "./api": "./api.generated.ts",
+    "./types": "./types.ts",
+    "./releases": "./releases.ts",
+    "./version": "./version.ts"
   },
   "scripts": {
-    "build": "tsx scripts/build-registry.ts",
-    "lint": "tsx scripts/check-registry.ts"
+    "generate:api": "tsx scripts/generate-api.ts",
+    "build": "pnpm generate:api && tsx scripts/build-registry.ts",
+    "lint": "tsx scripts/check-registry.ts",
+    "test": "node --import tsx --test test/*.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",

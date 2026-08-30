@@ -45,17 +45,6 @@ Each step derives its state from the root value: steps below it are
 `completed` (the indicator swaps to a check), the matching step is `active`
 (and carries `aria-current="step"`), the rest are `upcoming`.
 
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` / `defaultValue` (Stepper) | `number` — controlled/uncontrolled active step | `1` |
-| `onValueChange` (Stepper) | `(step: number) => void` | — |
-| `orientation` (Stepper) | `horizontal \| vertical` | `horizontal` |
-| `step` (StepperItem) | `number` — the step this item represents (required) | — |
-| `disabled` (StepperItem) | `boolean` — disables the item's trigger | `false` |
-| `children` (StepperIndicator) | `ReactNode` — override the number/check content | — |
-
 ## Examples
 
 ### Vertical

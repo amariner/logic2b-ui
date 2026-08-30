@@ -1,0 +1,112 @@
+---
+title: Para LLM y agentes
+description: logic2b ui está diseñado para agentes de IA. Esta es su superficie legible por máquinas.
+---
+
+Todo el sitio está disponible en formatos aptos para máquinas. Si eres un LLM
+o estás construyendo un agente, usa estos endpoints en vez de extraer HTML.
+
+## Endpoints
+
+| Endpoint | Contenido |
+| --- | --- |
+| `/llms.txt` | Índice de toda la documentación inglesa con URL absolutas |
+| `/es/llms.txt` | Índice de las traducciones españolas |
+| `/es/llms-full.txt` | Toda la documentación española disponible en un Markdown |
+| `/es/docs/<page>.md` | Cualquier página española como Markdown plano |
+| `/r/index.json` | Índice del registro con cada componente y descripción |
+| `/r/<name>.json` | Payload completo: metadatos, código, API y contrato de accesibilidad |
+| `/r/versions.json` | Índice de versiones exactas, fechas y canales |
+| `/r/versions/<version>.json` | Manifiesto inmutable con URL de contenido e integridad SHA-256 |
+| `/r/changelog/<name>.json` | Historial de versiones legible por máquinas |
+| `/tokens/default/manifest.json` | Manifiesto SHA-256 de los tokens portables |
+| `/mcp` | Endpoint MCP remoto mediante HTTP streamable |
+
+## Instalar componentes programáticamente
+
+El registro usa un esquema JSON abierto. Cada elemento contiene `dependencies`
+(npm), `registryDependencies` (otros elementos) y `files[].content` (el código
+TypeScript completo):
+
+```bash
+curl https://ui.logic2b.com/r/button.json
+```
+
+Cada payload `registry:ui` también publica `api`, generado desde sus exports de
+TypeScript, y `accessibility`: modelo de soporte, semántica/ARIA, interacción de
+teclado, responsabilidades del consumidor y limitaciones conocidas. Un agente
+debe preservar esos requisitos al componer o modificar un componente.
+
+Para instalar en el proyecto del usuario, ejecuta la CLI:
+
+```bash
+npx logic2b@latest add button
+```
+
+O resuelve una versión mediante `/r/versions.json`, descarga el payload
+direccionado por contenido del manifiesto inmutable, verifica su SHA-256,
+escribe `files[].content`, instala las dependencias y recorre
+`registryDependencies`.
+
+## Copy Prompt
+
+Cada superficie de instalación —componentes, bloques, gráficos y el estudio
+[/create](/create)— ofrece **Copy Prompt** junto al comando. Copia un encargo
+autocontenido con la ruta CLI, un fallback contra el JSON del registro, el tema
+exacto, la tabla de rutas y una lista de verificación. Un agente recibe así el
+contexto completo sin extraer páginas ni adivinar convenciones.
+
+## Servidor MCP
+
+El registro expone el Model Context Protocol de dos formas con las mismas
+herramientas. Para leer: `list_components`, `search_components`,
+`get_component`, `get_demo`, `list_registry_versions` y `get_changelog`. Las
+lecturas, instalaciones y operaciones de tema aceptan `version` como semver
+exacto, rango o canal, y verifican SHA-256 antes de responder.
+
+Para actuar sobre un proyecto sin shell: `install_plan` devuelve los archivos y
+dependencias exactos; `scaffold_plan` devuelve una app Next.js, Vite o Astro
+completa desde un starter de marketing, dashboard o auth. `get_theme`,
+`decode_preset` y `apply_preset` reconstruyen o parchean `theme.css`;
+`contrast_audit` comprueba WCAG 2.2 y APCA; `lint_theme` detecta tokens ausentes,
+duplicados o inválidos, deriva, contraste y fidelidad exacta a un preset.
+`export_tokens` resuelve cualquier preset al paquete global/claro/oscuro que
+alimenta las salidas CSS, iOS y Android.
+
+Por ejemplo, un agente puede llamar a `scaffold_plan` con
+`framework: "vite"`, `starter: "dashboard"`, `version: "next"` y un preset,
+escribir los archivos e instalar dependencias. La respuesta conserva la versión
+exacta en `components.json`. CI compila ese mismo contrato para Next, Vite y
+Astro.
+
+**Remoto (sin instalación ni shell)** — conecta un cliente MCP HTTP streamable:
+
+```
+https://ui.logic2b.com/mcp
+```
+
+Con Claude Code:
+
+```bash
+claude mcp add --transport http logic2b https://ui.logic2b.com/mcp
+```
+
+O en un cliente con configuración JSON:
+
+```json
+{
+  "mcpServers": {
+    "logic2b": { "type": "http", "url": "https://ui.logic2b.com/mcp" }
+  }
+}
+```
+
+**Local (stdio)** — `npx -y @logic2b/mcp` ejecuta las mismas herramientas como
+proceso local.
+
+## Convenciones fiables para un agente
+
+- Cada componente usa `cn()` desde `@/lib/utils`.
+- Los colores siempre son tokens (`bg-primary`), nunca clases de paleta crudas.
+- Las variantes se definen y exportan con `class-variance-authority`.
+- Cada raíz incluye `data-slot` para una selección estable.

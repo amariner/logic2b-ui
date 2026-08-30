@@ -208,7 +208,7 @@ export function InviteTeam() {
           <div key={r.email} className="flex gap-2">
             <Input defaultValue={r.email} className="flex-1" />
             <Select defaultValue={r.role}>
-              <SelectTrigger className="w-24">
+              <SelectTrigger className="w-24" aria-label={`Role for ${r.email}`}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -379,9 +379,9 @@ export function ReportBug() {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
-            <Label>Severity</Label>
+            <Label htmlFor="rb-severity">Severity</Label>
             <Select defaultValue="medium">
-              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectTrigger id="rb-severity" className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="low">Low</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
@@ -390,9 +390,9 @@ export function ReportBug() {
             </Select>
           </div>
           <div className="grid gap-2">
-            <Label>Component</Label>
+            <Label htmlFor="rb-component">Component</Label>
             <Select defaultValue="dashboard">
-              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectTrigger id="rb-component" className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="dashboard">Dashboard</SelectItem>
                 <SelectItem value="billing">Billing</SelectItem>
@@ -447,9 +447,9 @@ export function TopicFeedback() {
   return (
     <Card>
       <CardHeader>
-        <Label>Topic</Label>
+        <Label htmlFor="tf-topic">Topic</Label>
         <Select defaultValue="bug">
-          <SelectTrigger className="w-full"><SelectValue placeholder="Select a topic" /></SelectTrigger>
+          <SelectTrigger id="tf-topic" className="w-full"><SelectValue placeholder="Select a topic" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="bug">Bug report</SelectItem>
             <SelectItem value="idea">Feature idea</SelectItem>

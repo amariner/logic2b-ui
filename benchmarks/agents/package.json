@@ -1,0 +1,17 @@
+{
+  "name": "logic2b-agent-benchmark",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "benchmark": "node --import tsx scripts/run-benchmark.mts",
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "score": "node scripts/score-runs.mjs",
+    "test": "node --import tsx --test test/*.test.mjs test/*.test.mts",
+    "test:fixtures": "node --import tsx scripts/verify-fixtures.mts"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.0",
+    "typescript": "6.0.3",
+    "tsx": "4.23.0"
+  }
+}

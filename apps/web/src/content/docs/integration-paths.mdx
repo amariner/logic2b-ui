@@ -1,0 +1,49 @@
+---
+title: Compare Integration Paths
+description: Choose the right logic2b workflow for a developer, coding agent or custom registry client.
+---
+
+import IntegrationPaths from "@/components/IntegrationPaths.astro";
+
+There is one source registry and five ways to consume it. The component code is
+the same; what changes is who resolves dependencies, who writes files and
+whether a terminal is available.
+
+<IntegrationPaths />
+
+## Choose in 30 seconds
+
+- **You are browsing or deciding:** use the website. Every install surface can
+  return source, a CLI command or a self-contained Copy Prompt.
+- **You have a terminal and an existing repository:** use the CLI. It resolves
+  registry dependencies and writes the source into your configured aliases.
+- **Your agent has no shell or local Node runtime:** connect the remote MCP at
+  `https://ui.logic2b.com/mcp`. `install_plan` and `scaffold_plan` return the
+  complete writes as structured tool results.
+- **Your terminal-backed agent already speaks MCP:** run `npx -y @logic2b/mcp`.
+  The local server exposes the same contracts as the remote endpoint.
+- **You are building your own integration:** consume `/r/index.json` and
+  `/r/<name>.json`. Your client owns recursive dependency resolution and writes.
+
+## The maintenance boundary
+
+Installation is only the first step. A `/create` preset can travel through the
+studio, CLI and MCP without losing choices. Later, an MCP-connected agent can
+pass the repository's stylesheet to `lint_theme` to detect missing, duplicate
+or invalid tokens, derived-token drift, exact-preset drift and measured
+contrast regressions. The stylesheet is parsed as text and never executed.
+
+MCP tools do not silently mutate a repository. They return explicit plans; the
+connected host decides whether and where to write them. This keeps the same
+server usable by local IDEs, web assistants and controlled enterprise clients.
+
+## Verify the claims
+
+- [Framework benchmarks](/docs/benchmarks) publish exact-pinned fixtures,
+  methodology and raw measurements.
+- [Agent benchmarks](/docs/agent-benchmarks) publish the task protocol and
+  objective scorer before any model result is accepted.
+- The release gate packs both npm artifacts, installs them into a clean
+  consumer and verifies CLI help/version plus the MCP tool inventory.
+- Every registry item is validated for resolvable dependencies and parseable
+  payloads; every generated starter contract is production-built in CI.

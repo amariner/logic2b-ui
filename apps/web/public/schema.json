@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui.logic2b.com/schema.json",
+  "title": "logic2b components configuration",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "style": { "type": "string" },
+    "tailwind": {
+      "type": "object",
+      "properties": {
+        "css": { "type": "string" },
+        "baseColor": { "type": "string" },
+        "cssVariables": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "aliases": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "iconLibrary": {
+      "type": "string",
+      "enum": ["lucide", "tabler", "phosphor", "hugeicons"],
+      "description": "Icon implementation used when CLI or MCP registry sources are installed."
+    },
+    "logic2b": {
+      "type": "object",
+      "properties": {
+        "registry": { "type": "string", "format": "uri" },
+        "version": {
+          "type": "string",
+          "description": "Exact registry semver, semver range or published channel."
+        },
+        "preset": { "type": "string" }
+      },
+      "required": ["registry"],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

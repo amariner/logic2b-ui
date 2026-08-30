@@ -1,0 +1,53 @@
+---
+title: Selector
+description: Muestra una lista de opciones que se abre desde un botón.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="select-demo" locale="es" />
+
+## Instalación
+
+<Install name="select" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+<Select>
+  <SelectTrigger aria-label="Selecciona una fruta" className="w-[180px]">
+    <SelectValue placeholder="Selecciona una fruta" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="apple">Manzana</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+## Ejemplos
+
+### Opciones agrupadas
+
+<ComponentPreview name="select-groups-demo" locale="es" />
+
+### Con una opción desactivada
+
+<ComponentPreview name="select-disabled-demo" locale="es" />
+
+## Accesibilidad
+
+Está construido sobre [Select de Radix](https://www.radix-ui.com/primitives/docs/components/select) y sigue el patrón listbox de WAI-ARIA.
+
+- Se maneja completamente con teclado: abre con <kbd>Enter</kbd>, <kbd>Espacio</kbd> o las flechas, muévete con las flechas y escribe para saltar a una opción.
+- <kbd>Escape</kbd> cierra la lista y devuelve el foco al disparador.
+- Da a `SelectTrigger` un nombre accesible explícito con `aria-label` o `aria-labelledby`. El placeholder comunica que no hay valor, pero no sustituye el nombre del campo.
+- Agrupa opciones relacionadas con `SelectGroup` y `SelectLabel`.

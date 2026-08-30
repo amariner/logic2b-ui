@@ -1,0 +1,101 @@
+---
+import {
+  localizedIntegrationPaths,
+} from "@/data/integration-paths";
+
+interface Props {
+  locale?: "en" | "es";
+}
+
+const { locale = "en" } = Astro.props;
+const { paths, capabilities } = localizedIntegrationPaths(locale);
+const copy = locale === "es"
+  ? {
+      region: "Comparación de capacidades de integración",
+      caption: "Comparación de capacidades para cada vía de integración de logic2b",
+      capability: "Capacidad",
+      note: "“Solo plan” significa que MCP devuelve rutas relativas, contenido completo y dependencias; el host o agente conectado sigue siendo responsable de escribirlos.",
+    }
+  : {
+      region: "Integration capability comparison",
+      caption: "Capability comparison for every logic2b integration path",
+      capability: "Capability",
+      note: "“Plan only” means the MCP tool returns project-relative paths, complete file contents and dependencies; the connected host or agent remains responsible for writing them.",
+    };
+---
+
+<div class="not-prose mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+  {
+    paths.map((path) => (
+      <section class="rounded-lg border bg-card p-4 text-card-foreground">
+        <p class="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          {path.access}
+        </p>
+        <h2 class="mt-2 text-base font-semibold">
+          <a class="hover:underline" href={path.href}>{path.name}</a>
+        </h2>
+        <p class="mt-2 text-sm leading-6 text-muted-foreground">{path.bestFor}</p>
+      </section>
+    ))
+  }
+</div>
+
+<div
+  aria-label={copy.region}
+  class="not-prose mt-8 overflow-x-auto rounded-lg border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  role="region"
+  tabindex="0"
+>
+  <table class="w-full min-w-[860px] text-sm">
+    <caption class="sr-only">
+      {copy.caption}
+    </caption>
+    <thead class="bg-muted/50 text-left">
+      <tr>
+        <th class="px-3 py-2 font-medium" scope="col">{copy.capability}</th>
+        {
+          paths.map((path) => (
+            <th class="whitespace-nowrap px-3 py-2 font-medium" scope="col">
+              {path.name}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        capabilities.map((capability) => (
+          <tr class="border-t">
+            <th class="w-56 px-3 py-3 text-left align-top font-medium" scope="row">
+              {capability.label}
+              <span class="mt-1 block text-xs font-normal leading-5 text-muted-foreground">
+                {capability.detail}
+              </span>
+            </th>
+            {paths.map((path) => {
+              const value = capability.values[path.id];
+              return (
+                <td class="px-3 py-3 align-top">
+                  <span
+                    class:list={[
+                      "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
+                      value === "Yes" || value === "Sí"
+                        ? "bg-foreground text-background"
+                        : "bg-muted text-muted-foreground",
+                    ]}
+                  >
+                    {value}
+                  </span>
+                </td>
+              );
+            })}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-3 text-xs leading-5 text-muted-foreground">
+  {copy.note}
+</p>

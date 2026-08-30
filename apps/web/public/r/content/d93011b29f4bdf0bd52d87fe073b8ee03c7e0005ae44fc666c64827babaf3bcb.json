@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-sparkline-01",
+  "type": "registry:block",
+  "title": "Sparkline - Line",
+  "description": "A compact line sparkline in a metric card (label + value, no axes/grid/tooltip). Use inline in tables, tiles or lists to show a trend at a glance.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-sparkline-01.tsx",
+      "type": "registry:block",
+      "content": "import { Line, LineChart } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { ChartContainer, type ChartConfig } from \"@/components/ui/chart\"\n\nconst chartData = [\n  { day: 1, value: 240 },\n  { day: 2, value: 300 },\n  { day: 3, value: 280 },\n  { day: 4, value: 360 },\n  { day: 5, value: 340 },\n  { day: 6, value: 420 },\n  { day: 7, value: 480 },\n]\n\nconst chartConfig = {\n  value: { label: \"Visitors\", color: \"var(--chart-1)\" },\n} satisfies ChartConfig\n\nexport default function ChartSparkline01() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardDescription>Visitors</CardDescription>\n        <CardTitle className=\"text-2xl tabular-nums\">12,480</CardTitle>\n      </CardHeader>\n      <CardContent>\n        <ChartContainer config={chartConfig} className=\"h-16 w-full\">\n          <LineChart data={chartData} margin={{ top: 5, bottom: 5, left: 0, right: 0 }}>\n            <Line\n              dataKey=\"value\"\n              type=\"natural\"\n              stroke=\"var(--color-value)\"\n              strokeWidth={2}\n              dot={false}\n            />\n          </LineChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-sparkline"
+  ]
+}

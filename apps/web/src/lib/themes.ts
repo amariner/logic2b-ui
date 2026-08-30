@@ -12,6 +12,7 @@ import {
   ACCENTS,
   BASE_COLORS,
   FONTS,
+  ICON_LIBRARIES,
   RADII,
   buildTypesetCss,
   encodePreset,
@@ -28,6 +29,7 @@ export {
   DEFAULT_CONFIG,
   FLOWS,
   FONTS,
+  ICON_LIBRARIES,
   LEADINGS,
   MEASURES,
   RADII,
@@ -55,6 +57,7 @@ export {
   type ReadabilityCheck,
   type ResolvedTypeset,
   type ThemeConfig,
+  type IconLibrary,
   type TokenSet,
 } from "@logic2b/tokens"
 
@@ -64,6 +67,7 @@ export function buildDesignMd(cfg: ThemeConfig): string {
   const radius = RADII[cfg.radius] ?? RADII.default
   const font = FONTS[cfg.font] ?? FONTS.sans
   const heading = FONTS[cfg.heading] ?? FONTS.sans
+  const iconLibrary = ICON_LIBRARIES[cfg.iconLibrary] ?? ICON_LIBRARIES.lucide
   const light = resolveTokens(cfg, "light")
   const dark = resolveTokens(cfg, "dark")
   const preset = encodePreset(cfg)
@@ -83,6 +87,7 @@ export function buildDesignMd(cfg: ThemeConfig): string {
 
 **Theme:** light + dark (toggled with the \`dark\` class on \`<html>\`)
 **Base:** ${baseLabel} · **Accent:** ${accentLabel} · **Radius:** ${radius}
+**Icons:** ${iconLibrary.label} (\`${iconLibrary.package}\`)
 
 All colors are oklch CSS variables consumed through semantic utilities
 (\`bg-primary\`, \`text-muted-foreground\`, \`border-border\`, …). Components
@@ -191,7 +196,7 @@ export function buildComponentsJson(cfg: ThemeConfig): string {
       style: "default",
       tailwind: { config: "", css: "src/styles/global.css", baseColor: cfg.base, cssVariables: true },
       aliases: { components: "@/components", ui: "@/components/ui", lib: "@/lib", hooks: "@/hooks" },
-      iconLibrary: "lucide",
+      iconLibrary: cfg.iconLibrary,
     },
     null,
     2,

@@ -327,9 +327,9 @@ export function PayoutThreshold() {
       </CardHeader>
       <CardContent className="grid gap-5">
         <div className="grid gap-2">
-          <Label>Preferred Currency</Label>
+          <Label htmlFor="payout-currency">Preferred Currency</Label>
           <Select defaultValue="usd">
-            <SelectTrigger className="w-full">
+            <SelectTrigger id="payout-currency" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -345,6 +345,7 @@ export function PayoutThreshold() {
             <span className="text-lg font-semibold tabular-nums">${money}.00</span>
           </div>
           <Slider
+            aria-label="Minimum payout amount"
             value={amount}
             onValueChange={setAmount}
             min={50}

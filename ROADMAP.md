@@ -22,7 +22,7 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   100% shadcn/ui parity plus components beyond it (tree view, stepper, tags
   input, rating, native select, item, timeline, number field, code block,
   autocomplete, file dropzone, color picker).
-- ✅ **Blocks** — 34 blocks: login, signup, pricing, hero, dashboards, chat,
+- ✅ **Blocks** — 38 blocks: login, signup, pricing, hero, dashboards, chat,
   onboarding, settings, team, products, stats, FAQ, CTA, contact, navbar,
   footer, kanban, the e-commerce set (cart, checkout, product detail), the
   admin set (orders, reservations, customers, analytics) and animated twins.
@@ -37,6 +37,12 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 - ✅ **CLI presets** — `init --preset <id>` decodes a studio preset and rewrites
   the installed `theme.css` tokens (light + dark + charts + sidebar + fonts +
   radius) so the copied command reproduces the studio theme exactly.
+- ✅ **CLI project scaffolding** — `init --template <next|vite|astro>` writes a
+  complete exact-pinned marketing, dashboard or auth project from the shared
+  MCP scaffold core; `--monorepo` produces a real Turbo workspace with the app
+  under `apps/web`. Presets and immutable registry versions are applied before
+  disk writes, generated installs start with an update-ready `.logic2b` lock,
+  and non-empty targets are rejected without mutation.
 - ✅ **Prompt copier** — every install surface (docs Install tabs, blocks,
   charts, `/create` Get Code) offers **Copy Prompt**: a self-contained brief
   for Claude Code / Cursor / Copilot with the CLI path, a no-CLI fallback
@@ -52,7 +58,15 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   writes + npm deps for a set of items (registry dependencies resolved), so an
   agent with no terminal installs by itself; `get_theme`, `decode_preset` and
   `apply_preset` inspect and rebuild theme.css for any studio preset, including
-  patching an existing stylesheet in place.
+  patching an existing stylesheet in place; `lint_theme` statically checks the
+  resulting contract for missing, duplicate and invalid tokens, derived-token
+  drift, exact-preset drift and contrast regressions.
+- ✅ **Project-scale MCP scaffolding** — `scaffold_plan` returns every file for
+  a runnable Next.js, Vite or Astro application from one call: framework shell,
+  routing entry, exact-pinned package manifest, theme and all transitive
+  registry files. Marketing, dashboard and auth starters ship first; any
+  `/create` preset is applied before the files leave the tool. CI materializes,
+  installs and production-builds all three stacks from the real registry.
 - ✅ **`AGENTS.md` generator** next to `DESIGN.md` in the studio's Get Code —
   house rules for agents working in a repo that consumes logic2b ui: the full
   primitive/block/chart inventory, the token rules, what not to hand-roll, and
@@ -128,6 +142,11 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   `registryDependencies` resolve, declared files exist, every `@/registry/*`
   import maps to a shipped file, no duplicate names — plus `tsc --noEmit`) and
   `pnpm test`. The gate now runs on every push instead of relying on memory.
+- ✅ **Machine-readable accessibility contracts** — all 71 `registry:ui`
+  items publish their semantic support level, keyboard interactions, ARIA
+  behavior, consumer responsibilities and honest known limitations in the
+  installable JSON. Component docs render the same contract, MCP exposes it,
+  and registry tests fail if any current or future UI item ships without one.
 
 ## Now (🔜) — Jul–Aug polish, in priority order
 
@@ -147,35 +166,68 @@ shipped. What's left of the polish window before the September trust pass:
 
 ### 2. Accessibility checks in CI
 
-- ✅ **axe-core over every shipped block preview** (`/blocks/preview/<name>`),
-  light + dark, gated in CI (`apps/web/tests/a11y.spec.ts`, run after
-  `pnpm build` on the built `dist/client`): no serious/critical violations may
-  merge. Contrast stays owned by the studio's WCAG 2.2 + APCA audit, so this
-  gate covers the rest — accessible names, roles, labels and valid ARIA. The
-  first run surfaced and fixed real shipped-block defects: dangling
+- ✅ **axe-core over every shipped UI surface**, light + dark, gated in CI
+  (`apps/web/tests/a11y.spec.ts`, run after `pnpm build` on the built and
+  hydrated `dist/client`): 38 block previews, 212 component/chart demos and 24
+  guide/benchmark docs, generated API references and the live starter gallery
+  plus 71 isolated component prop playgrounds produce **706 axe analyses**, and
+  no serious/critical
+  violation may merge. Contrast stays owned by the studio's WCAG 2.2 + APCA
+  audit, so this gate covers the rest — accessible names, roles, labels, valid
+  ARIA and keyboard access. The gate uses a fresh static server and a fresh tab
+  per demo so stale hashed assets or leaked observers cannot turn it into an
+  SSR-only check. It surfaced and fixed real defects including dangling
   `aria-controls` on the admin filter tabs (they now render a real panel per
   status so the tab semantics are honest), a role-bearing `<Separator>` inside
   a `<dl>` in `cart-01`, an unnamed `<Progress>` in `onboarding-01`, and
-  missing `title`s on every block-preview iframe across the site.
+  missing `title`s on every block-preview iframe across the site, plus unnamed
+  form controls, invalid list/listbox children, nested interactive dropzones,
+  inaccessible scroll regions and incomplete resizable-panel semantics in the
+  copyable component examples.
+- ✅ **Accessibility coverage is now part of the registry contract**, not only
+  a browser audit: 71/71 UI items carry metadata validated at build/test time,
+  including explicit composition duties and limitations such as the color
+  picker's pointer-only visual controls and reduced-motion requirements.
 
 ### 3. Visual regression suite — lock the look before launch
 
-- 🔜 **Playwright screenshots of every demo**, light + dark. The a11y harness
-  above already builds the Playwright + static-serve plumbing this rides on;
-  what's deferred is the pixel-diff gate itself — committing baselines that
-  stay stable across the container and GitHub's runners (font/AA rendering
-  differences need a tolerance strategy) before it can block merges without
-  flaking. Next up in the polish window.
+- ✅ **Playwright screenshots of every demo, block, launch starter and shipped
+  prop playground**, light + dark. CI now checks 325 isolated surfaces (650
+  baselines) at a fixed desktop viewport.
+  Fonts and two animation frames settle before capture; Recharts and animated
+  blocks get an additional deterministic wait; browser animations/carets are
+  disabled; and the matcher owns a small cross-host antialiasing tolerance.
+  The isolated `/demos/preview/<name>` routes also make every component and
+  chart directly inspectable without loading the full docs shell.
 
-### 4. CLI — only what the lane needs
+### 4. Trust gates — performance cannot drift silently
+
+- ✅ **Lighthouse CI** runs three desktop audits each for the landing, docs and
+  theme studio, gating performance (≥ 0.85), accessibility/best practices/SEO
+  (≥ 0.95), CLS (≤ 0.1), median LCP (≤ 2.5 s) and median TBT (≤ 300 ms).
+- ✅ **Bundle budgets** measure the production output after every build: largest
+  browser chunk ≤ 350 KiB, total browser JS ≤ 2 MiB, largest registry item ≤
+  32 KiB, registry index ≤ 96 KiB, active registry ≤ 750 KiB, current version
+  manifest and changelogs ≤ 128 KiB each, portable token exports ≤ 32 KiB,
+  docs OG cards ≤ 64 KiB each and their full set ≤ 4 MiB.
+- ✅ **Registry growth headroom** — mutable `/r/*.json` discovery mirrors and
+  changelogs ship as canonical compact JSON, while immutable content-addressed
+  payloads retain their byte-stable representation and SHA-256 contract. The
+  split saves about 66.5 KiB from the active catalog without weakening versioned
+  verification or raising its 750 KiB budget.
+- ✅ Demo and block renderers now lazy-load each preview instead of pulling the
+  entire catalog into one shared client chunk; the former ~547 KiB renderer
+  fell to ~45 KiB and the current largest browser chunk is ~193 KiB.
+
+### 5. CLI — only what the lane needs
 
 We deliberately stopped chasing feature parity with the upstream CLI (search,
 view, eject, migrate… exist there and move faster than we can copy). The CLI
 work we keep is what the agent lane and real installs depend on:
 
-- 💡 `init --template <next|vite|astro|…>` real scaffolding and `--monorepo`
-  workspaces — useful, but parity work; stays demoted behind the polish and
-  trust passes.
+- ✅ `init --template <next|vite|astro>` real scaffolding and `--monorepo`
+  workspaces, shared with the MCP rather than maintained as a second template
+  implementation.
 
 ## Deliberately out of scope (for now)
 
@@ -194,11 +246,21 @@ work we keep is what the agent lane and real installs depend on:
   copy, autocomplete, file dropzone and color picker shipped (on top of tree
   view, stepper, tags input, rating, native select and item, which closed
   shadcn/ui parity to 100%).
-- 💡 More blocks: mail client, calendar app, AI chat with streaming states,
-  marketing bundles (full landing in one install). (Kanban board and the
-  e-commerce set — cart, checkout, product detail — shipped ✅.)
-- 💡 Chart gallery expansion: streaming/real-time examples. (Sparklines —
-  line/area/bar — KPI tiles, composed charts and an activity heatmap shipped ✅.)
+- ✅ More blocks: the responsive `ai-chat-01` workspace ships accessible
+  message history, a prompt composer, deterministic streaming plus stop and
+  continue states, token context and a source rail. The responsive
+  three-pane `mail-client-01` (folders, search, selection, unread/label states,
+  reading view and interactive starring) is shipped ✅.
+  The interactive `calendar-app-01` (month navigation, filterable calendars,
+  selectable events, responsive month grid and detail rail) is shipped ✅.
+  The complete marketing bundle is shipped as `landing-page-01` ✅: one install
+  resolves the canonical navbar, animated hero, animated feature grid, CTA and
+  footer transitively. (Kanban board and the e-commerce set — cart, checkout,
+  product detail — also shipped ✅.)
+- ✅ Chart gallery expansion: `chart-realtime-01` ships a deterministic rolling
+  window with start, pause and reset controls, live throughput/error metrics
+  and accessible status announcements. Sparklines — line/area/bar — KPI tiles,
+  composed charts and an activity heatmap are also shipped.
 
 ### Design Plus kit (motion, icons, 3D — the "extras" lane)
 
@@ -223,46 +285,87 @@ documented recipes, never a runtime framework of our own.
   marketing-image layer purely with CSS scroll-driven animations
   (`animation-timeline: view()`), guarded by `@supports` for a static
   fallback. Both honor `prefers-reduced-motion`.
-- 💡 **3D extras, documented** — guidance + copyable examples for
-  react-three-fiber hero scenes and product viewers that respect the token
-  system (lights/materials driven by theme tokens). Docs-first: heavy deps
-  never enter the base registry.
-- 💡 **Icon libraries beyond Lucide** — make the studio's Icon Library
-  selector real: Tabler / Phosphor / Hugeicons mappings, with the CLI and
-  `install_plan` rewriting icon imports per choice.
+- ✅ **3D extras, documented** — the `/docs/3d-extras` guide ships copyable,
+  lazy-loaded react-three-fiber hero and product-viewer recipes. An explicit
+  OKLCH → sRGB bridge keeps lights/materials on semantic theme tokens; demand
+  rendering, capped DPR, glTF budgets, posters, DOM controls, reduced-motion
+  and failure fallbacks cover performance and accessibility. Three.js, Fiber
+  and Drei remain outside the base registry and generated starters.
+- ✅ **Icon libraries beyond Lucide** — the studio's Icon Library selector is
+  real: Lucide / Tabler / Phosphor / Hugeicons round-trip through presets and
+  `components.json`; CLI add/update, MCP `install_plan` and complete scaffolds
+  rewrite verified icon exports, package dependencies and update snapshots.
+  Old 6- and 11-field preset links remain valid and default to Lucide. CI
+  checks every canonical registry icon mapping against the installed packages
+  and production-builds generated consumers for all four implementations.
 - ✅ **Typeset lane** — the Typeset studio shipped (see Shipped above).
 
 ### Benchmarks (public, reproducible)
 
-- 💡 **Framework performance benchmarks** — the same blocks rendered in
-  Next.js / Vite / Astro / TanStack, measured (bundle size, hydration cost,
-  LCP on a throttled profile) with published methodology and scripts, for
-  backends/frontends/API-layer choices around a UI.
-- 💡 **Agent benchmark / leaderboard** — how fast and how correctly coding
-  agents (Claude, Cursor, Copilot…) install, theme and compose logic2b ui
-  vs. copy-paste baselines: tasks, scoring rubric and per-model execution
-  speed published as a living page. Doubles as our own regression suite for
-  the MCP/prompt surfaces.
+- ✅ **Framework performance benchmarks** — the same interactive registry block
+  rendered in Next.js / Vite / Astro / TanStack Start, measured for production
+  client size, transferred JS, hydration-ready time, LCP, TTFB and cold build
+  time under a shared throttled profile. Exact-pinned fixtures, raw JSON,
+  methodology and scripts ship in `benchmarks/frameworks`; the living public
+  table is `/docs/benchmarks`.
+- 🔜 **Agent benchmark / leaderboard** — the public v1 protocol, 300-point
+  objective rubric, safe static scorer, reproducible evaluator runner,
+  deterministic SHA-256 fixtures, timeout/transcript controls, regression
+  tests and living status page are shipped. Synthetic results are mechanically
+  excluded from publication. Remaining: execute the runner in disposable
+  sandboxes against real model/agent combinations and publish their raw
+  artifacts, scores and timing. The harness already doubles as a regression
+  suite for the MCP/prompt surfaces.
 
 ### Site & docs
 
-- 💡 Auto-generated API tables from the component types (today they're
-  hand-written).
-- 💡 Live playground per component (edit props/code in the browser).
-- 💡 Theme-aware OG images per docs page.
-- 💡 i18n of the docs (Spanish first).
-- 💡 Accessibility notes per component (keyboard map, ARIA contract).
+- ✅ Live starter gallery at `/demos` — marketing, analytics dashboard and auth
+  run as hydrated, full-page compositions of the exact canonical blocks used by
+  CLI/MCP scaffolding. Each has a copyable creation command; the typed catalog
+  is also published at `/demos/index.json`. Functional, mobile-overflow, axe and
+  light/dark pixel gates prevent the launch surface from drifting.
+- ✅ Source-generated API reference for all 71 UI items — TypeScript extraction
+  publishes 337 public exports and 181 owned/defaulted props (plus inherited
+  prop expressions, aliases, hook signatures and public types) into the
+  registry JSON, MCP responses and component docs. Drift fails registry lint;
+  the previous 69 hand-maintained tables have been removed while their usage
+  notes remain.
+- ✅ Live playground per component — all 71 UI components now have a lazy,
+  executable playground. Direct recipes, declarative composition trees,
+  structured JSON/date props and closed-by-default portal recipes render real
+  registry exports and native descendants; narrow adapters cover external
+  Recharts children, react-hook-form context and imperative Sonner actions.
+  Typed bindings keep root or nested props and generated JSX synchronized.
+  Copy/reset plus 101 functional checks, isolated axe audits and light/dark
+  pixel gates cover the complete inventory without breaking the browser-JS
+  budget.
+- ✅ Theme-aware OG images per docs page — all 85 English content entries, the
+  20 Spanish translations and the component index get deterministic
+  1200×630 PNG cards during the web build.
+  Section palettes and paired light/dark component surfaces make the theme
+  visible at share time; a SHA-256 manifest, exact route coverage tests and
+  per-image/total byte budgets prevent stale or oversized social assets.
+- 🔜 i18n of the docs (Spanish first) — locale-aware HTML and Markdown routes,
+  `lang`, canonical alternates, navigation, search, sitemap, agent indexes and
+  OG generation are shipped. All 10 top-level guides plus 10 core component
+  references (Button, Card, Chart, Dialog, Form and five common form controls)
+  now exist in Spanish, including localized playground, install, generated API
+  and accessibility shells. Untranslated component links still resolve
+  explicitly to English instead of presenting partial translations.
+- ✅ Accessibility notes per component — all 71 UI docs render their validated
+  keyboard/ARIA contract from the same metadata shipped in registry JSON and
+  exposed through MCP.
 
 ### Quality
 
-- 🔜 Visual regression suite (Playwright screenshots of every demo, light +
-  dark, both themes) — in the Now lane above (plumbing shipped with the a11y
-  gate; the pixel-diff baselines are what's left).
-- ✅ axe-core a11y checks in CI — shipped over every block preview (see the
-  Now lane). Extending the gate to the docs component demos (many are
-  intentionally minimal shadcn-style examples) is a possible follow-up.
-- 💡 Bundle-size budgets per component payload; Lighthouse CI on the site
-  (the September trust pass).
+- ✅ Visual regression suite — 650 Playwright baselines cover every demo, block,
+  launch starter and shipped prop playground in light and dark, enforced in CI
+  (see the Now lane).
+- ✅ axe-core a11y checks in CI — 706 hydrated analyses cover every block,
+  component/chart demo, launch starter, launch/benchmark doc and shipped prop
+  playground in light and dark (see the Now lane).
+- ✅ Bundle-size budgets and Lighthouse CI — shipped as the September trust
+  pass, with failures blocking CI (see the Now lane).
 - ✅ Registry build validation: every `registryDependencies` resolvable, every
   import mapped, every payload parseable — enforced in CI (see Shipped).
 
@@ -284,21 +387,28 @@ The remote MCP, `install_plan` and the preset codec are the moat — the
 long-term bets keep widening the gap between "an agent can read our docs" and
 "an agent can build a real interface with us end to end":
 
-- 💡 **Project-scale MCP tools** — beyond per-item `install_plan`, a
-  `scaffold_plan` that returns the file writes for a whole screen or app
-  shell (blocks + theme + routing glue) from a one-line brief, so a shell-less
-  agent stands up a working page in a single tool call.
-- 💡 **Theme lint as a tool** — an MCP tool that takes a repo's `theme.css`
-  and reports drift from the token contract (missing derived tokens, hand-
-  edited scales, contrast regressions), so an agent maintaining a consumer
-  project can keep it on-system over time, not just at install.
-- 💡 **Registry versioning + changelogs** — pin an install to a registry
-  version, machine-readable changelogs per item, and `logic2b update` honoring
-  version ranges — the audit trail an enterprise agent needs to adopt updates
-  safely.
-- 💡 **Cross-platform token export** — the shared `@logic2b/tokens` data
-  emitted through Style Dictionary to CSS-in-JS, iOS and Android token
-  formats, so the same preset id themes more than the web.
+- ✅ **Project-scale MCP tools** — `scaffold_plan` now returns complete starter
+  applications, not commands, so a shell-less agent can stand up a working
+  marketing site, dashboard or auth surface in one tool call. The chart-heavy
+  Vite dashboard ships as a lazy composition with a separate cacheable chart
+  runtime; CI production-builds all three frameworks and enforces its entry,
+  chunk-count and largest-chunk budgets. A future brief planner can broaden
+  composition beyond the three validated starters.
+- ✅ **Theme lint as a tool** — `lint_theme` takes a repo's `theme.css` and
+  statically reports missing, duplicate or invalid tokens, derived-token drift
+  and measured contrast regressions. With a preset id it also verifies exact
+  preset fidelity, so an agent can keep a consumer project on-system over time,
+  not just at install.
+- ✅ **Registry versioning + changelogs** — immutable release manifests map
+  exact versions/ranges/channels to content-addressed, SHA-256-verified items;
+  every item has a machine-readable changelog. CLI installs record an exact
+  lock manifest, `status` reports drift, and three-way `update` honors the
+  selected range. MCP exposes the same selection and audit trail.
+- ✅ **Cross-platform token export** — the shared `@logic2b/tokens` data is
+  emitted through exact-pinned Style Dictionary to portable DTCG JSON, CSS,
+  iOS Swift and Android light/dark resources. Public artifacts carry SHA-256
+  integrity, CI checks source parity, and MCP `export_tokens` resolves any
+  preset id into the same platform-neutral contract.
 - 💡 **Agent telemetry (opt-in)** — anonymized signal on what agents install,
   where prompts fail and which items get hand-edited after install, feeding
   the agent benchmark and the prompt/MCP surfaces as a real feedback loop.
@@ -329,19 +439,31 @@ that green light. Working backwards:
 
 1. **Jul–Aug** — polish pass: the information architecture (grouped sidebar,
    block categories, per-block pages) ✅, the typeset studio ✅, registry
-   validation in CI ✅, scope cleanup (reservations retired) ✅ and the
-   accessibility gate ✅ are done; **remaining**: the visual-regression suite
-   (the current Now lane).
-2. **Sep** — trust pass: framework benchmarks published, Lighthouse CI,
-   bundle budgets.
-3. **Oct** — release candidate: CLI/MCP at 1.0.0-rc, starter templates,
-   agent benchmark v1, launch content (demos, comparison pages).
+   validation in CI ✅, scope cleanup (reservations retired) ✅, accessibility
+   gate ✅ and visual-regression suite ✅ are done.
+2. **Sep** — trust pass completed early: Lighthouse CI ✅, bundle budgets ✅
+   and public reproducible framework benchmarks ✅.
+3. **Oct** — release candidate: shell-less starter templates through MCP
+   `scaffold_plan` ✅, the public agent benchmark v1 harness + isolated-runner
+   contract ✅ and locally
+   verified CLI/MCP `1.0.0-rc.2` tarballs + consumer smoke gate ✅. The CLI now
+   generates the same exact-pinned starters as MCP, including real Turbo
+   workspaces and update-ready install manifests. The public
+   integration-path comparison and its machine-readable twin are also live;
+   the live starter gallery and its machine-readable catalog complete the launch
+   demos ✅. Remaining: publish the RC under npm's `next` tag and run real
+   isolated agent benchmarks.
 4. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
    post, community namespace opens.
 
-_Status (mid-Jul 2026): on track — the polish pass is nearly complete
-(reservations retired, the accessibility gate live in CI), with the
-visual-regression suite the last item before the September trust pass._
+_Status (30 Aug 2026): ahead of plan — the polish and September trust passes
+are complete. The remaining launch-path objectives are to publish the verified
+`1.0.0-rc.2` CLI/MCP artifacts under npm's `next` tag and run real isolated
+agent benchmarks. The CLI and shell-less MCP starter lanes, live launch demos,
+public comparison, benchmark harness and RC artifact gate are already complete.
+The local registry has advanced through `1.0.0-rc.16` with the composed landing,
+mail, calendar and AI chat applications, and compact delivery mirrors, while CLI/MCP
+packages remain the verified `1.0.0-rc.2` artifacts awaiting publication._
 
 ## Watching
 

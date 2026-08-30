@@ -9,7 +9,13 @@
  * network installs.
  */
 
-import { buildCss, buildTypesetCssExport, fontsourceImportsFor, type ThemeConfig } from "@/lib/themes"
+import {
+  ICON_LIBRARIES,
+  buildCss,
+  buildTypesetCssExport,
+  fontsourceImportsFor,
+  type ThemeConfig,
+} from "@/lib/themes"
 
 export const SITE = "https://ui.logic2b.com"
 
@@ -105,7 +111,7 @@ const TEMPLATE_STACK: Record<string, Stack> = {
 }
 
 /** Shared closing sections: registry map, conventions, verification. */
-function commonSections(): string {
+function commonSections(iconPackage: string = ICON_LIBRARIES.lucide.package): string {
   return `## Registry reference
 
 - Index of every item: ${SITE}/r/index.json
@@ -128,7 +134,7 @@ Registry file paths map to project paths like this:
 - All colors go through semantic tokens (\`bg-primary\`, \`text-muted-foreground\`,
   \`border-border\`, …). Never hardcode hex/oklch values in components.
 - Dark mode is class-based: toggle \`.dark\` on \`<html>\`.
-- Icons come from lucide-react.
+- Icons come from ${iconPackage}.
 
 ## Verify before finishing
 
@@ -214,6 +220,7 @@ Do it manually: fetch ${SITE}/r/theme.json and ${SITE}/r/utils.json, write each
 entry of their \`files[]\` arrays to the mapped paths (see below), install their
 \`dependencies\`, and then replace the \`:root\` and \`.dark\` token blocks of
 theme.css with the exact CSS in the next section.
+${cfg.iconLibrary === "lucide" ? "" : `Because this preset selects ${ICON_LIBRARIES[cfg.iconLibrary].label}, use MCP \`install_plan\` with \`iconLibrary: "${cfg.iconLibrary}"\` for additional components; raw registry payloads intentionally contain canonical Lucide imports.\n`}
 
 ## My theme (preset \`${presetId}\` — this CSS is the source of truth)
 
@@ -221,7 +228,7 @@ theme.css with the exact CSS in the next section.
 ${css}
 \`\`\`
 
-${notes ? `${notes}\n\n` : ""}${commonSections()}`
+${notes ? `${notes}\n\n` : ""}${commonSections(ICON_LIBRARIES[cfg.iconLibrary].package)}`
 }
 
 /**

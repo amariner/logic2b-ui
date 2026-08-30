@@ -1,4 +1,5 @@
 node_modules/
+.pnpm-store/
 dist/
 .astro/
 .turbo/
@@ -15,6 +16,7 @@ dist/
 test-results/
 playwright-report/
 playwright/.cache/
+.lighthouseci/
 
 # Internal planning docs & editor tooling (never publish)
 # ROADMAP.md is public now and lives at the repo root.

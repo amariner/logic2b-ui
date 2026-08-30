@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "preset": "bmV1dHJhbHxiYXNlfGRlZmF1bHR8ZGVmYXVsdHxpbnRlcnxpbnRlcnxtb25vfGRlZmF1bHR8ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8bHVjaWRl",
+  "generator": "style-dictionary@5.5.2",
+  "files": {
+    "logic2b.tokens.json": "sha256-xUqzt2i3Q98r0KI/QQbD/0qhn4/j+4ykq6YCPt9wZtY=",
+    "logic2b.css": "sha256-JcsmvWVNWrtnARTWqWO0HYp1WJBEMjBNxbLW3glI81c=",
+    "android/values/logic2b_tokens.xml": "sha256-lPzbMajdj4RFJJeJa35YdLmffuj+GoNiWjX5ao6e1Fk=",
+    "android/values-night/logic2b_tokens.xml": "sha256-b0SS6yntKPQbIhVSwCzVnfDKgovDHXLqOIwpYNHB21k=",
+    "ios/Logic2bLightTokens.swift": "sha256-XWdSq0b7RXA3GA3rNVxFF2Duus+41+2eSqq2FZSPy54=",
+    "ios/Logic2bDarkTokens.swift": "sha256-CvDreeyYwy3xxNnl0ZixlC+pQqMmI08ySudJO/2zTuw="
+  },
+  "notes": [
+    "CSS preserves the source oklch values.",
+    "Native colors are deterministic, gamut-clamped sRGB conversions of the same semantic tokens.",
+    "iOS and Android receive separate light/dark resources; CSS font stacks remain in the DTCG and web artifacts because native font registration is application-specific."
+  ]
+}

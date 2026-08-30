@@ -4,7 +4,11 @@ import { Parallax } from "@/registry/ui/parallax"
 
 export default function ParallaxDemo() {
   return (
-    <div className="h-80 w-full overflow-y-auto rounded-lg border bg-muted/20">
+    <div
+      aria-label="Parallax demo scroll area"
+      className="h-80 w-full overflow-y-auto rounded-lg border bg-muted/20"
+      tabIndex={0}
+    >
       <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
         Scroll ↓
       </div>

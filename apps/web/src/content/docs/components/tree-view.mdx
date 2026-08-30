@@ -29,19 +29,6 @@ import { TreeItem, TreeView } from "@/components/ui/tree-view"
 Nesting `TreeItem` children turns an item into a branch — the chevron,
 `aria-expanded` state and indentation are derived automatically.
 
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `expanded` / `defaultExpanded` (TreeView) | `string[]` — controlled/uncontrolled expanded branch values | `[]` |
-| `onExpandedChange` (TreeView) | `(expanded: string[]) => void` | — |
-| `selected` / `defaultSelected` (TreeView) | `string \| null` — controlled/uncontrolled selected value | `null` |
-| `onSelectedChange` (TreeView) | `(selected: string \| null) => void` | — |
-| `value` (TreeItem) | `string` — unique item id (required) | — |
-| `label` (TreeItem) | `ReactNode` — the row text (required) | — |
-| `icon` (TreeItem) | `ReactNode` — rendered before the label | — |
-| `disabled` (TreeItem) | `boolean` — skipped by pointer and keyboard | `false` |
-
 ## Examples
 
 ### Controlled

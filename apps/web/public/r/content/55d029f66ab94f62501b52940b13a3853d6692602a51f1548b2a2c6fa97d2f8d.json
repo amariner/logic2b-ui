@@ -1,0 +1,51 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "motion-blur",
+  "type": "registry:ui",
+  "title": "Motion Blur",
+  "description": "Sharpen a mounting element in from an 8px blur while it fades — the <MotionBlur> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+  "registryDependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "ui/motion-blur.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\"\n\nimport { Motion, type MotionProps } from \"@/components/ui/motion\"\n\nexport type MotionBlurProps = Omit<MotionProps, \"preset\">\n\n/** Sharpen a mounting element in from an 8px blur. Preconfigured\n *  `<Motion preset=\"blur\">`. */\nfunction MotionBlur(props: MotionBlurProps) {\n  return <Motion preset=\"blur\" {...props} />\n}\n\nexport { MotionBlur }\n"
+    }
+  ],
+  "categories": [
+    "motion"
+  ],
+  "accessibility": {
+    "support": "consumer",
+    "pattern": "blur animation",
+    "primitive": "Motion for React",
+    "keyboard": [],
+    "aria": [
+      "Preserves child semantics and accepts reduced-motion behavior from the motion foundation."
+    ],
+    "consumer": [
+      "Ensure final text is sharp, contrast remains sufficient and reduced-motion users receive an instant transition."
+    ],
+    "limitations": [
+      "Blurred text can be temporarily unreadable during animation."
+    ]
+  },
+  "api": {
+    "source": "src/ui/motion-blur.tsx",
+    "exports": [
+      {
+        "name": "MotionBlurProps",
+        "kind": "type",
+        "definition": "type MotionBlurProps = Omit<MotionProps, \"preset\">"
+      },
+      {
+        "name": "MotionBlur",
+        "kind": "component",
+        "description": "Sharpen a mounting element in from an 8px blur. Preconfigured `<Motion preset=\"blur\">`.",
+        "propsType": "MotionBlurProps"
+      }
+    ]
+  }
+}

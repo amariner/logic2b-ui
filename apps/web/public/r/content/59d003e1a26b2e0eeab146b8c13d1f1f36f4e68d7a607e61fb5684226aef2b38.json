@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "feature-grid-01-animated",
+  "type": "registry:block",
+  "title": "Feature grid (animated)",
+  "description": "The animated twin of feature-grid-01: the heading reveals first, then the feature cards cascade in as a staggered fade-up on mount. Drop-in replacement — same FeatureGrid export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "blocks/feature-grid-01-animated/feature-grid.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\nimport {\n  BlocksIcon,\n  BotIcon,\n  MoonIcon,\n  PaletteIcon,\n  TerminalIcon,\n  ZapIcon,\n} from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Motion } from \"@/components/ui/motion\"\n\n// The animated twin of feature-grid-01: the heading reveals first, then the\n// feature cards cascade in as a staggered fade-up on mount. Respects\n// prefers-reduced-motion via the motion engine.\nconst features = [\n  {\n    icon: BlocksIcon,\n    title: \"Copy-paste components\",\n    description:\n      \"You own the code. Components are copied into your project — no runtime dependency, no lock-in.\",\n  },\n  {\n    icon: MoonIcon,\n    title: \"Dark-first design\",\n    description:\n      \"A monochrome, engineered aesthetic that treats dark as the default and keeps light first-class.\",\n  },\n  {\n    icon: PaletteIcon,\n    title: \"Theme that travels\",\n    description:\n      \"The oklch token system installs with the CLI, so components look like you — never like a stock template.\",\n  },\n  {\n    icon: TerminalIcon,\n    title: \"A real CLI\",\n    description:\n      \"init, add, diff and --all. Honors your components.json aliases and installs the design system.\",\n  },\n  {\n    icon: BotIcon,\n    title: \"Built for agents\",\n    description:\n      \"llms.txt, a full-text bundle and a machine-readable registry make it trivial for coding agents.\",\n  },\n  {\n    icon: ZapIcon,\n    title: \"Framework-agnostic\",\n    description:\n      \"Next, Vite, Astro, Remix, TanStack Start — if it runs React and Tailwind, it runs here.\",\n  },\n]\n\nexport function FeatureGrid({\n  className,\n  ...props\n}: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\"mx-auto w-full max-w-5xl px-6 py-16\", className)}\n      {...props}\n    >\n      <Motion asChild preset=\"fade-up\" delay={0}>\n        <div className=\"mx-auto mb-12 max-w-2xl text-center\">\n          <h2 className=\"font-heading text-3xl font-bold tracking-tight text-balance\">\n            Everything you need, nothing you don&apos;t\n          </h2>\n          <p className=\"text-muted-foreground mt-3 text-balance\">\n            A registry designed to get out of your way and let you ship.\n          </p>\n        </div>\n      </Motion>\n      <div className=\"grid gap-8 sm:grid-cols-2 lg:grid-cols-3\">\n        {features.map((feature, i) => (\n          <Motion\n            asChild\n            key={feature.title}\n            preset=\"fade-up\"\n            delay={120 + i * 80}\n          >\n            <div className=\"flex flex-col gap-3\">\n              <div className=\"bg-muted flex size-10 items-center justify-center rounded-lg border\">\n                <feature.icon className=\"size-5\" />\n              </div>\n              <h3 className=\"font-medium\">{feature.title}</h3>\n              <p className=\"text-muted-foreground text-sm leading-relaxed\">\n                {feature.description}\n              </p>\n            </div>\n          </Motion>\n        ))}\n      </div>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "marketing"
+  ]
+}

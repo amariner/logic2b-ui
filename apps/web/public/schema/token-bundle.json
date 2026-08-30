@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui.logic2b.com/schema/token-bundle.json",
+  "title": "logic2b portable design token bundle",
+  "type": "object",
+  "required": ["$extensions", "global", "light", "dark"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "$description": { "type": "string" },
+    "$extensions": {
+      "type": "object",
+      "required": ["logic2b"],
+      "properties": {
+        "logic2b": {
+          "type": "object",
+          "required": ["preset", "modes"],
+          "properties": {
+            "preset": { "type": "string" },
+            "modes": {
+              "type": "array",
+              "prefixItems": [{ "const": "light" }, { "const": "dark" }],
+              "items": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "global": { "$ref": "#/$defs/tokenSet" },
+    "light": { "$ref": "#/$defs/tokenSet" },
+    "dark": { "$ref": "#/$defs/tokenSet" }
+  },
+  "$defs": {
+    "tokenSet": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/token" }
+    },
+    "token": {
+      "type": "object",
+      "required": ["$type", "$value"],
+      "properties": {
+        "$type": { "enum": ["color", "dimension", "number", "string"] },
+        "$value": {}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

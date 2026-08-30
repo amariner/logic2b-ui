@@ -1,0 +1,28 @@
+---
+import { DemoRenderer } from "@/components/DemoRenderer";
+import BlockPreviewLayout from "@/layouts/BlockPreviewLayout.astro";
+
+export function getStaticPaths() {
+  const demos = import.meta.glob("../../../demos/*.tsx");
+  const charts = import.meta.glob(
+    "../../../../../../packages/registry/src/charts/*.tsx",
+  );
+
+  return [...Object.keys(demos), ...Object.keys(charts)].map((path) => {
+    const name = path.split("/").pop()!.replace(/\.tsx$/, "");
+    return { params: { name } };
+  });
+}
+
+const { name } = Astro.params;
+---
+
+<BlockPreviewLayout title={`${name} demo preview`}>
+  <main class="flex min-h-svh p-8">
+    <!-- Auto margins center compact demos but collapse safely when a chart or
+         table is taller than the viewport, avoiding negative top overflow. -->
+    <div class="m-auto w-full max-w-5xl">
+      <DemoRenderer name={name!} client:load />
+    </div>
+  </main>
+</BlockPreviewLayout>

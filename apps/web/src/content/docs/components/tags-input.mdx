@@ -30,17 +30,6 @@ Enter or comma commits the draft, pasted comma-separated text is split into
 tags, Backspace on an empty field removes the last tag, and blur commits
 whatever is pending. Duplicates are ignored.
 
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` / `defaultValue` | `string[]` — controlled/uncontrolled tag list | `[]` |
-| `onValueChange` | `(value: string[]) => void` | — |
-| `placeholder` | `string` — hint shown in the free-text field | — |
-| `max` | `number` — cap the list; the field locks at the limit | — |
-| `disabled` | `boolean` | `false` |
-| `id` / `aria-label` / `aria-labelledby` | forwarded to the inner text field for labeling | — |
-
 ## Examples
 
 ### Max tags

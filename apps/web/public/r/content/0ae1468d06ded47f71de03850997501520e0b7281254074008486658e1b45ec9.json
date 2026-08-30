@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "product-detail-01",
+  "type": "registry:block",
+  "title": "Product detail",
+  "description": "A product detail page: an image gallery with selectable thumbnails, title, rating, price and description, a size selector, a quantity stepper and an add-to-cart button whose total updates with quantity. Use as a storefront product page.",
+  "registryDependencies": [
+    "utils",
+    "badge",
+    "button",
+    "number-field",
+    "rating",
+    "separator"
+  ],
+  "files": [
+    {
+      "path": "blocks/product-detail-01/product-detail.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Badge } from \"@/components/ui/badge\"\nimport { Button } from \"@/components/ui/button\"\nimport { NumberField } from \"@/components/ui/number-field\"\nimport { Rating } from \"@/components/ui/rating\"\nimport { Separator } from \"@/components/ui/separator\"\n\nconst GALLERY = [220, 250, 28, 160]\nconst SIZES = [\"XS\", \"S\", \"M\", \"L\", \"XL\"]\nconst PRICE = 129\n\nconst money = (n: number) =>\n  new Intl.NumberFormat(\"en-US\", { style: \"currency\", currency: \"USD\" }).format(n)\n\nconst swatch = (hue: number) =>\n  `linear-gradient(135deg, hsl(${hue} 55% 55%), hsl(${hue} 55% 32%))`\n\nexport function ProductDetail({\n  className,\n  ...props\n}: React.ComponentProps<\"div\">) {\n  const [active, setActive] = React.useState(0)\n  const [size, setSize] = React.useState(\"M\")\n  const [qty, setQty] = React.useState(1)\n\n  return (\n    <div\n      className={cn(\n        \"mx-auto grid w-full max-w-5xl gap-10 px-6 py-12 lg:grid-cols-2\",\n        className\n      )}\n      {...props}\n    >\n      <div className=\"flex flex-col gap-4\">\n        <div\n          data-slot=\"product-image\"\n          className=\"aspect-square w-full rounded-xl border\"\n          style={{ backgroundImage: swatch(GALLERY[active]) }}\n        />\n        <div className=\"grid grid-cols-4 gap-3\">\n          {GALLERY.map((hue, i) => (\n            <button\n              key={i}\n              type=\"button\"\n              onClick={() => setActive(i)}\n              data-active={i === active ? \"\" : undefined}\n              aria-label={`View image ${i + 1}`}\n              className=\"ring-ring/50 data-active:ring-ring aspect-square rounded-lg border outline-none transition-[box-shadow] focus-visible:ring-[3px] data-active:ring-2\"\n              style={{ backgroundImage: swatch(hue) }}\n            />\n          ))}\n        </div>\n      </div>\n\n      <div className=\"flex flex-col gap-5\">\n        <div className=\"flex flex-col gap-2\">\n          <Badge variant=\"secondary\" className=\"w-fit\">\n            New\n          </Badge>\n          <h1 className=\"font-heading text-2xl font-bold tracking-tight\">\n            Aero Runner\n          </h1>\n          <div className=\"flex items-center gap-2\">\n            <Rating value={4} readOnly />\n            <span className=\"text-muted-foreground text-sm\">4.0 (128 reviews)</span>\n          </div>\n        </div>\n\n        <p className=\"text-2xl font-semibold tabular-nums\">{money(PRICE)}</p>\n        <p className=\"text-muted-foreground text-sm leading-relaxed\">\n          A featherweight daily trainer with a breathable knit upper and a\n          responsive foam midsole. Built for the long run and the short commute\n          alike.\n        </p>\n\n        <Separator />\n\n        <div className=\"flex flex-col gap-2\">\n          <p className=\"text-sm font-medium\">Size</p>\n          <div className=\"flex flex-wrap gap-2\">\n            {SIZES.map((s) => (\n              <Button\n                key={s}\n                type=\"button\"\n                variant={s === size ? \"default\" : \"outline\"}\n                size=\"sm\"\n                className=\"w-11\"\n                onClick={() => setSize(s)}\n                aria-pressed={s === size}\n              >\n                {s}\n              </Button>\n            ))}\n          </div>\n        </div>\n\n        <div className=\"flex flex-col gap-2\">\n          <p className=\"text-sm font-medium\">Quantity</p>\n          <NumberField\n            value={qty}\n            onValueChange={(q) => setQty(Number.isNaN(q) ? 1 : q)}\n            min={1}\n            max={10}\n            aria-label=\"Quantity\"\n          />\n        </div>\n\n        <div className=\"flex gap-3\">\n          <Button size=\"lg\" className=\"flex-1\" data-slot=\"add-to-cart\">\n            Add to cart · {money(PRICE * qty)}\n          </Button>\n          <Button size=\"lg\" variant=\"outline\">\n            Wishlist\n          </Button>\n        </div>\n      </div>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "ecommerce"
+  ]
+}

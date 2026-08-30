@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "contact-01",
+  "type": "registry:block",
+  "title": "Contact form",
+  "description": "A centered contact form card with name, email and message fields. Use as a standalone contact page or a section.",
+  "registryDependencies": [
+    "button",
+    "card",
+    "input",
+    "label",
+    "textarea"
+  ],
+  "files": [
+    {
+      "path": "blocks/contact-01/contact-form.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Button } from \"@/components/ui/button\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { Input } from \"@/components/ui/input\"\nimport { Label } from \"@/components/ui/label\"\nimport { Textarea } from \"@/components/ui/textarea\"\n\nexport function ContactForm({\n  className,\n  ...props\n}: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\n        \"flex min-h-svh items-center justify-center p-6 md:p-10\",\n        className\n      )}\n      {...props}\n    >\n      <Card className=\"w-full max-w-lg\">\n        <CardHeader>\n          <CardTitle>Get in touch</CardTitle>\n          <CardDescription>\n            Tell us what you&apos;re building and we&apos;ll get back to you\n            within one business day.\n          </CardDescription>\n        </CardHeader>\n        <CardContent>\n          <form>\n            <div className=\"grid gap-4\">\n              <div className=\"grid gap-4 sm:grid-cols-2\">\n                <div className=\"grid gap-2\">\n                  <Label htmlFor=\"first-name\">First name</Label>\n                  <Input id=\"first-name\" placeholder=\"Ada\" required />\n                </div>\n                <div className=\"grid gap-2\">\n                  <Label htmlFor=\"last-name\">Last name</Label>\n                  <Input id=\"last-name\" placeholder=\"Lovelace\" required />\n                </div>\n              </div>\n              <div className=\"grid gap-2\">\n                <Label htmlFor=\"email\">Email</Label>\n                <Input\n                  id=\"email\"\n                  type=\"email\"\n                  placeholder=\"ada@example.com\"\n                  required\n                />\n              </div>\n              <div className=\"grid gap-2\">\n                <Label htmlFor=\"message\">Message</Label>\n                <Textarea\n                  id=\"message\"\n                  placeholder=\"What can we help you with?\"\n                  className=\"min-h-28\"\n                  required\n                />\n              </div>\n              <Button type=\"submit\" className=\"w-full\">\n                Send message\n              </Button>\n            </div>\n          </form>\n        </CardContent>\n      </Card>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "marketing"
+  ]
+}

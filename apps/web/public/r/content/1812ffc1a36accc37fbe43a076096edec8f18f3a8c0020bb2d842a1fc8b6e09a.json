@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "stats-01",
+  "type": "registry:block",
+  "title": "KPI stat cards",
+  "description": "A row of four KPI stat cards with values and trend deltas. Use as the header of a dashboard or analytics overview.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "card"
+  ],
+  "files": [
+    {
+      "path": "blocks/stats-01/stats.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\nimport { TrendingDownIcon, TrendingUpIcon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\n\nconst stats = [\n  { label: \"Total revenue\", value: \"$45,231.89\", delta: \"+20.1%\", up: true },\n  { label: \"Subscriptions\", value: \"2,350\", delta: \"+180.1%\", up: true },\n  { label: \"Active now\", value: \"573\", delta: \"+201\", up: true },\n  { label: \"Churn\", value: \"1.2%\", delta: \"-0.4%\", up: false },\n]\n\nexport function Stats({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\"mx-auto w-full max-w-5xl px-6 py-16\", className)}\n      {...props}\n    >\n      <div className=\"mb-8\">\n        <h2 className=\"font-heading text-2xl font-bold tracking-tight\">\n          Overview\n        </h2>\n        <p className=\"text-muted-foreground mt-1 text-sm\">\n          Your key metrics for the last 30 days.\n        </p>\n      </div>\n      <div className=\"grid gap-4 sm:grid-cols-2 lg:grid-cols-4\">\n        {stats.map((stat) => {\n          const Icon = stat.up ? TrendingUpIcon : TrendingDownIcon\n          return (\n            <Card key={stat.label}>\n              <CardHeader className=\"pb-2\">\n                <CardDescription>{stat.label}</CardDescription>\n                <CardTitle className=\"font-heading text-2xl tracking-tight tabular-nums\">\n                  {stat.value}\n                </CardTitle>\n              </CardHeader>\n              <CardContent>\n                <p className=\"text-muted-foreground flex items-center gap-1 text-xs\">\n                  <Icon className=\"text-foreground size-3.5\" />\n                  <span className=\"text-foreground font-medium\">\n                    {stat.delta}\n                  </span>\n                  vs last month\n                </p>\n              </CardContent>\n            </Card>\n          )\n        })}\n      </div>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "dashboard"
+  ]
+}

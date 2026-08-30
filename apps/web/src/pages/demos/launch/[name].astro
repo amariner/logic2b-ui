@@ -1,0 +1,30 @@
+---
+import "@/styles/global.css"
+import { LaunchDemo } from "@/components/LaunchDemo"
+import { LAUNCH_DEMOS, getLaunchDemo } from "@/data/launch-demos"
+
+export function getStaticPaths() {
+  return LAUNCH_DEMOS.map((demo) => ({ params: { name: demo.name } }))
+}
+
+const demo = getLaunchDemo(Astro.params.name ?? "")
+if (!demo) throw new Error(`Unknown launch demo: ${Astro.params.name}`)
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={demo.description} />
+    <meta name="robots" content="noindex" />
+    <title>{demo.title} live demo — logic2b ui</title>
+    <script is:inline>
+      const theme = localStorage.getItem("theme") ?? "dark";
+      document.documentElement.classList.toggle("dark", theme === "dark");
+    </script>
+  </head>
+  <body class="min-h-svh bg-background font-sans antialiased">
+    <LaunchDemo starter={demo.name} client:load />
+  </body>
+</html>

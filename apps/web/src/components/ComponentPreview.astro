@@ -9,9 +9,13 @@ interface Props {
   wide?: boolean;
   /** Show a copyable `npx logic2b add <name>` chip — for previews of installable registry items. */
   install?: boolean;
+  locale?: "en" | "es";
 }
 
-const { name, wide = false, install = false } = Astro.props;
+const { name, wide = false, install = false, locale = "en" } = Astro.props;
+const copy = locale === "es"
+  ? { preview: "Vista previa", code: "Código", installTitle: "Copiar el comando de instalación", promptTitle: "Copiar un prompt para tu asistente de IA", prompt: "Copiar prompt", copied: "¡Copiado!" }
+  : { preview: "Preview", code: "Code", installTitle: "Copy install command", promptTitle: "Copy a prompt for your AI assistant", prompt: "Copy Prompt", copied: "Copied!" };
 const installCmd = `npx logic2b@latest add ${name}`;
 
 const sources = import.meta.glob<string>("../demos/*.tsx", {
@@ -40,11 +44,11 @@ const source = rawSource
   <div class="flex items-center gap-1 border-b">
     <button
       class="tab-btn -mb-px border-b-2 border-primary px-3 py-1.5 text-sm font-medium"
-      data-tab="preview">Preview</button
+      data-tab="preview">{copy.preview}</button
     >
     <button
       class="tab-btn -mb-px border-b-2 border-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground"
-      data-tab="code">Code</button
+      data-tab="code">{copy.code}</button
     >
     {
       install && (
@@ -52,16 +56,18 @@ const source = rawSource
           <button
             class="copy-install btn btn-sm btn-outline ml-auto mb-1 hidden font-mono sm:inline-flex"
             data-cmd={installCmd}
-            title="Copy install command"
+            data-copied={copy.copied}
+            title={copy.installTitle}
           >
             {installCmd}
           </button>
           <button
             class="copy-install btn btn-sm btn-outline mb-1 ml-auto sm:ml-0"
             data-cmd={buildAddPrompt(name)}
-            title="Copy a prompt for your AI assistant"
+            data-copied={copy.copied}
+            title={copy.promptTitle}
           >
-            Copy Prompt
+            {copy.prompt}
           </button>
         </>
       )
@@ -86,7 +92,7 @@ const source = rawSource
     btn.addEventListener("click", async () => {
       await navigator.clipboard.writeText(btn.dataset.cmd ?? "");
       const original = btn.textContent;
-      btn.textContent = "Copied!";
+      btn.textContent = btn.dataset.copied ?? "Copied!";
       setTimeout(() => (btn.textContent = original), 1500);
     });
   });

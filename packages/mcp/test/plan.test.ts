@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import { describe, test } from "node:test"
 
 import { buildInstallPlan, planPath } from "../src/plan.ts"
-import { itemUrl, type FetchLike, type RegistryFile } from "../src/registry.ts"
+import { indexUrl, itemUrl, type FetchLike, type RegistryFile } from "../src/registry.ts"
 
 const file = (path: string): RegistryFile => ({ path, type: "x", content: `// ${path}` })
 
@@ -50,8 +50,24 @@ describe("buildInstallPlan", () => {
       dependencies: ["tw-animate-css"],
       files: [file("theme.css")],
     },
+    icons: {
+      name: "icons", type: "registry:ui", description: "x",
+      dependencies: ["lucide-react", "clsx"],
+      files: [{
+        path: "ui/icons.tsx",
+        type: "x",
+        content: 'import { SearchIcon } from "lucide-react"\nexport { SearchIcon }\n',
+      }],
+    },
   }
   const fetchImpl: FetchLike = async (url: string) => {
+    if (url === indexUrl(base)) {
+      return {
+        ok: true,
+        status: 200,
+        text: async () => JSON.stringify(Object.values(items)),
+      }
+    }
     const name = Object.keys(items).find((n) => url === itemUrl(base, n))
     return name
       ? { ok: true, status: 200, text: async () => JSON.stringify(items[name]) }
@@ -94,5 +110,17 @@ describe("buildInstallPlan", () => {
       () => buildInstallPlan(["ghost"], { base, fetchImpl }),
       /HTTP 404/
     )
+  })
+
+  test("emits the selected icon implementation and dependency contract", async () => {
+    const plan = await buildInstallPlan(["icons"], {
+      base,
+      fetchImpl,
+      iconLibrary: "phosphor",
+    })
+    assert.equal(plan.iconLibrary, "phosphor")
+    assert.deepEqual(plan.npmDependencies, ["@phosphor-icons/react", "clsx"])
+    assert.match(plan.files[0].content, /MagnifyingGlassIcon as SearchIcon/)
+    assert.doesNotMatch(plan.snapshots[0].content, /lucide-react/)
   })
 })

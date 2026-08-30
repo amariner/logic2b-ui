@@ -9,7 +9,12 @@ export default function InputOTPControlledDemo() {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <InputOTP maxLength={4} value={value} onChange={setValue}>
+      <InputOTP
+        aria-label="Four-digit PIN"
+        maxLength={4}
+        value={value}
+        onChange={setValue}
+      >
         <InputOTPGroup>
           <InputOTPSlot index={0} />
           <InputOTPSlot index={1} />

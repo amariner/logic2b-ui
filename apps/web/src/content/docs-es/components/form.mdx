@@ -1,0 +1,87 @@
+---
+title: Formulario
+description: Construye formularios accesibles con react-hook-form y zod.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="form-demo" locale="es" />
+
+## Instalación
+
+<Install name="form" locale="es" />
+
+## Anatomía
+
+```tsx
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
+const formSchema = z.object({
+  username: z.string().min(2),
+})
+
+function ProfileForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { username: "" },
+  })
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(console.log)}>
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nombre de usuario</FormLabel>
+              <FormControl>
+                <input {...field} />
+              </FormControl>
+              <FormDescription>Tu nombre público.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  )
+}
+```
+
+`FormField` envuelve el `Controller` de `react-hook-form` y proporciona el contexto del campo a `FormLabel`, `FormControl`, `FormDescription` y `FormMessage`. Estas piezas leen el error y el identificador desde ese contexto, por lo que etiquetas y mensajes permanecen conectados al control correcto.
+
+## Notas de uso
+
+`Form` es un alias de `FormProvider`. Pásale el valor devuelto por `useForm`; el resto de piezas consumen su contexto.
+
+## Ejemplos
+
+### Inicio de sesión
+
+Valida un correo electrónico y una contraseña con zod.
+
+<ComponentPreview name="form-signin-demo" locale="es" />
+
+### Área de texto
+
+<ComponentPreview name="form-textarea-demo" locale="es" />
+
+## Accesibilidad
+
+- `FormControl` obtiene `id`, `aria-describedby` y `aria-invalid` del contexto del campo. La etiqueta, la descripción y el error quedan conectados sin coordinar `htmlFor` e `id` manualmente.
+- Cuando falla la validación, `FormMessage` muestra el error con el identificador referenciado por `aria-describedby`, mientras `FormLabel` adopta el estado destructivo. El error se comunica visualmente y a tecnologías de asistencia.
+- Cada control recibe un identificador generado único, incluso cuando un campo se reutiliza dentro de una lista.

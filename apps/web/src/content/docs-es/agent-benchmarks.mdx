@@ -1,0 +1,56 @@
+---
+title: Benchmarks de agentes
+description: Benchmark público y reproducible para agentes que instalan, tematizan y componen logic2b ui.
+---
+
+import AgentBenchmarkStatus from "@/components/AgentBenchmarkStatus.astro"
+
+Este benchmark mide la afirmación central del producto: si un agente puede usar
+logic2b de extremo a extremo en vez de limitarse a leer documentación. El
+protocolo es público, cada regla tiene puntos y el scorer nunca ejecuta el
+código enviado.
+
+<AgentBenchmarkStatus locale="es" />
+
+## Qué se mide
+
+Las tareas avanzan desde instalar componentes hasta componer y generar una app
+completa. Comprueban procedencia (`data-slot`, imports y archivos transitivos),
+fidelidad al preset, tokens semánticos, formularios accesibles, versiones
+fijadas y builds observados por el evaluador.
+
+La puntuación total es 300. Se ordena primero por puntos y después por duración,
+por lo que un resultado rápido pero roto queda bajo uno completo más lento.
+
+## Contrato de ejecución justa
+
+- Directorio aislado y nuevo para cada modelo y tarea.
+- Mismo texto, preset y fixture inicial.
+- Shell, red y MCP registrados en los metadatos.
+- Sin correcciones humanas después de iniciar el cronómetro.
+- Tareas fallidas o agotadas conservan artefactos parciales.
+- El operador —no el modelo— registra el código de salida del build.
+- Versión de modelo/proveedor, host del agente, SO y Node acompañan el resultado.
+
+El repositorio incluye runner versionado y scorer estático. El runner crea cada
+fixture desde el registro compilado en staging externo, registra SHA-256, invoca
+el agente configurado sin shell, limita tiempo/salida y captura el código antes
+del build observado. Excluye dependencias y cachés, descarta symlinks y nunca
+ejecuta una fuente que exceda el presupuesto. Debe ejecutarse dentro de un
+contenedor o VM desechable porque la verificación sí compila código generado.
+
+## Reproducir o auditar
+
+El protocolo, scorer, fixtures y formato crudo viven en
+[`benchmarks/agents`](https://github.com/amariner/logic2b-ui/tree/main/benchmarks/agents).
+
+```bash
+pnpm --dir benchmarks/agents test
+pnpm --dir benchmarks/agents benchmark config.json --validate
+pnpm --dir benchmarks/agents benchmark config.json
+pnpm --dir benchmarks/agents score <run-id>
+```
+
+Los artefactos reales se publicarán junto a su puntuación detallada. El
+leaderboard permanece vacío hasta que existan ejecuciones aisladas reales; los
+fixtures sintéticos están etiquetados y se excluyen mecánicamente.

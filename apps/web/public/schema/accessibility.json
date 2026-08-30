@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui.logic2b.com/schema/accessibility.json",
+  "title": "logic2b component accessibility contract",
+  "type": "object",
+  "required": ["support", "pattern", "keyboard", "aria", "consumer"],
+  "properties": {
+    "support": {
+      "enum": ["native", "primitive", "authored", "consumer"]
+    },
+    "pattern": { "type": "string", "minLength": 1 },
+    "primitive": { "type": "string", "minLength": 1 },
+    "keyboard": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["keys", "action"],
+        "properties": {
+          "keys": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "action": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "aria": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "consumer": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": false
+}

@@ -14,7 +14,12 @@ LLM or building an agent, use these endpoints instead of scraping HTML.
 | `/llms-full.txt` | The entire documentation in one Markdown file |
 | `/docs/<page>.md` | Any docs page as plain Markdown (append `.md`) |
 | `/r/index.json` | Registry index: every component with its description |
-| `/r/<name>.json` | Full component payload: metadata + source code |
+| `/r/<name>.json` | Full component payload: metadata, source code, generated API and UI accessibility contract |
+| `/r/versions.json` | Release index: exact versions, dates and channels |
+| `/r/versions/<version>.json` | Immutable manifest with content URLs and SHA-256 integrity |
+| `/r/changelog/<name>.json` | Machine-readable release history for one item |
+| `/tokens/default/manifest.json` | SHA-256 manifest for the portable default token exports |
+| `/tokens/default/logic2b.tokens.json` | DTCG-shaped global/light/dark semantic tokens |
 | `/mcp` | Remote MCP endpoint (streamable HTTP): registry tools for agents |
 
 ## Installing components programmatically
@@ -27,14 +32,22 @@ The registry uses an open registry-item JSON schema. Each item includes
 curl https://ui.logic2b.com/r/button.json
 ```
 
+Every `registry:ui` payload also includes `api`, generated from its public
+TypeScript exports, and `accessibility`: its support model,
+semantic/ARIA behavior, keyboard interactions, responsibilities left to the
+consumer and any known limitations. Agents should preserve those requirements
+when composing or modifying an installed component.
+
 To install into a user project, either run the logic2b CLI:
 
 ```bash
 npx logic2b@latest add button
 ```
 
-or write `files[].content` to `src/components/ui/<name>.tsx` yourself, install
-the listed `dependencies`, and recurse into `registryDependencies`.
+or resolve a release through `/r/versions.json`, fetch the content-addressed
+payload referenced by its immutable manifest, verify its SHA-256 integrity,
+write `files[].content` to the mapped project path, install the listed
+`dependencies`, and recurse into `registryDependencies`.
 
 ## Copy Prompt
 
@@ -52,13 +65,29 @@ Prefer a live connection? The registry speaks the Model Context Protocol two
 ways — both expose the same tools. Reading the registry: `list_components`,
 `search_components`, `get_component` (full source of every file) and
 `get_demo` (real usage examples, imports rewritten to project paths — also
-served raw at `/r/demos/index.json`). Acting on a project, no shell required:
+served raw at `/r/demos/index.json`). `list_registry_versions` resolves the
+available releases/channels and `get_changelog` exposes per-item history.
+Registry read/install/theme tools accept an optional `version` containing an
+exact semver, a range or a channel; versioned payloads are SHA-256 verified
+before being returned. Acting on a project, no shell required:
 `install_plan` (the exact files to write and npm deps to add for any set of
-items, registry dependencies resolved), `get_theme`, `decode_preset` and
-`apply_preset` (rebuilds theme.css for any `/create` preset, or patches the
-stylesheet you pass in). `contrast_audit` verifies a theme's WCAG 2.2 and
-APCA contrast per token pair before you ship it. With a shell, `add_command`
-returns the validated CLI invocation instead.
+items, registry dependencies resolved) and `scaffold_plan` (a complete runnable
+Next.js, Vite or Astro app from a marketing, dashboard or auth starter,
+including routing, exact-pinned dependencies and an optional `/create`
+preset). `get_theme`, `decode_preset` and `apply_preset` rebuild or patch
+theme.css; `contrast_audit` verifies WCAG 2.2 and APCA contrast per token pair
+before you ship it. `lint_theme` statically checks an existing theme.css for
+missing, duplicate or invalid tokens, derived-token drift and contrast
+regressions; include a preset id to require exact preset fidelity. With a
+shell, `add_command` returns the validated CLI invocation instead.
+`export_tokens` resolves any preset into the portable global/light/dark token
+bundle that drives the Style Dictionary CSS, iOS and Android outputs.
+
+For example, an agent can call `scaffold_plan` with `framework: "vite"`,
+`starter: "dashboard"`, `version: "next"` and a preset id, write the returned
+files into an empty directory, then install dependencies. The response records
+the exact resolved registry version in `components.json`. The same contract is available for
+`next` and `astro`; all three generated projects are compiled in CI.
 
 **Remote (zero install, no shell needed)** — connect any streamable-HTTP MCP
 client to:

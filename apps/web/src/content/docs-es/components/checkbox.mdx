@@ -1,0 +1,39 @@
+---
+title: Casilla de verificación
+description: Permite alternar entre los estados marcado y desmarcado.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="checkbox-demo" locale="es" />
+
+## Instalación
+
+<Install name="checkbox" locale="es" />
+
+## Uso
+
+```tsx
+import { Checkbox } from "@/components/ui/checkbox"
+
+<Checkbox id="terms" />
+```
+
+## Ejemplos
+
+### Con texto
+
+Combina la casilla con `Label` y una descripción de ayuda.
+
+<ComponentPreview name="checkbox-with-text-demo" locale="es" />
+
+### Desactivada
+
+<ComponentPreview name="checkbox-disabled-demo" locale="es" />
+
+## Accesibilidad
+
+- Expone `role="checkbox"` y refleja el estado mediante `aria-checked`, incluido el estado mixto o indeterminado.
+- <kbd>Espacio</kbd> alterna la casilla enfocada; <kbd>Tab</kbd> permite alcanzarla.
+- Asocia un `Label` mediante un `htmlFor` que coincida con el `id` de la casilla para que el texto también active el control.

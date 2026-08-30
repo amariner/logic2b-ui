@@ -1,11 +1,22 @@
 import { auditTokens } from "@logic2b/tokens/contrast"
+import { portableTokenBundle } from "@logic2b/tokens/export"
+import { lintThemeCss } from "@logic2b/tokens/lint"
 import { buildInstallPlan } from "./plan.ts"
+import { PACKAGE_VERSION } from "./version.ts"
+import {
+  buildScaffoldPlan,
+  SCAFFOLD_FRAMEWORKS,
+  SCAFFOLD_STARTERS,
+  type ScaffoldFramework,
+  type ScaffoldStarter,
+} from "./scaffold.ts"
 import {
   DEFAULT_REGISTRY,
+  createRegistryClient,
+  fetchChangelog,
   fetchDemo,
   fetchDemoIndex,
-  fetchIndex,
-  fetchItem,
+  fetchRegistryVersions,
   filterIndex,
   kindOf,
   searchIndex,
@@ -21,15 +32,24 @@ import {
   DEFAULT_CONFIG,
   encodePreset,
   FONTS,
+  ICON_LIBRARIES,
   parseCustomKey,
   presetDeclarations,
   RADII,
   type ThemeConfig,
 } from "@logic2b/tokens"
 
-export const SERVER_INFO = { name: "logic2b-ui", version: "0.2.0" } as const
+export const SERVER_INFO = { name: "logic2b-ui", version: PACKAGE_VERSION } as const
 
 export const KINDS = ["component", "block", "chart", "theme"] as const
+
+const VERSION_INPUT = {
+  version: {
+    type: "string",
+    description:
+      'Optional registry semver, range or channel (for example "1.0.0-rc.7", "^1.0.0" or "next"). Resolves to one immutable SHA-256-verified manifest.',
+  },
+} as const
 
 export const TOOLS = [
   {
@@ -39,6 +59,7 @@ export const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
+        ...VERSION_INPUT,
         kind: {
           type: "string",
           enum: KINDS,
@@ -59,6 +80,7 @@ export const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
+        ...VERSION_INPUT,
         query: {
           type: "string",
           description: 'Free-text query, e.g. "login form", "donut chart", "data table".',
@@ -78,9 +100,31 @@ export const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
+        ...VERSION_INPUT,
         name: {
           type: "string",
           description: 'The item name, e.g. "button", "login-01", "chart-area-04".',
+        },
+      },
+      required: ["name"],
+    },
+  },
+  {
+    name: "list_registry_versions",
+    description:
+      "List published immutable registry releases and channels. Use the returned exact semver, a semver range or a channel as the version argument on read/install/scaffold tools.",
+    inputSchema: { type: "object", properties: {} },
+  },
+  {
+    name: "get_changelog",
+    description:
+      "Fetch the machine-readable release history for one registry item before updating it.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+          description: 'Registry item name, e.g. "button" or "dashboard-02".',
         },
       },
       required: ["name"],
@@ -108,6 +152,7 @@ export const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
+        ...VERSION_INPUT,
         items: {
           type: "array",
           items: { type: "string" },
@@ -124,6 +169,7 @@ export const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
+        ...VERSION_INPUT,
         items: {
           type: "array",
           items: { type: "string" },
@@ -135,15 +181,74 @@ export const TOOLS = [
           description:
             'Project source root the `@/*` alias points at. Default "src"; pass "" for projects whose alias maps to the repo root.',
         },
+        iconLibrary: {
+          type: "string",
+          enum: Object.keys(ICON_LIBRARIES),
+          description:
+            "Icon implementation for generated sources. Defaults to lucide; also supports tabler, phosphor and hugeicons.",
+        },
       },
       required: ["items"],
     },
   },
   {
+    name: "scaffold_plan",
+    description:
+      "Generate a complete runnable starter project as file writes: framework shell, routing entry, package.json, logic2b theme and every component/block dependency. Works without a terminal. Choose Next.js, Vite or Astro and a marketing, dashboard or authentication starter; optionally apply an exact /create preset.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        ...VERSION_INPUT,
+        framework: {
+          type: "string",
+          enum: SCAFFOLD_FRAMEWORKS,
+          description: "Application framework for the generated project.",
+        },
+        starter: {
+          type: "string",
+          enum: SCAFFOLD_STARTERS,
+          description: "Starter application to compose from registry blocks.",
+        },
+        name: {
+          type: "string",
+          description:
+            'Optional npm project name. Defaults to "logic2b-<starter>".',
+        },
+        preset: {
+          type: "string",
+          description:
+            "Optional theme preset id from ui.logic2b.com/create. The generated theme.css is patched to match it exactly.",
+        },
+      },
+      required: ["framework", "starter"],
+    },
+  },
+  {
     name: "get_theme",
     description:
-      "Fetch the logic2b theme: the theme.css stylesheet (every design token the components consume), its npm dependencies, and the customization catalog — available base scales, accents, chart palettes, radii and fonts plus the defaults. Use it to install the design system or to see what apply_preset can change.",
-    inputSchema: { type: "object", properties: {} },
+      "Fetch the logic2b theme: the theme.css stylesheet (every design token the components consume), its npm dependencies, and the customization catalog — available base scales, accents, chart palettes, radii, fonts and icon libraries plus the defaults. Use it to install the design system or to see what apply_preset can change.",
+    inputSchema: { type: "object", properties: { ...VERSION_INPUT } },
+  },
+  {
+    name: "export_tokens",
+    description:
+      "Export a /create preset as a portable DTCG-shaped light/dark token bundle. The same source drives the public Style Dictionary CSS, iOS and Android artifacts.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        preset: {
+          type: "string",
+          description: "A preset id from /create. Omit it to compose from the options below.",
+        },
+        base: { type: "string", description: "Base gray scale (see apply_preset)." },
+        accent: { type: "string", description: "Accent color (see apply_preset)." },
+        chart: { type: "string", description: "Chart palette (see apply_preset)." },
+        radius: { type: "string", description: "Corner radius (see apply_preset)." },
+        font: { type: "string", description: "Body font (see apply_preset)." },
+        heading: { type: "string", description: "Heading font (see apply_preset)." },
+        iconLibrary: { type: "string", enum: Object.keys(ICON_LIBRARIES), description: "Icon library (see apply_preset)." },
+      },
+    },
   },
   {
     name: "decode_preset",
@@ -167,6 +272,7 @@ export const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
+        ...VERSION_INPUT,
         preset: {
           type: "string",
           description:
@@ -178,6 +284,11 @@ export const TOOLS = [
         radius: { type: "string", description: 'Corner radius: "none", "sm", "md", "default", "lg" or "xl".' },
         font: { type: "string", description: 'Body font: "inter", "grotesk", "sans", "system", "serif" or "mono".' },
         heading: { type: "string", description: "Heading font (same options as font)." },
+        iconLibrary: {
+          type: "string",
+          enum: Object.keys(ICON_LIBRARIES),
+          description: "Icon output carried by the canonical preset id.",
+        },
         css: {
           type: "string",
           description:
@@ -208,6 +319,26 @@ export const TOOLS = [
       },
     },
   },
+  {
+    name: "lint_theme",
+    description:
+      "Lint a project's theme.css as a static design-system contract. Reports missing/duplicate/invalid tokens, broken sidebar derivations, optional exact /create preset drift and new WCAG/APCA contrast regressions. Caller CSS is parsed as text and never executed.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        css: {
+          type: "string",
+          description: "The complete theme.css contents to inspect (maximum 1 MB).",
+        },
+        preset: {
+          type: "string",
+          description:
+            "Optional /create preset id. When supplied, every contract token is also compared with that exact preset.",
+        },
+      },
+      required: ["css"],
+    },
+  },
 ] as const
 
 // Type alias (not interface) on purpose: aliases get an implicit index
@@ -232,7 +363,18 @@ function summarize(item: IndexItem) {
     title: item.title ?? item.name,
     description: item.description,
     categories: item.categories,
+    ...(item.version ? { version: item.version } : {}),
+    ...(item.registryVersion ? { registryVersion: item.registryVersion } : {}),
+    ...(item.integrity ? { integrity: item.integrity } : {}),
+    ...(item.changelog ? { changelog: item.changelog } : {}),
+    ...(item.accessibility ? { accessibility: item.accessibility } : {}),
+    ...(item.api ? { api: item.api } : {}),
   }
+}
+
+function versionArg(args: Record<string, unknown>): string | undefined {
+  const version = typeof args.version === "string" ? args.version.trim() : ""
+  return version || undefined
 }
 
 function textResult(value: unknown): ToolResult {
@@ -263,6 +405,7 @@ function resolveThemeArgs(args: Record<string, unknown>): ThemeConfig | string {
     ["radius", "radius", RADII],
     ["font", "font", FONTS],
     ["heading", "heading", FONTS],
+    ["iconLibrary", "iconLibrary", ICON_LIBRARIES],
   ]
   const cfg = { ...DEFAULT_CONFIG }
   for (const [key, arg, table] of tables) {
@@ -281,7 +424,7 @@ function resolveThemeArgs(args: Record<string, unknown>): ThemeConfig | string {
           : ""
       }.`
     }
-    cfg[key] = value as string
+    Object.assign(cfg, { [key]: value })
   }
   return cfg
 }
@@ -295,13 +438,15 @@ export async function runTool(
 ): Promise<ToolResult> {
   try {
     if (name === "list_components") {
-      const index = await fetchIndex(base, fetchImpl)
-      const filtered = filterIndex(index, {
+      const client = await createRegistryClient(base, versionArg(args), fetchImpl)
+      const filtered = filterIndex(client.index, {
         kind: args.kind as (typeof KINDS)[number] | undefined,
         category: args.category as string | undefined,
       })
       return textResult({
         registry: base,
+        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
+        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
         count: filtered.length,
         items: filtered.map(summarize),
       })
@@ -311,10 +456,12 @@ export async function runTool(
       const query = String(args.query ?? "")
       if (!query.trim()) return errorResult('The "query" argument is required.')
       const limit = Number(args.limit) || 20
-      const index = await fetchIndex(base, fetchImpl)
-      const results = searchIndex(index, query, limit)
+      const client = await createRegistryClient(base, versionArg(args), fetchImpl)
+      const results = searchIndex(client.index, query, limit)
       return textResult({
         registry: base,
+        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
+        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
         query,
         count: results.length,
         items: results.map(summarize),
@@ -324,8 +471,25 @@ export async function runTool(
     if (name === "get_component") {
       const itemName = String(args.name ?? "")
       if (!itemName.trim()) return errorResult('The "name" argument is required.')
-      const item = await fetchItem(base, itemName, fetchImpl)
+      const client = await createRegistryClient(base, versionArg(args), fetchImpl)
+      const item = await client.getItem(itemName)
       return textResult(item)
+    }
+
+    if (name === "list_registry_versions") {
+      return textResult({
+        registry: base,
+        ...(await fetchRegistryVersions(base, fetchImpl)),
+      })
+    }
+
+    if (name === "get_changelog") {
+      const itemName = String(args.name ?? "").trim()
+      if (!itemName) return errorResult('The "name" argument is required.')
+      return textResult({
+        registry: base,
+        ...(await fetchChangelog(base, itemName, fetchImpl)),
+      })
     }
 
     if (name === "get_demo") {
@@ -359,8 +523,8 @@ export async function runTool(
       if (items.length === 0) {
         return errorResult('The "items" argument must be a non-empty array of item names.')
       }
-      const index = await fetchIndex(base, fetchImpl)
-      const known = new Set(index.map((i) => i.name))
+      const client = await createRegistryClient(base, versionArg(args), fetchImpl)
+      const known = new Set(client.index.map((i) => i.name))
       const unknown = items.filter((i) => !known.has(i))
       if (unknown.length > 0) {
         return errorResult(
@@ -368,14 +532,19 @@ export async function runTool(
         )
       }
       const names = items.join(" ")
+      const versionFlag = client.resolvedVersion
+        ? ` --registry-version ${client.resolvedVersion}`
+        : ""
       return textResult({
         registry: base,
+        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
+        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
         items,
         commands: {
-          npm: `npx logic2b@latest add ${names}`,
-          pnpm: `pnpm dlx logic2b@latest add ${names}`,
-          yarn: `yarn dlx logic2b@latest add ${names}`,
-          bun: `bunx logic2b@latest add ${names}`,
+          npm: `npx logic2b@latest add ${names}${versionFlag}`,
+          pnpm: `pnpm dlx logic2b@latest add ${names}${versionFlag}`,
+          yarn: `yarn dlx logic2b@latest add ${names}${versionFlag}`,
+          bun: `bunx logic2b@latest add ${names}${versionFlag}`,
         },
         notes: [
           "If the project has no components.json yet, run `npx logic2b@latest init` first (add --preset <id> to apply a /create theme).",
@@ -393,15 +562,58 @@ export async function runTool(
         return errorResult('The "items" argument must be a non-empty array of item names.')
       }
       const srcDir = typeof args.srcDir === "string" ? args.srcDir : "src"
-      const plan = await buildInstallPlan(items, { base, fetchImpl, srcDir })
+      const iconLibrary = String(args.iconLibrary ?? "lucide")
+      if (!(iconLibrary in ICON_LIBRARIES)) {
+        return errorResult(
+          `The "iconLibrary" argument must be one of: ${Object.keys(ICON_LIBRARIES).join(", ")}.`,
+        )
+      }
+      const plan = await buildInstallPlan(items, {
+        base,
+        fetchImpl,
+        srcDir,
+        version: versionArg(args),
+        iconLibrary: iconLibrary as keyof typeof ICON_LIBRARIES,
+      })
+      // Snapshots are scaffold-internal. Per-item installs write their own
+      // bases through the CLI and shell-less agents only need target writes.
+      const { snapshots: _snapshots, ...publicPlan } = plan
+      return textResult(publicPlan)
+    }
+
+    if (name === "scaffold_plan") {
+      const framework = String(args.framework ?? "") as ScaffoldFramework
+      const starter = String(args.starter ?? "") as ScaffoldStarter
+      if (!SCAFFOLD_FRAMEWORKS.includes(framework)) {
+        return errorResult(
+          `The "framework" argument must be one of: ${SCAFFOLD_FRAMEWORKS.join(", ")}.`
+        )
+      }
+      if (!SCAFFOLD_STARTERS.includes(starter)) {
+        return errorResult(
+          `The "starter" argument must be one of: ${SCAFFOLD_STARTERS.join(", ")}.`
+        )
+      }
+      const plan = await buildScaffoldPlan({
+        base,
+        fetchImpl,
+        framework,
+        starter,
+        name: typeof args.name === "string" ? args.name : undefined,
+        preset: typeof args.preset === "string" ? args.preset : undefined,
+        version: versionArg(args),
+      })
       return textResult(plan)
     }
 
     if (name === "get_theme") {
-      const item = await fetchItem(base, "theme", fetchImpl)
+      const client = await createRegistryClient(base, versionArg(args), fetchImpl)
+      const item = await client.getItem("theme")
       const css = item.files?.find((f) => f.path.endsWith(".css"))?.content ?? ""
       return textResult({
         registry: base,
+        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
+        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
         name: item.name,
         description: item.description,
         npmDependencies: item.dependencies ?? [],
@@ -414,11 +626,32 @@ export async function runTool(
           chart: Object.keys(CHARTS),
           radius: RADII,
           font: FONTS,
+          iconLibrary: ICON_LIBRARIES,
         },
         notes: [
           "Every option combination is addressable as a preset id — use apply_preset to get the patched stylesheet, decode_preset to inspect one.",
           'The config key for the accent is "theme" (historical); the apply_preset argument is "accent".',
           'Beyond the named accents/charts, any oklch hue/chroma works as a custom key: "h<hue>c<chroma>" (hue 0-360, chroma 0-0.4), e.g. accent "h250c0.2". The readable text color is derived by contrast.',
+        ],
+      })
+    }
+
+    if (name === "export_tokens") {
+      const cfg = resolveThemeArgs(args)
+      if (typeof cfg === "string") return errorResult(cfg)
+      const bundle = portableTokenBundle(cfg)
+      return textResult({
+        preset: encodePreset(cfg),
+        bundle,
+        defaultArtifacts: {
+          manifest: `${base}/tokens/default/manifest.json`,
+          css: `${base}/tokens/default/logic2b.css`,
+          android: `${base}/tokens/default/android/`,
+          ios: `${base}/tokens/default/ios/`,
+        },
+        notes: [
+          "The bundle preserves CSS oklch values and separates global, light and dark semantic tokens.",
+          "Feed this DTCG-shaped source into Style Dictionary or another design-token pipeline for a custom preset.",
         ],
       })
     }
@@ -429,7 +662,7 @@ export async function runTool(
       const cfg = decodePreset(preset)
       if (!cfg) {
         return errorResult(
-          `"${preset}" is not a valid preset id (expected base64url of "base|accent|chart|radius|font|heading" with known values).`
+          `"${preset}" is not a valid preset id (expected a known, URL-safe /create configuration).`
         )
       }
       return textResult({
@@ -447,14 +680,21 @@ export async function runTool(
       if (typeof cfg === "string") return errorResult(cfg)
       let css = typeof args.css === "string" && args.css.trim() ? args.css : undefined
       let npmDependencies: string[] | undefined
+      let selectedVersion: { requestedVersion?: string; registryVersion?: string } = {}
       if (css === undefined) {
-        const item = await fetchItem(base, "theme", fetchImpl)
+        const client = await createRegistryClient(base, versionArg(args), fetchImpl)
+        const item = await client.getItem("theme")
         css = item.files?.find((f) => f.path.endsWith(".css"))?.content ?? ""
         npmDependencies = item.dependencies ?? []
+        selectedVersion = {
+          ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
+          ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
+        }
       }
       const patched = applyPresetToCss(css, cfg)
       return textResult({
         registry: base,
+        ...selectedVersion,
         preset: encodePreset(cfg),
         config: cfg,
         file: { path: "src/styles/theme.css", content: patched },
@@ -490,6 +730,25 @@ export async function runTool(
           warnings.length === 0
             ? "Every audited pair meets WCAG AA and APCA |Lc| 60."
             : `${warnings.length} pair(s) fall below the baseline — see "warn": true.`,
+      })
+    }
+
+    if (name === "lint_theme") {
+      const css = typeof args.css === "string" ? args.css : ""
+      if (!css.trim()) return errorResult('The "css" argument is required.')
+      if (new TextEncoder().encode(css).byteLength > 1_000_000) {
+        return errorResult('The "css" argument must not exceed 1 MB.')
+      }
+      const preset = typeof args.preset === "string" ? args.preset.trim() : ""
+      let expected: ThemeConfig | undefined
+      if (preset) {
+        const decoded = decodePreset(preset)
+        if (!decoded) return errorResult(`"${preset}" is not a valid preset id.`)
+        expected = decoded
+      }
+      return textResult({
+        ...(preset ? { preset, expectedConfig: expected } : {}),
+        ...lintThemeCss(css, { expected }),
       })
     }
 

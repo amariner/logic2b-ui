@@ -8,5 +8,5 @@ export default defineConfig({
   format: "esm",
   target: "node18",
   clean: true,
-  noExternal: ["@logic2b/tokens"],
+  noExternal: ["@logic2b/scaffold", "@logic2b/tokens"],
 })

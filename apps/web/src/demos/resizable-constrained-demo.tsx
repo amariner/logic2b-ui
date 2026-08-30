@@ -8,16 +8,22 @@ import {
 export default function ResizableConstrainedDemo() {
   return (
     <ResizablePanelGroup
+      id="constrained-layout"
       direction="horizontal"
-      className="max-w-md rounded-lg border md:min-w-[450px]"
+      className="h-[200px] max-w-md rounded-lg border md:min-w-[450px]"
     >
-      <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
+      <ResizablePanel
+        id="sidebar"
+        defaultSize="25%"
+        minSize="20%"
+        maxSize="40%"
+      >
         <div className="flex h-[200px] items-center justify-center p-6">
           <span className="font-semibold">Sidebar</span>
         </div>
       </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={75}>
+      <ResizableHandle id="sidebar-main" withHandle />
+      <ResizablePanel id="main" defaultSize="75%">
         <div className="flex h-[200px] items-center justify-center p-6">
           <span className="font-semibold">Main</span>
         </div>

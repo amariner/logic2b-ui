@@ -1,0 +1,324 @@
+---
+title: Extras 3D
+description: Añade escenas hero y visores de producto con react-three-fiber y tokens, sin introducir Three.js en el registro base.
+---
+
+3D es una capa opcional de la aplicación, no una primitiva del registro.
+Instálala solo en el producto que renderiza la escena; el registro, CLI y
+starters generados siguen libres de Three.js y código WebGL.
+
+Esta receta apunta a React 19 con React Three Fiber 9. Las aplicaciones React 18
+deben usar Fiber 8, según la
+[tabla oficial de compatibilidad](https://r3f.docs.pmnd.rs/getting-started/introduction#installation).
+
+```bash
+pnpm add three @react-three/fiber @react-three/drei
+pnpm add -D @types/three
+```
+
+## Aísla la escena detrás de una frontera cliente
+
+Una escena debe vivir en su propio chunk diferido. No la importes desde un
+Server Component, el layout raíz ni un elemento del registro.
+
+```tsx
+// Next.js App Router
+import dynamic from "next/dynamic"
+
+const TokenHeroScene = dynamic(() => import("./token-hero-scene"), {
+  ssr: false,
+  loading: () => <div className="min-h-80 animate-pulse rounded-xl bg-muted" />,
+})
+```
+
+En Vite React usa `React.lazy` y `Suspense`. En Astro mantén el componente React
+aislado e hidrátalo cuando se acerque al viewport:
+
+```astro
+---
+import ProductViewer from "@/components/product-viewer"
+---
+
+<ProductViewer client:visible />
+```
+
+`client:visible` es el valor habitual para un visor bajo el fold. Usa
+`client:idle` si una escena hero debe aparecer inmediatamente. Reserva siempre
+la proporción final en HTML para evitar desplazamientos al cargar WebGL.
+
+## Conecta tokens OKLCH semánticos con Three.js
+
+logic2b define colores como propiedades CSS en OKLCH. Three.js acepta formatos
+CSS comunes, pero `Color.setStyle()` no documenta OKLCH. Este helper pide al
+navegador una conversión a sRGB y declara explícitamente ese espacio de origen.
+
+```tsx
+// three-theme.ts
+"use client"
+
+import * as React from "react"
+import { Color, SRGBColorSpace } from "three"
+
+type SceneTheme = {
+  background: Color
+  foreground: Color
+  primary: Color
+  muted: Color
+}
+
+function readToken(name: `--${string}`) {
+  const probe = document.createElement("span")
+  probe.style.color = `color-mix(in srgb, var(${name}) 100%, transparent)`
+  probe.hidden = true
+  document.body.append(probe)
+
+  const serialized = getComputedStyle(probe).color
+  probe.remove()
+
+  const match = serialized.match(
+    /^color\(srgb\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)/,
+  )
+  if (!match) return new Color().setStyle(serialized, SRGBColorSpace)
+
+  const channel = (value: string) => Math.min(1, Math.max(0, Number(value)))
+  return new Color().setRGB(
+    channel(match[1]),
+    channel(match[2]),
+    channel(match[3]),
+    SRGBColorSpace,
+  )
+}
+
+export function useThreeTheme(): SceneTheme | null {
+  const [theme, setTheme] = React.useState<SceneTheme | null>(null)
+
+  React.useEffect(() => {
+    const sync = () =>
+      setTheme({
+        background: readToken("--background"),
+        foreground: readToken("--foreground"),
+        primary: readToken("--primary"),
+        muted: readToken("--muted"),
+      })
+
+    sync()
+    const observer = new MutationObserver(sync)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "style"],
+    })
+    return () => observer.disconnect()
+  }, [])
+
+  return theme
+}
+```
+
+El `MutationObserver` sigue la misma clase `.dark` que la interfaz. Los colores
+continúan siendo semánticos: un material puede usar `primary` o `muted`, nunca
+un hex ni una paleta 3D paralela. Three.js calcula luz en Linear-sRGB y convierte
+las entradas sRGB con la gestión de color activada por defecto; consulta su
+[guía de color](https://threejs.org/manual/en/color-management.html).
+
+## Hero copiable y conectado a tokens
+
+El canvas es decorativo: título, descripción y CTA siguen en HTML y la escena
+se oculta a tecnologías de asistencia. Renderiza bajo demanda, limita DPR y no
+mantiene un bucle perpetuo.
+
+```tsx
+// token-hero-scene.tsx
+"use client"
+
+import { Canvas } from "@react-three/fiber"
+
+import { useThreeTheme } from "./three-theme"
+
+function Sculpture() {
+  const theme = useThreeTheme()
+  if (!theme) return null
+
+  return (
+    <group rotation={[-0.28, 0.5, 0.08]}>
+      <mesh position={[-0.85, 0.15, 0]}>
+        <icosahedronGeometry args={[1.15, 2]} />
+        <meshStandardMaterial
+          color={theme.primary}
+          metalness={0.18}
+          roughness={0.28}
+        />
+      </mesh>
+      <mesh position={[0.95, -0.2, -0.45]} rotation={[0.5, 0.2, 0]}>
+        <torusGeometry args={[0.72, 0.2, 24, 72]} />
+        <meshStandardMaterial
+          color={theme.muted}
+          metalness={0.05}
+          roughness={0.55}
+        />
+      </mesh>
+    </group>
+  )
+}
+
+export default function TokenHeroScene() {
+  const theme = useThreeTheme()
+
+  return (
+    <div className="relative aspect-[4/3] min-h-80 overflow-hidden rounded-xl border bg-card">
+      <Canvas
+        aria-hidden="true"
+        frameloop="demand"
+        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 5], fov: 38 }}
+        gl={{ antialias: true, powerPreference: "high-performance" }}
+      >
+        {theme && <color attach="background" args={[theme.background]} />}
+        <ambientLight intensity={1.4} />
+        <directionalLight position={[3, 4, 5]} intensity={3} />
+        <Sculpture />
+      </Canvas>
+    </div>
+  )
+}
+```
+
+`Canvas frameloop="demand"` solo dibuja cuando Fiber detecta cambios. Los
+controles de Drei invalidan automáticamente; para cambios externos a React usa
+`invalidate()` como explica la
+[guía oficial](https://r3f.docs.pmnd.rs/advanced/scaling-performance#on-demand-rendering).
+
+## Visor de producto copiable
+
+Usa glTF 2.0 en producción. `useGLTF` cachea el modelo por URL, los controles de
+Drei se integran con render bajo demanda y el HTML exterior posee nombre,
+instrucciones, estado y controles accesibles.
+
+```tsx
+// product-viewer.tsx
+"use client"
+
+import * as React from "react"
+import { Canvas } from "@react-three/fiber"
+import { Bounds, Environment, OrbitControls, useGLTF, useProgress } from "@react-three/drei"
+
+function Product({ resetKey }: { resetKey: number }) {
+  const { scene } = useGLTF("/models/product.glb")
+
+  return (
+    <Bounds key={resetKey} fit clip observe margin={1.2}>
+      <primitive object={scene} />
+    </Bounds>
+  )
+}
+
+function LoadingStatus() {
+  const { active, progress } = useProgress()
+  return (
+    <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+      {active ? `Cargando modelo 3D: ${Math.round(progress)}%` : "Modelo 3D listo"}
+    </p>
+  )
+}
+
+export default function ProductViewer() {
+  const [resetKey, reset] = React.useReducer((value) => value + 1, 0)
+
+  return (
+    <section aria-labelledby="product-model-title" className="space-y-3">
+      <div>
+        <h2 id="product-model-title" className="font-heading text-xl font-semibold">
+          Modelo del producto
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Arrastra para rotar, usa la rueda para ampliar o restablece la vista.
+        </p>
+      </div>
+
+      <div className="relative aspect-square overflow-hidden rounded-xl border bg-card">
+        <img
+          src="/models/product-poster.webp"
+          alt="Producto visto de frente"
+          className="absolute inset-0 size-full object-contain"
+          width="960"
+          height="960"
+        />
+        <Canvas
+          aria-hidden="true"
+          frameloop="demand"
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0.4, 4], fov: 36 }}
+          gl={{ antialias: true, powerPreference: "high-performance" }}
+        >
+          <React.Suspense fallback={null}>
+            <Environment preset="studio" />
+            <Product resetKey={resetKey} />
+            <OrbitControls
+              makeDefault
+              enablePan={false}
+              minDistance={2}
+              maxDistance={7}
+            />
+          </React.Suspense>
+        </Canvas>
+      </div>
+
+      <div className="flex items-center justify-between gap-3">
+        <LoadingStatus />
+        <button
+          type="button"
+          onClick={reset}
+          className="rounded-md border bg-background px-3 py-2 text-sm font-medium"
+        >
+          Restablecer vista
+        </button>
+      </div>
+    </section>
+  )
+}
+
+useGLTF.preload("/models/product.glb")
+```
+
+El póster es mejora progresiva: ocupa la misma caja, sirve mientras carga JS o
+el modelo y sobrevive a la ausencia de WebGL. En producción envuelve el visor
+diferido con el Error Boundary habitual para conservar imagen e información si
+falla la descarga. No precargues un visor muy por debajo del fold.
+
+La [guía de carga de Fiber](https://r3f.docs.pmnd.rs/tutorials/loading-models)
+cubre `useGLTF`, `Suspense`, progreso y preload. Three.js recomienda glTF 2.0
+por su gestión coherente del color; consulta
+[`GLTFLoader`](https://threejs.org/docs/pages/GLTFLoader.html).
+
+## Reglas de movimiento e interacción
+
+- Nunca dejes información esencial disponible solo al rotar. Nombre, precio,
+  variantes y compra permanecen en HTML.
+- Canvas decorativos usan `aria-hidden="true"`. Un visor ofrece además póster,
+  instrucciones, estado y controles DOM operables por teclado.
+- No autorrotes por defecto. Si el usuario activa rotación, inicialízala apagada
+  cuando `matchMedia("(prefers-reduced-motion: reduce)")` coincida y ofrece parar.
+- Mantén controles fuera del canvas para heredar foco, tokens, teclado y alto contraste.
+- Ante pérdida de contexto WebGL o carga fallida, conserva el póster.
+
+## Presupuesto de producción
+
+Empieza con estos límites y mide en móviles modestos representativos:
+
+| Recurso | Presupuesto inicial |
+| --- | --- |
+| Página inicial | Ningún chunk Three.js/R3F antes de activar la frontera cliente |
+| Transferencia del modelo | ≤ 1 MB comprimido en hero; ≤ 3 MB en un visor intencional |
+| Geometría | ≤ 100k triángulos visibles en móvil |
+| Texturas | Normalmente ≤ 2K; KTX2 si domina la transferencia |
+| Densidad de píxel | Limita a `[1, 1.5]`; redúcela antes de quitar contenido |
+| Bucle de frames | `demand`, salvo que el movimiento continuo sea requisito |
+
+Reutiliza geometrías y materiales, usa instancing para repeticiones, glTF con
+Meshopt o Draco y texturas KTX2/Basis. No crees materiales dentro de `useFrame`;
+loaders cacheados y objetos compartidos ahorran CPU y subidas GPU. La
+[guía de rendimiento](https://r3f.docs.pmnd.rs/advanced/scaling-performance)
+documenta caché, instancing, DPR adaptativo y `PerformanceMonitor`.
+
+Antes de publicar, prueba temas claro/oscuro, teclado, movimiento reducido,
+zoom 200%, 4G lento, un 404 del modelo y pérdida de contexto WebGL. El póster y
+el contenido DOM deben seguir siendo una experiencia completa en cada fallo.

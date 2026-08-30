@@ -53,16 +53,7 @@ viewports it renders as a `Sheet` automatically. Read the current state
 (`state`, `open`, `isMobile`, `toggleSidebar`) with the `useSidebar()` hook
 from any descendant.
 
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `defaultOpen` (SidebarProvider) | `boolean` — uncontrolled initial open state | `true` |
-| `open` / `onOpenChange` (SidebarProvider) | `boolean` / `(open: boolean) => void` — controlled state | — |
-| `side` (Sidebar) | `left \| right` | `left` |
-| `variant` (Sidebar) | `sidebar \| floating \| inset` | `sidebar` |
-| `collapsible` (Sidebar) | `offcanvas \| icon \| none` | `offcanvas` |
-| `tooltip` (SidebarMenuButton) | `string \| TooltipContent props` — shown when collapsed to icons | — |
+## Usage notes
 
 `SidebarTrigger` is a `Button` that calls `toggleSidebar()`; it forwards all
 button props.

@@ -1,0 +1,1 @@
+{"$schema":"https://ui.logic2b.com/schema/registry-changelog.json","schemaVersion":1,"name":"hero-01-animated","currentVersion":"1.0.0-rc.1","changes":[{"version":"1.0.0-rc.1","releasedAt":"2026-08-29","kind":"baseline","summary":"First release tracked by the immutable registry manifest and per-item changelog contract."}]}

@@ -13,22 +13,50 @@ block and chart — without leaving the conversation and without a shell.
 | --- | --- |
 | `list_components` | List registry items. Filter by `kind` (`component` \| `block` \| `chart` \| `theme`) or `category`. |
 | `search_components` | Keyword search ranked by name/title/description, e.g. `"login form"`, `"donut chart"`. |
-| `get_component` | Fetch an item's full payload by `name`: dependencies, registry dependencies and the complete source of every file. |
+| `get_component` | Fetch an item's full payload by `name`: dependencies, complete source and, for UI items, its generated API plus accessibility contract. |
+| `list_registry_versions` | List immutable releases and the exact versions behind channels such as `next`. |
+| `get_changelog` | Read the machine-readable release history for one registry item before updating it. |
 | `get_demo` | Usage examples for an item — the demo components the docs render, with imports rewritten to installed-project paths. |
 
 ### Act on a project
 
 | Tool | What it does |
 | --- | --- |
-| `install_plan` | Resolve items into an executable plan: every file to write (project-relative path + full content, registry dependencies resolved) and the npm dependencies to add. No command to run — write the files, add the deps, done. |
+| `install_plan` | Resolve items into an executable plan: every file to write (project-relative path + full content, registry dependencies resolved) and the npm dependencies to add. Accepts `iconLibrary` (`lucide`, `tabler`, `phosphor` or `hugeicons`). |
+| `scaffold_plan` | Generate a complete runnable Next.js, Vite or Astro project from a marketing, dashboard or auth starter: framework shell, routing entry, exact-pinned package manifest, theme and all registry files. An optional `/create` preset applies its theme and icon library. |
 | `add_command` | The exact `logic2b add` invocation (npm/pnpm/yarn/bun, names validated) for when a shell **is** available. |
 | `get_theme` | The theme.css stylesheet, its npm deps, and the customization catalog (base scales, accents, chart palettes, radii, fonts). |
+| `export_tokens` | Export a preset as a portable DTCG-shaped global/light/dark bundle for Style Dictionary and native pipelines. |
 | `decode_preset` | Decode a `/create` preset id into its config and the exact token values it pins for light and dark. |
 | `apply_preset` | Build a themed theme.css from a preset id or explicit choices; optionally patch a stylesheet you pass in. Returns the CSS and the canonical preset id. |
 | `contrast_audit` | WCAG 2.2 + APCA contrast of every text token pair (light + dark) for a preset, explicit options or raw token values — verify a generated theme before shipping it. |
+| `lint_theme` | Statically inspect a theme.css for missing, duplicate or invalid tokens, derived-sidebar drift and contrast regressions. Pass a preset id to verify exact preset fidelity. |
 
 `get_component` returns exactly what `npx logic2b add <name>` installs;
 `install_plan` turns that into file writes an agent can execute directly.
+`scaffold_plan` goes one level higher and returns an entire application an
+agent can create without invoking a scaffolder or having a shell. The generated
+Next.js, Vite and Astro projects are installed and production-built as a
+contract test before changes merge.
+Icon substitution is fail-closed: every canonical Lucide name is mapped to a
+real export from the chosen package, and generated source, dependencies and
+`.logic2b/base` snapshots change as one contract.
+`lint_theme` also gives maintenance agents a safe, non-executing contract check
+for theme.css after a project has been installed and edited over time.
+
+Registry read, install, scaffold and theme tools accept an optional `version`
+argument: an exact semver, a semver range or a published channel. It resolves
+once to an immutable manifest, verifies every fetched payload against its
+SHA-256 integrity and returns the exact resolved registry/item versions.
+`scaffold_plan` records that resolved version in the generated
+`components.json` and writes an update-ready `.logic2b/manifest.json` with each
+item's integrity and installed files; `add_command` emits only the resolved
+exact version, never the caller's unvalidated selector.
+
+Every UI payload carries structured accessibility metadata: semantic support,
+keyboard interactions, built-in ARIA behavior, consumer responsibilities and
+known limitations. `list_components` links to that contract and
+`get_component` returns it in full so agents can preserve it while composing.
 
 ## Usage
 
@@ -93,6 +121,7 @@ By default the server reads from `https://ui.logic2b.com`. Override it with the
 ```bash
 pnpm --dir packages/mcp dev     # run from source (tsx)
 pnpm --dir packages/mcp test    # unit tests (node:test)
+pnpm --dir packages/mcp test:scaffolds # install/build generated starters
 pnpm --dir packages/mcp build   # emit dist/
 ```
 

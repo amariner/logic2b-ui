@@ -17,7 +17,11 @@ import Install from "@/components/Install.astro";
 ```tsx
 import { NativeSelect } from "@/components/ui/native-select"
 
-<NativeSelect defaultValue="apple" className="w-[180px]">
+<NativeSelect
+  aria-label="Favorite fruit"
+  defaultValue="apple"
+  className="w-[180px]"
+>
   <option value="apple">Apple</option>
   <option value="banana">Banana</option>
 </NativeSelect>
@@ -44,15 +48,6 @@ popover styling exactly.
 ### Disabled
 
 <ComponentPreview name="native-select-disabled-demo" />
-
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `size` | `sm \| default` | `default` |
-| `disabled` | `boolean` | `false` |
-| `aria-invalid` | `boolean` | — |
-| ...props | `React.ComponentProps<"select">` | — |
 
 ## Accessibility
 

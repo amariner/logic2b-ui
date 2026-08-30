@@ -67,18 +67,10 @@ function ProfileForm() {
 validation state (error, id) from that context, so labels and messages stay
 wired to the right input automatically.
 
-## API
+## Usage notes
 
 `Form` is an alias for react-hook-form's `FormProvider`, so spread your `useForm`
 return value onto it. The pieces below consume field context.
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `control` (FormField) | `Control` — from `useForm()` | — |
-| `name` (FormField) | `string` — the field path | — |
-| `render` (FormField) | `({ field, fieldState, formState }) => ReactElement` | — |
-| `...form` (Form) | the object returned by `useForm()` | — |
-| `useFormField()` | hook returning `{ id, name, error, formItemId, formDescriptionId, formMessageId }` | — |
 
 ## Examples
 

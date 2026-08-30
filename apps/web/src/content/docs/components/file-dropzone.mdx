@@ -18,6 +18,7 @@ import Install from "@/components/Install.astro";
 import { FileDropzone } from "@/components/ui/file-dropzone"
 
 <FileDropzone
+  inputLabel="Upload product images"
   multiple
   accept="image/*"
   onFiles={(files) => upload(files)}
@@ -33,16 +34,6 @@ default icon and prompt.
 
 The surface is a `role="button"` region, focusable and operable with
 <kbd>Enter</kbd> / <kbd>Space</kbd> to open the file picker, so it works without
-a mouse. It wraps a real `<input type="file">`, so native file selection and
-`accept`/`multiple` behave as expected.
-
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `onFiles` | `(files: File[]) => void` | — |
-| `accept` | `string` | — |
-| `multiple` | `boolean` | `false` |
-| `disabled` | `boolean` | `false` |
-| `children` | `React.ReactNode` | default icon + prompt |
-| ...props | `React.ComponentProps<"div">` | — |
+a mouse. A labelled native `<input type="file">` is rendered alongside the
+surface, outside the button region, so native file selection works without
+nested interactive controls. Use `inputLabel` to describe the upload purpose.

@@ -28,6 +28,7 @@ import {
   CHARTS,
   DEFAULT_CONFIG,
   FONTS,
+  ICON_LIBRARIES,
   RADII,
   buildComponentsJson,
   buildCss,
@@ -252,14 +253,15 @@ export function CreateStudio() {
       const keys = Object.keys(obj)
       return keys[Math.floor(Math.random() * keys.length)]
     }
-    setCfg({
+    setCfg((current) => ({
+      ...current,
       base: pick(BASE_COLORS),
       theme: pick(ACCENTS),
       chart: pick(CHARTS),
       radius: pick(RADII),
       font: pick(FONTS),
       heading: pick(FONTS),
-    })
+    }))
   }, [])
 
   // Header actions (BaseLayout renders Shuffle + Get Code on /create).
@@ -327,6 +329,10 @@ export function CreateStudio() {
     label: FONT_LABELS[key] ?? key,
   }))
   const headingOpts = fontOpts
+  const iconOpts = Object.entries(ICON_LIBRARIES).map(([key, value]) => ({
+    key,
+    label: value.label,
+  }))
 
   return (
     <div
@@ -404,7 +410,7 @@ export function CreateStudio() {
           </p>
           <ControlRow
             label="Icon Library"
-            valueLabel="Lucide"
+            valueLabel={ICON_LIBRARIES[cfg.iconLibrary].label}
             glyph={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -421,9 +427,9 @@ export function CreateStudio() {
                 <path d="m8 12 3 3 5-6" />
               </svg>
             }
-            options={[{ key: "lucide", label: "Lucide" }]}
-            value="lucide"
-            onChange={() => {}}
+            options={iconOpts}
+            value={cfg.iconLibrary}
+            onChange={(iconLibrary) => set({ iconLibrary: iconLibrary as ThemeConfig["iconLibrary"] })}
           />
           <ControlRow
             label="Radius"
@@ -592,7 +598,7 @@ export function CreateStudio() {
             <button
               key={n}
               onClick={() => setPage(n)}
-              aria-label={`Page ${n}`}
+              aria-label={`Page ${String(n).padStart(2, "0")}`}
               aria-current={page === n}
               className={`inline-flex size-8 items-center justify-center rounded-md text-xs font-medium tabular-nums transition-colors ${
                 page === n

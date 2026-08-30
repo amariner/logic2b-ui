@@ -7,7 +7,7 @@ import {
 
 export default function InputOTPDemo() {
   return (
-    <InputOTP maxLength={6}>
+    <InputOTP aria-label="One-time code" maxLength={6}>
       <InputOTPGroup>
         <InputOTPSlot index={0} />
         <InputOTPSlot index={1} />

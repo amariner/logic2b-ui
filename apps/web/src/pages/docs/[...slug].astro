@@ -1,23 +1,88 @@
 ---
 import { getCollection, render } from "astro:content";
+import { registry } from "@logic2b/registry/registry";
+import AccessibilityContract from "@/components/AccessibilityContract.astro";
+import ApiReference from "@/components/ApiReference.astro";
+import ComponentPlayground from "@/components/ComponentPlayground.astro";
 import DocsLayout from "@/layouts/DocsLayout.astro";
+import { hasPlayground } from "@/data/playground-recipes";
 
 export async function getStaticPaths() {
-  const docs = await getCollection("docs");
+  const [docs, docsEs] = await Promise.all([
+    getCollection("docs"),
+    getCollection("docsEs"),
+  ]);
+  const spanishIds = new Set(docsEs.map((entry) => entry.id));
   return docs.map((entry) => ({
     params: { slug: entry.id === "index" ? undefined : entry.id },
-    props: { entry },
+    props: {
+      entry,
+      alternateHref: spanishIds.has(entry.id)
+        ? entry.id === "index"
+          ? "/es/docs"
+          : `/es/docs/${entry.id}`
+        : undefined,
+    },
   }));
 }
 
-const { entry } = Astro.props;
+const { entry, alternateHref } = Astro.props;
 const { Content, headings } = await render(entry);
+const componentName = entry.id.startsWith("components/")
+  ? entry.id.slice("components/".length)
+  : undefined;
+const component = componentName
+  ? registry.find(
+      (item) => item.name === componentName && item.type === "registry:ui",
+    )
+  : undefined;
+const accessibility = component?.accessibility;
+const api = component?.api;
+const playground = componentName && hasPlayground(componentName)
+  ? componentName
+  : undefined;
+const pageHeadings = [
+  ...headings,
+  ...(playground
+    ? [
+        {
+          depth: 2,
+          slug: `playground-${componentName}`,
+          text: "Live playground",
+        },
+      ]
+    : []),
+  ...(api
+    ? [
+      {
+        depth: 2,
+        slug: `api-reference-${componentName}`,
+        text: "API reference",
+      },
+    ]
+    : []),
+  ...(accessibility
+    ? [
+        {
+          depth: 2,
+          slug: `accessibility-contract-${componentName}`,
+          text: "Accessibility contract",
+        },
+      ]
+    : []),
+];
 ---
 
 <DocsLayout
   title={entry.data.title}
   description={entry.data.description}
-  headings={headings}
+  headings={pageHeadings}
+  alternateHref={alternateHref}
 >
   <Content />
+  {playground && <ComponentPlayground name={playground} />}
+  {componentName && api && <ApiReference name={componentName} contract={api} />}
+  {componentName && accessibility && (
+    <AccessibilityContract name={componentName} contract={accessibility} />
+  )}
 </DocsLayout>

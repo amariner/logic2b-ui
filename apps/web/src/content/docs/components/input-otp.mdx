@@ -22,7 +22,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 
-<InputOTP maxLength={6}>
+<InputOTP aria-label="One-time code" maxLength={6}>
   <InputOTPGroup>
     <InputOTPSlot index={0} />
     <InputOTPSlot index={1} />
@@ -38,17 +38,6 @@ import {
 ```
 
 Built on [input-otp](https://github.com/guilhermerodz/input-otp).
-
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `maxLength` (InputOTP) | `number` | — |
-| `value` / `onChange` (InputOTP) | `string` / `(value: string) => void` | — |
-| `pattern` (InputOTP) | `string` — regex allow-list (e.g. `REGEXP_ONLY_DIGITS`) | — |
-| `onComplete` (InputOTP) | `(value: string) => void` — fired when all slots fill | — |
-| `disabled` (InputOTP) | `boolean` | `false` |
-| `index` (InputOTPSlot) | `number` — which slot to render | — |
 
 ## Examples
 
@@ -73,3 +62,5 @@ Pass a `pattern` to restrict input — `REGEXP_ONLY_DIGITS` is re-exported by
   [input-otp](https://github.com/guilhermerodz/input-otp) primitive.
 - Invalid state is driven by `aria-invalid`, which styles the active slot with
   the destructive ring.
+- Give the underlying field an accessible name with a visible `<label>`,
+  `aria-label` or `aria-labelledby`; every bundled example does so explicitly.

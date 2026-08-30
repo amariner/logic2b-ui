@@ -51,20 +51,6 @@ Give each item an increasing `delay` to cascade a list as it enters:
 By default a reveal fires once and stays. Pass `once={false}` to re-hide and
 replay the recipe every time the element leaves and re-enters view.
 
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `preset` | `fade \| fade-up \| fade-down \| fade-left \| fade-right \| scale \| blur` | `fade-up` |
-| `duration` | `number` (ms) | `500` |
-| `delay` | `number` (ms) | `0` |
-| `once` | `boolean` | `true` |
-| `amount` | `number` (0–1 visible threshold) | `0.3` |
-| `margin` | `string` (rootMargin) | `"0px"` |
-| `root` | `RefObject<Element>` (scroll container) | viewport |
-| `asChild` | `boolean` | `false` |
-| ...props | `React.ComponentProps<"div">` | — |
-
 ## useInView
 
 `scroll-reveal` installs the `useInView` hook, which you can use on its own to

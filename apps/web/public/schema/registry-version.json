@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui.logic2b.com/schema/registry-version.json",
+  "title": "logic2b immutable registry version manifest",
+  "type": "object",
+  "required": ["schemaVersion", "version", "channel", "releasedAt", "items"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "version": { "type": "string" },
+    "channel": { "type": "string" },
+    "releasedAt": { "type": "string", "format": "date" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "description", "version", "registryVersion", "integrity", "content", "changelog"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "categories": { "type": "array", "items": { "type": "string" } },
+          "version": { "type": "string" },
+          "registryVersion": { "type": "string" },
+          "integrity": { "type": "string", "pattern": "^sha256-" },
+          "content": { "type": "string" },
+          "changelog": { "type": "string" },
+          "accessibility": { "type": "string", "pattern": "^/r/[^#]+\\.json#accessibility$" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

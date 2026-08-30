@@ -1,9 +1,11 @@
 import {
-  fetchItem,
+  createRegistryClient,
   type FetchLike,
   type RegistryFile,
   type RegistryItem,
 } from "./registry.ts"
+import { scaffoldRegistryPath, transformIconItems } from "@logic2b/scaffold"
+import { ICON_LIBRARIES, type IconLibrary } from "@logic2b/tokens"
 
 /**
  * Turn a registry file path into a project-relative target path, mirroring
@@ -13,14 +15,7 @@ import {
  * "theme.css".
  */
 export function planPath(srcDir: string, file: RegistryFile): string {
-  const root = srcDir === "" || srcDir === "." ? "" : `${srcDir.replace(/\/$/, "")}/`
-  if (file.path.startsWith("ui/")) return `${root}components/ui/${file.path.slice(3)}`
-  if (file.path.startsWith("blocks/")) return `${root}components/${file.path.slice(7)}`
-  if (file.path.startsWith("charts/")) return `${root}components/${file.path}`
-  if (file.path.startsWith("hooks/")) return `${root}${file.path}`
-  if (file.path.startsWith("lib/")) return `${root}${file.path}`
-  if (file.path.endsWith(".css")) return `${root}styles/${file.path}`
-  return `${root}${file.path}`
+  return scaffoldRegistryPath(srcDir, file.path)
 }
 
 /** Breadth-first resolution of items and their registry dependencies. */
@@ -42,18 +37,34 @@ export async function resolvePlanGraph(
 
 export interface InstallPlan {
   registry: string
-  items: { name: string; title: string; requested: boolean }[]
+  requestedVersion?: string
+  registryVersion?: string
+  items: {
+    name: string
+    title: string
+    requested: boolean
+    version?: string
+    integrity?: string
+    files?: string[]
+  }[]
   files: { path: string; content: string }[]
+  /** Raw registry sources retained for scaffold update snapshots. */
+  snapshots: { path: string; content: string }[]
   npmDependencies: string[]
+  iconLibrary: IconLibrary
   notes: string[]
 }
 
 export interface InstallPlanOptions {
   base: string
   fetchImpl?: FetchLike
+  /** Exact registry semver, semver range or published channel. */
+  version?: string
   /** Project source root the `@/*` alias points at. Default "src";
    *  pass "" (or ".") for projects with no src directory. */
   srcDir?: string
+  /** Icon implementation to substitute for the registry's canonical Lucide imports. */
+  iconLibrary?: IconLibrary
 }
 
 /**
@@ -64,15 +75,22 @@ export interface InstallPlanOptions {
  */
 export async function buildInstallPlan(
   names: string[],
-  { base, fetchImpl, srcDir = "src" }: InstallPlanOptions
+  { base, fetchImpl, srcDir = "src", version, iconLibrary = "lucide" }: InstallPlanOptions
 ): Promise<InstallPlan> {
+  if (!(iconLibrary in ICON_LIBRARIES)) {
+    throw new Error(`Unknown icon library "${iconLibrary}".`)
+  }
   const requested = new Set(names)
-  const resolved = await resolvePlanGraph(names, (name) =>
-    fetchItem(base, name, fetchImpl)
+  const client = await createRegistryClient(base, version, fetchImpl)
+  const resolved = transformIconItems(
+    await resolvePlanGraph(names, (name) => client.getItem(name)),
+    iconLibrary,
   )
 
   const files: { path: string; content: string }[] = []
   const seenPaths = new Set<string>()
+  const snapshots: { path: string; content: string }[] = []
+  const seenSnapshotPaths = new Set<string>()
   const npmDeps = new Set<string>()
   let hasTheme = false
 
@@ -80,6 +98,10 @@ export async function buildInstallPlan(
     if (item.type === "registry:style") hasTheme = true
     for (const dep of item.dependencies ?? []) npmDeps.add(dep)
     for (const file of item.files ?? []) {
+      if (!seenSnapshotPaths.has(file.path)) {
+        seenSnapshotPaths.add(file.path)
+        snapshots.push({ path: file.path, content: file.content })
+      }
       const path = planPath(srcDir, file)
       if (seenPaths.has(path)) continue
       seenPaths.add(path)
@@ -108,13 +130,24 @@ export async function buildInstallPlan(
 
   return {
     registry: base,
+    ...(client.requestedVersion
+      ? { requestedVersion: client.requestedVersion }
+      : {}),
+    ...(client.resolvedVersion
+      ? { registryVersion: client.resolvedVersion }
+      : {}),
     items: [...resolved.values()].map((item) => ({
       name: item.name,
       title: item.title ?? item.name,
       requested: requested.has(item.name),
+      ...(item.version ? { version: item.version } : {}),
+      ...(item.integrity ? { integrity: item.integrity } : {}),
+      files: (item.files ?? []).map((file) => file.path).sort(),
     })),
     files,
+    snapshots,
     npmDependencies: [...npmDeps].sort(),
+    iconLibrary,
     notes,
   }
 }

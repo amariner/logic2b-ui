@@ -7,14 +7,18 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./contrast": "./src/contrast.ts"
+    "./contrast": "./src/contrast.ts",
+    "./export": "./src/export.ts",
+    "./lint": "./src/lint.ts"
   },
   "scripts": {
-    "lint": "tsc --noEmit -p tsconfig.json",
+    "build": "tsx scripts/build-platforms.ts",
+    "lint": "tsc --noEmit -p tsconfig.json && tsx scripts/check-platforms.ts",
     "test": "node --import tsx --test test/*.test.ts"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
+    "style-dictionary": "5.5.2",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3"
   }

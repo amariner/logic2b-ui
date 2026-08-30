@@ -17,16 +17,8 @@ import Install from "@/components/Install.astro";
 ```tsx
 import { Progress } from "@/components/ui/progress"
 
-<Progress value={66} />
+<Progress value={66} aria-label="Upload progress" />
 ```
-
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` | `number \| null` — completion from 0 to `max` | — |
-| `max` | `number` — the value representing 100% | `100` |
-| `className` | `string` — sizing/width utilities (e.g. `w-[60%]`) | — |
 
 ## Examples
 

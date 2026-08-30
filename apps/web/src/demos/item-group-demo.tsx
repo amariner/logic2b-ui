@@ -24,7 +24,7 @@ export default function ItemGroupDemo() {
           <ItemDescription>Get notified about account activity.</ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Switch defaultChecked />
+          <Switch aria-label="Enable account activity notifications" defaultChecked />
         </ItemActions>
       </Item>
       <ItemSeparator />
@@ -37,7 +37,7 @@ export default function ItemGroupDemo() {
           <ItemDescription>Require a code at every sign-in.</ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Switch />
+          <Switch aria-label="Require two-factor authentication" />
         </ItemActions>
       </Item>
       <ItemSeparator />
@@ -50,7 +50,7 @@ export default function ItemGroupDemo() {
           <ItemDescription>Email me before a renewal charge.</ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Switch defaultChecked />
+          <Switch aria-label="Enable billing alerts" defaultChecked />
         </ItemActions>
       </Item>
     </ItemGroup>
