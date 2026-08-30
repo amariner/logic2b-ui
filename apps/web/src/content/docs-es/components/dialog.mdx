@@ -1,0 +1,56 @@
+---
+title: Diálogo
+description: Superpone una ventana sobre la interfaz principal para mostrar contenido que requiere la atención del usuario.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="dialog-demo" locale="es" />
+
+## Instalación
+
+<Install name="dialog" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+<Dialog>
+  <DialogTrigger>Abrir</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>¿Confirmas la acción?</DialogTitle>
+      <DialogDescription>
+        Esta acción no se puede deshacer.
+      </DialogDescription>
+    </DialogHeader>
+  </DialogContent>
+</Dialog>
+```
+
+## Ejemplos
+
+### Compartir enlace
+
+<ComponentPreview name="dialog-share-demo" locale="es" />
+
+### Controlado
+
+Gestiona el estado abierto desde tu aplicación para confirmar una acción destructiva.
+
+<ComponentPreview name="dialog-controlled-demo" locale="es" />
+
+## Accesibilidad
+
+- Está construido sobre [Dialog de Radix](https://www.radix-ui.com/primitives/docs/components/dialog): el foco queda contenido dentro del diálogo y vuelve al disparador al cerrarlo.
+- `DialogTitle` aporta el nombre accesible. Combínalo con `DialogDescription`; Radix conecta ambos mediante `aria-labelledby` y `aria-describedby`.
+- Tanto `Escape` como un clic en la capa exterior cierran el diálogo. El botón de cierre incluye una etiqueta solo visible para lectores de pantalla.

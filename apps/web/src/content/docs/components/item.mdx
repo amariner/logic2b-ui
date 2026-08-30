@@ -50,21 +50,12 @@ muted square backdrop sized to match; `variant="image"` sizes and clips an
 
 <ComponentPreview name="item-group-demo" />
 
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `variant` (Item) | `default \| outline \| muted` | `default` |
-| `size` (Item) | `default \| sm` | `default` |
-| `asChild` (Item) | `boolean` | `false` |
-| `variant` (ItemMedia) | `default \| icon \| image` | `default` |
-
 ## Parts
 
 | Component | Use for |
 | --- | --- |
 | `Item` | The row/card root — a flex container that wraps everything else. |
-| `ItemGroup` | Groups items into a list (`role="list"`), pair with `ItemSeparator`. |
+| `ItemGroup` | Visually groups items with neutral semantics; pair with `ItemSeparator`. |
 | `ItemSeparator` | A horizontal rule between grouped items. |
 | `ItemMedia` | Leading icon, image or avatar. |
 | `ItemContent` | Wraps `ItemTitle` + `ItemDescription`; multiple `ItemContent`s in one `Item` stay non-growing. |
@@ -75,8 +66,10 @@ muted square backdrop sized to match; `variant="image"` sizes and clips an
 
 ## Accessibility
 
-`ItemGroup` renders `role="list"` so assistive technology announces grouped
-items as a list. When an `Item` is interactive (a settings row that
-navigates, for example), pass `asChild` and render a real `<a>` or `<button>`
-as the child — don't attach `onClick` to a bare `<div>`, which native input
-methods and screen readers won't treat as actionable.
+`ItemGroup` is semantically neutral by default because not every composite
+group is a list. For true list content, pass `role="list"` to `ItemGroup` and
+`role="listitem"` to each `Item`. When an `Item` is interactive (a settings row
+that navigates, for example), pass `asChild` and render a real `<a>` or
+`<button>` as the child — don't attach `onClick` to a bare `<div>`, which native
+input methods and screen readers won't treat as actionable. Give every trailing
+icon button or switch its own accessible name.

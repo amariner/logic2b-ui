@@ -203,7 +203,7 @@ function TargetRow({
         {label}
       </p>
       <p className="mt-1 text-2xl font-bold tabular-nums">{amount}</p>
-      <Progress value={pct} className="mt-3" />
+      <Progress value={pct} className="mt-3" aria-label={`${label} progress`} />
       <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
         <span>{pct}% achieved</span>
         <span className="tabular-nums">{current}</span>

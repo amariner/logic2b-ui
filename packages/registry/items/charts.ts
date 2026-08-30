@@ -206,6 +206,19 @@ export const items: RegistryItem[] = [
       { path: "src/charts/chart-area-04.tsx", type: "registry:block" },
     ],
   },
+  {
+    name: "chart-realtime-01",
+    type: "registry:block",
+    title: "Real-time Line Chart",
+    description:
+      "A deterministic rolling-window line chart with start, pause and reset controls, live throughput and error metrics, accessible status announcements and animation-free data updates. Use for telemetry, operations or live product analytics.",
+    dependencies: ["recharts"],
+    registryDependencies: ["button", "card", "chart"],
+    categories: ["charts", "charts-realtime"],
+    files: [
+      { path: "src/charts/chart-realtime-01.tsx", type: "registry:block" },
+    ],
+  },
 ]
 
 /** All installable charts share the same shape: a single file, recharts, and

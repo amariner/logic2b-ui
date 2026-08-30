@@ -97,7 +97,7 @@ function ControlSlider({
       </span>
       <div className="grid flex-1 gap-1.5">
         <span className="text-xs text-muted-foreground">{label}</span>
-        <Slider defaultValue={[value]} max={100} step={1} />
+        <Slider aria-label={label} defaultValue={[value]} max={100} step={1} />
       </div>
     </div>
   )
@@ -164,7 +164,7 @@ export function RollerShades() {
         <div className="relative h-24 overflow-hidden rounded-lg border bg-gradient-to-b from-muted-foreground/20 to-muted">
           <div className="absolute inset-x-0 top-0 h-2/3 bg-muted-foreground/25" />
         </div>
-        <Slider defaultValue={[66]} max={100} step={1} />
+        <Slider aria-label="Roller shade position" defaultValue={[66]} max={100} step={1} />
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>OPEN</span>
           <span>CLOSE</span>

@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "width": 1200,
+  "height": 630,
+  "pages": [
+    {
+      "id": "3d-extras",
+      "title": "3D extras",
+      "image": "/og/docs/3d-extras.png",
+      "bytes": 31460,
+      "sha256": "2d8577f064ad246a0947ebdbd20aec1263b3e91586d7ba33c0776dc424b8e442"
+    },
+    {
+      "id": "agent-benchmarks",
+      "title": "Agent Benchmarks",
+      "image": "/og/docs/agent-benchmarks.png",
+      "bytes": 30252,
+      "sha256": "9ae73effa54b2ef0c06e6e3f50dbe7e249eacc22d87aaff26f837b1e202421ee"
+    },
+    {
+      "id": "backend",
+      "title": "Bring your own backend",
+      "image": "/og/docs/backend.png",
+      "bytes": 37555,
+      "sha256": "4efa1be374c7b3fdefc783805ee6722f5b5b8d20cc9858e6c948aafe1b6b1f8c"
+    },
+    {
+      "id": "benchmarks",
+      "title": "Framework Benchmarks",
+      "image": "/og/docs/benchmarks.png",
+      "bytes": 32228,
+      "sha256": "86a2b18993cf61216926052b1d86f661e69050909103b29049cf30c6ef844a5e"
+    },
+    {
+      "id": "components/accordion",
+      "title": "Accordion",
+      "image": "/og/docs/components/accordion.png",
+      "bytes": 33509,
+      "sha256": "c8ef7424e03e4ccb65cc441fc6007d8ce129ebfac7c9ab7c230308bca88a1727"
+    },
+    {
+      "id": "components/alert",
+      "title": "Alert",
+      "image": "/og/docs/components/alert.png",
+      "bytes": 25449,
+      "sha256": "0f17802bf87041bb118664ccdc8ed46485ae72ac8cf000d7f6179b7d0266d2db"
+    },
+    {
+      "id": "components/alert-dialog",
+      "title": "Alert Dialog",
+      "image": "/og/docs/components/alert-dialog.png",
+      "bytes": 34181,
+      "sha256": "a97cccf1e94438fa13534e8b91cf0c336efd2ae01b60e885829dc1635d31809b"
+    },
+    {
+      "id": "components/aspect-ratio",
+      "title": "Aspect Ratio",
+      "image": "/og/docs/components/aspect-ratio.png",
+      "bytes": 34986,
+      "sha256": "c971f7796afe309dbdcda5ac4d373cbce32efd2ac93312f6041b85cff4d7dfc6"
+    },
+    {
+      "id": "components/autocomplete",
+      "title": "Autocomplete",
+      "image": "/og/docs/components/autocomplete.png",
+      "bytes": 36020,
+      "sha256": "5b3c17676467992a5007a0d2e1e4eb0d0d5b0805f5d92441a9a3484042d53387"
+    },
+    {
+      "id": "components/avatar",
+      "title": "Avatar",
+      "image": "/og/docs/components/avatar.png",
+      "bytes": 31268,
+      "sha256": "e0fd081c3c11e628e28247faa2fc0669f5c1a1be49323811a91a2ea03a0b122a"
+    },
+    {
+      "id": "components/badge",
+      "title": "Badge",
+      "image": "/og/docs/components/badge.png",
+      "bytes": 31150,
+      "sha256": "844e9efd18271635aa91898ef955913203d3dbf3d7dc95f36ce83883af75d4ec"
+    },
+    {
+      "id": "components/breadcrumb",
+      "title": "Breadcrumb",
+      "image": "/og/docs/components/breadcrumb.png",
+      "bytes": 34395,
+      "sha256": "ea3b47453c6a3d528261657679b97376407596c69f6b960f8a8f29f9c4007dcb"
+    },
+    {
+      "id": "components/button",
+      "title": "Button",
+      "image": "/og/docs/components/button.png",
+      "bytes": 30856,
+      "sha256": "72bd09b92f892c5828efb77be63f51642bf2945d145bb646c251c1181b5a5d6c"
+    },
+    {
+      "id": "components/button-group",
+      "title": "Button Group",
+      "image": "/og/docs/components/button-group.png",
+      "bytes": 34040,
+      "sha256": "3f43f1f89442cd40fbd0d2f2548581d25b7bb23763ebe814ea77fdd90a47a1c7"
+    },
+    {
+      "id": "components/calendar",
+      "title": "Calendar",
+      "image": "/og/docs/components/calendar.png",
+      "bytes": 36684,
+      "sha256": "a9f5e45560c7e0a2aedcc681455deac51f0e7e51eda3290fe030d2a546bad2e1"
+    },
+    {
+      "id": "components/card",
+      "title": "Card",
+      "image": "/og/docs/components/card.png",
+      "bytes": 30633,
+      "sha256": "ff811469aaf157a0d12637e1ac4c7d6ef1c951ea24fa12cfe9d63eb2c5f870ed"
+    },
+    {
+      "id": "components/carousel",
+      "title": "Carousel",
+      "image": "/og/docs/components/carousel.png",
+      "bytes": 33752,
+      "sha256": "deb6c07dbdead42d2be8f63dd21d3750393130e9632228059d43118e5aa25a79"
+    },
+    {
+      "id": "components/chart",
+      "title": "Chart",
+      "image": "/og/docs/components/chart.png",
+      "bytes": 29395,
+      "sha256": "4881c48cfc0bfd6568caac72d2ab020e9b283fad7856dc67d2822651c01b29be"
+    },
+    {
+      "id": "components/checkbox",
+      "title": "Checkbox",
+      "image": "/og/docs/components/checkbox.png",
+      "bytes": 31230,
+      "sha256": "ba37ab40833f28bf14b5100a35c0e1f9615282fed0cfb1de37ceae7b953a7d79"
+    },
+    {
+      "id": "components/code-block",
+      "title": "Code Block",
+      "image": "/og/docs/components/code-block.png",
+      "bytes": 30932,
+      "sha256": "754c43673498d8f83b583aa2bf5f9d49f084f0b7842b0534c984c63685e5582c"
+    },
+    {
+      "id": "components/collapsible",
+      "title": "Collapsible",
+      "image": "/og/docs/components/collapsible.png",
+      "bytes": 35726,
+      "sha256": "53d6bf4d028f0da93314db0996ea2b5ffe541835990313efbae1a8fba889796c"
+    },
+    {
+      "id": "components/color-picker",
+      "title": "Color Picker",
+      "image": "/og/docs/components/color-picker.png",
+      "bytes": 35653,
+      "sha256": "5452f77c055d159fde6899f29ca098cac06bb6e5bef71f9f7c2800c1a0cfc3d2"
+    },
+    {
+      "id": "components/combobox",
+      "title": "Combobox",
+      "image": "/og/docs/components/combobox.png",
+      "bytes": 35315,
+      "sha256": "7370c0c97a35d13b9bf2fede61a77e74f6be6887348663c62fd6f7f0dd26a5cb"
+    },
+    {
+      "id": "components/command",
+      "title": "Command",
+      "image": "/og/docs/components/command.png",
+      "bytes": 28610,
+      "sha256": "621f3ebd05ffa6ab64060d3e7b7a5365aa4a7371e6c866c125b9b91bf96f3a20"
+    },
+    {
+      "id": "components/context-menu",
+      "title": "Context Menu",
+      "image": "/og/docs/components/context-menu.png",
+      "bytes": 35180,
+      "sha256": "091010e5f2bb592e1e3137879653927af79393a5ce2ad4d92e3d9b720f188c5b"
+    },
+    {
+      "id": "components/data-table",
+      "title": "Data Table",
+      "image": "/og/docs/components/data-table.png",
+      "bytes": 33491,
+      "sha256": "a17709870d91638f8e3e706a6edde772aef713edfc8fa43e08d3d4aae8409043"
+    },
+    {
+      "id": "components/date-picker",
+      "title": "Date Picker",
+      "image": "/og/docs/components/date-picker.png",
+      "bytes": 32271,
+      "sha256": "873a4ed69bbe3c01494ea0bc1734922d0cfed942d2529a08a939e7ab26a2c7ad"
+    },
+    {
+      "id": "components/dialog",
+      "title": "Dialog",
+      "image": "/og/docs/components/dialog.png",
+      "bytes": 30649,
+      "sha256": "f5cc73c5a04a83296de358f1f2d9f4ac5addd086182a9f551ccd0e86a6ed8a8f"
+    },
+    {
+      "id": "components/drawer",
+      "title": "Drawer",
+      "image": "/og/docs/components/drawer.png",
+      "bytes": 35781,
+      "sha256": "5882b5abf9418a0fa0f11b4141f6f4a5725f1720f1e3addb7d798ea784044aea"
+    },
+    {
+      "id": "components/dropdown-menu",
+      "title": "Dropdown Menu",
+      "image": "/og/docs/components/dropdown-menu.png",
+      "bytes": 34569,
+      "sha256": "3af2ae3f8755771aecff82b8af8b86dd6eb0fe1ef7a08b3c55fc691baf7dd3b6"
+    },
+    {
+      "id": "components/empty",
+      "title": "Empty",
+      "image": "/og/docs/components/empty.png",
+      "bytes": 35423,
+      "sha256": "bde8293bad4c9d754b9a08ba4a515f0a57bf037276d61d04d63027c27a7469a5"
+    },
+    {
+      "id": "components/field",
+      "title": "Field",
+      "image": "/og/docs/components/field.png",
+      "bytes": 29335,
+      "sha256": "51272eeb7a75fa42dcd5a4b09d04b012d1fd34f45d2c1cdb789ed57891d02d17"
+    },
+    {
+      "id": "components/file-dropzone",
+      "title": "File Dropzone",
+      "image": "/og/docs/components/file-dropzone.png",
+      "bytes": 32774,
+      "sha256": "34fb469dc862e2c21481864c97e501a85ccd852a72a0cc5858d72c2f514a88e5"
+    },
+    {
+      "id": "components/form",
+      "title": "Form",
+      "image": "/og/docs/components/form.png",
+      "bytes": 31814,
+      "sha256": "de9383c0464315dbaa08ed565a00abb8ec58c46d548c9bc711539949a022ee8a"
+    },
+    {
+      "id": "components/hover-card",
+      "title": "Hover Card",
+      "image": "/og/docs/components/hover-card.png",
+      "bytes": 28712,
+      "sha256": "2040eb6afc093ad5f6235aac99bf00e52ccb5143d85c70ddb7e667aec0f39b0a"
+    },
+    {
+      "id": "components/index",
+      "title": "Components",
+      "image": "/og/docs/components/index.png",
+      "bytes": 35184,
+      "sha256": "480568d58412afa9b9845fa1e9fcae99df3a088b4ac8b187d6c3a9748c1c178a"
+    },
+    {
+      "id": "components/input",
+      "title": "Input",
+      "image": "/og/docs/components/input.png",
+      "bytes": 26698,
+      "sha256": "b872aaa74b0d4fa4bd114b694879e31b6b339c1cdef48966e86679379cf2a4d7"
+    },
+    {
+      "id": "components/input-group",
+      "title": "Input Group",
+      "image": "/og/docs/components/input-group.png",
+      "bytes": 31688,
+      "sha256": "4d2338be922af76ebdfef8e9ca82428ac0c766bcbfcc445cf8881a3d76f4ebe8"
+    },
+    {
+      "id": "components/input-otp",
+      "title": "Input OTP",
+      "image": "/og/docs/components/input-otp.png",
+      "bytes": 30939,
+      "sha256": "3946d8ab9b1a73853c55b340f6bfd177fb26329b66d2e5450a598a253daf3065"
+    },
+    {
+      "id": "components/item",
+      "title": "Item",
+      "image": "/og/docs/components/item.png",
+      "bytes": 31291,
+      "sha256": "e19900c1ae4a201b1f381bc72ba515c6a85429cf9af4ef1904e4f907b8a950d7"
+    },
+    {
+      "id": "components/kbd",
+      "title": "Kbd",
+      "image": "/og/docs/components/kbd.png",
+      "bytes": 30421,
+      "sha256": "3e60070b2208d381dd8dbd90db868e010d89e84f23bccc1236d17682e6eb36e6"
+    },
+    {
+      "id": "components/label",
+      "title": "Label",
+      "image": "/og/docs/components/label.png",
+      "bytes": 27884,
+      "sha256": "0c6f15868949de01d6def9f2dfc53586a78b37e6b27002fdf96f066c824c44bc"
+    },
+    {
+      "id": "components/menubar",
+      "title": "Menubar",
+      "image": "/og/docs/components/menubar.png",
+      "bytes": 29572,
+      "sha256": "e15b35c982f38950583debcac9870025ca32a95627f21738b3f1f9683a555128"
+    },
+    {
+      "id": "components/motion",
+      "title": "Motion",
+      "image": "/og/docs/components/motion.png",
+      "bytes": 37300,
+      "sha256": "f8951500c5650ae192c3ffb6b5d4fcdb1d9a529de114371be3e34ce252ca592f"
+    },
+    {
+      "id": "components/motion-blur",
+      "title": "Motion Blur",
+      "image": "/og/docs/components/motion-blur.png",
+      "bytes": 35965,
+      "sha256": "fc215a653571395077de023f0a32bd814bd9b0eb6a3884bef3a099cb24e85ec7"
+    },
+    {
+      "id": "components/motion-fade",
+      "title": "Motion Fade",
+      "image": "/og/docs/components/motion-fade.png",
+      "bytes": 35410,
+      "sha256": "401cbf02aa588f05b74bd019e9d3451f97c7770382f0faa4e48fa47701f3693e"
+    },
+    {
+      "id": "components/motion-scale",
+      "title": "Motion Scale",
+      "image": "/og/docs/components/motion-scale.png",
+      "bytes": 37444,
+      "sha256": "f7263f4bac324bc216e437894491a4b8389a7ed580acd7863b2b1bbbd875cd94"
+    },
+    {
+      "id": "components/motion-slide",
+      "title": "Motion Slide",
+      "image": "/og/docs/components/motion-slide.png",
+      "bytes": 39057,
+      "sha256": "1395ce0c464ce5cff1806aedb38992d0a003f10eb56222ae7da6a7d98136cde4"
+    },
+    {
+      "id": "components/native-select",
+      "title": "Native Select",
+      "image": "/og/docs/components/native-select.png",
+      "bytes": 36972,
+      "sha256": "9cce264d703feb0cdb2a3e17675a949be9567950f2b128f4eca713ddc873c1a9"
+    },
+    {
+      "id": "components/navigation-menu",
+      "title": "Navigation Menu",
+      "image": "/og/docs/components/navigation-menu.png",
+      "bytes": 33001,
+      "sha256": "f8cbcd3a98e22010eb169bd4194d16bf143dcef87461b6c52d855bfecd5db4ab"
+    },
+    {
+      "id": "components/number-field",
+      "title": "Number Field",
+      "image": "/og/docs/components/number-field.png",
+      "bytes": 32501,
+      "sha256": "d1bcf06673d8d7112462d2a1f61a98be4a4f9806730cc61124c2a029cd42ddf7"
+    },
+    {
+      "id": "components/pagination",
+      "title": "Pagination",
+      "image": "/og/docs/components/pagination.png",
+      "bytes": 30724,
+      "sha256": "2a3a24558a3c955030baaf7b21b739237fa575a7aa5530d90ad34aae312920a7"
+    },
+    {
+      "id": "components/parallax",
+      "title": "Parallax",
+      "image": "/og/docs/components/parallax.png",
+      "bytes": 36604,
+      "sha256": "69cff125f8d1627d5f41b7d97e52cdd981a1292a79a08080e2551148207b0cf8"
+    },
+    {
+      "id": "components/popover",
+      "title": "Popover",
+      "image": "/og/docs/components/popover.png",
+      "bytes": 29290,
+      "sha256": "e4ae2d8b8cdd2f0da1eb192e86c9370894fd92dc66f02944a57f745d2743d0b5"
+    },
+    {
+      "id": "components/progress",
+      "title": "Progress",
+      "image": "/og/docs/components/progress.png",
+      "bytes": 30737,
+      "sha256": "3db0890e649c075f2c798f76561d661607261a6034bca0959524c45551b791cc"
+    },
+    {
+      "id": "components/radio-group",
+      "title": "Radio Group",
+      "image": "/og/docs/components/radio-group.png",
+      "bytes": 36218,
+      "sha256": "d5cb263e3a8ec6cc42e4582e968a3a7196af95dffa7879304625857704b967ac"
+    },
+    {
+      "id": "components/rating",
+      "title": "Rating",
+      "image": "/og/docs/components/rating.png",
+      "bytes": 39963,
+      "sha256": "dc5d81827ba3a57c17f50b9a42cda9a08c622738586cf60f3c9b8de8638c0815"
+    },
+    {
+      "id": "components/resizable",
+      "title": "Resizable",
+      "image": "/og/docs/components/resizable.png",
+      "bytes": 32675,
+      "sha256": "f8690b7cca6f8b1ea1e6f573ea653a8cb1680deaa603759c315df4a93c526ace"
+    },
+    {
+      "id": "components/scroll-area",
+      "title": "Scroll Area",
+      "image": "/og/docs/components/scroll-area.png",
+      "bytes": 31484,
+      "sha256": "251f0db4af47afdc954331f927c114e73b0739f0d44b0a904e59a9a298ff7466"
+    },
+    {
+      "id": "components/scroll-reveal",
+      "title": "Scroll Reveal",
+      "image": "/og/docs/components/scroll-reveal.png",
+      "bytes": 37168,
+      "sha256": "9f349fdf10bc9b094bf4ce4959d0553bf9538c4e1f5877ef660a75d7fbacf753"
+    },
+    {
+      "id": "components/select",
+      "title": "Select",
+      "image": "/og/docs/components/select.png",
+      "bytes": 32487,
+      "sha256": "8112dad5c28bb3bb9c560cac03224de6da7ff7b2feffc1a7c6dea773f95c9b54"
+    },
+    {
+      "id": "components/separator",
+      "title": "Separator",
+      "image": "/og/docs/components/separator.png",
+      "bytes": 30375,
+      "sha256": "f2bcce10b9fa8e71d62d74e6739f72d2fd88f19cc32215e231bf6cf292c8dece"
+    },
+    {
+      "id": "components/sheet",
+      "title": "Sheet",
+      "image": "/og/docs/components/sheet.png",
+      "bytes": 30819,
+      "sha256": "1af432590c5cbb0cf3facdf220e96f8938c9c1a5391c614a3357e9fbf5012f6c"
+    },
+    {
+      "id": "components/sidebar",
+      "title": "Sidebar",
+      "image": "/og/docs/components/sidebar.png",
+      "bytes": 32094,
+      "sha256": "38afb34ffa6bfa7c2bf4b268835c8c4b68eb14456b37aaa00e9e7a4d359f5824"
+    },
+    {
+      "id": "components/skeleton",
+      "title": "Skeleton",
+      "image": "/og/docs/components/skeleton.png",
+      "bytes": 31602,
+      "sha256": "d35d95d14bb480afc925a8846141b0e00ab126ba0f341a0db352dd8299212dac"
+    },
+    {
+      "id": "components/slider",
+      "title": "Slider",
+      "image": "/og/docs/components/slider.png",
+      "bytes": 30894,
+      "sha256": "524a2c7b2078fcfe5d2d6ac756bfa9006e35029fe830605646735ca07433a7ef"
+    },
+    {
+      "id": "components/sonner",
+      "title": "Sonner",
+      "image": "/og/docs/components/sonner.png",
+      "bytes": 30200,
+      "sha256": "2a18dd293337f1ff9dacb0ff91e1c8a5f63d61f688351a29ca3749edf875a295"
+    },
+    {
+      "id": "components/spinner",
+      "title": "Spinner",
+      "image": "/og/docs/components/spinner.png",
+      "bytes": 30841,
+      "sha256": "b0ed1fec5de15ea3171e636346fd78c57e71be966845cacf3cc4755c76eff421"
+    },
+    {
+      "id": "components/stepper",
+      "title": "Stepper",
+      "image": "/og/docs/components/stepper.png",
+      "bytes": 34120,
+      "sha256": "96a7490c1f5d1d5d0e5c54caf5827e010e5dacb27d87b5986c8616e42d52327a"
+    },
+    {
+      "id": "components/switch",
+      "title": "Switch",
+      "image": "/og/docs/components/switch.png",
+      "bytes": 31870,
+      "sha256": "a0f88d123c10784d17b1c73c9920ee12f7d9be78687e83c7388179e85ab01e3a"
+    },
+    {
+      "id": "components/table",
+      "title": "Table",
+      "image": "/og/docs/components/table.png",
+      "bytes": 30825,
+      "sha256": "e82c4dd011f8bb9def1ee9961696e267e636520ba7a083e49a7e851d4cae051a"
+    },
+    {
+      "id": "components/tabs",
+      "title": "Tabs",
+      "image": "/og/docs/components/tabs.png",
+      "bytes": 32995,
+      "sha256": "696cbbd4f9d129bfe7b0367db9a543383cc92b6df993f3c2ea299f7eca3cc18a"
+    },
+    {
+      "id": "components/tags-input",
+      "title": "Tags Input",
+      "image": "/og/docs/components/tags-input.png",
+      "bytes": 34476,
+      "sha256": "8d6bd57dc8972420b862e295542974bb8cd826e110c12c32b032898d38d0e655"
+    },
+    {
+      "id": "components/textarea",
+      "title": "Textarea",
+      "image": "/og/docs/components/textarea.png",
+      "bytes": 28121,
+      "sha256": "c4563a907c4241beb4332424e16b6d03f765c7498bf14823936ff2181208c758"
+    },
+    {
+      "id": "components/timeline",
+      "title": "Timeline",
+      "image": "/og/docs/components/timeline.png",
+      "bytes": 30438,
+      "sha256": "5e0130393d3d12a6d083ddc99a8c70677fc849d6900e46705ac1d616b6a2589c"
+    },
+    {
+      "id": "components/toggle",
+      "title": "Toggle",
+      "image": "/og/docs/components/toggle.png",
+      "bytes": 29455,
+      "sha256": "e1f84ae7602323febd335d3c22740aa7b9697255f7e96e73ee9c1a9c18456c16"
+    },
+    {
+      "id": "components/toggle-group",
+      "title": "Toggle Group",
+      "image": "/og/docs/components/toggle-group.png",
+      "bytes": 33756,
+      "sha256": "7a58377d3ae0c3e766af947488da8c3bf7fd8f5a76e9628010303a498e5f66ef"
+    },
+    {
+      "id": "components/tooltip",
+      "title": "Tooltip",
+      "image": "/og/docs/components/tooltip.png",
+      "bytes": 35480,
+      "sha256": "ac8127dc7665bb6eca10a00123b8621cf6a3fae64dc372a5cc8727b7c7c25d0e"
+    },
+    {
+      "id": "components/tree-view",
+      "title": "Tree View",
+      "image": "/og/docs/components/tree-view.png",
+      "bytes": 36710,
+      "sha256": "98b12d727b78066bdca3bfef2fe4e8ca2115c7bf5560634e4039b395a2eed532"
+    },
+    {
+      "id": "components/typography",
+      "title": "Typography",
+      "image": "/og/docs/components/typography.png",
+      "bytes": 33549,
+      "sha256": "7eb8ee5078cf02dc07a28da8aa73071389f30ba5a0bd65184bd377f5bb59524a"
+    },
+    {
+      "id": "cross-platform-tokens",
+      "title": "Cross-platform tokens",
+      "image": "/og/docs/cross-platform-tokens.png",
+      "bytes": 35518,
+      "sha256": "2d76760b66d7b4ab28ba6048514c84e5da3fa9597d0fc16c3a63e988b1fbf713"
+    },
+    {
+      "id": "es/3d-extras",
+      "title": "Extras 3D",
+      "image": "/og/docs/es/3d-extras.png",
+      "bytes": 32853,
+      "sha256": "062b1293fbf752c071b618029945a97a5b02fa43fd5f4361c86444ed41ca12fb"
+    },
+    {
+      "id": "es/agent-benchmarks",
+      "title": "Benchmarks de agentes",
+      "image": "/og/docs/es/agent-benchmarks.png",
+      "bytes": 35529,
+      "sha256": "b482ac2bdeb930e270d01869b3c7c2349d5b900da3d20bceac43f8cee6efdf67"
+    },
+    {
+      "id": "es/backend",
+      "title": "Conecta tu propio backend",
+      "image": "/og/docs/es/backend.png",
+      "bytes": 36794,
+      "sha256": "f0b6805f9860bb1784edec38195ac0d5dc1abfc34bcdaf16605b24e4c4fef6fb"
+    },
+    {
+      "id": "es/benchmarks",
+      "title": "Benchmarks de frameworks",
+      "image": "/og/docs/es/benchmarks.png",
+      "bytes": 36391,
+      "sha256": "ce29e3058cc44a2f35e5e129630bb992432e5ff55422750893696836eb76fb0c"
+    },
+    {
+      "id": "es/components/button",
+      "title": "Botón",
+      "image": "/og/docs/es/components/button.png",
+      "bytes": 28689,
+      "sha256": "be2d6bc776848d4dcf99930eb346ee5199dae9e996070c262e7035716482947c"
+    },
+    {
+      "id": "es/components/card",
+      "title": "Tarjeta",
+      "image": "/og/docs/es/components/card.png",
+      "bytes": 28043,
+      "sha256": "5ba4d63d127196ecc529b00a3817842439bf478c8e62284b2da527be6eb13c86"
+    },
+    {
+      "id": "es/components/chart",
+      "title": "Gráfico",
+      "image": "/og/docs/es/components/chart.png",
+      "bytes": 32094,
+      "sha256": "af1225aa95e34b6cf1afa333fee495e92d301405c345546773e5f1f89a8c0fa0"
+    },
+    {
+      "id": "es/components/checkbox",
+      "title": "Casilla de verificación",
+      "image": "/og/docs/es/components/checkbox.png",
+      "bytes": 28731,
+      "sha256": "79b0e6a45114e94af21a2701363509c93f653c4cd9e64053b6d911785b2f202d"
+    },
+    {
+      "id": "es/components/dialog",
+      "title": "Diálogo",
+      "image": "/og/docs/es/components/dialog.png",
+      "bytes": 31946,
+      "sha256": "a4d758051f55d2b81d2342b20b0460b56f3461311be91b359ee54caee842007b"
+    },
+    {
+      "id": "es/components/form",
+      "title": "Formulario",
+      "image": "/og/docs/es/components/form.png",
+      "bytes": 29891,
+      "sha256": "3ebe2acf6a3d10c82ab19677ddc7c8affb5fbbe332844c8cfbf0f81d6d351133"
+    },
+    {
+      "id": "es/components/input",
+      "title": "Campo de entrada",
+      "image": "/og/docs/es/components/input.png",
+      "bytes": 30980,
+      "sha256": "bba9f08319812f689eed261f861af46ef4372b6c603adbd6aaf97e118f71a7ab"
+    },
+    {
+      "id": "es/components/select",
+      "title": "Selector",
+      "image": "/og/docs/es/components/select.png",
+      "bytes": 27151,
+      "sha256": "4bcab05bf57583c31b98f96b54745991f20b1ff6b644d1c989116729f95d4cc4"
+    },
+    {
+      "id": "es/components/switch",
+      "title": "Interruptor",
+      "image": "/og/docs/es/components/switch.png",
+      "bytes": 29418,
+      "sha256": "6a25f40486695860075e3f3a2ba2f737e602be114629c664fca473ae3103e548"
+    },
+    {
+      "id": "es/components/textarea",
+      "title": "Área de texto",
+      "image": "/og/docs/es/components/textarea.png",
+      "bytes": 28824,
+      "sha256": "3a239a38a4634e9b75d82caabb53e7b66f593e5a9468a7562281f1ec252c419a"
+    },
+    {
+      "id": "es/cross-platform-tokens",
+      "title": "Tokens multiplataforma",
+      "image": "/og/docs/es/cross-platform-tokens.png",
+      "bytes": 36319,
+      "sha256": "4fc5ca282288d8fae0836d929a4cee650b6d5a11ff3336dcf2204b41726f286d"
+    },
+    {
+      "id": "es/index",
+      "title": "Introducción",
+      "image": "/og/docs/es/index.png",
+      "bytes": 29204,
+      "sha256": "efb39f3cc02deffe7a781e22d4205bc2b5ab534c74270d36eb0a0354b947bf47"
+    },
+    {
+      "id": "es/installation",
+      "title": "Instalación",
+      "image": "/og/docs/es/installation.png",
+      "bytes": 30608,
+      "sha256": "9ef2557214a15534a9203854bac34c7e9c759c5d1475b39e4762fe0f0595cc9c"
+    },
+    {
+      "id": "es/integration-paths",
+      "title": "Comparar vías de integración",
+      "image": "/og/docs/es/integration-paths.png",
+      "bytes": 38604,
+      "sha256": "e351727fc62322818e4a5e5432367f425706b3dcb2a54cbbfd142dc109fe7558"
+    },
+    {
+      "id": "es/llms",
+      "title": "Para LLM y agentes",
+      "image": "/og/docs/es/llms.png",
+      "bytes": 31584,
+      "sha256": "52e67847b2c63c3fde2f0c0f2503a762f1c1fa98c7b2e244d658d551638358cf"
+    },
+    {
+      "id": "es/theming",
+      "title": "Temas",
+      "image": "/og/docs/es/theming.png",
+      "bytes": 31846,
+      "sha256": "d4d1cc0d317a92b226ec6f1195a7ced7492209a0aa699532d95037083582ab9b"
+    },
+    {
+      "id": "index",
+      "title": "Introduction",
+      "image": "/og/docs/index.png",
+      "bytes": 30480,
+      "sha256": "19d6124f771a7e4c8b5a825316a3e57f60d7319afecae0b69b9452c25d4093c3"
+    },
+    {
+      "id": "installation",
+      "title": "Installation",
+      "image": "/og/docs/installation.png",
+      "bytes": 28419,
+      "sha256": "f395f446d0ade35f86b506c2c1f284e90ae7ab44cb9ca47358ce6a4efc6000b7"
+    },
+    {
+      "id": "integration-paths",
+      "title": "Compare Integration Paths",
+      "image": "/og/docs/integration-paths.png",
+      "bytes": 34496,
+      "sha256": "b7e6985bf1b2ac8513f6d1ec1aca6e2b6db4fb84dc540b77252da9a492ef5f5d"
+    },
+    {
+      "id": "llms",
+      "title": "For LLMs & Agents",
+      "image": "/og/docs/llms.png",
+      "bytes": 28583,
+      "sha256": "df5f37c08ecd6a6ae83865bf548641937e9286c5531a73909624d6d3b91b7934"
+    },
+    {
+      "id": "theming",
+      "title": "Theming",
+      "image": "/og/docs/theming.png",
+      "bytes": 28235,
+      "sha256": "70671c490b129ba6fd0ef4d85bf670150f93d29b513af2758bb043af4518509b"
+    }
+  ]
+}

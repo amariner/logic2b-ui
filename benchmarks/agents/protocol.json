@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "name": "logic2b agent benchmark",
+  "version": "1.1.0",
+  "description": "Measures whether a coding agent can install, theme and compose logic2b ui without hand-rolling the design system.",
+  "preset": "bmV1dHJhbHxibHVlfHZpb2xldHx4bHxpbnRlcnxncm90ZXNrfG1vbm98ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8ZGVmYXVsdA",
+  "tasks": [
+    {
+      "id": "install-and-theme",
+      "title": "Install and theme",
+      "prompt": "In the supplied Vite React + Tailwind v4 project, install the logic2b button, card and dialog with their registry dependencies. Apply the exact preset id supplied by the benchmark. Use logic2b's CLI, MCP or raw registry; do not recreate the components. Finish by running the production build.",
+      "artifactDir": "01-install-and-theme",
+      "fixture": "vite-base",
+      "timeoutMs": 600000,
+      "verification": { "command": ["npm", "run", "build"], "timeoutMs": 120000 },
+      "maxPoints": 100,
+      "rules": [
+        { "id": "button-file", "description": "Button registry source installed", "points": 10, "check": { "type": "fileExists", "path": "src/components/ui/button.tsx" } },
+        { "id": "card-file", "description": "Card registry source installed", "points": 10, "check": { "type": "fileExists", "path": "src/components/ui/card.tsx" } },
+        { "id": "dialog-file", "description": "Dialog registry source installed", "points": 10, "check": { "type": "fileExists", "path": "src/components/ui/dialog.tsx" } },
+        { "id": "utils-file", "description": "Shared cn helper installed", "points": 8, "check": { "type": "fileExists", "path": "src/lib/utils.ts" } },
+        { "id": "theme-file", "description": "Theme stylesheet installed", "points": 8, "check": { "type": "fileExists", "path": "src/styles/theme.css" } },
+        { "id": "button-provenance", "description": "Button keeps the registry data-slot contract", "points": 8, "check": { "type": "fileContains", "path": "src/components/ui/button.tsx", "value": "data-slot=\"button\"" } },
+        { "id": "card-provenance", "description": "Card keeps the registry data-slot contract", "points": 8, "check": { "type": "fileContains", "path": "src/components/ui/card.tsx", "value": "data-slot=\"card\"" } },
+        { "id": "dialog-provenance", "description": "Dialog uses the registry primitive dependency", "points": 8, "check": { "type": "fileContains", "path": "src/components/ui/dialog.tsx", "value": "radix-ui" } },
+        { "id": "registry-config", "description": "components.json points at logic2b", "points": 8, "check": { "type": "jsonEquals", "path": "components.json", "jsonPath": "logic2b.registry", "value": "https://ui.logic2b.com" } },
+        { "id": "preset-config", "description": "components.json records the exact preset", "points": 7, "check": { "type": "jsonEquals", "path": "components.json", "jsonPath": "logic2b.preset", "value": "bmV1dHJhbHxibHVlfHZpb2xldHx4bHxpbnRlcnxncm90ZXNrfG1vbm98ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8ZGVmYXVsdA" } },
+        { "id": "package-dependency", "description": "Registry runtime dependency recorded", "points": 7, "check": { "type": "jsonHas", "path": "package.json", "jsonPath": "dependencies.radix-ui" } },
+        { "id": "build", "description": "Evaluator-observed production build succeeds", "points": 8, "check": { "type": "runEquals", "jsonPath": "verification.buildExitCode", "value": 0 } }
+      ]
+    },
+    {
+      "id": "compose-settings",
+      "title": "Compose an accessible settings screen",
+      "prompt": "Using the installed logic2b components, create src/App.tsx as an account settings screen with Card, Tabs, Label, Input, Switch and Button. Use semantic labels, token-based colors only and no raw Tailwind palette colors. Preserve the supplied preset and finish with a production build.",
+      "artifactDir": "02-compose-settings",
+      "fixture": "vite-settings",
+      "timeoutMs": 600000,
+      "verification": { "command": ["npm", "run", "build"], "timeoutMs": 120000 },
+      "maxPoints": 100,
+      "rules": [
+        { "id": "app", "description": "Settings screen created at the requested entry", "points": 10, "check": { "type": "fileExists", "path": "src/App.tsx" } },
+        { "id": "card", "description": "Composes the registry Card", "points": 6, "check": { "type": "fileContains", "path": "src/App.tsx", "value": "@/components/ui/card" } },
+        { "id": "tabs", "description": "Composes the registry Tabs", "points": 6, "check": { "type": "fileContains", "path": "src/App.tsx", "value": "@/components/ui/tabs" } },
+        { "id": "label", "description": "Uses the registry Label for form naming", "points": 6, "check": { "type": "fileContains", "path": "src/App.tsx", "value": "@/components/ui/label" } },
+        { "id": "input", "description": "Uses the registry Input", "points": 6, "check": { "type": "fileContains", "path": "src/App.tsx", "value": "@/components/ui/input" } },
+        { "id": "switch", "description": "Uses the registry Switch", "points": 6, "check": { "type": "fileContains", "path": "src/App.tsx", "value": "@/components/ui/switch" } },
+        { "id": "button", "description": "Uses the registry Button", "points": 6, "check": { "type": "fileContains", "path": "src/App.tsx", "value": "@/components/ui/button" } },
+        { "id": "label-link", "description": "Labels are explicitly linked to controls", "points": 10, "check": { "type": "fileMatches", "path": "src/App.tsx", "pattern": "htmlFor=|aria-label=" } },
+        { "id": "tokens", "description": "Screen uses semantic design tokens", "points": 8, "check": { "type": "fileMatches", "path": "src/App.tsx", "pattern": "bg-background|text-foreground|text-muted-foreground" } },
+        { "id": "no-raw-palette", "description": "No raw Tailwind palette colors", "points": 10, "check": { "type": "fileNotMatches", "path": "src/App.tsx", "pattern": "(bg|text|border)-(red|blue|green|yellow|orange|purple|violet|pink|gray|slate|zinc|neutral)-[0-9]" } },
+        { "id": "preset-primary", "description": "Exact blue primary token applied", "points": 6, "check": { "type": "fileContains", "path": "src/styles/theme.css", "value": "--primary: oklch(0.546 0.245 262.881);" } },
+        { "id": "preset-radius", "description": "Exact xl radius applied", "points": 6, "check": { "type": "fileContains", "path": "src/styles/theme.css", "value": "--radius: 1rem;" } },
+        { "id": "build", "description": "Evaluator-observed production build succeeds", "points": 14, "check": { "type": "runEquals", "jsonPath": "verification.buildExitCode", "value": 0 } }
+      ]
+    },
+    {
+      "id": "scaffold-dashboard",
+      "title": "Scaffold a dashboard from empty",
+      "prompt": "Starting from an empty directory, use logic2b to create a Vite analytics dashboard with the benchmark preset. Prefer scaffold_plan when available. The result must include a runnable framework shell, dashboard block, charts, theme, components.json and exact dependency versions. Finish with a production build.",
+      "artifactDir": "03-scaffold-dashboard",
+      "fixture": "empty",
+      "timeoutMs": 600000,
+      "verification": { "command": ["npm", "run", "build"], "timeoutMs": 120000 },
+      "maxPoints": 100,
+      "rules": [
+        { "id": "manifest", "description": "Runnable package manifest generated", "points": 8, "check": { "type": "fileExists", "path": "package.json" } },
+        { "id": "vite", "description": "Vite framework shell generated", "points": 8, "check": { "type": "fileExists", "path": "vite.config.ts" } },
+        { "id": "entry", "description": "React entry generated", "points": 8, "check": { "type": "fileExists", "path": "src/main.tsx" } },
+        { "id": "starter", "description": "Starter composition generated", "points": 8, "check": { "type": "fileExists", "path": "src/components/starter-page.tsx" } },
+        { "id": "dashboard", "description": "Dashboard registry block installed", "points": 14, "check": { "type": "fileExists", "path": "src/components/dashboard-02/analytics-dashboard.tsx" } },
+        { "id": "chart", "description": "Transitive chart dependency installed", "points": 12, "check": { "type": "fileExists", "path": "src/components/ui/chart.tsx" } },
+        { "id": "theme", "description": "Theme installed at the framework entry", "points": 8, "check": { "type": "fileExists", "path": "src/styles/theme.css" } },
+        { "id": "config", "description": "Registry configuration generated", "points": 8, "check": { "type": "fileExists", "path": "components.json" } },
+        { "id": "pinned-react", "description": "React version is exact-pinned", "points": 6, "check": { "type": "jsonEquals", "path": "package.json", "jsonPath": "dependencies.react", "value": "19.2.7" } },
+        { "id": "pinned-vite", "description": "Vite version is exact-pinned", "points": 6, "check": { "type": "jsonEquals", "path": "package.json", "jsonPath": "devDependencies.vite", "value": "8.2.2" } },
+        { "id": "preset", "description": "Exact preset recorded", "points": 6, "check": { "type": "jsonEquals", "path": "components.json", "jsonPath": "logic2b.preset", "value": "bmV1dHJhbHxibHVlfHZpb2xldHx4bHxpbnRlcnxncm90ZXNrfG1vbm98ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8ZGVmYXVsdA" } },
+        { "id": "build", "description": "Evaluator-observed production build succeeds", "points": 8, "check": { "type": "runEquals", "jsonPath": "verification.buildExitCode", "value": 0 } }
+      ]
+    }
+  ]
+}

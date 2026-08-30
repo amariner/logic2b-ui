@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui.logic2b.com/benchmarks/agents/runner-config.schema.json",
+  "title": "logic2b agent benchmark runner config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "runId",
+    "model",
+    "agent",
+    "capabilities",
+    "command"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "runId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "model": { "$ref": "#/$defs/identity" },
+    "agent": { "$ref": "#/$defs/identity" },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["network", "shell", "mcp"],
+      "properties": {
+        "network": { "type": "boolean" },
+        "shell": { "type": "boolean" },
+        "mcp": { "type": "boolean" }
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "args", "toolCallMarker"],
+      "properties": {
+        "executable": { "type": "string", "minLength": 1 },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "passEnv": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "uniqueItems": true
+        },
+        "toolCallMarker": { "type": "string", "minLength": 1 }
+      }
+    },
+    "outputLimitBytes": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 100000000
+    },
+    "artifactLimitBytes": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 1000000000
+    }
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

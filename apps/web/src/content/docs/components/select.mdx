@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select"
 
 <Select>
-  <SelectTrigger className="w-[180px]">
+  <SelectTrigger aria-label="Select a fruit" className="w-[180px]">
     <SelectValue placeholder="Select a fruit" />
   </SelectTrigger>
   <SelectContent>
@@ -32,17 +32,6 @@ import {
   </SelectContent>
 </Select>
 ```
-
-## API
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `value` / `defaultValue` (Select) | `string` | — |
-| `onValueChange` (Select) | `(value: string) => void` | — |
-| `disabled` (Select) | `boolean` | `false` |
-| `size` (SelectTrigger) | `sm \| default` | `default` |
-| `position` (SelectContent) | `popper \| item-aligned` | `popper` |
-| `disabled` (SelectItem) | `boolean` | `false` |
 
 ## Examples
 
@@ -62,7 +51,8 @@ following the WAI-ARIA listbox pattern.
 - Fully keyboard operable: open with <kbd>Enter</kbd>/<kbd>Space</kbd>/arrow
   keys, move with arrows, and type-ahead to jump to an option.
 - <kbd>Esc</kbd> closes the list and focus returns to the trigger.
-- The trigger exposes the selected value to assistive technology; use
-  `SelectValue`'s `placeholder` for the empty state.
+- Give `SelectTrigger` an explicit accessible name with `aria-label` or
+  `aria-labelledby`; `SelectValue`'s placeholder communicates the empty state
+  but does not replace the field name.
 - Group related options with `SelectGroup` + `SelectLabel` for clearer
   announcements.

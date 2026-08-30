@@ -1,0 +1,50 @@
+---
+title: Framework Benchmarks
+description: A public, reproducible comparison of the same logic2b block in Next.js, Vite, Astro and TanStack Start.
+---
+
+import FrameworkBenchmarks from "@/components/FrameworkBenchmarks.astro";
+
+The benchmark renders the exact same interactive `stats-01-animated` registry
+block with React 19.2.7 and Tailwind 4.3.2 in four production builds. It measures
+delivery overhead for one real component graph; it is not a universal framework
+ranking.
+
+<FrameworkBenchmarks />
+
+## Profile
+
+Each framework gets a clean production build and five fresh Chromium contexts.
+Chrome DevTools Protocol applies a 4× CPU slowdown, 150 ms round-trip latency,
+195.3 KiB/s download and 91.6 KiB/s upload. The table reports medians.
+
+- **Client gzip** is the sum of production client JS and CSS compressed with
+  gzip. Server output is intentionally excluded.
+- **JS transferred** is the same-origin JavaScript reported by the browser
+  Resource Timing API with cache disabled.
+- **Hydration ready** is `performance.now()` at the shared scenario's first
+  React effect. In the Vite SPA this includes the initial client render; in the
+  three SSR/static-HTML variants it marks hydration.
+- **LCP** and **TTFB** come from browser Performance APIs under the same
+  throttled profile.
+
+## Reproduce it
+
+The isolated workspace lives in `benchmarks/frameworks` and exact-pins every
+framework. From the repository root:
+
+```bash
+cd benchmarks/frameworks
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
+pnpm benchmark
+```
+
+Before each run the harness copies the current block and its transitive registry
+source into an ignored generated directory, so all four fixtures compile the
+same product code without drifting copies. It writes the raw profile, host,
+versions, samples summary and results to `results/latest.json`.
+
+Compare changes only when runs use the same host and profile. These local
+preview servers do not measure CDN caching, serverless cold starts, production
+network topology or developer experience.

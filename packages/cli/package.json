@@ -1,13 +1,14 @@
 {
   "name": "logic2b",
-  "version": "0.4.0",
+  "version": "1.0.0-rc.2",
   "description": "CLI for logic2b ui — add copy-paste components to your project.",
   "type": "module",
   "bin": {
     "logic2b": "dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "logic2b",
@@ -38,13 +39,17 @@
     "dev": "tsx src/index.ts",
     "lint": "tsc --noEmit -p tsconfig.json",
     "test": "node --import tsx --test test/*.test.ts",
-    "prepublishOnly": "tsup"
+    "test:scaffold": "node --import tsx scripts/verify-scaffold.mts",
+    "prepack": "tsup"
   },
   "license": "MIT",
   "dependencies": {
-    "commander": "^15.0.0"
+    "commander": "13.1.0",
+    "semver": "7.8.5"
   },
   "devDependencies": {
+    "@logic2b/registry": "workspace:*",
+    "@logic2b/scaffold": "workspace:*",
     "@logic2b/tokens": "workspace:*",
     "@types/node": "^26.1.0",
     "tsup": "^8.5.0",

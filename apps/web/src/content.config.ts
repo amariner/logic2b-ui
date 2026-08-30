@@ -9,4 +9,12 @@ const docs = defineCollection({
   }),
 });
 
-export const collections = { docs };
+const docsEs = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/docs-es" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+  }),
+});
+
+export const collections = { docs, docsEs };

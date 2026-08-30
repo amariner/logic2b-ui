@@ -1,0 +1,125 @@
+---
+import protocol from "../../../../benchmarks/agents/protocol.json";
+import leaderboard from "../../../../benchmarks/agents/results/leaderboard.json";
+
+interface Props {
+  locale?: "en" | "es";
+}
+
+const { locale = "en" } = Astro.props;
+
+interface LeaderboardEntry {
+  rank: number;
+  model: { name: string };
+  agent: { name: string } | null;
+  score: number;
+  maxScore: number;
+  percent: number;
+  durationMs: number | null;
+}
+
+const totalPoints = protocol.tasks.reduce((sum, task) => sum + task.maxPoints, 0);
+const entries = leaderboard.entries as LeaderboardEntry[];
+const formatDuration = (value: number | null) =>
+  value == null ? "—" : `${new Intl.NumberFormat(locale === "es" ? "es-ES" : "en-US").format(value / 1000)} s`;
+const TASKS_ES: Record<string, { title: string; prompt: string }> = {
+  "install-and-theme": {
+    title: "Instalar y aplicar tema",
+    prompt: "Instala Button, Card y Dialog desde logic2b y aplica el preset exacto sin recrear los componentes.",
+  },
+  "compose-settings": {
+    title: "Componer ajustes accesibles",
+    prompt: "Construye una pantalla de cuenta accesible con primitivas del registro y colores semánticos.",
+  },
+  "scaffold-dashboard": {
+    title: "Crear un dashboard desde cero",
+    prompt: "Genera un dashboard Vite ejecutable con tema, gráfico y dependencias transitivas exactas.",
+  },
+};
+const copy = locale === "es"
+  ? {
+      task: "Tarea",
+      points: "puntos",
+      checks: "comprobaciones objetivas",
+      rank: "Posición",
+      model: "Modelo",
+      agent: "Agente",
+      score: "Puntuación",
+      duration: "Duración",
+      empty: "Aún no hay ejecuciones publicadas. El protocolo está listo; solo aparecen resultados de ejecuciones reales y aisladas.",
+      protocol: "Puntuación antes que duración; el evaluador registra el build.",
+    }
+  : {
+      task: "Task",
+      points: "points",
+      checks: "objective checks",
+      rank: "Rank",
+      model: "Model",
+      agent: "Agent",
+      score: "Score",
+      duration: "Duration",
+      empty: "No model runs published yet. The protocol is ready; results appear only after real isolated executions.",
+      protocol: "Score ranks before duration; build success is recorded by the evaluator.",
+    };
+---
+
+<div class="not-prose mt-6 grid gap-4 md:grid-cols-3">
+  {
+    protocol.tasks.map((task, index) => (
+      <section class="rounded-lg border bg-card p-4 text-card-foreground">
+        <p class="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          {copy.task} {index + 1} · {task.maxPoints} {copy.points}
+        </p>
+        <h2 class="mt-2 text-base font-semibold">{locale === "es" ? TASKS_ES[task.id]?.title : task.title}</h2>
+        <p class="mt-2 text-sm leading-6 text-muted-foreground">{locale === "es" ? TASKS_ES[task.id]?.prompt : task.prompt}</p>
+        <p class="mt-3 text-xs text-muted-foreground">
+          {task.rules.length} {copy.checks}
+        </p>
+      </section>
+    ))
+  }
+</div>
+
+<div class="not-prose mt-8 overflow-x-auto rounded-lg border">
+  <table class="w-full text-sm">
+    <thead class="bg-muted/50 text-left">
+      <tr>
+        <th class="px-3 py-2 font-medium">{copy.rank}</th>
+        <th class="px-3 py-2 font-medium">{copy.model}</th>
+        <th class="px-3 py-2 font-medium">{copy.agent}</th>
+        <th class="px-3 py-2 text-right font-medium">{copy.score}</th>
+        <th class="px-3 py-2 text-right font-medium">{copy.duration}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        entries.length > 0 ? (
+          entries.map((entry) => (
+            <tr class="border-t">
+              <td class="px-3 py-2 tabular-nums">{entry.rank}</td>
+              <td class="px-3 py-2 font-medium">{entry.model.name}</td>
+              <td class="px-3 py-2 text-muted-foreground">{entry.agent?.name ?? "—"}</td>
+              <td class="px-3 py-2 text-right tabular-nums">
+                {entry.score}/{entry.maxScore} ({entry.percent}%)
+              </td>
+              <td class="px-3 py-2 text-right tabular-nums">
+                {formatDuration(entry.durationMs)}
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr class="border-t">
+            <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">
+              {copy.empty}
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-3 text-xs text-muted-foreground">
+  {locale === "es" ? "Protocolo" : "Protocol"} v{protocol.version}: {protocol.tasks.length} {locale === "es" ? "tareas" : "tasks"}, {totalPoints} {copy.points}.
+  {copy.protocol}
+</p>

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "team-01",
+  "type": "registry:block",
+  "title": "Team members",
+  "description": "A team management card listing members with avatars and per-member role selects, plus an invite-by-email row. Use in settings or workspace admin pages.",
+  "registryDependencies": [
+    "avatar",
+    "button",
+    "card",
+    "input",
+    "select",
+    "separator"
+  ],
+  "files": [
+    {
+      "path": "blocks/team-01/team-members.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Avatar, AvatarFallback, AvatarImage } from \"@/components/ui/avatar\"\nimport { Button } from \"@/components/ui/button\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport { Input } from \"@/components/ui/input\"\nimport {\n  Select,\n  SelectContent,\n  SelectItem,\n  SelectTrigger,\n  SelectValue,\n} from \"@/components/ui/select\"\nimport { Separator } from \"@/components/ui/separator\"\n\nconst members = [\n  {\n    name: \"Sofia Davis\",\n    email: \"sofia@example.com\",\n    role: \"owner\",\n    avatar: \"https://github.com/shadcn.png\",\n    initials: \"SD\",\n  },\n  {\n    name: \"Jackson Lee\",\n    email: \"jackson@example.com\",\n    role: \"member\",\n    avatar: \"\",\n    initials: \"JL\",\n  },\n  {\n    name: \"Isabella Nguyen\",\n    email: \"isabella@example.com\",\n    role: \"member\",\n    avatar: \"\",\n    initials: \"IN\",\n  },\n]\n\nconst roles = [\n  { value: \"owner\", label: \"Owner\" },\n  { value: \"member\", label: \"Member\" },\n  { value: \"viewer\", label: \"Viewer\" },\n]\n\nexport function TeamMembers({\n  className,\n  ...props\n}: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\n        \"mx-auto flex w-full max-w-xl flex-col px-6 py-16\",\n        className\n      )}\n      {...props}\n    >\n      <Card>\n        <CardHeader>\n          <CardTitle>Team members</CardTitle>\n          <CardDescription>\n            Invite your team members to collaborate.\n          </CardDescription>\n        </CardHeader>\n        <CardContent className=\"grid gap-6\">\n          {members.map((member) => (\n            <div\n              key={member.email}\n              className=\"flex items-center justify-between gap-4\"\n            >\n              <div className=\"flex items-center gap-3\">\n                <Avatar>\n                  {member.avatar ? (\n                    <AvatarImage src={member.avatar} alt={member.name} />\n                  ) : null}\n                  <AvatarFallback>{member.initials}</AvatarFallback>\n                </Avatar>\n                <div>\n                  <p className=\"text-sm font-medium leading-none\">\n                    {member.name}\n                  </p>\n                  <p className=\"text-sm text-muted-foreground\">\n                    {member.email}\n                  </p>\n                </div>\n              </div>\n              <Select defaultValue={member.role}>\n                <SelectTrigger\n                  className=\"w-[110px]\"\n                  aria-label={`Role for ${member.name}`}\n                >\n                  <SelectValue />\n                </SelectTrigger>\n                <SelectContent>\n                  {roles.map((role) => (\n                    <SelectItem key={role.value} value={role.value}>\n                      {role.label}\n                    </SelectItem>\n                  ))}\n                </SelectContent>\n              </Select>\n            </div>\n          ))}\n          <Separator />\n          <div className=\"grid gap-2\">\n            <p className=\"text-sm font-medium\">Invite by email</p>\n            <div className=\"flex gap-2\">\n              <Input type=\"email\" placeholder=\"email@example.com\" />\n              <Button>Invite</Button>\n            </div>\n          </div>\n        </CardContent>\n        <CardFooter className=\"text-sm text-muted-foreground\">\n          Members can view and edit shared projects.\n        </CardFooter>\n      </Card>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "application"
+  ]
+}

@@ -1,0 +1,38 @@
+---
+import { PropPlayground } from "@/components/PropPlayground"
+import type { PlaygroundName } from "@/data/playground-recipes"
+
+interface Props {
+  name: PlaygroundName
+  locale?: "en" | "es"
+}
+
+const { name, locale = "en" } = Astro.props
+const copy = locale === "es"
+  ? {
+      title: "Playground interactivo",
+      description: "Edita las propiedades del componente y revisa el JSX exacto antes de copiarlo. La vista previa se carga solo cuando esta sección entra en pantalla.",
+    }
+  : {
+      title: "Live playground",
+      description: "Edit the component props and inspect the exact JSX before copying it. The preview loads only when this section enters the viewport.",
+    }
+---
+
+<section
+  aria-labelledby={`playground-${name}`}
+  class="not-prose mt-12 border-t pt-8"
+>
+  <div class="mb-6 max-w-2xl">
+    <h2
+      class="scroll-mt-24 text-2xl font-semibold tracking-tight"
+      id={`playground-${name}`}
+    >
+      {copy.title}
+    </h2>
+    <p class="mt-2 text-sm leading-6 text-muted-foreground">
+      {copy.description}
+    </p>
+  </div>
+  <PropPlayground name={name} locale={locale} client:visible />
+</section>

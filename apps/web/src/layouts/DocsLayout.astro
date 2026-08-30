@@ -1,31 +1,120 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { docsNav, componentGroups } from "@/config/docs";
+import { docsNav, docsNavEs, componentGroups } from "@/config/docs";
 import type { MarkdownHeading } from "astro";
 
 interface Props {
   title: string;
   description?: string;
   headings?: MarkdownHeading[];
+  locale?: "en" | "es";
+  alternateHref?: string;
+  ogId?: string;
 }
 
-const { title, description, headings = [] } = Astro.props;
+const {
+  title,
+  description,
+  headings = [],
+  locale = "en",
+  alternateHref,
+  ogId,
+} = Astro.props;
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const spanishComponentDocs = import.meta.glob("../content/docs-es/components/*.mdx");
+const spanishComponentNames = new Set(
+  Object.keys(spanishComponentDocs).map((path) => path.split("/").at(-1)?.replace(/\.mdx$/, "")),
+);
+const inferredDocsId = currentPath === "/docs"
+  ? "index"
+  : currentPath === "/docs/components"
+    ? "components/index"
+    : currentPath.slice("/docs/".length);
+const ogImage = `/og/docs/${ogId ?? inferredDocsId}.png`;
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const pageNav = locale === "es" ? docsNavEs : docsNav;
+const labels = locale === "es"
+  ? {
+      sidebar: "Navegación de la documentación",
+      documentation: "Documentación",
+      components: "Componentes",
+      filter: "Filtrar componentes…",
+      menu: "Menú",
+      mobile: "Documentación móvil",
+      contents: "Contenido de la página",
+      onThisPage: "En esta página",
+      language: "Idioma de la documentación",
+    }
+  : {
+      sidebar: "Documentation sidebar",
+      documentation: "Documentation",
+      components: "Components",
+      filter: "Filter components…",
+      menu: "Menu",
+      mobile: "Mobile documentation",
+      contents: "Page contents",
+      onThisPage: "On This Page",
+      language: "Documentation language",
+    };
 const isGroupActive = (group: (typeof componentGroups)[number]) =>
   group.items.some((item) => item.href === currentPath);
+const spanishGroupLabels: Record<string, string> = {
+  form: "Formularios",
+  "data-display": "Visualización de datos",
+  overlays: "Superposiciones",
+  navigation: "Navegación",
+  feedback: "Estado y feedback",
+  layout: "Disposición",
+  motion: "Movimiento y scroll",
+  guides: "Guías",
+};
+const spanishComponentLabels: Record<string, string> = {
+  button: "Botón",
+  card: "Tarjeta",
+  chart: "Gráfico",
+  dialog: "Diálogo",
+  form: "Formulario",
+  input: "Campo de entrada",
+  textarea: "Área de texto",
+  checkbox: "Casilla de verificación",
+  select: "Selector",
+  switch: "Interruptor",
+};
+const localizedComponentGroups = locale === "es"
+  ? componentGroups.map((group) => ({
+      ...group,
+      title: spanishGroupLabels[group.slug] ?? group.title,
+      items: group.items.map((item) => {
+        const name = item.href.split("/").at(-1);
+        return spanishComponentNames.has(name)
+          ? {
+              ...item,
+              title: spanishComponentLabels[name ?? ""] ?? item.title,
+              href: `/es/docs/components/${name}`,
+            }
+          : item;
+      }),
+    }))
+  : componentGroups;
 ---
 
-<BaseLayout title={`${title} — logic2b/ui`} description={description}>
+<BaseLayout
+  title={`${title} — logic2b/ui`}
+  description={description}
+  image={ogImage}
+  lang={locale}
+  alternateHref={alternateHref}
+>
   <div class="flex w-full gap-8 px-6">
     <aside
+      aria-label={labels.sidebar}
       class="sticky top-14 hidden h-[calc(100svh-3.5rem)] w-56 shrink-0 overflow-y-auto border-r border-border/40 py-8 pr-4 md:block"
     >
-      <nav class="grid gap-6" data-nav-root>
+      <nav aria-label={labels.documentation} class="grid gap-6" data-nav-root>
         {
-          docsNav.map((section) => (
+          pageNav.map((section) => (
             <div>
-              <h4 class="mb-2 text-sm font-semibold">{section.title}</h4>
+              <p class="mb-2 text-sm font-semibold">{section.title}</p>
               <ul class="grid gap-0.5">
                 {section.items.map((item) => (
                   <li>
@@ -47,17 +136,17 @@ const isGroupActive = (group: (typeof componentGroups)[number]) =>
           ))
         }
         <div>
-          <h4 class="mb-2 text-sm font-semibold">Components</h4>
+          <p class="mb-2 text-sm font-semibold">{labels.components}</p>
           <input
             type="text"
-            placeholder="Filter components…"
-            aria-label="Filter components"
+            placeholder={labels.filter}
+            aria-label={labels.filter}
             class="mb-3 w-full rounded-md border border-border/60 bg-transparent px-2 py-1 text-sm outline-none placeholder:text-muted-foreground focus:border-border"
             data-component-filter
           />
           <div class="grid gap-1" data-nav-groups>
             {
-              componentGroups.map((group) => (
+              localizedComponentGroups.map((group) => (
                 <details class="group/nav" data-nav-group open={isGroupActive(group)}>
                   <summary class="flex cursor-pointer list-none items-center justify-between rounded-md px-2 py-1 text-sm font-medium text-foreground/80 hover:text-foreground">
                     {group.title}
@@ -105,14 +194,14 @@ const isGroupActive = (group: (typeof componentGroups)[number]) =>
         <summary
           class="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-medium"
         >
-          Menu
+          {labels.menu}
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
         </summary>
-        <nav class="grid gap-6 border-t border-border/40 px-4 py-4" data-nav-root>
+        <nav aria-label={labels.mobile} class="grid gap-6 border-t border-border/40 px-4 py-4" data-nav-root>
           {
-            docsNav.map((section) => (
+            pageNav.map((section) => (
               <div>
-                <h4 class="mb-2 text-sm font-semibold">{section.title}</h4>
+                <p class="mb-2 text-sm font-semibold">{section.title}</p>
                 <ul class="grid gap-0.5">
                   {section.items.map((item) => (
                     <li>
@@ -134,17 +223,17 @@ const isGroupActive = (group: (typeof componentGroups)[number]) =>
             ))
           }
           <div>
-            <h4 class="mb-2 text-sm font-semibold">Components</h4>
+            <p class="mb-2 text-sm font-semibold">{labels.components}</p>
             <input
               type="text"
-              placeholder="Filter components…"
-              aria-label="Filter components"
+              placeholder={labels.filter}
+              aria-label={labels.filter}
               class="mb-3 w-full rounded-md border border-border/60 bg-transparent px-2 py-1 text-sm outline-none placeholder:text-muted-foreground focus:border-border"
               data-component-filter
             />
             <div class="grid gap-1" data-nav-groups>
               {
-                componentGroups.map((group) => (
+                localizedComponentGroups.map((group) => (
                   <details class="group/nav" data-nav-group open={isGroupActive(group)}>
                     <summary class="flex cursor-pointer list-none items-center justify-between rounded-md px-2 py-1 text-sm font-medium text-foreground/80 hover:text-foreground">
                       {group.title}
@@ -187,6 +276,23 @@ const isGroupActive = (group: (typeof componentGroups)[number]) =>
         </nav>
       </details>
       <div class="mb-8 max-w-3xl">
+        {
+          alternateHref && (
+            <nav aria-label={labels.language} class="mb-4 flex items-center gap-3 text-sm">
+              {locale === "en" ? (
+                <>
+                  <span aria-current="page" class="font-medium text-foreground">English</span>
+                  <a class="text-muted-foreground underline underline-offset-4" href={alternateHref}>Español</a>
+                </>
+              ) : (
+                <>
+                  <a class="text-muted-foreground underline underline-offset-4" href={alternateHref}>English</a>
+                  <span aria-current="page" class="font-medium text-foreground">Español</span>
+                </>
+              )}
+            </nav>
+          )
+        }
         <h1 class="text-3xl font-bold tracking-tight">{title}</h1>
         {description && <p class="mt-2 text-lg text-muted-foreground">{description}</p>}
       </div>
@@ -199,8 +305,11 @@ const isGroupActive = (group: (typeof componentGroups)[number]) =>
 
     {
       toc.length > 0 && (
-        <aside class="sticky top-14 hidden h-[calc(100svh-3.5rem)] w-48 shrink-0 overflow-y-auto py-8 pl-4 xl:block">
-          <h4 class="mb-2 text-sm font-medium">On This Page</h4>
+        <aside
+          aria-label={labels.contents}
+          class="sticky top-14 hidden h-[calc(100svh-3.5rem)] w-48 shrink-0 overflow-y-auto py-8 pl-4 xl:block"
+        >
+          <p class="mb-2 text-sm font-medium">{labels.onThisPage}</p>
           <ul class="grid gap-1 text-sm">
             {toc.map((h) => (
               <li class:list={[h.depth === 3 && "pl-3"]}>

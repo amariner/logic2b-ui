@@ -1,5 +1,13 @@
-export type { RegistryItem, RegistryItemType } from "./types.ts"
+export type {
+  RegistryApiContract,
+  RegistryApiExport,
+  RegistryApiProp,
+  RegistryItem,
+  RegistryItemType,
+} from "./types.ts"
 import type { RegistryItem } from "./types.ts"
+import { accessibilityFor } from "./accessibility.ts"
+import { API_CONTRACTS } from "./api.generated.ts"
 
 import { items as theme } from "./items/theme.ts"
 import { items as core } from "./items/core.ts"
@@ -11,7 +19,7 @@ import { items as scroll } from "./items/scroll.ts"
 import { items as charts } from "./items/charts.ts"
 import { items as blocks } from "./items/blocks.ts"
 
-export const registry: RegistryItem[] = [
+const items: RegistryItem[] = [
   ...theme,
   ...core,
   ...overlays,
@@ -22,3 +30,13 @@ export const registry: RegistryItem[] = [
   ...charts,
   ...blocks,
 ]
+
+export const registry: RegistryItem[] = items.map((item) => {
+  const accessibility = accessibilityFor(item.name)
+  const api = item.type === "registry:ui" ? API_CONTRACTS[item.name] : undefined
+  return {
+    ...item,
+    ...(accessibility ? { accessibility } : {}),
+    ...(api ? { api } : {}),
+  }
+})

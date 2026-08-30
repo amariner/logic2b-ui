@@ -9,7 +9,7 @@ import {
 export default function SelectDisabledDemo() {
   return (
     <Select defaultValue="starter">
-      <SelectTrigger size="sm" className="w-[180px]">
+      <SelectTrigger aria-label="Select a plan" size="sm" className="w-[180px]">
         <SelectValue placeholder="Select a plan" />
       </SelectTrigger>
       <SelectContent>

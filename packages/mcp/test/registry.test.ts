@@ -1,12 +1,18 @@
 import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
 import { describe, test } from "node:test"
 
 import {
   fetchIndex,
   fetchItem,
+  fetchChangelog,
+  fetchRegistryVersions,
+  createRegistryClient,
   filterIndex,
   indexUrl,
   itemUrl,
+  changelogUrl,
+  versionsUrl,
   kindOf,
   scoreItem,
   searchIndex,
@@ -145,5 +151,133 @@ describe("fetchIndex / fetchItem", () => {
   test("fetchItem throws a helpful error on 404", async () => {
     const f = fakeFetch({})
     await assert.rejects(() => fetchItem(base, "ghost", f), /HTTP 404/)
+  })
+})
+
+describe("versioned registry", () => {
+  const base = "https://reg.test"
+  const item = {
+    name: "button",
+    type: "registry:ui",
+    description: "Versioned button.",
+    files: [{ path: "ui/button.tsx", type: "registry:ui", content: "// v1" }],
+  }
+  const itemText = JSON.stringify(item)
+  const integrity = `sha256-${createHash("sha256").update(itemText).digest("base64")}`
+  const content = "/r/content/button-v1.json"
+  const manifest = {
+    schemaVersion: 1,
+    version: "1.0.0",
+    channel: "latest",
+    releasedAt: "2026-08-29",
+    items: [
+      {
+        name: "button",
+        type: "registry:ui",
+        description: "Versioned button.",
+        version: "1.0.0",
+        registryVersion: "1.0.0",
+        integrity,
+        content,
+        changelog: "/r/changelog/button.json",
+      },
+    ],
+  }
+  const versions = {
+    schemaVersion: 1,
+    latest: "1.0.0",
+    channels: { latest: "1.0.0", stable: "^1.0.0" },
+    versions: [
+      {
+        version: "1.0.0",
+        channel: "latest",
+        releasedAt: "2026-08-29",
+        manifest: "/r/versions/1.0.0.json",
+      },
+    ],
+  }
+  const changelog = {
+    schemaVersion: 1,
+    name: "button",
+    currentVersion: "1.0.0",
+    changes: [
+      { version: "1.0.0", releasedAt: "2026-08-29", kind: "baseline", summary: "Initial." },
+    ],
+  }
+
+  function versionFetch(overrides: Record<string, string> = {}): FetchLike {
+    const routes: Record<string, string> = {
+      [versionsUrl(base)]: JSON.stringify(versions),
+      [`${base}/r/versions/1.0.0.json`]: JSON.stringify(manifest),
+      [`${base}${content}`]: itemText,
+      [changelogUrl(base, "button")]: JSON.stringify(changelog),
+      ...overrides,
+    }
+    return async (url: string) =>
+      url in routes
+        ? { ok: true, status: 200, text: async () => routes[url] }
+        : { ok: false, status: 404, text: async () => "Not found" }
+  }
+
+  test("reads versions, changelogs and resolves a channel", async () => {
+    assert.equal((await fetchRegistryVersions(base, versionFetch())).latest, "1.0.0")
+    assert.equal((await fetchChangelog(base, "button", versionFetch())).name, "button")
+    const client = await createRegistryClient(base, "stable", versionFetch())
+    assert.equal(client.requestedVersion, "stable")
+    assert.equal(client.resolvedVersion, "1.0.0")
+    const resolved = await client.getItem("button")
+    assert.equal(resolved.files?.[0]?.content, "// v1")
+    assert.equal(resolved.integrity, integrity)
+  })
+
+  test("refuses a content payload that does not match its SHA-256", async () => {
+    const client = await createRegistryClient(
+      base,
+      "1.0.0",
+      versionFetch({ [`${base}${content}`]: JSON.stringify({ ...item, description: "tampered" }) })
+    )
+    await assert.rejects(() => client.getItem("button"), /Integrity check failed/)
+  })
+
+  test("rejects invalid and unsatisfied version selectors", async () => {
+    await assert.rejects(
+      () => createRegistryClient(base, "not semver", versionFetch()),
+      /Invalid registry version/
+    )
+    await assert.rejects(
+      () => createRegistryClient(base, ">=2", versionFetch()),
+      /No published registry version satisfies/
+    )
+  })
+
+  test("rejects unsafe files and cross-origin manifest references", async () => {
+    const redirected = structuredClone(versions)
+    redirected.versions[0].manifest = "https://attacker.test/r/manifest.json"
+    await assert.rejects(
+      () =>
+        createRegistryClient(
+          base,
+          "1.0.0",
+          versionFetch({ [versionsUrl(base)]: JSON.stringify(redirected) })
+        ),
+      /must stay under/
+    )
+
+    const unsafe = JSON.stringify({
+      ...item,
+      files: [{ path: "../../package.json", type: "registry:file", content: "{}" }],
+    })
+    const unsafeIntegrity = `sha256-${createHash("sha256").update(unsafe).digest("base64")}`
+    const unsafeManifest = structuredClone(manifest)
+    unsafeManifest.items[0].integrity = unsafeIntegrity
+    const client = await createRegistryClient(
+      base,
+      "1.0.0",
+      versionFetch({
+        [`${base}/r/versions/1.0.0.json`]: JSON.stringify(unsafeManifest),
+        [`${base}${content}`]: unsafe,
+      })
+    )
+    await assert.rejects(() => client.getItem("button"), /Unsafe registry file path/)
   })
 })

@@ -22,12 +22,15 @@ const encode = (raw: string) =>
 
 // The default preset /create shows on load.
 const DEFAULT_ID = encode(
-  "neutral|base|default|default|inter|inter|mono|default|default|default|default",
+  "neutral|base|default|default|inter|inter|mono|default|default|default|default|lucide",
 )
 // A preset id in the pre-/typeset 6-field format, shared before "mono",
 // "measure", "size", "leading" and "flow" existed — decodePreset must still
 // accept these (see the LEGACY_LENGTH comment on ORDER in src/index.ts).
 const LEGACY_DEFAULT_ID = encode("neutral|base|default|default|inter|inter")
+const PRE_ICON_DEFAULT_ID = encode(
+  "neutral|base|default|default|inter|inter|mono|default|default|default|default",
+)
 
 const SAMPLE_CSS = `@import "tailwindcss";
 
@@ -69,6 +72,10 @@ describe("encodePreset / decodePreset", () => {
     assert.deepEqual(decodePreset(LEGACY_DEFAULT_ID), DEFAULT_CONFIG)
   })
 
+  it("decodes an 11-field pre-icon-library id to Lucide", () => {
+    assert.deepEqual(decodePreset(PRE_ICON_DEFAULT_ID), DEFAULT_CONFIG)
+  })
+
   it("round-trips a fully custom preset", () => {
     const cfg = {
       ...DEFAULT_CONFIG,
@@ -97,6 +104,10 @@ describe("encodePreset / decodePreset", () => {
     assert.equal(decodePreset(encode("only|three|parts")), null)
     assert.equal(decodePreset(encode("bogus|base|default|default|inter|inter")), null)
     assert.equal(decodePreset(encode("neutral|base|default|huge|inter|inter")), null)
+    assert.equal(
+      decodePreset(encode("neutral|base|default|default|inter|inter|mono|default|default|default|default|unknown")),
+      null,
+    )
   })
 })
 

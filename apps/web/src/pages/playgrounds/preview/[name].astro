@@ -1,0 +1,35 @@
+---
+import "@/styles/global.css"
+import { PropPlayground } from "@/components/PropPlayground"
+import {
+  PLAYGROUND_NAMES,
+  hasPlayground,
+} from "@/data/playground-recipes"
+
+export function getStaticPaths() {
+  return PLAYGROUND_NAMES.map((name) => ({ params: { name } }))
+}
+
+const name = Astro.params.name ?? ""
+if (!hasPlayground(name)) throw new Error(`Unknown playground: ${name}`)
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>{name} playground — logic2b ui</title>
+    <script is:inline>
+      const theme = localStorage.getItem("theme") ?? "dark";
+      document.documentElement.classList.toggle("dark", theme === "dark");
+    </script>
+  </head>
+  <body class="min-h-svh bg-background font-sans antialiased">
+    <main class="mx-auto w-full max-w-5xl p-4 sm:p-8">
+      <h1 class="sr-only">{name} live playground</h1>
+      <PropPlayground name={name} client:load />
+    </main>
+  </body>
+</html>

@@ -10,7 +10,7 @@
 
 import registryIndex from "../../public/r/index.json"
 
-import { encodePreset, FONTS, RADII, type ThemeConfig } from "@/lib/themes"
+import { encodePreset, FONTS, ICON_LIBRARIES, RADII, type ThemeConfig } from "@/lib/themes"
 
 const SITE = "https://ui.logic2b.com"
 
@@ -43,6 +43,7 @@ export function buildAgentsMd(cfg: ThemeConfig): string {
   const radius = RADII[cfg.radius] ?? RADII.default
   const font = FONTS[cfg.font] ?? FONTS.sans
   const heading = FONTS[cfg.heading] ?? FONTS.sans
+  const iconPackage = ICON_LIBRARIES[cfg.iconLibrary]?.package ?? ICON_LIBRARIES.lucide.package
 
   return `# AGENTS.md — UI house rules
 > generated with logic2b ui · preset \`${preset}\`
@@ -54,7 +55,7 @@ through CSS tokens. Follow these rules for any work that touches the UI.
 ## Stack contract
 
 - React 19 + Tailwind CSS v4 (CSS-first config — there is no
-  \`tailwind.config.js\`). Icons come from lucide-react.
+  \`tailwind.config.js\`). Icons come from ${iconPackage}.
 - The theme is the token blocks in \`theme.css\`: \`:root\` (light) and
   \`.dark\` (dark). Dark mode toggles with the \`dark\` class on \`<html>\`.
 - Code layout: primitives in \`@/components/ui\`, installed blocks in
@@ -67,8 +68,7 @@ Before writing any UI element from scratch, install it:
 
 - CLI: \`npx logic2b@latest add <name>\` (resolves registry dependencies).
 - No shell? Use the MCP endpoint \`${SITE}/mcp\` — the \`install_plan\` tool
-  returns the exact files to write and npm deps to add — or fetch
-  \`${SITE}/r/<name>.json\` and write its \`files[]\` yourself.
+  returns the exact files to write and npm deps to add${cfg.iconLibrary === "lucide" ? " — or fetch the raw registry payload directly" : `; pass \`iconLibrary: "${cfg.iconLibrary}"\` so its canonical Lucide sources are rewritten`}.
 
 Available primitives (${components.length}):
 ${wrapList(components)}

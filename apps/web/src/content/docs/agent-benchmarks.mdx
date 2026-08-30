@@ -1,0 +1,66 @@
+---
+title: Agent Benchmarks
+description: A public, reproducible benchmark for agents installing, theming and composing logic2b ui.
+---
+
+import AgentBenchmarkStatus from "@/components/AgentBenchmarkStatus.astro"
+
+This benchmark measures the product's core claim: whether a coding agent can
+use logic2b as a design system end to end instead of merely reading its docs.
+The protocol is public, every rule has a point value, and submitted code is
+never executed by the scorer.
+
+<AgentBenchmarkStatus />
+
+## What is measured
+
+The tasks progress from component installation to composition and full
+application scaffolding. They check registry provenance (`data-slot`, expected
+imports and transitive files), exact preset fidelity, semantic token use,
+accessible form naming, dependency pinning and evaluator-observed production
+builds.
+
+The overall score is 300 points. Score ranks first; total duration breaks ties.
+This keeps a fast but broken result below a slower complete one.
+
+## Fair-run contract
+
+- Fresh isolated directory for every model and task.
+- Identical task text, preset and starting fixture.
+- Tool access (shell, network and MCP) recorded in run metadata.
+- No human corrections after the timer starts.
+- Failed and timed-out tasks retain their partial artifacts.
+- The benchmark operator—not the model—records build exit codes.
+- Model/provider version, agent host, OS and Node version accompany the result.
+
+The repository now ships the versioned evaluator runner as well as the static
+scorer. It creates each fixture from the built registry in external staging,
+records its SHA-256, invokes the configured agent without a shell, enforces
+time/output limits and snapshots source before the observed build; dependencies
+and generated caches are excluded. It captures both agent and verification
+transcripts; symlinks are discarded and source over the configured artifact
+budget is never executed. The runner must itself be
+executed inside a disposable container or VM because the observed build step
+intentionally executes generated project code.
+
+## Reproduce or audit
+
+The protocol, scorer, test fixture contract and raw run format ship in
+[`benchmarks/agents`](https://github.com/amariner/logic2b-ui/tree/main/benchmarks/agents).
+Run the harness tests with:
+
+```bash
+pnpm --dir benchmarks/agents test
+```
+
+Validate and execute an isolated agent configuration with:
+
+```bash
+pnpm --dir benchmarks/agents benchmark config.json --validate
+pnpm --dir benchmarks/agents benchmark config.json
+pnpm --dir benchmarks/agents score <run-id>
+```
+
+Real run artifacts will be committed alongside their detailed score JSON. The
+leaderboard is deliberately empty until those executions exist; synthetic test
+fixtures are tagged and mechanically excluded from publication.

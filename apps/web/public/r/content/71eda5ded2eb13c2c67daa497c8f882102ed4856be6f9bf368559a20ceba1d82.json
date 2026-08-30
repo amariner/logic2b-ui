@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-pie-03",
+  "type": "registry:block",
+  "title": "Pie Chart - Donut with Text",
+  "description": "A donut chart with the total rendered in the center via a custom Label. Use it to show proportions and the headline number at once.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-pie-03.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Label, Pie, PieChart } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport {\n  ChartContainer,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from \"@/components/ui/chart\"\n\nconst chartData = [\n  { browser: \"chrome\", visitors: 275, fill: \"var(--color-chrome)\" },\n  { browser: \"safari\", visitors: 200, fill: \"var(--color-safari)\" },\n  { browser: \"firefox\", visitors: 187, fill: \"var(--color-firefox)\" },\n  { browser: \"edge\", visitors: 173, fill: \"var(--color-edge)\" },\n  { browser: \"other\", visitors: 90, fill: \"var(--color-other)\" },\n]\n\nconst chartConfig = {\n  visitors: { label: \"Visitors\" },\n  chrome: { label: \"Chrome\", color: \"var(--chart-1)\" },\n  safari: { label: \"Safari\", color: \"var(--chart-2)\" },\n  firefox: { label: \"Firefox\", color: \"var(--chart-3)\" },\n  edge: { label: \"Edge\", color: \"var(--chart-4)\" },\n  other: { label: \"Other\", color: \"var(--chart-5)\" },\n} satisfies ChartConfig\n\nexport default function ChartPie03() {\n  const totalVisitors = React.useMemo(\n    () => chartData.reduce((acc, curr) => acc + curr.visitors, 0),\n    []\n  )\n\n  return (\n    <Card className=\"flex flex-col\">\n      <CardHeader className=\"items-center pb-0\">\n        <CardTitle>Pie Chart - Donut with Text</CardTitle>\n        <CardDescription>January - June 2024</CardDescription>\n      </CardHeader>\n      <CardContent className=\"flex-1 pb-0\">\n        <ChartContainer\n          config={chartConfig}\n          className=\"mx-auto aspect-square max-h-[250px]\"\n        >\n          <PieChart>\n            <ChartTooltip\n              cursor={false}\n              content={<ChartTooltipContent hideLabel />}\n            />\n            <Pie\n              data={chartData}\n              dataKey=\"visitors\"\n              nameKey=\"browser\"\n              innerRadius={60}\n              strokeWidth={5}\n            >\n              <Label\n                content={({ viewBox }) => {\n                  if (viewBox && \"cx\" in viewBox && \"cy\" in viewBox) {\n                    return (\n                      <text\n                        x={viewBox.cx}\n                        y={viewBox.cy}\n                        textAnchor=\"middle\"\n                        dominantBaseline=\"middle\"\n                      >\n                        <tspan\n                          x={viewBox.cx}\n                          y={viewBox.cy}\n                          className=\"fill-foreground text-3xl font-bold\"\n                        >\n                          {totalVisitors.toLocaleString()}\n                        </tspan>\n                        <tspan\n                          x={viewBox.cx}\n                          y={(viewBox.cy || 0) + 24}\n                          className=\"fill-muted-foreground\"\n                        >\n                          Visitors\n                        </tspan>\n                      </text>\n                    )\n                  }\n                }}\n              />\n            </Pie>\n          </PieChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-pie"
+  ]
+}

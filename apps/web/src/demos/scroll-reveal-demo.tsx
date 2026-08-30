@@ -18,7 +18,9 @@ export default function ScrollRevealDemo() {
   return (
     <div
       ref={rootRef}
+      aria-label="Scroll reveal demo area"
       className="h-80 w-full overflow-y-auto rounded-lg border bg-muted/20"
+      tabIndex={0}
     >
       <div className="p-4 text-center text-sm text-muted-foreground">
         Scroll down ↓

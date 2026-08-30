@@ -49,21 +49,10 @@ import { CommandDialog, CommandInput, CommandList } from "@/components/ui/comman
 </CommandDialog>
 ```
 
-## API
+## Usage notes
 
 Built on [cmdk](https://cmdk.paco.me/). Props flow through to the underlying
 primitives.
-
-| Prop | Type | Default |
-| --- | --- | --- |
-| `shouldFilter` (Command) | `boolean` — filter items automatically as you type | `true` |
-| `filter` (Command) | `(value, search, keywords) => number` — custom scoring | — |
-| `value` / `onValueChange` (Command) | `string` / `(value: string) => void` — control the highlighted item | — |
-| `value` (CommandItem) | `string` — value used for filtering | text content |
-| `onSelect` (CommandItem) | `(value: string) => void` | — |
-| `disabled` (CommandItem) | `boolean` | `false` |
-| `title` / `description` (CommandDialog) | `string` — accessible labels for the dialog | `Command Palette` / `Search for a command to run...` |
-| `showCloseButton` (CommandDialog) | `boolean` | `true` |
 
 ## Examples
 
@@ -83,5 +72,7 @@ Render the menu inside a modal and toggle it with a keyboard shortcut.
   highlighted item, and `Home` / `End` jump to the ends of the list.
 - `CommandInput` is a combobox that owns the list via `aria-activedescendant`,
   so focus stays in the input while items are announced as active.
+- `CommandSeparator` is decorative by default, which keeps it out of the
+  `listbox` child-role contract while retaining its visual grouping.
 - `CommandDialog` traps focus, closes on `Escape`, and ships an `sr-only` title
   and description so screen readers announce the palette on open.

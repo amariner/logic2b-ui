@@ -1,0 +1,39 @@
+---
+title: Área de texto
+description: Muestra un área de texto que adapta su altura al contenido.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="textarea-demo" locale="es" />
+
+## Instalación
+
+<Install name="textarea" locale="es" />
+
+## Uso
+
+```tsx
+import { Textarea } from "@/components/ui/textarea"
+
+<Textarea placeholder="Escribe tu mensaje." />
+```
+
+## Notas de uso
+
+`Textarea` renderiza un `<textarea>` nativo y reenvía todas sus propiedades. Ajusta automáticamente su altura al contenido mediante `field-sizing-content` y aplica estilos de validación cuando recibe `aria-invalid`.
+
+## Ejemplos
+
+### Con etiqueta
+
+<ComponentPreview name="textarea-label-demo" locale="es" />
+
+### Desactivada
+
+<ComponentPreview name="textarea-disabled-demo" locale="es" />
+
+### Con un botón
+
+<ComponentPreview name="textarea-form-demo" locale="es" />

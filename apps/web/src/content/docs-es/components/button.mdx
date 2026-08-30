@@ -1,0 +1,33 @@
+---
+title: Botón
+description: Muestra un botón o un componente con apariencia de botón.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="button-demo" locale="es" />
+
+## Instalación
+
+<Install name="button" locale="es" />
+
+## Uso
+
+```tsx
+import { Button } from "@/components/ui/button"
+
+<Button variant="outline" size="lg">Continuar</Button>
+```
+
+## Notas de uso
+
+### Como enlace
+
+Usa `asChild` para delegar el elemento interactivo en un enlace sin perder los estilos del botón.
+
+```tsx
+<Button asChild>
+  <a href="/docs">Leer la documentación</a>
+</Button>
+```

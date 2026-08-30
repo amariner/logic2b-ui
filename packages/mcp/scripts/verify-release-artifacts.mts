@@ -1,0 +1,234 @@
+import assert from "node:assert/strict"
+import { execFile } from "node:child_process"
+import { access, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
+import { createServer } from "node:http"
+import { tmpdir } from "node:os"
+import { join, resolve } from "node:path"
+import { promisify } from "node:util"
+
+import { Client } from "@modelcontextprotocol/sdk/client/index.js"
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
+
+const execFileAsync = promisify(execFile)
+const repoRoot = resolve(import.meta.dirname, "../../..")
+const cliRoot = join(repoRoot, "packages/cli")
+const mcpRoot = join(repoRoot, "packages/mcp")
+const registryRoot = join(repoRoot, "apps/web/public/r")
+
+async function json(path: string) {
+  return JSON.parse(await readFile(path, "utf8")) as Record<string, unknown>
+}
+
+function releaseHeading(version: unknown) {
+  assert.equal(typeof version, "string")
+  return new RegExp(`^## ${version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "m")
+}
+
+async function pack(packageRoot: string, destination: string) {
+  const before = new Set(await readdir(destination))
+  await execFileAsync("pnpm", ["pack", "--pack-destination", destination], {
+    cwd: packageRoot,
+  })
+  const created = (await readdir(destination)).filter(
+    (name) => name.endsWith(".tgz") && !before.has(name)
+  )
+  assert.equal(created.length, 1, `expected one tarball from ${packageRoot}`)
+  const tarball = join(destination, created[0]!)
+  const { stdout } = await execFileAsync("tar", ["-tzf", tarball])
+  assert.deepEqual(
+    stdout
+      .trim()
+      .split(/\r?\n/)
+      .map((path) => path.replace(/^package\//, ""))
+      .sort(),
+    ["CHANGELOG.md", "LICENSE", "README.md", "dist/index.js", "package.json"],
+    `unexpected publication contents in ${tarball}`,
+  )
+  return tarball
+}
+
+async function withLocalRegistry<T>(run: (base: string) => Promise<T>): Promise<T> {
+  const server = createServer(async (request, response) => {
+    const pathname = new URL(request.url ?? "/", "http://registry.test").pathname
+    if (!pathname.startsWith("/r/")) {
+      response.writeHead(404).end("Not found")
+      return
+    }
+    const registryPath = decodeURIComponent(pathname.slice(3))
+    if (
+      !registryPath.endsWith(".json") ||
+      registryPath
+        .split("/")
+        .some((segment) => !segment || segment === "." || segment === "..")
+    ) {
+      response.writeHead(404).end("Not found")
+      return
+    }
+    try {
+      response.writeHead(200, { "content-type": "application/json" })
+      response.end(await readFile(join(registryRoot, registryPath), "utf8"))
+    } catch {
+      response.writeHead(404).end("Not found")
+    }
+  })
+  await new Promise<void>((resolve, reject) => {
+    server.once("error", reject)
+    server.listen(0, "127.0.0.1", resolve)
+  })
+  const address = server.address()
+  assert.ok(address && typeof address === "object")
+  try {
+    return await run(`http://127.0.0.1:${address.port}`)
+  } finally {
+    await new Promise<void>((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    )
+  }
+}
+
+const root = await mkdtemp(join(tmpdir(), "logic2b-release-artifacts-"))
+const consumer = join(root, "consumer")
+let passed = false
+
+try {
+  const [cliSource, mcpSource] = await Promise.all([
+    json(join(cliRoot, "package.json")),
+    json(join(mcpRoot, "package.json")),
+  ])
+  assert.equal(cliSource.version, mcpSource.version, "CLI and MCP versions must match")
+  for (const [name, packageRoot, manifest] of [
+    ["logic2b", cliRoot, cliSource],
+    ["@logic2b/mcp", mcpRoot, mcpSource],
+  ] as const) {
+    assert.deepEqual(manifest.files, ["dist", "CHANGELOG.md"], `${name} publish allowlist drifted`)
+    assert.deepEqual(manifest.publishConfig, { access: "public" })
+    assert.match(
+      await readFile(join(packageRoot, "CHANGELOG.md"), "utf8"),
+      releaseHeading(manifest.version),
+      `${name} changelog has no entry for ${String(manifest.version)}`,
+    )
+  }
+  const cliTarball = await pack(cliRoot, root)
+  const mcpTarball = await pack(mcpRoot, root)
+
+  await mkdir(consumer)
+  await writeFile(
+    join(consumer, "package.json"),
+    JSON.stringify({ name: "logic2b-release-consumer", private: true }, null, 2)
+  )
+  await execFileAsync(
+    "pnpm",
+    ["add", "--prefer-offline", "--ignore-scripts", "--save-exact", cliTarball, mcpTarball],
+    { cwd: consumer }
+  )
+
+  const installedCli = join(consumer, "node_modules/logic2b")
+  const installedMcp = join(consumer, "node_modules/@logic2b/mcp")
+  const cliManifest = await json(join(installedCli, "package.json"))
+  const mcpManifest = await json(join(installedMcp, "package.json"))
+
+  assert.equal(cliManifest.version, cliSource.version)
+  assert.equal(mcpManifest.version, mcpSource.version)
+  assert.deepEqual(cliManifest.bin, { logic2b: "dist/index.js" })
+  assert.deepEqual(mcpManifest.bin, { "logic2b-mcp": "dist/index.js" })
+  for (const packageRoot of [installedCli, installedMcp]) {
+    await Promise.all(
+      ["dist/index.js", "README.md", "LICENSE", "CHANGELOG.md"].map((path) =>
+        access(join(packageRoot, path)),
+      ),
+    )
+  }
+
+  const cliEntry = join(installedCli, "dist/index.js")
+  const binSuffix = process.platform === "win32" ? ".cmd" : ""
+  const cliBin = join(consumer, "node_modules/.bin", `logic2b${binSuffix}`)
+  const mcpBin = join(consumer, "node_modules/.bin", `logic2b-mcp${binSuffix}`)
+  await Promise.all([access(cliBin), access(mcpBin)])
+  const version = await execFileAsync(cliBin, ["--version"])
+  assert.equal(version.stdout.trim(), cliSource.version)
+  const help = await execFileAsync(cliBin, ["--help"])
+  for (const command of ["init", "add", "update", "diff", "list", "status"]) {
+    assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
+  }
+  await withLocalRegistry(async (registry) => {
+    const target = join(root, "generated-from-tarball")
+    await execFileAsync(process.execPath, [
+      cliEntry,
+      "init",
+      "--template",
+      "vite",
+      "--starter",
+      "auth",
+      "--name",
+      "release-smoke",
+      "--cwd",
+      target,
+      "--registry",
+      registry,
+      "--registry-version",
+      "1.0.0-rc.16",
+      "--no-install",
+    ])
+    await Promise.all([
+      access(join(target, "package.json")),
+      access(join(target, "src/main.tsx")),
+      access(join(target, "src/components/login-01/login-form.tsx")),
+      access(join(target, ".logic2b/manifest.json")),
+      access(
+        join(
+          target,
+          ".logic2b/base/blocks/login-01/login-form.tsx",
+        ),
+      ),
+      access(join(target, ".logic2b/base/theme.css")),
+    ])
+  })
+
+  const transport = new StdioClientTransport({
+    command: mcpBin,
+    cwd: consumer,
+    stderr: "pipe",
+  })
+  const client = new Client({ name: "logic2b-release-verifier", version: "1.0.0" })
+  try {
+    await client.connect(transport)
+    assert.deepEqual(client.getServerVersion(), {
+      name: "logic2b-ui",
+      version: mcpSource.version,
+    })
+    const { tools } = await client.listTools()
+    assert.deepEqual(
+      tools.map((tool) => tool.name).sort(),
+      [
+        "add_command",
+        "apply_preset",
+        "contrast_audit",
+        "decode_preset",
+        "export_tokens",
+        "get_changelog",
+        "get_component",
+        "get_demo",
+        "get_theme",
+        "install_plan",
+        "lint_theme",
+        "list_components",
+        "list_registry_versions",
+        "scaffold_plan",
+        "search_components",
+      ]
+    )
+    await client.ping()
+  } finally {
+    await client.close()
+  }
+
+  passed = true
+  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/scaffold verified`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, stdio/tools verified`)
+} finally {
+  if (passed) {
+    await rm(root, { recursive: true, force: true })
+  } else {
+    console.error(`Release artifact fixture kept for inspection: ${root}`)
+  }
+}

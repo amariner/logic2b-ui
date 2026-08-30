@@ -54,6 +54,11 @@ const categories = [
     label: "Heatmap",
     demos: ["chart-heatmap-01"],
   },
+  {
+    slug: "realtime",
+    label: "Real-time",
+    demos: ["chart-realtime-01"],
+  },
 ];
 
 export async function getStaticPaths() {
@@ -68,6 +73,7 @@ export async function getStaticPaths() {
     { params: { category: "kpi" } },
     { params: { category: "composed" } },
     { params: { category: "heatmap" } },
+    { params: { category: "realtime" } },
   ];
 }
 

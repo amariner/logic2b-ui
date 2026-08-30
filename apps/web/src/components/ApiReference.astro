@@ -1,0 +1,173 @@
+---
+import type { RegistryApiContract } from "@logic2b/registry/types";
+
+interface Props {
+  name: string;
+  contract: RegistryApiContract;
+  locale?: "en" | "es";
+}
+
+const { name, contract, locale = "en" } = Astro.props;
+const copy = locale === "es"
+  ? {
+      title: "Referencia de API",
+      generated: "Generada a partir de las exportaciones públicas de TypeScript en",
+      canonical: "Las descripciones técnicas conservan el texto canónico del código fuente.",
+      json: "Ver JSON",
+      alias: "Alias directo de",
+      propsType: "tipo de propiedades",
+      signature: "firma",
+      definition: "definición de tipo",
+      ownedProps: "propiedades propias",
+      prop: "Propiedad",
+      type: "Tipo",
+      required: "Obligatoria",
+      default: "Valor predeterminado",
+      description: "Descripción",
+      yes: "Sí",
+      no: "No",
+    }
+  : {
+      title: "API reference",
+      generated: "Generated from the public TypeScript exports in",
+      canonical: "",
+      json: "View JSON",
+      alias: "Direct alias of",
+      propsType: "props type",
+      signature: "signature",
+      definition: "type definition",
+      ownedProps: "owned props",
+      prop: "Prop",
+      type: "Type",
+      required: "Required",
+      default: "Default",
+      description: "Description",
+      yes: "Yes",
+      no: "No",
+    };
+const kindLabels = locale === "es"
+  ? { component: "Componente", hook: "Hook", type: "Tipo", utility: "Utilidad" } as const
+  : { component: "Component", hook: "Hook", type: "Type", utility: "Utility" } as const;
+---
+
+<section aria-labelledby={`api-reference-${name}`} class="not-prose mt-12 border-t pt-8">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h2
+        class="scroll-mt-24 text-2xl font-semibold tracking-tight"
+        id={`api-reference-${name}`}
+      >
+        {copy.title}
+      </h2>
+      <p class="mt-2 text-sm leading-6 text-muted-foreground">
+        {copy.generated} <code>{contract.source}</code>.
+        {copy.canonical && <> {copy.canonical}</>}
+      </p>
+    </div>
+    <a
+      class="rounded-full border px-3 py-1 text-xs font-medium hover:bg-muted"
+      href={`/r/${name}.json#api`}
+    >
+      {copy.json}
+    </a>
+  </div>
+
+  <div class="mt-6 space-y-7">
+    {contract.exports.map((entry) => (
+      <article aria-labelledby={`api-${name}-${entry.name}`}>
+        <div class="flex flex-wrap items-center gap-2">
+          <h3
+            class="scroll-mt-24 font-mono text-base font-semibold"
+            id={`api-${name}-${entry.name}`}
+          >
+            {entry.name}
+          </h3>
+          <span class="rounded-full border bg-muted/40 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            {kindLabels[entry.kind]}
+          </span>
+        </div>
+
+        {entry.description && (
+          <p class="mt-2 text-sm leading-6 text-muted-foreground">{entry.description}</p>
+        )}
+        {entry.aliasOf && (
+          <p class="mt-2 text-sm text-muted-foreground">
+            {copy.alias} <code class="text-foreground">{entry.aliasOf}</code>.
+          </p>
+        )}
+        {entry.propsType && (
+          <div
+            class="mt-3 overflow-x-auto rounded-md border bg-muted/30 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            role="region"
+            aria-label={`${entry.name} ${copy.propsType}`}
+            tabindex="0"
+          >
+            <code class="whitespace-nowrap font-mono text-xs">Props: {entry.propsType}</code>
+          </div>
+        )}
+        {entry.signature && (
+          <div
+            class="mt-3 overflow-x-auto rounded-md border bg-muted/30 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            role="region"
+            aria-label={`${entry.name} ${copy.signature}`}
+            tabindex="0"
+          >
+            <code class="whitespace-nowrap font-mono text-xs">{entry.signature}</code>
+          </div>
+        )}
+        {entry.definition && (
+          <div
+            class="mt-3 overflow-x-auto rounded-md border bg-muted/30 px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            role="region"
+            aria-label={`${entry.name} ${copy.definition}`}
+            tabindex="0"
+          >
+            <code class="whitespace-nowrap font-mono text-xs">{entry.definition}</code>
+          </div>
+        )}
+
+        {entry.props && entry.props.length > 0 && (
+          <div
+            class="mt-3 overflow-x-auto rounded-lg border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            role="region"
+            aria-label={`${entry.name} ${copy.ownedProps}`}
+            tabindex="0"
+          >
+            <table class="w-full min-w-[680px] text-sm">
+              <thead class="bg-muted/50 text-left">
+                <tr>
+                  <th class="px-3 py-2 font-medium" scope="col">{copy.prop}</th>
+                  <th class="px-3 py-2 font-medium" scope="col">{copy.type}</th>
+                  <th class="px-3 py-2 font-medium" scope="col">{copy.required}</th>
+                  <th class="px-3 py-2 font-medium" scope="col">{copy.default}</th>
+                  <th class="px-3 py-2 font-medium" scope="col">{copy.description}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {entry.props.map((prop) => (
+                  <tr class="border-t">
+                    <th class="px-3 py-2 text-left align-top font-normal" scope="row">
+                      <code class="font-mono text-xs">{prop.name}</code>
+                    </th>
+                    <td class="px-3 py-2 align-top">
+                      <code class="font-mono text-xs">{prop.type}</code>
+                    </td>
+                    <td class="px-3 py-2 align-top text-muted-foreground">
+                      {prop.required ? copy.yes : copy.no}
+                    </td>
+                    <td class="px-3 py-2 align-top text-muted-foreground">
+                      {prop.default ? <code class="font-mono text-xs">{prop.default}</code> : "—"}
+                    </td>
+                    <td class="px-3 py-2 align-top text-muted-foreground">
+                      {prop.description ?? "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+</section>

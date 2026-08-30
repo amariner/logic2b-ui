@@ -1,0 +1,1859 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-version.json",
+  "schemaVersion": 1,
+  "version": "1.0.0-rc.1",
+  "channel": "next",
+  "releasedAt": "2026-08-29",
+  "items": [
+    {
+      "name": "theme",
+      "type": "registry:style",
+      "title": "logic2b theme",
+      "description": "The logic2b design system: monochrome oklch token ladder (light + dark), the 5-stop chart palette, 0.625rem radius, and Inter font wiring. Install this once so every component renders with the logic2b look.",
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-lccfTDkVT1QAkPBHuEblUissl4BowDbVvF+gN6VLbcg=",
+      "content": "/r/content/95c71f4c39154f540090f047b846e5522b2c978068c036d5bc5fa037a54b6dc8.json",
+      "changelog": "/r/changelog/theme.json"
+    },
+    {
+      "name": "use-mobile",
+      "type": "registry:hook",
+      "title": "useIsMobile",
+      "description": "A React hook that tracks whether the viewport is below the mobile breakpoint (768px) via matchMedia. Used by sidebar and any responsive component.",
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-CoVdEHGqfWPt8CoTRNhMqSwJ0C9nROFNxI9sYnEPRX0=",
+      "content": "/r/content/0a855d1071aa7d63edf02a1344d84ca92c09d02f6744e14dc48f6c62710f457d.json",
+      "changelog": "/r/changelog/use-mobile.json"
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "description": "The cn() helper that merges Tailwind classes with clsx and tailwind-merge. Required by every component.",
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-CBGmAr6zsnkELQSLEqq/vXR8EabLWi7Qg1vLpr4zzT8=",
+      "content": "/r/content/0811a602beb3b279042d048b12aabfbd747c11a6cb5a2ed0835bcba6be33cd3f.json",
+      "changelog": "/r/changelog/utils.json"
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "description": "Displays a button or a component that looks like a button. Variants: default, destructive, outline, secondary, ghost, link. Sizes: default, sm, lg, icon.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-Z23VZ1uLuN7J69GgiWC3dla4E+heCh8SKna39CKFuoQ=",
+      "content": "/r/content/676dd5675b8bb8dec9ebd1a08960b77656b813e85e0a1f122a76b7f42285ba84.json",
+      "changelog": "/r/changelog/button.json"
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "description": "Displays a card with header, title, description, action, content and footer sections.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-wQvXKU7YriV03qEObefhDFlIGyfhBppwcmrAOv5mPso=",
+      "content": "/r/content/c10bd7294ed8ae2574dea10e6de7e10c59481b27e1069a70726ac03afe663eca.json",
+      "changelog": "/r/changelog/card.json"
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "description": "Displays a form input field. Supports all native input types, file inputs, invalid state styling.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-WodMFyPzObOITQ5bCoOxy5YEpF70LLUkhvNNglDTA9g=",
+      "content": "/r/content/5a874c1723f339b3884d0e5b0a83b1cb9604a45ef42cb52486f34d8250d303d8.json",
+      "changelog": "/r/changelog/input.json"
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "description": "Renders an accessible label associated with form controls, built on Radix Label.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-bwHnhjj0oPnqmfWfPl1nxisjyAquCBcRcDbkSSDHKqU=",
+      "content": "/r/content/6f01e78638f4a0f9ea99f59f3e5d67c62b23c80aae0817117036e44920c72aa5.json",
+      "changelog": "/r/changelog/label.json"
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "description": "Displays a badge or a component that looks like a badge. Variants: default, secondary, destructive, outline.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-VIfa4vFVNFGn4ggoX4CzCNqbWOs/rYLpKqIreaJNJEY=",
+      "content": "/r/content/5487dae2f1553451a7e208285f80b308da9b58eb3fad82e92aa22b79a24d2446.json",
+      "changelog": "/r/changelog/badge.json"
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "description": "Visually or semantically separates content, horizontal or vertical, built on Radix Separator.",
+      "categories": [
+        "layout"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-jcaJqCR5vodfn3jJxNvtSTWg6uvIKu6EdhlXBpHmfnM=",
+      "content": "/r/content/8dc689a82479be875f9f78c9c4dbed4935a0eaebc82aee847619570691e67e73.json",
+      "changelog": "/r/changelog/separator.json"
+    },
+    {
+      "name": "item",
+      "type": "registry:ui",
+      "description": "A flex container for a title, description and actions, with media (icon/image) and grouping — for settings rows, notification lists, command results and any generic list of composite entries. Parts: Item (variant: default | outline | muted, size: default | sm), ItemGroup, ItemSeparator, ItemMedia (variant: default | icon | image), ItemContent, ItemTitle, ItemDescription, ItemActions, ItemHeader, ItemFooter.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ET3C0gBVRWxVwUODAVndcDKy3p6kw4PfBZtnnJbtEwo=",
+      "content": "/r/content/113dc2d20055456c55c143830159dd7032b2de9ea4c383df059b679c96ed130a.json",
+      "changelog": "/r/changelog/item.json"
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "description": "An image element with a fallback for representing a user, built on Radix Avatar.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-pI1zmJmXfEVUOMtfNrHMwSCpG6YsILn1s3k6W58F3Z4=",
+      "content": "/r/content/a48d739899977c455438cb5f36b1ccc120a91ba62c20b9f5b3793a5b9f05dd9e.json",
+      "changelog": "/r/changelog/avatar.json"
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "description": "Use to show a placeholder while content is loading.",
+      "categories": [
+        "feedback"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-GK56Eo0ZathVJkvAjO9HKDRgWH7XFTruEXfTxiJ+yEY=",
+      "content": "/r/content/18ae7a128d196ad855264bc08cef47283460587ed7153aee1177d3c6227ec846.json",
+      "changelog": "/r/changelog/skeleton.json"
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "description": "Displays a callout for user attention with title and description. Variants: default, destructive.",
+      "categories": [
+        "feedback"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-RQv9TfqUkh5xKKWX1zLG6ClbzrIPCn+tzKWZnQwFoFM=",
+      "content": "/r/content/450bfd4dfa94921e7128a597d732c6e8295bceb20f0a7fadcca5999d0c05a053.json",
+      "changelog": "/r/changelog/alert.json"
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "description": "Displays a form textarea that auto-sizes to its content (field-sizing).",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-zoz6Io3t7K1kmjw3r/z8KezQg0ccY3Nq+FvplR5YfBk=",
+      "content": "/r/content/ce8cfa228dedecad649a3c37affcfc29ecd083471c63736af85be9951e587c19.json",
+      "changelog": "/r/changelog/textarea.json"
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "description": "A vertically stacked set of interactive headings that each reveal a section of content, built on Radix Accordion. Use it for FAQs or collapsible content groups. Parts: Accordion (root, supports type 'single' or 'multiple'), AccordionItem, AccordionTrigger, AccordionContent.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-eprdYHTfl1Dj1WcwDvGfVAsiInu6FTFx+PpaRIpRxfw=",
+      "content": "/r/content/7a9add6074df9750e3d567300ef19f540b22227bba153171f8fa5a448a51c5fc.json",
+      "changelog": "/r/changelog/accordion.json"
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "description": "An interactive component which expands and collapses a panel of content, built on Radix Collapsible. Use it for simple show/hide sections without the multi-item semantics of an accordion. Parts: Collapsible (root), CollapsibleTrigger, CollapsibleContent.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ki64cydRNAvzN/AZYK7r2AQAZMllQPdZ9xkTYqolY7A=",
+      "content": "/r/content/922eb8732751340bf337f01960aeebd8040064c96540f759f7191362aa2563b0.json",
+      "changelog": "/r/changelog/collapsible.json"
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "description": "A window overlaid on the primary window, rendering content that requires the user's attention, built on Radix Dialog. Use it for modal forms or confirmations that block interaction with the page. Parts: Dialog (root), DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose, DialogOverlay, DialogPortal.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-hr9KHK62sU/IlSY4slNg6yAIXHj3cWMm90fDPVpR67k=",
+      "content": "/r/content/86bf4a1caeb6b14fc8952638b25360eb20085c78f7716326f747c33d5a51ebb9.json",
+      "changelog": "/r/changelog/dialog.json"
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "description": "A modal dialog that interrupts the user with important content and expects an explicit confirmation, built on Radix Alert Dialog. Use it for destructive actions (e.g. delete) that need a yes/no confirmation, unlike a regular Dialog it cannot be dismissed by clicking outside. Parts: AlertDialog (root), AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-WzWN0yIplZAnAwLj0qNoqb92ONncrgzYIWuLX0jCaDk=",
+      "content": "/r/content/5b358dd322299590270302e3d2a368a9bf7638d9dcae0cd8216b8b5f48c26839.json",
+      "changelog": "/r/changelog/alert-dialog.json"
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "description": "Displays a menu of actions or options triggered by a button, built on Radix Dropdown Menu. Use it for contextual action lists, with support for items, checkboxes, radio groups, submenus, labels, separators and shortcuts. Parts: DropdownMenu (root), DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuPortal.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-pld0Ls6riwcne/+dn4VKj0e4lm3RfLCKOO2vPJkFadw=",
+      "content": "/r/content/a657742eceab8b07277bff9d9f854a8f47b8966dd17cb08a38edaf3c990569dc.json",
+      "changelog": "/r/changelog/dropdown-menu.json"
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "description": "Displays rich content in a portal, triggered by a button, built on Radix Popover. Use it for non-modal floating panels such as pickers or extra details that stay open until dismissed. Parts: Popover (root), PopoverTrigger, PopoverContent, PopoverAnchor.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-7WbDRirEXnlNe14yF1DW3OThjTXLL+FDsDB/6sU2upU=",
+      "content": "/r/content/ed66c3462ac45e794d7b5e321750d6dce4e18d35cb2fe143b0307feac536ba95.json",
+      "changelog": "/r/changelog/popover.json"
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "description": "A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it, built on Radix Tooltip. Use it for short contextual hints on icons or truncated labels. Parts: TooltipProvider, Tooltip (root), TooltipTrigger, TooltipContent.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-fR1v6sQ5UGUFJr+aCTP/46HGxmmaW1oxqASchlGEQc0=",
+      "content": "/r/content/7d1d6feac43950650526bf9a0933ffe3a1c6c6699a5b5a31a8049c86518441cd.json",
+      "changelog": "/r/changelog/tooltip.json"
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "description": "Extends the Dialog component to display content that complements the main content of the screen, sliding in from an edge, built on Radix Dialog. Use it for side panels, filters or mobile navigation drawers. Variant: side (top, bottom, left, right). Parts: Sheet (root), SheetTrigger, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, SheetClose.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-PN42N88q+tsVlBusDEUqF624Q8DH74qJVPZyUxKc5PQ=",
+      "content": "/r/content/3cde3637cf2afadb15941bac0c452a17adb843c0c7ef8a8954f67253129ce4f4.json",
+      "changelog": "/r/changelog/sheet.json"
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "description": "A set of layered sections of content, only one of which is displayed at a time, built on Radix Tabs. Use it to switch between related views without navigation. Parts: Tabs (root), TabsList, TabsTrigger, TabsContent.",
+      "categories": [
+        "navigation"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-qmcONR9vF7EfCe0uxbkKvmy59Nk43Yv6LyQmJVB2oAI=",
+      "content": "/r/content/aa670e351f6f17b11f09ed2ec5b90abe6cb9f4d938dd8bfa2f2426255076a002.json",
+      "changelog": "/r/changelog/tabs.json"
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "description": "For sighted users to preview content available behind a link, shown after a short hover delay, built on Radix Hover Card. Use it for user profile previews or link previews, unlike Tooltip it supports rich interactive content. Parts: HoverCard (root), HoverCardTrigger, HoverCardContent.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-vRckAXlTUtcFfrAxKcmKRp0jSGVcFGsHxgAoEKTF8tM=",
+      "content": "/r/content/bd172401795352d7057eb03129c98a469d2348655c146b07c6002810a4c5f2d3.json",
+      "changelog": "/r/changelog/hover-card.json"
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "description": "Displays a menu of actions or options triggered by right-clicking an element, built on Radix Context Menu. Use it for contextual actions on a table row, card or canvas item. Parts: ContextMenu (root), ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuGroup, ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuPortal.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-HpD4+LGbTMwPTRDkbaLT0BZMyO1jljwfsJdzAj6auMU=",
+      "content": "/r/content/1e90f8f8b19b4ccc0f4d10e46da2d3d0164cc8ed63963c1fb09773023e9ab8c5.json",
+      "changelog": "/r/changelog/context-menu.json"
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "description": "A horizontal bar of menus, like a desktop application's menu bar, built on Radix Menubar. Use for app-shell top-level command menus (File, Edit, View...). Parts: Menubar (root), MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarLabel, MenubarSeparator, MenubarShortcut, MenubarGroup, MenubarSub, MenubarSubTrigger, MenubarSubContent, MenubarPortal.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-i2HW6YjsU9/VY0FafRsLC83Jd8sWwra6W1Q4AUwybOc=",
+      "content": "/r/content/8b61d6e988ec53dfd563415a7d1b0b0bcdc977cb16c2b6ba5b5438014c326ce7.json",
+      "changelog": "/r/changelog/menubar.json"
+    },
+    {
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "description": "A collection of links and dropdown panels for site or app navigation, built on Radix Navigation Menu. Use for a primary site nav with dropdown mega-menus, unlike menubar it's meant for navigation links, not commands. Parts: NavigationMenu (root, viewport), NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, NavigationMenuIndicator, NavigationMenuViewport, navigationMenuTriggerStyle (cva for plain link items).",
+      "categories": [
+        "navigation"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-gtROT4Z/bVx3WIZwATMOiSUkIphzsMShl5VuUymXPzs=",
+      "content": "/r/content/82d44e4f867f6d5c7758867001330e892524229873b0c4a197956e5329973f3b.json",
+      "changelog": "/r/changelog/navigation-menu.json"
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "description": "Extends the Dialog component to display content sliding in from an edge with a drag handle, built on vaul. Use for mobile-friendly bottom sheets, unlike sheet it supports drag-to-dismiss. Parts: Drawer (root, direction top | bottom | left | right), DrawerTrigger, DrawerContent, DrawerHeader, DrawerFooter, DrawerTitle, DrawerDescription, DrawerClose, DrawerOverlay, DrawerPortal.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-Mgv8r2gOuZQWnpB5C7mb6s3rnUq7wMdxO9DtsrjRz9o=",
+      "content": "/r/content/320bfcaf680eb994169e90790bb99beacdeb9d4abbc0c7713bd0edb2b8d1cfda.json",
+      "changelog": "/r/changelog/drawer.json"
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "description": "A set of composable components (built on react-hook-form + zod) for building accessible forms with labels, descriptions and validation messages wired to field state. Use for any form that needs validation.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-s5nPR5k+oASGJ07WVuLYLrFwr6G93y3ttVFi5MZyXnc=",
+      "content": "/r/content/b399cf47993ea00486274ed656e2d82eb170afa1bddf2dedb55162e4c6725e77.json",
+      "changelog": "/r/changelog/form.json"
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "description": "A control that allows the user to toggle between checked, unchecked and indeterminate states. Use for boolean options in forms, built on Radix Checkbox.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-9vj9h3/QRvLY8M0UGfoWzkMp8tgGzrsUDCIzawQbBuM=",
+      "content": "/r/content/f6f8fd877fd046f2d8f0cd1419fa16ce4329f2d806cebb140c22336b041b06e3.json",
+      "changelog": "/r/changelog/checkbox.json"
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "description": "A set of checkable buttons where no more than one can be checked at a time. Use when the user must pick exactly one option from a visible list, built on Radix Radio Group.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-L3lG3/LN8l9vHUfQ8sLMrmnPQwuaWgUxK3u1CDqmRTo=",
+      "content": "/r/content/2f7946dff2cdf25f6f1d47d0f2c2ccae69cf430b9a5a05312b7bb5083aa6453a.json",
+      "changelog": "/r/changelog/radio-group.json"
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "description": "A control that toggles between checked and unchecked states, presented as a physical switch. Use for on/off settings, built on Radix Switch.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-xROBS8dsbcoJ0wrW96rzYO9CN+6yV60Tk72fBjHL1+8=",
+      "content": "/r/content/c513814bc76c6dca09d30ad6f7aaf360ef4237eeb257ad1393bd9f0631cbd7ef.json",
+      "changelog": "/r/changelog/switch.json"
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "description": "Displays a list of options for the user to pick from, triggered by a button. Use for choosing one value from a longer or dropdown-style list, built on Radix Select.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-8si5awI+sY5wNkCp5RJo9yHXRduqrlO3R9o+tG9LUZ8=",
+      "content": "/r/content/f2c8b96b023eb18e703640a9e51268f721d745dbaaae53b747da3eb46f4b519f.json",
+      "changelog": "/r/changelog/select.json"
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "description": "A styled wrapper around the native <select> element: platform-native option list and keyboard/touch behavior, with a token-matched border, focus ring and chevron. Use when you want OS-native select UX (mobile pickers, screen reader familiarity) instead of Select's custom listbox.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-DhgS6dxQum0EZxVycSTqtUC8hdCMxVfrnoiaiWo+kPw=",
+      "content": "/r/content/0e1812e9dc50ba6d046715727124eab540bc85d08cc557eb9e889a896a3e90fc.json",
+      "changelog": "/r/changelog/native-select.json"
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "description": "An input where the user selects a value, or range of values, by dragging a handle within a track. Use for numeric ranges like volume or price, built on Radix Slider.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-M4FZgVgMa2IrOL/9RYiHsKzDXNc20n7muDET5OGyh40=",
+      "content": "/r/content/33815981580c6b622b38bffd458887b0acc35cd736d27ee6b83113e4e1b2878d.json",
+      "changelog": "/r/changelog/slider.json"
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "description": "Displays an indicator showing the completion progress of a task. Use to communicate long-running operations, built on Radix Progress.",
+      "categories": [
+        "feedback"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-Ne26zy4SwNyY3xpZobczfcr7r5kNDNa9k2ctvajUEtk=",
+      "content": "/r/content/35edbacf2e12c0dc98df1a59a1b7337dcafbaf990d0cd6bd93672dbda8d412d9.json",
+      "changelog": "/r/changelog/progress.json"
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "description": "A two-state button that can be either on or off. Use for a single toggleable action like bold formatting, built on Radix Toggle.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-fgcqxpRRa+glGAZvADrGRZ4F06ZxlrPfsRvKqfzHlL8=",
+      "content": "/r/content/7e072ac694516be82518066f003ac6459e05d3a67196b3dfb11bcaa9fcc794bf.json",
+      "changelog": "/r/changelog/toggle.json"
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "description": "A set of two-state buttons that can be toggled on or off, grouped together with shared variant and size. Use for grouped exclusive or multiple selection toggles like text alignment, built on Radix Toggle Group.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-98RfMrersnf+kr2TybV7d+Qk3HSI53sfHnkmR1PfXJA=",
+      "content": "/r/content/f7c45f32b7abb277fe92bd93c9b57b77e424dc7488e77b1f1e79264753df5c90.json",
+      "changelog": "/r/changelog/toggle-group.json"
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "description": "Groups related buttons (and optionally a text label or select) together edge-to-edge, horizontal or vertical. Use for segmented actions like a split button or a toolbar. Parts: ButtonGroup (root, orientation), ButtonGroupText, ButtonGroupSeparator.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-3qqSA8RpBGy+0jcDXMLtub/pno15DqsJLlyUdZXD3Ok=",
+      "content": "/r/content/deaa9203c469046cbed237035cc2edb9bfe99e8d790eab092e5c947595c3dce9.json",
+      "changelog": "/r/changelog/button-group.json"
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "description": "Wraps an input or textarea with addons (icons, text, buttons) aligned to either edge, sharing one bordered container. Use for search boxes with an icon, inputs with a unit suffix, or inline actions. Parts: InputGroup (root), InputGroupAddon (align inline-start | inline-end | block-start | block-end), InputGroupButton, InputGroupText, InputGroupInput, InputGroupTextarea.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-pi2QVWXu4Ssi18Fq8aivy+4/pMDizURao4KorqEkynM=",
+      "content": "/r/content/a62d905565eee12b22d7c16af1a8afcbee3fa4c0e2cd445aa382a8aea124ca73.json",
+      "changelog": "/r/changelog/input-group.json"
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "description": "Composable primitives for laying out a form field (label, control slot, description, validation error) without requiring react-hook-form. Use for simple forms or to wrap a single control; use the form component instead when you need react-hook-form + zod wiring. Parts: FieldSet, FieldLegend, FieldGroup, Field (orientation vertical | horizontal | responsive), FieldContent, FieldLabel, FieldTitle, FieldDescription, FieldSeparator, FieldError.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ItFHDIfwefpEjnk0lH61IcUrnvzqycgTom19XSXSJVc=",
+      "content": "/r/content/22d1470c87f079fa448e7934947eb521c52b9efceac9c813a26d7d5d25d22557.json",
+      "changelog": "/r/changelog/field.json"
+    },
+    {
+      "name": "tags-input",
+      "type": "registry:ui",
+      "description": "Free-form multi-value input rendered as removable chips: Enter or comma commits, paste splits on commas, Backspace on an empty field removes the last tag, duplicates are ignored and max caps the list. Controlled or uncontrolled via value/defaultValue + onValueChange.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-M0CBTeONcSlsrnE3l/PVgeg89yeJOIV15pOCbgamNQA=",
+      "content": "/r/content/3340814de38d71296cae713797f3d581e83cf72789388575e693826e06a63500.json",
+      "changelog": "/r/changelog/tags-input.json"
+    },
+    {
+      "name": "rating",
+      "type": "registry:ui",
+      "description": "A star rating input following the radio-group pattern: each step is a radio with aria-checked, arrow keys move the value (Home/End jump to the ends), hover previews, clicking the current value clears it, and readOnly renders a static labelled image. Swap the star for any icon via the icon prop.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-VDCsf6l9AruCVsUPeHTLyJbxfLiYnpiDVwmO6g9FtHs=",
+      "content": "/r/content/5430ac7fa97d02bb8256c50f7874cbc896f17cb8989e988357098eea0f45b47b.json",
+      "changelog": "/r/changelog/rating.json"
+    },
+    {
+      "name": "number-field",
+      "type": "registry:ui",
+      "title": "Number Field",
+      "description": "A numeric input with decrement/increment steppers, min/max clamping and step. Controlled via value/onValueChange or uncontrolled via defaultValue. Renders a real <input type=number> (native form submission + keyboard) with the native spinners hidden in favor of the styled buttons.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-7S7UJztos015sHdK/Yv5Uc9E7bmDTwcxfD1VOJZ0oQY=",
+      "content": "/r/content/ed2ed4273b68b34d79b0774afd8bf951cf44edb9834f07317c3d55389674a106.json",
+      "changelog": "/r/changelog/number-field.json"
+    },
+    {
+      "name": "autocomplete",
+      "type": "registry:ui",
+      "title": "Autocomplete",
+      "description": "A free-text input with a filtered suggestion list — the editable ARIA combobox pattern. Unlike a select-style combobox it accepts arbitrary text; the list just offers matches. Fully keyboard-driven (↑/↓ move, Enter picks, Esc closes), controlled or uncontrolled, dependency-free.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-RdW5DoIRVY6ssTM0+t/Qn0y+13DnGjkGq0T+ItbHbmQ=",
+      "content": "/r/content/45d5b90e8211558eacb13334fadfd09f4cbed770e71a3906ab44fe22d6c76e64.json",
+      "changelog": "/r/changelog/autocomplete.json"
+    },
+    {
+      "name": "file-dropzone",
+      "type": "registry:ui",
+      "title": "File Dropzone",
+      "description": "A drag-and-drop file surface with click/keyboard to browse. Native DnD (no dependencies): highlights while a file is dragged over it and calls onFiles with the dropped or selected files. Supports accept, multiple and disabled; rendering the file list is left to the consumer.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-P1UuAUmtO5L2yS9DJjquYm4hkCvQrWgLWFiysHZnaWs=",
+      "content": "/r/content/3f552e0149ad3b92f6c92f43263aae626e21902bd0ad680b5858b2b07667696b.json",
+      "changelog": "/r/changelog/file-dropzone.json"
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "title": "Color Picker",
+      "description": "A self-contained HSV color picker: a draggable saturation/value area, a hue slider and a hex input. Controlled via value/onValueChange or uncontrolled via defaultValue; emits #rrggbb. Pointer-driven, zero dependencies.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-v8HbJix7fGzta/Z4UgtJazo/bRSCrSfo68mUNvxjsOc=",
+      "content": "/r/content/bfc1db262c7b7c6ced6bf678520b496b3a3f6d1482ad27e8ebc99436fc63b0e7.json",
+      "changelog": "/r/changelog/color-picker.json"
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "description": "Displays tabular data in rows and columns. Use for lists of structured data with headers, body, footer and captions.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-2wPIg+UaxqPsgNUNZhZPCBqd1KVY8kp0iBK9+hyJB9A=",
+      "content": "/r/content/db03c883e51ac6a3ec80d50d66164f081a9dd4a558f24a748812bdfa1c8907d0.json",
+      "changelog": "/r/changelog/table.json"
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "description": "Displays the path to the current resource using a hierarchy of links. Use for navigation showing the user's location within a site.",
+      "categories": [
+        "navigation"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-tBg+hzXIvLjttoNJqZF5fVtwsxyeOFwxhuWnjMGF7E4=",
+      "content": "/r/content/b4183e8735c8bcb8edb68349a991797d5b70b31c9e385c3186e5a78cc185ec4e.json",
+      "changelog": "/r/changelog/breadcrumb.json"
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "description": "Renders page navigation links for paginated content, such as tables or search results.",
+      "categories": [
+        "navigation"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-pBgiuv4k/B+BExPqZ+Q/3bMrEzp1e0yzcoponCELzZk=",
+      "content": "/r/content/a41822bafe24fc1f811313ea67e43fddb32b133a757b4cb3728a689c210bcd99.json",
+      "changelog": "/r/changelog/pagination.json"
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "description": "Augments native scroll functionality with custom, cross-browser styled scrollbars. Use to control overflow inside a fixed-size container.",
+      "categories": [
+        "layout"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-Fg+6aQsI/0hwR0u03lYKbl1bbQuHL2m1inZaQ3SUx00=",
+      "content": "/r/content/160fba690b08ff4870474bb4de560a6e5d5b6d0b872f69b58a765a437494c74d.json",
+      "changelog": "/r/changelog/scroll-area.json"
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:ui",
+      "description": "Displays content, such as images or videos, within a fixed, desired ratio.",
+      "categories": [
+        "layout"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ea5wL3jDoDWxHKaar2xdXnBsbCwDmuhWB/+77DtpwZY=",
+      "content": "/r/content/79ae702f78c3a035b11ca69aaf6c5d5e706c6c2c039ae85607ffbbec3b69c196.json",
+      "changelog": "/r/changelog/aspect-ratio.json"
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "description": "A fast, composable command menu for building command palettes (cmd+k style search-and-run interfaces), built on cmdk.",
+      "categories": [
+        "overlays"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-4LVQWeRD3amdi+8gRx81uR2qY6rDo1JwvYXQNAPHn5M=",
+      "content": "/r/content/e0b55059e443dda99d8bef20471f35b91daa63aac3a35270bd85d03403c79f93.json",
+      "changelog": "/r/changelog/command.json"
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui",
+      "description": "An opinionated toast notification component. Use to show brief, auto-dismissing messages to the user.",
+      "categories": [
+        "feedback"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-6oZKMttqnS6cuYpA/PiAWwUmlUrdMHyrPgQh1DlL4NE=",
+      "content": "/r/content/ea864a32db6a9d2e9cb98a40fcf8805b0526954add307cab3e0421d4394be0d1.json",
+      "changelog": "/r/changelog/sonner.json"
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "description": "A composable, themeable app-shell sidebar with a provider (state, mobile sheet, cookie-persisted collapse, ⌘B shortcut), collapsible variants (offcanvas/icon/none) and menu primitives (group, menu, submenu, skeleton). Use as the base layout for dashboards.",
+      "categories": [
+        "navigation"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-G9p87aVB1NcGEjZJccH80UwRLv6n9b1UkcCaR0zuGCY=",
+      "content": "/r/content/1bda7ceda541d4d70612364971c1fcd14c112efea7f5bd5491c09a474cee1826.json",
+      "changelog": "/r/changelog/sidebar.json"
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "description": "Displays a keyboard shortcut or key combination, e.g. a ⌘K hint next to a menu item. Parts: Kbd, KbdGroup (wraps multiple keys with a separator-free gap).",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-7aI3xbkBQZbl+0zYPWYGRwLJiAmThmmf486ZwqpssLg=",
+      "content": "/r/content/eda237c5b9014196e5fb4cd83d66064702c988099386699fe3ce99c2aa6cb0b8.json",
+      "changelog": "/r/changelog/kbd.json"
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "description": "A spinning loading indicator built on lucide-react's Loader2 icon. Use inline in buttons or standalone to signal a pending async operation.",
+      "categories": [
+        "feedback"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-uhrOoSBjvn6B3Pd/8zjcDOcGj19hWs/WIfwiATdy6kw=",
+      "content": "/r/content/ba1acea12063be7e81dcf77ff338dc0ce7068f5f615acfd621fc22013772ea4c.json",
+      "changelog": "/r/changelog/spinner.json"
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "description": "Displays an empty state placeholder with an icon, title, description and actions. Use for empty lists, search results with no matches or first-run states. Parts: Empty (root), EmptyHeader, EmptyMedia (variant default | icon), EmptyTitle, EmptyDescription, EmptyContent.",
+      "categories": [
+        "feedback"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-8SV/TsI6rrqDtHon2/r6JcSCrdAgPbIbpPp01cyAbMg=",
+      "content": "/r/content/f1257f4ec23aaeba83b47a27dbfafa25c482add0203db21ba4fa74d5cc806cc8.json",
+      "changelog": "/r/changelog/empty.json"
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "description": "A date field with a calendar grid for picking a single day, multiple days or a date range, built on react-day-picker. Use it standalone or compose it with popover for a date-picker input.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-NO4/I/Xgc96yTaOwLdRPNzcjJ4ySJfaaj3qpKoXjX14=",
+      "content": "/r/content/34ee3f23f5e073deb24da3b02dd44f373723278c9225f69a8f7aa92a85e35f5e.json",
+      "changelog": "/r/changelog/calendar.json"
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "description": "A carousel of slides with previous/next controls and keyboard navigation, built on embla-carousel-react. Use for image galleries, testimonial rotators or onboarding steps. Parts: Carousel (root, orientation), CarouselContent, CarouselItem, CarouselPrevious, CarouselNext.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-fm6tY/aN7lrhdA+akyMqVSUwrxElV0KNxRj3HVtYNH4=",
+      "content": "/r/content/7e6ead63f68dee5ae1740f9a93232a552530af112557428dc518f71d5b58347e.json",
+      "changelog": "/r/changelog/carousel.json"
+    },
+    {
+      "name": "resizable",
+      "type": "registry:ui",
+      "description": "Resizable split panels the user can drag to resize, horizontal or vertical, built on react-resizable-panels. Use for split views like a code editor's sidebar/pane layout. Parts: ResizablePanelGroup (root, direction), ResizablePanel, ResizableHandle (withHandle for a visible grip).",
+      "categories": [
+        "layout"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-JoqmqtfBlJ9KQHu6F72p15Oeuykgv/V6QQLl1wkP5hE=",
+      "content": "/r/content/268aa6aad7c1949f4a407bba17bda9d7939ebb2920bff57a4102e5d7090fe611.json",
+      "changelog": "/r/changelog/resizable.json"
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "description": "An accessible one-time-password input with individual character slots and a fake caret, built on input-otp. Use for verification codes (SMS/email/2FA). Parts: InputOTP (root), InputOTPGroup, InputOTPSlot (index), InputOTPSeparator.",
+      "categories": [
+        "form"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-6fU6Fv6qwItsIEhHJR67gGYFvB67VRXNctgU7Xu0Ano=",
+      "content": "/r/content/e9f53a16feaac08b6c204847251ebb806605bc1ebb5515cd72d814ed7bb4027a.json",
+      "changelog": "/r/changelog/input-otp.json"
+    },
+    {
+      "name": "tree-view",
+      "type": "registry:ui",
+      "description": "A hierarchical tree for browsing nested items (files, folders, categories) following the WAI-ARIA tree pattern: expand/collapse, single selection, roving focus and full keyboard navigation. Parts: TreeView (root, expanded/selected state), TreeItem (value, label, icon; nest items to make a branch).",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-MPdRc3NcAoM5pNKxgm4E4ev5z7uzdZnSO3PiC//Ks1Y=",
+      "content": "/r/content/30f75173735c028339a4d2b1826e04e1ebf9cfbbb37599d23b73e20bffcab356.json",
+      "changelog": "/r/changelog/tree-view.json"
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "description": "A multi-step progress indicator for wizards, checkouts and onboarding flows, horizontal or vertical. Steps derive completed/active/upcoming state from the root value; the active step carries aria-current. Parts: Stepper (root, value/orientation), StepperItem (step), StepperTrigger, StepperIndicator (number/check), StepperTitle, StepperDescription, StepperSeparator.",
+      "categories": [
+        "navigation"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-cMCA0s8pK7MQOsEHSY2p2/w16PxoI1JxmTk6sDeuAGo=",
+      "content": "/r/content/70c080d2cf292bb3103ac107498da9dbfc35e8fc6823527199393ab037ae006a.json",
+      "changelog": "/r/changelog/stepper.json"
+    },
+    {
+      "name": "timeline",
+      "type": "registry:ui",
+      "description": "A vertical timeline for activity feeds, changelogs and process histories. Composable: each TimelineItem holds a TimelineIndicator (dot + connector line, hidden on the last item) and a TimelineContent. Parts: Timeline (root ol), TimelineItem, TimelineIndicator, TimelineContent, TimelineTime, TimelineTitle, TimelineDescription.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-4M3w96KBWgmDlbnl8pCQsRdTsc/SfkYrRrsnvqquVPs=",
+      "content": "/r/content/e0cdf0f7a2815a098395b9e5f29090b11753b1cfd27e462b46bb27beaaae54fb.json",
+      "changelog": "/r/changelog/timeline.json"
+    },
+    {
+      "name": "code-block",
+      "type": "registry:ui",
+      "title": "Code Block",
+      "description": "A styled code container with a one-click copy button. Dependency-free (no syntax highlighter): renders the code verbatim in a <pre> and copies it via the Clipboard API with a copied-state affordance. Optional language label in the header.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-CAJkWAJkHHTQsgnTx6jjyhtZrEJZtoTUUhEdvVCmm60=",
+      "content": "/r/content/0802645802641c74d0b209d3c7a8e3ca1b59ac4259b684d452111dbd50a69bad.json",
+      "changelog": "/r/changelog/code-block.json"
+    },
+    {
+      "name": "motion",
+      "type": "registry:ui",
+      "title": "Motion",
+      "description": "Enter/exit/hover animation recipes on tokens, built on tw-animate-css (zero runtime deps). Ships the <Motion> primitive (plays an enter preset on mount, with duration/delay/hover props and asChild) plus the recipe maps and helpers (motionEnter, motionExit, motionHover) to drop the same effects onto any element or a Radix data-[state] node. Presets: fade, fade-up/down/left/right, scale, blur. Respects prefers-reduced-motion.",
+      "categories": [
+        "motion"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-nfVNBsbaBm6yLmsU4dzdIfjSw6+SbahiHYxjzrY7y0w=",
+      "content": "/r/content/9df54d06c6da066eb22e6b14e1dcdd21f8d2c3af926da8621d8c63ceb63bcb4c.json",
+      "changelog": "/r/changelog/motion.json"
+    },
+    {
+      "name": "motion-fade",
+      "type": "registry:ui",
+      "title": "Motion Fade",
+      "description": "Fade a mounting element in — the preconfigured <MotionFade> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+      "categories": [
+        "motion"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-w4kB4v9qYC2zBjCkFu/0bYai9BvWUO+m6egI8cUDo3Q=",
+      "content": "/r/content/c38901e2ff6a602db30630a416eff46d86a2f41bd650efa6e9e808f1c503a374.json",
+      "changelog": "/r/changelog/motion-fade.json"
+    },
+    {
+      "name": "motion-slide",
+      "type": "registry:ui",
+      "title": "Motion Slide",
+      "description": "Slide a mounting element in from a direction (up/down/left/right) while it fades — the <MotionSlide> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+      "categories": [
+        "motion"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-XMcrGyb6DqejVEGsw4R8TEvIx7j+ogU0HWqtjP720rk=",
+      "content": "/r/content/5cc72b1b26fa0ea7a35441acc3847c4c4bc8c7b8fea205341d6aad8cfef6d2b9.json",
+      "changelog": "/r/changelog/motion-slide.json"
+    },
+    {
+      "name": "motion-scale",
+      "type": "registry:ui",
+      "title": "Motion Scale",
+      "description": "Zoom a mounting element in from 95% while it fades — the <MotionScale> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+      "categories": [
+        "motion"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-KQ55KDRJWqiGSKKnsAd32Rljdps+KknrQtxw2g4Qs7Q=",
+      "content": "/r/content/290e792834495aa88648a2a7b00777d91963769b3e2a49eb42dc70da0e10b3b4.json",
+      "changelog": "/r/changelog/motion-scale.json"
+    },
+    {
+      "name": "motion-blur",
+      "type": "registry:ui",
+      "title": "Motion Blur",
+      "description": "Sharpen a mounting element in from an 8px blur while it fades — the <MotionBlur> preset built on the motion engine. Zero runtime deps (tw-animate-css).",
+      "categories": [
+        "motion"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-V2vjhR82dlA0ZJHJRsjmcQss+6FCYIeMOI2GPufNwbM=",
+      "content": "/r/content/576be3851f367650346491c946c8e6710b2cfba14260878c388d863ee7cdc1b3.json",
+      "changelog": "/r/changelog/motion-blur.json"
+    },
+    {
+      "name": "use-count-up",
+      "type": "registry:hook",
+      "title": "useCountUp",
+      "description": "A React hook that animates a number from 0 up to a target with an ease-out curve (requestAnimationFrame). Format the returned value with Intl.NumberFormat. Gates on a `start` flag and jumps straight to the target under prefers-reduced-motion. Powers the count-up in the animated stats block.",
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-vP1SVQq/JyUhfrfLMkGN7+WFlxnSrqKnuau0Ypl7IWw=",
+      "content": "/r/content/bcfd52550abf2725217eb7cb32418defe5859719d2aea2a7b9abb462997b216c.json",
+      "changelog": "/r/changelog/use-count-up.json"
+    },
+    {
+      "name": "use-in-view",
+      "type": "registry:hook",
+      "title": "useInView",
+      "description": "A React hook that tracks whether an element is scrolled into view via IntersectionObserver. Returns [ref, inView] with `once`, `amount` (threshold), `margin` (rootMargin) and a `root` scroll-container option. Falls back to visible when IntersectionObserver is unavailable. Powers scroll-reveal.",
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-LzujGdwCXMSjkI507ujAcdWkkL87FbT12tgwLfkQ2c0=",
+      "content": "/r/content/2f3ba319dc025cc4a3908e74eee8c071d5a490bf3b15b4f5dad8302df910d9cd.json",
+      "changelog": "/r/changelog/use-in-view.json"
+    },
+    {
+      "name": "scroll-reveal",
+      "type": "registry:ui",
+      "title": "Scroll Reveal",
+      "description": "Plays a motion enter recipe when the element scrolls into view instead of on mount. Shares the motion engine's presets (fade, fade-up/down/left/right, scale, blur), timing (duration/delay) and prefers-reduced-motion fallback, with once/amount/margin/root controls from useInView. SSR- and no-JS-safe: renders visible until armed. Supports asChild.",
+      "categories": [
+        "motion"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-63MMogXxcNfQ9nqfVtIhoad5lirGQzgDghOscCt5DW0=",
+      "content": "/r/content/eb730ca205f170d7d0f67a9f56d221a1a779962ac64338038213ac702b790d6d.json",
+      "changelog": "/r/changelog/scroll-reveal.json"
+    },
+    {
+      "name": "parallax",
+      "type": "registry:ui",
+      "title": "Parallax",
+      "description": "A scroll-linked parallax layer for marketing sections: the inner layer drifts as the section passes through the viewport, driven entirely by CSS scroll-driven animations (animation-timeline: view()). Zero JS on the scroll path, zero runtime deps, and guarded by @supports so unsupported browsers render it static. Give the container a height and put an oversized object-cover image or gradient inside.",
+      "categories": [
+        "motion"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-qvO7aY2A0cTZXmZkAkVVULWyEqIafCwQwJkpm5KAXTk=",
+      "content": "/r/content/aaf3bb698d80d1c4d95e666402455550b5b212a21a7c2c10c099299b92805d39.json",
+      "changelog": "/r/changelog/parallax.json"
+    },
+    {
+      "name": "chart",
+      "type": "registry:ui",
+      "description": "A composable chart container built on Recharts. Exposes ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend and ChartLegendContent, plus a ChartConfig type for mapping data keys to labels, icons and CSS colors (--color-*). Use it to build area, bar, line and pie charts with automatic light/dark theme colors and a theme-aware tooltip and legend.",
+      "categories": [
+        "data-display"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-CXJ+1Sf89rjb0c7x6tqKrqySBfXLWhQ1JjPpyx5Oi0s=",
+      "content": "/r/content/09727ed527fcf6b8dbd1cef1eada8aaeac9205f5cb5a14352633e9cb1e4e8b4b.json",
+      "changelog": "/r/changelog/chart.json"
+    },
+    {
+      "name": "chart-area-01",
+      "type": "registry:block",
+      "title": "Area Chart",
+      "description": "A simple area chart with a single series, month labels on the X axis and a line-indicator tooltip. Use it to show one metric's trend over time.",
+      "categories": [
+        "charts",
+        "charts-area"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-LmopZBThBKENSUrJS+XHQXoBQQncko6vYehCX2zf004=",
+      "content": "/r/content/2e6a296414e104a10d494ac94be5c7417a014109dc928eaf61e8425f6cdfd34e.json",
+      "changelog": "/r/changelog/chart-area-01.json"
+    },
+    {
+      "name": "chart-area-02",
+      "type": "registry:block",
+      "title": "Area Chart - Stacked",
+      "description": "A stacked area chart with two series (desktop and mobile) sharing one X axis. Use it to show how parts contribute to a total over time.",
+      "categories": [
+        "charts",
+        "charts-area"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-HU6LAbw55DRyXylfgr7bcUHQfmDVT8VdLVEpCDTdCdQ=",
+      "content": "/r/content/1d4e8b01bc39e434725f295f82bedb7141d07e60d54fc55d2d51290834dd09d4.json",
+      "changelog": "/r/changelog/chart-area-02.json"
+    },
+    {
+      "name": "chart-bar-01",
+      "type": "registry:block",
+      "title": "Bar Chart",
+      "description": "A vertical bar chart with two series side by side per month and rounded bar tops. Use it to compare two metrics across discrete periods.",
+      "categories": [
+        "charts",
+        "charts-bar"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-AvIcxhj7Q95PhTfwvoHl7CjGzUM6T4MHdUXMG/3iwKg=",
+      "content": "/r/content/02f21cc618fb43de4f8537f0be81e5ec28c6cd433a4f83077545cc1bfde2c0a8.json",
+      "changelog": "/r/changelog/chart-bar-01.json"
+    },
+    {
+      "name": "chart-bar-02",
+      "type": "registry:block",
+      "title": "Bar Chart - Horizontal",
+      "description": "A horizontal bar chart with a single series and category labels on the Y axis. Use it when category names are long or there are many categories.",
+      "categories": [
+        "charts",
+        "charts-bar"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-j6dJ7qnmwgOxPp8hW8zx5TS4kC+xCSiRt82KiFDvw1s=",
+      "content": "/r/content/8fa749eea9e6c203b13e9f215bccf1e534b8902fb1092891b7cd8a8850efc35b.json",
+      "changelog": "/r/changelog/chart-bar-02.json"
+    },
+    {
+      "name": "chart-line-01",
+      "type": "registry:block",
+      "title": "Line Chart",
+      "description": "A single-series line chart with a smooth monotone curve and no dots. Use it for a clean view of one metric's trend.",
+      "categories": [
+        "charts",
+        "charts-line"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-E2Gs7TzoahsQ2YBI0cGZxB+YpG4cP4AIcxlP/u5H4mU=",
+      "content": "/r/content/1361aced3ce86a1b10d98048d1c199c41f98a46e1c3f800873194ffeee47e265.json",
+      "changelog": "/r/changelog/chart-line-01.json"
+    },
+    {
+      "name": "chart-line-02",
+      "type": "registry:block",
+      "title": "Line Chart - Multiple",
+      "description": "A line chart with two series in different chart colors. Use it to compare trends between two metrics over the same period.",
+      "categories": [
+        "charts",
+        "charts-line"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-WRtPAPPaT/3VVZH8TuYxZjS2RGYRjQm/HkqwN6ufJ1Y=",
+      "content": "/r/content/591b4f00f3da4ffdd55591fc4ee6316634b64466118d09bf1e4ab037ab9f2756.json",
+      "changelog": "/r/changelog/chart-line-02.json"
+    },
+    {
+      "name": "chart-pie-01",
+      "type": "registry:block",
+      "title": "Pie Chart",
+      "description": "A pie chart with per-slice colors driven by the chart config (--color-*) and a labelled tooltip. Use it to show proportions of a whole.",
+      "categories": [
+        "charts",
+        "charts-pie"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-VQKOW95toPmhTyjdgDQEBZistPiXIqb+nrsvlKUfm1k=",
+      "content": "/r/content/55028e5bde6da0f9a14f28dd8034040598acb4f89722a6fe9ebb2f94a51f9b59.json",
+      "changelog": "/r/changelog/chart-pie-01.json"
+    },
+    {
+      "name": "chart-pie-02",
+      "type": "registry:block",
+      "title": "Pie Chart - Donut",
+      "description": "A donut chart (pie with inner radius) with per-slice colors and a hoverable tooltip. Use it when you want proportions plus room for a center label.",
+      "categories": [
+        "charts",
+        "charts-pie"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-2XcZ2kMAN3xBAiDcvtHa8eT6W5n9vX1hoAl+Reyy9ko=",
+      "content": "/r/content/d97719da4300377c410220dcbed1daf1e4fa5b99fdbd7d61a0097e45ecb2f64a.json",
+      "changelog": "/r/changelog/chart-pie-02.json"
+    },
+    {
+      "name": "chart-radar-01",
+      "type": "registry:block",
+      "title": "Radar Chart",
+      "description": "A radar chart plotting one series across categorical axes on a polar grid. Use it to compare a profile of values across dimensions.",
+      "categories": [
+        "charts",
+        "charts-radar"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-unOKtLuS7tXhNKvDsHGasQlYNtNTT+4q3R04mFAW8DM=",
+      "content": "/r/content/ba738ab4bb92eed5e134abc3b0719ab1095836d3534fee2add1d38985016f033.json",
+      "changelog": "/r/changelog/chart-radar-01.json"
+    },
+    {
+      "name": "chart-radial-01",
+      "type": "registry:block",
+      "title": "Radial Chart",
+      "description": "A radial bar chart where each ring is a category colored via the chart config. Use it as a compact, decorative alternative to a bar chart.",
+      "categories": [
+        "charts",
+        "charts-radial"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-UKoN75lDiwoA53mL0k39mEADb93wU46PsOrMr1ZDffM=",
+      "content": "/r/content/50aa0def99438b0a00e7798bd24dfd9840036fddf0538e8fb0eaccaf56437df3.json",
+      "changelog": "/r/changelog/chart-radial-01.json"
+    },
+    {
+      "name": "chart-area-03",
+      "type": "registry:block",
+      "title": "Area Chart - Legend",
+      "description": "A stacked area chart with two series and a theme-aware legend below the plot. Use it when readers need series names without hovering.",
+      "categories": [
+        "charts",
+        "charts-area"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-uN2zws8/fqFt+Fi7CoqQRaEznoHXsjn4OUmlfWJnDiw=",
+      "content": "/r/content/b8ddb3c2cf3f7ea16df858bb0a8a9045a1339e81d7b239f83949a57d62670e2c.json",
+      "changelog": "/r/changelog/chart-area-03.json"
+    },
+    {
+      "name": "chart-bar-03",
+      "type": "registry:block",
+      "title": "Bar Chart - Label",
+      "description": "A single-series bar chart with the value printed above each bar. Use it when exact values matter as much as the comparison.",
+      "categories": [
+        "charts",
+        "charts-bar"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-WwAgmvVQ+xXzd1IdmASSYTV5qU02nkyVZUeGYSCuzWI=",
+      "content": "/r/content/5b00209af550fb15f377521d980492613579a94d369e4c956547866120aecd62.json",
+      "changelog": "/r/changelog/chart-bar-03.json"
+    },
+    {
+      "name": "chart-bar-04",
+      "type": "registry:block",
+      "title": "Bar Chart - Stacked + Legend",
+      "description": "A stacked bar chart with two series per month and a legend. Use it to show totals and their composition across discrete periods.",
+      "categories": [
+        "charts",
+        "charts-bar"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-Fz99qy+Tx7hNuO3OKszqwuFeN9UNSyFwWP72m57ZiRQ=",
+      "content": "/r/content/173f7dab2f93c7b84db8edce2acceac2e15e37d50d4b217058fef69b9ed98914.json",
+      "changelog": "/r/changelog/chart-bar-04.json"
+    },
+    {
+      "name": "chart-line-03",
+      "type": "registry:block",
+      "title": "Line Chart - Dots",
+      "description": "A single-series line chart with a visible dot on every point and a larger active dot on hover. Use it when individual data points matter.",
+      "categories": [
+        "charts",
+        "charts-line"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-m9dSzpcJD2nnV4uoWO16cMx4mN9IgzocNrXnyzTeHNc=",
+      "content": "/r/content/9bd752ce97090f69e7578ba858ed7a70cc7898df48833a1c36b5e7cb34de1cd7.json",
+      "changelog": "/r/changelog/chart-line-03.json"
+    },
+    {
+      "name": "chart-pie-03",
+      "type": "registry:block",
+      "title": "Pie Chart - Donut with Text",
+      "description": "A donut chart with the total rendered in the center via a custom Label. Use it to show proportions and the headline number at once.",
+      "categories": [
+        "charts",
+        "charts-pie"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ce2l3tLrE8LGfapJfI+IIQLtSFa+b5vzaFWaIM66HYI=",
+      "content": "/r/content/71eda5ded2eb13c2c67daa497c8f882102ed4856be6f9bf368559a20ceba1d82.json",
+      "changelog": "/r/changelog/chart-pie-03.json"
+    },
+    {
+      "name": "chart-radar-02",
+      "type": "registry:block",
+      "title": "Radar Chart - Multiple",
+      "description": "A radar chart overlaying two series with translucent fills on a polar grid. Use it to compare two profiles across the same dimensions.",
+      "categories": [
+        "charts",
+        "charts-radar"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-YCIcrGgQ/rqcl4NU+TR1DWJAqjFLIS9DCZN151sewlw=",
+      "content": "/r/content/60221cac6810feba9c978354f934750d6240aa314b212f43099375e75b1ec25c.json",
+      "changelog": "/r/changelog/chart-radar-02.json"
+    },
+    {
+      "name": "chart-radial-02",
+      "type": "registry:block",
+      "title": "Radial Chart - Text",
+      "description": "A single-value radial progress ring with the number rendered in the center. Use it for a KPI, quota or completion metric.",
+      "categories": [
+        "charts",
+        "charts-radial"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-/Kk1cvOzv7onyasvFB1qIAycaPsupd4d0+CDc9LjU7U=",
+      "content": "/r/content/fca93572f3b3bfba27c9ab2f141d6a200c9c68fb2ea5de1dd3e08373d2e353b5.json",
+      "changelog": "/r/changelog/chart-radial-02.json"
+    },
+    {
+      "name": "chart-sparkline-01",
+      "type": "registry:block",
+      "title": "Sparkline - Line",
+      "description": "A compact line sparkline in a metric card (label + value, no axes/grid/tooltip). Use inline in tables, tiles or lists to show a trend at a glance.",
+      "categories": [
+        "charts",
+        "charts-sparkline"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-2TARsp9L3wvVLYf+BzuO4Dx+AAWuRPxmbGSCe6uvO8s=",
+      "content": "/r/content/d93011b29f4bdf0bd52d87fe073b8ee03c7e0005ae44fc666c64827babaf3bcb.json",
+      "changelog": "/r/changelog/chart-sparkline-01.json"
+    },
+    {
+      "name": "chart-sparkline-02",
+      "type": "registry:block",
+      "title": "Sparkline - Area",
+      "description": "A compact area sparkline in a metric card. Use for a filled trend indicator next to a value where a full chart would be too heavy.",
+      "categories": [
+        "charts",
+        "charts-sparkline"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-b5nTC7TJiB7y1Ph0RVMSPx8AS9EQzcBxmNkBd/5DDoA=",
+      "content": "/r/content/6f99d30bb4c9881ef2d4f8744553123f1f004bd110cdc07198d90177fe430e80.json",
+      "changelog": "/r/changelog/chart-sparkline-02.json"
+    },
+    {
+      "name": "chart-sparkline-03",
+      "type": "registry:block",
+      "title": "Sparkline - Bar",
+      "description": "A compact bar sparkline in a metric card. Use for discrete per-period counts (orders, signups) shown as a tiny bar trend.",
+      "categories": [
+        "charts",
+        "charts-sparkline"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-BMIp+dJj9T1dyJ7EWYWmA/jcQuV8KRT8NSfHhmE0zeQ=",
+      "content": "/r/content/04c229f9d263f53d5dc89ec45985a603f8dc42e57c2914fc3527c7866134cde4.json",
+      "changelog": "/r/changelog/chart-sparkline-03.json"
+    },
+    {
+      "name": "chart-kpi-01",
+      "type": "registry:block",
+      "title": "KPI Tile - Up",
+      "description": "A KPI stat tile: a large value, a positive trend delta and an area sparkline underneath. Use as a dashboard headline metric.",
+      "categories": [
+        "charts",
+        "charts-kpi"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-mhdFbrJS0LyZrPormCZMWZ/vwZKpuCqVJcw5upmDe60=",
+      "content": "/r/content/9a17456eb252d0bc99acfa2b98264c599fefc192a9b82a9525cc39ba99837bad.json",
+      "changelog": "/r/changelog/chart-kpi-01.json"
+    },
+    {
+      "name": "chart-kpi-02",
+      "type": "registry:block",
+      "title": "KPI Tile - Down",
+      "description": "A KPI stat tile with a negative trend delta (destructive-toned) and a line sparkline. Use for a metric that is trending down.",
+      "categories": [
+        "charts",
+        "charts-kpi"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-NR75ObrvokjoR5POCjfrguCdBdzlfHwsN8GcInB5CDo=",
+      "content": "/r/content/351ef939baefa248e84793ce0a37eb82e09d05dce57c7c2c37c19c227079083a.json",
+      "changelog": "/r/changelog/chart-kpi-02.json"
+    },
+    {
+      "name": "chart-composed-01",
+      "type": "registry:block",
+      "title": "Composed Chart",
+      "description": "A composed chart overlaying revenue bars with an orders trend line on one axis, with a legend and tooltip. Use to compare a volume metric and a trend in a single panel.",
+      "categories": [
+        "charts",
+        "charts-composed"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-v7IP5m1o194nE9QelrLw/evp8/CMe/DqpLpFWXnV9CQ=",
+      "content": "/r/content/bfb20fe66d68d7de2713d41e96b2f0fdebe9f3f08c7bf0eaa4ba455979d5f424.json",
+      "changelog": "/r/changelog/chart-composed-01.json"
+    },
+    {
+      "name": "chart-composed-02",
+      "type": "registry:block",
+      "title": "Composed Chart - Area + Line",
+      "description": "A composed chart with a filled traffic area beneath a conversions line. Use to show a total alongside a derived rate over the same period.",
+      "categories": [
+        "charts",
+        "charts-composed"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-WAjLkX45h4+XlG41SD2NYYBb1VGF8632viJgT8uS/E8=",
+      "content": "/r/content/5808cb917e39878f97946e35483d8d61805bd55185f3adf6be22604fcb92fc4f.json",
+      "changelog": "/r/changelog/chart-composed-02.json"
+    },
+    {
+      "name": "chart-heatmap-01",
+      "type": "registry:block",
+      "title": "Activity Heatmap",
+      "description": "A calendar-style activity heatmap (weekdays × weeks) built from token-colored cells — a single token ramped by opacity, no charting library. Use for contribution graphs, usage-by-day matrices or streak calendars.",
+      "categories": [
+        "charts",
+        "charts-heatmap"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-CWjCu8ymC1nOqFwlqLmvB/fOP52wXkhB5URmu376CO0=",
+      "content": "/r/content/0968c2bbcca60b59cea85c25a8b9af07f7ce3f9db05e4841e54466bb7efa08ed.json",
+      "changelog": "/r/changelog/chart-heatmap-01.json"
+    },
+    {
+      "name": "chart-area-04",
+      "type": "registry:block",
+      "title": "Area Chart - Interactive",
+      "description": "An interactive stacked area chart over 3 months of daily data, with gradient fills, a legend and a select to switch between 7/30/90-day ranges. Use it as a dashboard's primary time-series panel.",
+      "categories": [
+        "charts",
+        "charts-area"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-LcquCoBAgqdkQylQs4sCa8NcBotpiFmAqyiIWog/Xsg=",
+      "content": "/r/content/2dcaae0a804082a764432950b38b026bc35c068b69885980ab28885a883f5ec8.json",
+      "changelog": "/r/changelog/chart-area-04.json"
+    },
+    {
+      "name": "login-01",
+      "type": "registry:block",
+      "description": "A simple, centered login form with email and password fields. Use as the starting point for an authentication page.",
+      "categories": [
+        "authentication"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-pCy/Uo19Ck+Z45TGCvvPpupfcmvDY8uV48F1hs11d4k=",
+      "content": "/r/content/a42cbf528d7d0a4f99e394c60afbcfa6ea5f726bc363cb95e3c17586cd757789.json",
+      "changelog": "/r/changelog/login-01.json"
+    },
+    {
+      "name": "sidebar-01",
+      "type": "registry:block",
+      "description": "A simple sidebar with navigation links grouped by section. Use as the starting point for a dashboard's app-shell navigation.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ktQMjIBI9Qy5zJjfauhS/FaRXjVeAuEAmYD3zF2AuK4=",
+      "content": "/r/content/92d40c8c8048f50cb9cc98df6ae852fc56915e355e02e1009980f7cc5d80b8ae.json",
+      "changelog": "/r/changelog/sidebar-01.json"
+    },
+    {
+      "name": "login-02",
+      "type": "registry:block",
+      "description": "A two-column login page: form on one side, a decorative panel on the other. Use as an alternative, more spacious authentication page layout.",
+      "categories": [
+        "authentication"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-B5xfFUoREPvMmsG7DEqTt5tGkhVWo0ld7KOsYqUT9Sw=",
+      "content": "/r/content/079c5f154a1110fbcc9ac1bb0c4a93b79b46921556a3495deca3ac62a513f52c.json",
+      "changelog": "/r/changelog/login-02.json"
+    },
+    {
+      "name": "signup-01",
+      "type": "registry:block",
+      "description": "A simple, centered signup form with name, email, password and confirm password fields. Use as the starting point for a registration page.",
+      "categories": [
+        "authentication"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-/kSFfnkb5vlcTT0vgytqOw4sxVo0AUu5sPlNO2yyinc=",
+      "content": "/r/content/fe44857e791be6f95c4d3d2f832b6a3b0e2cc55a34014bb9b0f94d3b6cb28a77.json",
+      "changelog": "/r/changelog/signup-01.json"
+    },
+    {
+      "name": "dashboard-01",
+      "type": "registry:block",
+      "description": "A dashboard with a sidebar, stat cards, an interactive area chart and a data table. Use as the starting point for an admin or analytics app-shell.",
+      "categories": [
+        "dashboard"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-bY2moQnnFDcQWJRVXUbSbrZJrqa2maIfTkamRIsjUZc=",
+      "content": "/r/content/6d8da6a109e71437105894555d46d26eb649aea6b699a21f4e46a6448b235197.json",
+      "changelog": "/r/changelog/dashboard-01.json"
+    },
+    {
+      "name": "login-03",
+      "type": "registry:block",
+      "title": "Login with social",
+      "description": "A centered login card with GitHub and Google provider buttons, an 'or continue with' divider, and email/password fields. Use for an authentication page with social sign-in.",
+      "categories": [
+        "authentication"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-mKXi00+0BgHaGokLh06LTNOnd3j0ydqYwmr012fSCgU=",
+      "content": "/r/content/98a5e2d34fb40601da1a890b874e8b4cd3a77778f4c9da98c26af4d767d20a05.json",
+      "changelog": "/r/changelog/login-03.json"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block",
+      "title": "Three-tier pricing",
+      "description": "A responsive three-tier pricing section with a featured plan, feature checklists and per-plan calls to action. Use on a marketing or upgrade page.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-KvDwPRE1as6guqe7wTTGwlPyYSQsxmDiYL46aECt4QE=",
+      "content": "/r/content/2af0f03d11356acea0baa7bbc134c6c253f261242cc660e260be3a6840ade101.json",
+      "changelog": "/r/changelog/pricing-01.json"
+    },
+    {
+      "name": "stats-01",
+      "type": "registry:block",
+      "title": "KPI stat cards",
+      "description": "A row of four KPI stat cards with values and trend deltas. Use as the header of a dashboard or analytics overview.",
+      "categories": [
+        "dashboard"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-GBL/waNqzMN/vkOgdglu3sjxjzqMACC7LYQqH8i24Jo=",
+      "content": "/r/content/1812ffc1a36accc37fbe43a076096edec8f18f3a8c0020bb2d842a1fc8b6e09a.json",
+      "changelog": "/r/changelog/stats-01.json"
+    },
+    {
+      "name": "faq-01",
+      "type": "registry:block",
+      "title": "FAQ accordion",
+      "description": "A centered FAQ section built on the accordion, with a heading and a contact prompt. Use on a marketing, pricing or support page.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-bx+VzBPysiKf6iJaSb1rVZ1B6mH03QwZSz4l5bmmgqQ=",
+      "content": "/r/content/6f1f95cc13f2b2229fea225a49bd6b559d41ea61f4dd0c194b3e25e5b9a682a4.json",
+      "changelog": "/r/changelog/faq-01.json"
+    },
+    {
+      "name": "cta-01",
+      "type": "registry:block",
+      "title": "Call to action",
+      "description": "A bordered, centered call-to-action band with a headline, supporting copy and two buttons. Use to close a landing page.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-qjlfipHTOUF484NcdBw+kqaaqwrrAwdqv/RxOq8nZIo=",
+      "content": "/r/content/aa395f8a91d3394178f3835c741c3e92a69aab0aeb03076abff4713aaf27648a.json",
+      "changelog": "/r/changelog/cta-01.json"
+    },
+    {
+      "name": "contact-01",
+      "type": "registry:block",
+      "title": "Contact form",
+      "description": "A centered contact form card with name, email and message fields. Use as a standalone contact page or a section.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-Lku5et8r0cSGEMUpCpRpBHXn0cT8LhR2gesRkb5XT1k=",
+      "content": "/r/content/2e4bb97adf2bd1c48610c5290a94690475e7d1c4fc2e147681eb1191be574f59.json",
+      "changelog": "/r/changelog/contact-01.json"
+    },
+    {
+      "name": "hero-01",
+      "type": "registry:block",
+      "title": "Marketing hero",
+      "description": "A centered marketing hero with a badge, a large display headline, supporting copy and two calls to action. Use as the top of a landing page.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-+/vTJKZ8N82Ln7tQGQnuHMn9Yuzo2FbHblmN8xYjmJs=",
+      "content": "/r/content/fbfbd324a67c37cd8b9fbb501909ee1cc9fd62ece8d856c76e598df31623989b.json",
+      "changelog": "/r/changelog/hero-01.json"
+    },
+    {
+      "name": "testimonials-01",
+      "type": "registry:block",
+      "title": "Testimonials grid",
+      "description": "A grid of testimonial cards with quotes and avatars (initials fallback). Use as social proof on a marketing page.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-t4j3h5ryAOQUrndHxkqRxKnRQbYzuoy/7BfB12F/uwU=",
+      "content": "/r/content/b788f7879af200e414ae7747c64a91c4a9d141b633ba8cbfec17c1d7617fbb05.json",
+      "changelog": "/r/changelog/testimonials-01.json"
+    },
+    {
+      "name": "settings-01",
+      "type": "registry:block",
+      "title": "Settings panel",
+      "description": "A settings card with profile fields, notification switches and save/cancel actions. Use as an account or preferences page.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ms4Lykzr+GP/NVTyZGb9/HJ0SDpEjWMO4eI6+9QbLpc=",
+      "content": "/r/content/9ace0bca4cebf863ff3554f26466fdfc7274483a448d630ee1e23afbd41b2e97.json",
+      "changelog": "/r/changelog/settings-01.json"
+    },
+    {
+      "name": "signup-02",
+      "type": "registry:block",
+      "title": "Two-column signup",
+      "description": "A two-column signup page: decorative panel on one side, name/email/password form on the other. Use as a spacious registration page.",
+      "categories": [
+        "authentication"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ZNlmhl9Fw0DlF1Ll4pwYTUbVD2jzSMEA840BufEELio=",
+      "content": "/r/content/64d966865f45c340e51752e5e29c184d46d50f68f348c100f38d01b9f1042e2a.json",
+      "changelog": "/r/changelog/signup-02.json"
+    },
+    {
+      "name": "navbar-01",
+      "type": "registry:block",
+      "title": "Marketing navbar",
+      "description": "A sticky top navigation bar with a logo, inline links, sign-in and CTA buttons, and a mobile menu button. Use as a marketing site header.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-FjNHiLFqgdEv3eIcJyBS2lDO25aL/P8luY5ruWBJkTs=",
+      "content": "/r/content/16334788b16a81d12fdde21c272052da50cedb968bfcff25b98e6bb96049913b.json",
+      "changelog": "/r/changelog/navbar-01.json"
+    },
+    {
+      "name": "feature-grid-01",
+      "type": "registry:block",
+      "title": "Feature grid",
+      "description": "A responsive grid of feature cards, each with an icon, title and description. Use to showcase product capabilities on a landing page.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-QpAvJ11A6y8Wbzgre9b7qmQEcVkUXESF2eAKLYF4s2U=",
+      "content": "/r/content/42902f275d40eb2f166f382b7bd6fbaa64047159145c4485d9e00a2d8178b365.json",
+      "changelog": "/r/changelog/feature-grid-01.json"
+    },
+    {
+      "name": "footer-01",
+      "type": "registry:block",
+      "title": "Site footer",
+      "description": "A multi-column site footer with a brand blurb, link columns, a copyright line and social icons. Use as the bottom of a marketing site.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-BFGCffrNFKHT9abnHligtLqlBZ9rBZTyZZ7zrSCiLqg=",
+      "content": "/r/content/0451827dfacd14a1d3f5a6e71e58a0b4baa5059f6b0594f2659ef3ad20a22ea8.json",
+      "changelog": "/r/changelog/footer-01.json"
+    },
+    {
+      "name": "chat-01",
+      "type": "registry:block",
+      "title": "Chat",
+      "description": "A chat card with a contact header, a scrollable message thread with user/agent bubbles, and a working message input. Use for support chat or messaging UIs.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-cfJ/spUJ2i3A0nDncjm86w13r7T35Gq6pTK95goOn8I=",
+      "content": "/r/content/71f27fb29509da2dc0d270e77239bceb0d77afb4f7e46abaa532bde60a0e9fc2.json",
+      "changelog": "/r/changelog/chat-01.json"
+    },
+    {
+      "name": "team-01",
+      "type": "registry:block",
+      "title": "Team members",
+      "description": "A team management card listing members with avatars and per-member role selects, plus an invite-by-email row. Use in settings or workspace admin pages.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-XpN8iflVNLFmajnWVZzpklUKpbn44weRN4dbRKyCsPI=",
+      "content": "/r/content/5e937c89f95534b1666a39d6559ce992550aa5b9f8e3079137875b44ac82b0f2.json",
+      "changelog": "/r/changelog/team-01.json"
+    },
+    {
+      "name": "products-01",
+      "type": "registry:block",
+      "title": "Products table",
+      "description": "A products data table with live search, status badges, per-row action menus and responsive columns. Use for catalog, inventory or CRUD list pages.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-9o7Kv7EuVTbyDy3ceW2NzRqEXwuJbCt/cHMHVCxw4Bs=",
+      "content": "/r/content/f68ecabfb12e5536f20f2ddc796d8dcd1a845f0b896c2b7f707307542c70e01b.json",
+      "changelog": "/r/changelog/products-01.json"
+    },
+    {
+      "name": "dashboard-02",
+      "type": "registry:block",
+      "title": "Analytics dashboard",
+      "description": "An analytics overview: a KPI stat row above a responsive grid that composes the interactive area chart, a stacked bar chart, a donut and a KPI ring. Use as an analytics landing page.",
+      "categories": [
+        "dashboard"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-ZLoVeQrB0cAh6upNdKdiqkS2pLAtMdGBnSvIFuBodXA=",
+      "content": "/r/content/64ba15790ac1d1c021eaea4d74a762aa44b6a4b02d31d1819d2bc816e0687570.json",
+      "changelog": "/r/changelog/dashboard-02.json"
+    },
+    {
+      "name": "onboarding-01",
+      "type": "registry:block",
+      "title": "Onboarding wizard",
+      "description": "A multi-step onboarding card with a numbered step indicator, a progress bar and per-step form fields, plus Back/Continue navigation. Use as a first-run setup flow.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-D/eFqQkclRdfvGletJL/pZz2erXQ62IpmNAAgsS2U8k=",
+      "content": "/r/content/0ff785a9091c95175fbc695eb492ffa59cf67ab5d0eb622998d00082c4b653c9.json",
+      "changelog": "/r/changelog/onboarding-01.json"
+    },
+    {
+      "name": "hero-01-animated",
+      "type": "registry:block",
+      "title": "Marketing hero (animated)",
+      "description": "The animated twin of hero-01: the same centered marketing hero, revealed as a staggered fade-up on mount. Drop-in replacement — same Hero export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-pcJqr3/4a02Tu0pwYL6+1Pedjn6z46nOMD1UQ4/CS3E=",
+      "content": "/r/content/a5c26aaf7ff86b4d93bb4a7060bebed4f79d8e7eb3e3a9ce303d54438fc24b71.json",
+      "changelog": "/r/changelog/hero-01-animated.json"
+    },
+    {
+      "name": "stats-01-animated",
+      "type": "registry:block",
+      "title": "KPI stat cards (animated)",
+      "description": "The animated twin of stats-01: the KPI values count up on mount and the cards cascade in as a staggered fade-up. Drop-in replacement — same Stats export. Built on the motion engine and the useCountUp hook, respects prefers-reduced-motion.",
+      "categories": [
+        "dashboard"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-6xDDjlOqIZrAp1F7TxVqqDMK31VbTAgVpIer9GQ3/rw=",
+      "content": "/r/content/eb10c38e53aa219ac0a7517b4f156aa8330adf555b4c0815a487abf46437febc.json",
+      "changelog": "/r/changelog/stats-01-animated.json"
+    },
+    {
+      "name": "feature-grid-01-animated",
+      "type": "registry:block",
+      "title": "Feature grid (animated)",
+      "description": "The animated twin of feature-grid-01: the heading reveals first, then the feature cards cascade in as a staggered fade-up on mount. Drop-in replacement — same FeatureGrid export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+      "categories": [
+        "marketing"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-WdAD4aJrLg7qsUa4wT0fHzb05o16YH5h+1aEImrvKzg=",
+      "content": "/r/content/59d003e1a26b2e0eeab146b8c13d1f1f36f4e68d7a607e61fb5684226aef2b38.json",
+      "changelog": "/r/changelog/feature-grid-01-animated.json"
+    },
+    {
+      "name": "kanban-01",
+      "type": "registry:block",
+      "title": "Kanban board",
+      "description": "A three-column kanban board (to do / in progress / done) with cards you drag between columns, using native HTML5 drag-and-drop — no dependencies. Columns show a live count and highlight while a card is dragged over them. Use as the base for a task board or pipeline view.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-h20+Yg4a0iR57Dz7HP/7LGlqfOL79mmGb1pjV0JNOqk=",
+      "content": "/r/content/876d3e620e1ad22479ec3cfb1cfffb2c696a7ce2fbf669866f5a6357424d3aa9.json",
+      "changelog": "/r/changelog/kanban-01.json"
+    },
+    {
+      "name": "cart-01",
+      "type": "registry:block",
+      "title": "Shopping cart",
+      "description": "An e-commerce cart: line items with a thumbnail, variant, per-line quantity stepper and remove action, plus an order summary card (subtotal, free-over-threshold shipping, total) and a checkout button. Totals recompute live. Use as the cart page of a storefront.",
+      "categories": [
+        "ecommerce"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-WtfiH1XpqJVgvx9jru7GMl8qXgPOrQC34iVPhNfvjL4=",
+      "content": "/r/content/5ad7e21f55e9a89560bf1f63aeeec6325f2a5e03cead00b7e2254f84d7ef8cbe.json",
+      "changelog": "/r/changelog/cart-01.json"
+    },
+    {
+      "name": "checkout-01",
+      "type": "registry:block",
+      "title": "Checkout",
+      "description": "A two-column checkout: contact, shipping address and payment form fields on one side, an order summary (line items, subtotal, shipping, tax, total) with a Pay button on the other. Use as the checkout page of a storefront.",
+      "categories": [
+        "ecommerce"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-yLtYWKz9389yZ0PvHTF3EJXK9QXUNakYdkPdVytXbq4=",
+      "content": "/r/content/c8bb5858acfddfcf726743ef1d31771095caf505d435a9187643dd572b576eae.json",
+      "changelog": "/r/changelog/checkout-01.json"
+    },
+    {
+      "name": "product-detail-01",
+      "type": "registry:block",
+      "title": "Product detail",
+      "description": "A product detail page: an image gallery with selectable thumbnails, title, rating, price and description, a size selector, a quantity stepper and an add-to-cart button whose total updates with quantity. Use as a storefront product page.",
+      "categories": [
+        "ecommerce"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-CuFGjQbe1H9x3gOFCZdQFSDgtygSVAdACEhmWOG0Xsk=",
+      "content": "/r/content/0ae1468d06ded47f71de03850997501520e0b7281254074008486658e1b45ec9.json",
+      "changelog": "/r/changelog/product-detail-01.json"
+    },
+    {
+      "name": "admin-orders-01",
+      "type": "registry:block",
+      "title": "Orders admin dashboard",
+      "description": "An e-commerce back-office dashboard: a KPI row (revenue, orders, AOV, refunds with deltas) over an orders table with customer avatars, status badges, per-row actions, live search and status filter tabs. Use as the admin panel of a storefront.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-kIBqsf1q9XH1I0ie0F6mABBB2CuqI78XL2GWpx58skE=",
+      "content": "/r/content/90806ab1fd6af571f523489ed05ea6001041d82baa23bf172f6196a71e7cb241.json",
+      "changelog": "/r/changelog/admin-orders-01.json"
+    },
+    {
+      "name": "admin-reservations-01",
+      "type": "registry:block",
+      "title": "Reservations admin dashboard",
+      "description": "A reservations back-office dashboard: a KPI row (today's bookings, guests, occupancy, no-shows) over a bookings table with guest avatars, resource, time, party size, confirmed/held/cancelled status badges, per-row actions, live search and status filter tabs. Use as the admin panel of a booking system.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-G8Pf4F00VhINWmRcquEoeea7eAy1Y6cDRTtCrriqLNE=",
+      "content": "/r/content/1bc3dfe05d3456120d5a645caae12879e6bb780cb563a703453b42aeb8aa2cd1.json",
+      "changelog": "/r/changelog/admin-reservations-01.json"
+    },
+    {
+      "name": "admin-analytics-01",
+      "type": "registry:block",
+      "title": "Analytics admin dashboard",
+      "description": "An e-commerce analytics overview: a KPI row (revenue, orders, conversion, sessions), a monthly revenue area chart and a top-products-by-revenue breakdown with share bars. Use as the analytics tab of a store admin.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-UPArABbSzSkanZGpjox1lglf/aZDHqav0t2t19ZdmLc=",
+      "content": "/r/content/50f02b0016d2cd291a9d91a98e8c7596095ffda6431ea6afd2ddadd7d65d98b7.json",
+      "changelog": "/r/changelog/admin-analytics-01.json"
+    },
+    {
+      "name": "admin-customers-01",
+      "type": "registry:block",
+      "title": "Customers admin dashboard",
+      "description": "A customers back-office view: a KPI row (total customers, new this month, repeat rate) over a customers table with avatars, order count, lifetime spend, last order, active/new/churned segment badges, per-row actions and live search. Use as the customers tab of a store admin.",
+      "categories": [
+        "application"
+      ],
+      "version": "1.0.0-rc.1",
+      "registryVersion": "1.0.0-rc.1",
+      "integrity": "sha256-1R4wy34tFceMb7EXTLCdcN4pSwyr60bE7No+poiWaUw=",
+      "content": "/r/content/d51e30cb7e2d15c78c6fb1174cb09d70de294b0cabeb46c4ecda3ea68896694c.json",
+      "changelog": "/r/changelog/admin-customers-01.json"
+    }
+  ]
+}

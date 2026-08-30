@@ -1,0 +1,55 @@
+---
+title: Tarjeta
+description: Muestra una tarjeta compuesta por cabecera, contenido y pie.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="card-demo" locale="es" />
+
+## Instalación
+
+<Install name="card" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+<Card>
+  <CardHeader>
+    <CardTitle>Título</CardTitle>
+    <CardDescription>Descripción</CardDescription>
+    <CardAction>{/* por ejemplo, un botón */}</CardAction>
+  </CardHeader>
+  <CardContent>Contenido</CardContent>
+  <CardFooter>Pie</CardFooter>
+</Card>
+```
+
+## Notas de uso
+
+`Card` se compone de primitivas de disposición. Cada pieza es un `div` con estilos que acepta `className` y las propiedades estándar de `div`; no hay propiedades de variante. `CardAction` se coloca en la esquina superior derecha y `CardHeader` adopta una cuadrícula de dos columnas cuando contiene una acción.
+
+## Ejemplos
+
+### Con acción
+
+Coloca un control, como una insignia o un botón, en la cabecera mediante `CardAction`.
+
+<ComponentPreview name="card-stats-demo" locale="es" />
+
+### Notificación
+
+Combina cabecera, contenido y pie para crear un panel autocontenido.
+
+<ComponentPreview name="card-notification-demo" locale="es" />

@@ -33,11 +33,52 @@ jobs:
 
       - run: pnpm test
 
-      # Accessibility gate: axe-core over every shipped block preview
-      # (light + dark), asserting no serious/critical violations. Structural
-      # and semantic a11y — accessible names, roles, labels, valid ARIA.
+      # Benchmark contract: all rubric points are reachable; runner fixture
+      # hashes, time/output termination and observed-build metadata are tested;
+      # synthetic fixtures never enter the published leaderboard.
+      - run: pnpm benchmark:agents:test
+
+      # The two non-empty agent fixtures are exact-pinned Vite projects. Install
+      # and production-build both; assert the from-empty task really starts empty.
+      - run: pnpm --dir benchmarks/agents test:fixtures
+
+      # Build the exact npm tarballs, install them into an isolated consumer,
+      # verify CLI help/version and complete an MCP stdio handshake with the
+      # published tool list. This catches stale dist and dependency drift.
+      - run: pnpm test:release-artifacts
+
+      # Generate a real Vite starter through the public CLI contract, wrap it
+      # in a Turbo workspace, install it and production-build the app. This
+      # proves the CLI and MCP shared scaffold core remains consumer-ready.
+      - run: pnpm --filter logic2b test:scaffold
+
+      # Contract test for the shell-less agent path: materialize the MCP's
+      # Next marketing, Vite dashboard and Astro auth starters from the local
+      # registry, install them in a temporary workspace and production-build
+      # all three. This also type-checks the copied registry source as a real
+      # consumer project and enforces the Vite dashboard chunk budgets.
+      - run: pnpm --filter @logic2b/mcp test:scaffolds
+
+      # Raw-size guardrails for browser chunks and registry payloads. These are
+      # intentionally checked after the production build above, not estimated
+      # from source imports.
+      - run: pnpm --filter @logic2b/web test:budgets
+
+      # Accessibility gate: 654 hydrated axe analyses over all block previews,
+      # component/chart demos, launch docs and 71 prop playgrounds, light + dark,
+      # asserting no serious/critical violations. Structural and semantic
+      # a11y — accessible names, roles, labels, valid ARIA and keyboard access.
       # Color contrast is owned by the studio's WCAG 2.2 + APCA audit. Runs
       # against the dist/client built above.
       - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
 
       - run: pnpm --filter @logic2b/web test:a11y
+
+      # Pixel-diff gate over every isolated component/chart demo and block,
+      # light + dark. Animations and carets are disabled and the comparison
+      # allows a small antialiasing tolerance across browser hosts.
+      - run: pnpm --filter @logic2b/web test:visual
+
+      # Three desktop Lighthouse runs over the landing, docs and theme studio;
+      # assert category scores and Core Web Vitals against the built static site.
+      - run: pnpm --filter @logic2b/web test:lighthouse

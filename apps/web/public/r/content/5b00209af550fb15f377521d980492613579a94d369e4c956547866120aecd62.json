@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-bar-03",
+  "type": "registry:block",
+  "title": "Bar Chart - Label",
+  "description": "A single-series bar chart with the value printed above each bar. Use it when exact values matter as much as the comparison.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-bar-03.tsx",
+      "type": "registry:block",
+      "content": "import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport {\n  ChartContainer,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from \"@/components/ui/chart\"\n\nconst chartData = [\n  { month: \"January\", desktop: 186 },\n  { month: \"February\", desktop: 305 },\n  { month: \"March\", desktop: 237 },\n  { month: \"April\", desktop: 73 },\n  { month: \"May\", desktop: 209 },\n  { month: \"June\", desktop: 214 },\n]\n\nconst chartConfig = {\n  desktop: {\n    label: \"Desktop\",\n    color: \"var(--chart-1)\",\n  },\n} satisfies ChartConfig\n\nexport default function ChartBar03() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>Bar Chart - Label</CardTitle>\n        <CardDescription>January - June 2024</CardDescription>\n      </CardHeader>\n      <CardContent>\n        <ChartContainer config={chartConfig}>\n          <BarChart\n            accessibilityLayer\n            data={chartData}\n            margin={{ top: 20 }}\n          >\n            <CartesianGrid vertical={false} />\n            <XAxis\n              dataKey=\"month\"\n              tickLine={false}\n              tickMargin={10}\n              axisLine={false}\n              tickFormatter={(value) => value.slice(0, 3)}\n            />\n            <ChartTooltip\n              cursor={false}\n              content={<ChartTooltipContent hideLabel />}\n            />\n            <Bar dataKey=\"desktop\" fill=\"var(--color-desktop)\" radius={8}>\n              <LabelList\n                position=\"top\"\n                offset={12}\n                className=\"fill-foreground\"\n                fontSize={12}\n              />\n            </Bar>\n          </BarChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-bar"
+  ]
+}

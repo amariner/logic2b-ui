@@ -48,6 +48,53 @@ npx logic2b@latest add button
 Or copy the source from any component page — every page has a Code tab with the
 full source.
 
+For a complete marketing surface, install the composed landing block once:
+
+```bash
+npx logic2b@latest add landing-page-01
+```
+
+The registry resolves its canonical navbar, animated hero, animated feature
+grid, CTA and footer transitively. Those child items stay independently
+installable and updateable.
+
+## Versioned installs and safe updates
+
+Initialize a project with the CLI to pin the registry release used by the
+project:
+
+```bash
+npx logic2b@latest init
+npx logic2b@latest add button card
+npx logic2b@latest status
+```
+
+`init` writes an exact `logic2b.version` to `components.json`. Every install is
+also recorded in `.logic2b/manifest.json` with the resolved registry version,
+the SHA-256 integrity of each item and its installed files. This makes the
+inputs reproducible even if a channel later advances.
+
+Presets from [/create](/create) also carry the icon implementation. Choose
+Lucide, Tabler, Phosphor or Hugeicons in the studio; `init --preset <id>` stores
+that choice as `iconLibrary` in `components.json`, and later `add`/`update`
+operations rewrite source imports, npm dependencies and merge snapshots as one
+unit. Existing preset links created before this option default to Lucide.
+
+Use an exact version, a semver range or a published channel explicitly:
+
+```bash
+npx logic2b@latest add button --registry-version 1.0.0-rc.7
+npx logic2b@latest status --registry-version next
+npx logic2b@latest update --registry-version "^1.0.0"
+```
+
+`logic2b update` only considers items tracked in the install manifest unless
+you name items explicitly. It performs a three-way merge against the snapshot
+captured when each file was installed: untouched files advance automatically,
+local-only edits stay intact, compatible changes merge, and overlapping edits
+are marked as conflicts for review. Inspect an item's machine-readable history
+at `/r/changelog/<name>.json` before advancing a range.
+
 ## Using an AI assistant
 
 Every install block on this site has an **Agent** tab (and the theme studio a
@@ -56,6 +103,16 @@ Copilot. The prompt bundles the commands above, a no-CLI fallback and a
 verification checklist, so the assistant can do the whole setup in one go. You
 can also start from [/create](/create): pick a theme, press Get Code and copy
 the prompt for a new or existing project.
+
+An assistant connected to the logic2b MCP can start from an empty directory
+without a shell scaffolder. Ask it to use `scaffold_plan` with a framework
+(`next`, `vite` or `astro`) and starter (`marketing`, `dashboard` or `auth`).
+The tool returns the complete project as file writes, including the theme and
+an optional preset from `/create`. Pass `version` as an exact semver, range or
+channel when the plan must be reproducible; the response includes the resolved
+version and integrity for every item.
+For an item-only plan, pass `iconLibrary` directly to `install_plan`; complete
+scaffolds read the same choice from the optional `/create` preset.
 
 ## Path aliases
 

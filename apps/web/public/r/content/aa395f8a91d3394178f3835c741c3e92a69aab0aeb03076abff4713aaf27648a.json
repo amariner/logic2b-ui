@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "cta-01",
+  "type": "registry:block",
+  "title": "Call to action",
+  "description": "A bordered, centered call-to-action band with a headline, supporting copy and two buttons. Use to close a landing page.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "blocks/cta-01/cta.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\nimport { ArrowRightIcon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Button } from \"@/components/ui/button\"\n\nexport function Cta({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\"mx-auto w-full max-w-5xl px-6 py-16\", className)}\n      {...props}\n    >\n      <div className=\"bg-card relative overflow-hidden rounded-2xl border px-6 py-16 text-center\">\n        <div className=\"mx-auto max-w-xl\">\n          <h2 className=\"font-heading text-3xl font-bold tracking-tight text-balance md:text-4xl\">\n            Ship your next interface tonight\n          </h2>\n          <p className=\"text-muted-foreground mx-auto mt-4 max-w-md text-balance\">\n            Copy the components, keep the code, own the design. Start building\n            with a monochrome system that reads like your own.\n          </p>\n          <div className=\"mt-8 flex flex-wrap items-center justify-center gap-3\">\n            <Button size=\"lg\">\n              Get started\n              <ArrowRightIcon className=\"size-4\" />\n            </Button>\n            <Button size=\"lg\" variant=\"outline\">\n              Read the docs\n            </Button>\n          </div>\n        </div>\n      </div>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "marketing"
+  ]
+}

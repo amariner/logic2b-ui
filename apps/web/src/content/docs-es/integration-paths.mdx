@@ -1,0 +1,48 @@
+---
+title: Comparar vías de integración
+description: Elige el flujo de logic2b adecuado para una persona desarrolladora, un agente o un cliente propio del registro.
+---
+
+import IntegrationPaths from "@/components/IntegrationPaths.astro";
+
+Hay un único registro fuente y cinco formas de consumirlo. El código de los
+componentes es el mismo; cambia quién resuelve dependencias, quién escribe
+archivos y si hay un terminal disponible.
+
+<IntegrationPaths locale="es" />
+
+## Decide en 30 segundos
+
+- **Estás explorando o decidiendo:** usa la web. Cada superficie de instalación
+  devuelve código, un comando CLI o un Copy Prompt autocontenido.
+- **Tienes terminal y un repositorio existente:** usa la CLI. Resuelve las
+  dependencias del registro y escribe el código en los alias configurados.
+- **Tu agente no tiene shell ni Node local:** conecta el MCP remoto en
+  `https://ui.logic2b.com/mcp`. `install_plan` y `scaffold_plan` devuelven todas
+  las escrituras como resultados estructurados.
+- **Tu agente con terminal ya habla MCP:** ejecuta `npx -y @logic2b/mcp`. El
+  servidor local expone los mismos contratos que el endpoint remoto.
+- **Construyes una integración propia:** consume `/r/index.json` y
+  `/r/<name>.json`. Tu cliente resuelve recursivamente y escribe los archivos.
+
+## La frontera de mantenimiento
+
+La instalación solo es el primer paso. Un preset de `/create` viaja por el
+estudio, CLI y MCP sin perder elecciones. Más tarde, un agente conectado puede
+enviar la hoja de estilos a `lint_theme` para detectar tokens ausentes,
+duplicados o inválidos, deriva, fidelidad exacta y regresiones de contraste. La
+hoja se analiza como texto y nunca se ejecuta.
+
+Las herramientas MCP no mutan un repositorio silenciosamente. Devuelven planes
+explícitos y el host decide dónde escribirlos. Así el mismo servidor sirve a
+IDE locales, asistentes web y clientes empresariales controlados.
+
+## Verifica las afirmaciones
+
+- [Benchmarks de frameworks](/es/docs/benchmarks) publica fixtures fijados,
+  metodología y mediciones crudas.
+- [Benchmarks de agentes](/es/docs/agent-benchmarks) publica el protocolo y el
+  scorer objetivo antes de aceptar resultados.
+- El gate de release empaqueta los dos artefactos npm, los instala en un
+  consumidor limpio y verifica CLI, versión e inventario MCP.
+- Cada elemento valida dependencias y payloads; CI compila cada starter generado.

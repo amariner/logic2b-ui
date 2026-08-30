@@ -26,13 +26,12 @@ Set the viewport size with `className` (height/width) — the content scrolls
 inside it. For horizontal scrolling, render a `ScrollBar` with
 `orientation="horizontal"` inside the `ScrollArea`.
 
-## API
+## Accessibility
 
-| Prop | Type | Default |
-| --- | --- | --- |
-| `type` (ScrollArea) | `auto \| always \| scroll \| hover` | `hover` |
-| `scrollHideDelay` (ScrollArea) | `number` (ms) | `600` |
-| `orientation` (ScrollBar) | `vertical \| horizontal` | `vertical` |
+The viewport is keyboard-focusable by default, so arrow, Page Up/Down, Home
+and End scrolling remain available even when its content has no interactive
+descendants. The visible focus ring identifies which scroll region owns those
+keys.
 
 ## Examples
 

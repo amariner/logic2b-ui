@@ -1,0 +1,106 @@
+---
+title: Conecta tu propio backend
+description: Los bloques de administración y reservas son UI con datos de ejemplo. Este contrato de referencia permite conectarlos a datos reales.
+---
+
+logic2b ui es un sistema **visual**. Cada bloque —dashboards de pedidos,
+reservas, clientes y analítica, además de carrito, checkout y producto— entrega
+React puro con **datos de ejemplo estáticos**. El registro no incluye backend:
+la capa de datos es tuya y puede usar el almacenamiento, auth y pagos de tu
+stack.
+
+Esta guía es un **contrato de referencia** para el flujo con estado detrás de
+`admin-reservations-01`. Resume el esquema y API REST contra los que validamos
+el bloque para que puedas implementar un equivalente en Cloudflare Workers +
+D1, Postgres + Node/Bun, Rails, Django, Supabase u otra plataforma. Es un plano,
+no una dependencia.
+
+## Dominio
+
+Un modelo genérico de **reservas** sirve para mesas, habitaciones, plazas de
+clase, equipamiento o servicios con capacidad finita en un intervalo:
+
+- Un **recurso** es cualquier elemento reservable, con `capacity` y precio opcional.
+- Una **reserva** ocupa capacidad durante `[start, end)` para un grupo.
+- Se crea **retenida**, después se **confirma** con o sin pago, y puede cancelarse.
+- La retención vence tras `holdMinutes` (15 por defecto); las expiradas liberan
+  capacidad para impedir superar `capacity` entre intervalos solapados.
+
+## Esquema
+
+Boceto relacional en dialecto SQLite/D1; adapta tipos para Postgres o MySQL:
+
+```sql
+CREATE TABLE resources (
+  id          TEXT PRIMARY KEY,
+  name        TEXT NOT NULL,
+  kind        TEXT NOT NULL,              -- table | room | seat | service | …
+  capacity    INTEGER NOT NULL,
+  price_cents INTEGER NOT NULL DEFAULT 0,
+  currency    TEXT NOT NULL DEFAULT 'usd'
+);
+
+CREATE TABLE bookings (
+  id              TEXT PRIMARY KEY,
+  resource_id     TEXT NOT NULL REFERENCES resources(id),
+  start           TEXT NOT NULL,          -- ISO 8601
+  end             TEXT NOT NULL,          -- ISO 8601
+  party_size      INTEGER NOT NULL,
+  customer_name   TEXT NOT NULL,
+  customer_email  TEXT NOT NULL,
+  status          TEXT NOT NULL,          -- held | confirmed | cancelled
+  payment_id      TEXT,
+  hold_expires_at TEXT,
+  created_at      TEXT NOT NULL
+);
+CREATE INDEX idx_bookings_resource ON bookings(resource_id);
+
+CREATE TABLE payments (
+  id           TEXT PRIMARY KEY,
+  booking_id   TEXT NOT NULL REFERENCES bookings(id),
+  amount_cents INTEGER NOT NULL,
+  currency     TEXT NOT NULL,
+  status       TEXT NOT NULL,             -- pending | succeeded | failed | refunded
+  provider     TEXT NOT NULL,
+  provider_ref TEXT,
+  created_at   TEXT NOT NULL
+);
+CREATE INDEX idx_payments_booking ON payments(booking_id);
+```
+
+## API REST
+
+Los nombres son orientativos; importa la máquina de estados que representan.
+
+| Método y ruta | Propósito |
+| --- | --- |
+| `GET /health` | Estado del servicio |
+| `GET /resources` | Listar recursos reservables |
+| `GET /resources/:id` | Leer un recurso |
+| `GET /resources/:id/availability?from&to&slot&partySize` | Capacidad restante por franja |
+| `POST /bookings` | Crear una reserva **retenida** tras comprobar capacidad |
+| `GET /bookings/:id` | Leer reserva y pago |
+| `POST /bookings/:id/pay` | Cobrar y **confirmar** si tiene éxito |
+| `POST /bookings/:id/confirm` | Confirmar gratis sin pago |
+| `POST /bookings/:id/cancel` | Cancelar y reembolsar si estaba pagada |
+
+## Decisiones que facilitan las pruebas
+
+- **Núcleo puro.** Mantén solapamientos, capacidad, franjas y validación en
+  funciones sin I/O, totalmente comprobables en aislamiento.
+- **Store inyectable.** Programa contra una interfaz `Store`: implementación
+  real en producción y memoria en pruebas. El router no necesita saber cuál usa.
+- **Pagos intercambiables.** Encapsula pagos en `PaymentProvider`, con un mock
+  determinista por defecto y el proveedor real solo cuando exista el secreto.
+- **Handler único con dependencias inyectadas.** Construye la API desde store,
+  proveedor, reloj y generador de ids para repetir el mismo comportamiento.
+
+## Conectar el bloque
+
+`admin-reservations-01` renderiza KPI y tabla desde un array local. Sustitúyelo
+por una llamada a tu API y adapta cada fila a huésped, recurso, hora, grupo y
+estado `confirmed | held | cancelled`. Confirmar/cancelar llaman a los endpoints;
+búsqueda, filtros y badges ya funcionan con los datos recibidos.
+
+El mismo patrón vale para los demás bloques admin: son vistas sobre datos que
+controlas. Conéctalos a tu API y conserva la UI.

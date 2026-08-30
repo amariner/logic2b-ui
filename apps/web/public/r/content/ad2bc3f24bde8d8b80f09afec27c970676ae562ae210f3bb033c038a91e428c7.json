@@ -1,0 +1,52 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "progress",
+  "type": "registry:ui",
+  "description": "Displays an indicator showing the completion progress of a task. Use to communicate long-running operations, built on Radix Progress.",
+  "dependencies": [
+    "radix-ui"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "ui/progress.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Progress as ProgressPrimitive } from \"radix-ui\"\n\nimport { cn } from \"@/lib/utils\"\n\nfunction Progress({\n  className,\n  value,\n  \"aria-label\": ariaLabel = \"Progress\",\n  ...props\n}: React.ComponentProps<typeof ProgressPrimitive.Root>) {\n  return (\n    <ProgressPrimitive.Root\n      data-slot=\"progress\"\n      aria-label={ariaLabel}\n      className={cn(\n        \"bg-primary/20 relative h-2 w-full overflow-hidden rounded-full\",\n        className\n      )}\n      {...props}\n    >\n      <ProgressPrimitive.Indicator\n        data-slot=\"progress-indicator\"\n        className=\"bg-primary h-full w-full flex-1 transition-all\"\n        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}\n      />\n    </ProgressPrimitive.Root>\n  )\n}\n\nexport { Progress }\n"
+    }
+  ],
+  "categories": [
+    "feedback"
+  ],
+  "accessibility": {
+    "support": "primitive",
+    "pattern": "progressbar",
+    "primitive": "Radix Progress",
+    "keyboard": [],
+    "aria": [
+      "Exposes progressbar semantics and a default accessible name."
+    ],
+    "consumer": [
+      "Replace the default label with task-specific context; omit value only for indeterminate progress."
+    ]
+  },
+  "api": {
+    "source": "src/ui/progress.tsx",
+    "exports": [
+      {
+        "name": "Progress",
+        "kind": "component",
+        "propsType": "React.ComponentProps<typeof ProgressPrimitive.Root>",
+        "props": [
+          {
+            "name": "aria-label",
+            "type": "string",
+            "required": false,
+            "default": "\"Progress\""
+          }
+        ]
+      }
+    ]
+  }
+}

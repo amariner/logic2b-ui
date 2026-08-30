@@ -12,7 +12,7 @@ import {
 export default function SelectGroupsDemo() {
   return (
     <Select>
-      <SelectTrigger className="w-[200px]">
+      <SelectTrigger aria-label="Select a timezone" className="w-[200px]">
         <SelectValue placeholder="Select a timezone" />
       </SelectTrigger>
       <SelectContent>

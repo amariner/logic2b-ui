@@ -3,12 +3,16 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@/registry/*": ["../../packages/registry/src/*"]
     }
   },
-  "include": ["src", "../../packages/registry/src"],
+  "include": [
+    ".astro/types.d.ts",
+    "src",
+    "../../packages/registry/src",
+    "../../packages/mcp/src/semver.d.ts"
+  ],
   "exclude": ["dist", "node_modules"]
 }

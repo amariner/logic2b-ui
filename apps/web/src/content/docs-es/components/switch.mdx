@@ -1,0 +1,45 @@
+---
+title: Interruptor
+description: Permite alternar una opción entre activada y desactivada.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="switch-demo" locale="es" />
+
+## Instalación
+
+<Install name="switch" locale="es" />
+
+## Uso
+
+```tsx
+import { Switch } from "@/components/ui/switch"
+
+<Switch id="airplane-mode" />
+```
+
+## Notas de uso
+
+Está construido sobre `Switch.Root` de Radix y reenvía todas sus propiedades.
+
+## Ejemplos
+
+### Controlado
+
+<ComponentPreview name="switch-controlled-demo" locale="es" />
+
+### Desactivado
+
+<ComponentPreview name="switch-disabled-demo" locale="es" />
+
+### Lista de ajustes
+
+<ComponentPreview name="switch-settings-demo" locale="es" />
+
+## Accesibilidad
+
+- Expone el rol `switch` y comunica su estado activado o desactivado a las tecnologías de asistencia.
+- Se alterna con <kbd>Espacio</kbd> o <kbd>Enter</kbd> cuando tiene el foco y se alcanza con <kbd>Tab</kbd>.
+- Asocia un `Label` mediante `htmlFor`, o envuelve el control, para darle un nombre accesible.

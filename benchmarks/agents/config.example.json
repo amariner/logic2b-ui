@@ -1,0 +1,16 @@
+{
+  "$schema": "./runner-config.schema.json",
+  "schemaVersion": 1,
+  "runId": "model-agent-2026-08-29",
+  "model": { "name": "model-name", "version": "provider-version" },
+  "agent": { "name": "agent-host", "version": "host-version" },
+  "capabilities": { "network": true, "shell": true, "mcp": true },
+  "command": {
+    "executable": "/path/to/isolated-agent-wrapper",
+    "args": ["--workspace", "{workspace}", "--prompt", "{prompt}"],
+    "passEnv": ["AGENT_API_KEY"],
+    "toolCallMarker": "LOGIC2B_TOOL_CALL"
+  },
+  "outputLimitBytes": 20000000,
+  "artifactLimitBytes": 100000000
+}

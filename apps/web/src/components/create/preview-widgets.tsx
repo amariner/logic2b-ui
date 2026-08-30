@@ -61,9 +61,9 @@ export function BuyInvestment() {
           <Input id="bi-amount" defaultValue="$ 1,000.00" />
         </div>
         <div className="grid gap-2">
-          <Label>Order Type</Label>
+          <Label htmlFor="bi-order-type">Order Type</Label>
           <Select defaultValue="market">
-            <SelectTrigger className="w-full">
+            <SelectTrigger id="bi-order-type" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -194,9 +194,9 @@ export function TransferFunds() {
           <Input id="tf-amt" defaultValue="$ 1,200.00" />
         </div>
         <div className="grid gap-2">
-          <Label>From Account</Label>
+          <Label htmlFor="tf-from-account">From Account</Label>
           <Select defaultValue="checking">
-            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+            <SelectTrigger id="tf-from-account" className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="checking">Main Checking (··8402) — $12,450.00</SelectItem>
               <SelectItem value="savings">High Yield Savings (··1192) — $42,100.00</SelectItem>
@@ -204,9 +204,9 @@ export function TransferFunds() {
           </Select>
         </div>
         <div className="grid gap-2">
-          <Label>To Account</Label>
+          <Label htmlFor="tf-to-account">To Account</Label>
           <Select defaultValue="savings">
-            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+            <SelectTrigger id="tf-to-account" className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="savings">High Yield Savings (··1192) — $42,100.00</SelectItem>
               <SelectItem value="checking">Main Checking (··8402) — $12,450.00</SelectItem>
@@ -243,9 +243,9 @@ export function PreferencesCard() {
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
-          <Label>Default Currency</Label>
+          <Label htmlFor="pf-default-currency">Default Currency</Label>
           <Select defaultValue="usd">
-            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+            <SelectTrigger id="pf-default-currency" className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="usd">USD — United States Dollar</SelectItem>
               <SelectItem value="eur">EUR — Euro</SelectItem>
@@ -322,9 +322,9 @@ export function ShippingAddress() {
             <Input id="sa-city" placeholder="San Francisco" />
           </div>
           <div className="grid gap-2">
-            <Label>State</Label>
+            <Label htmlFor="sa-state">State</Label>
             <Select defaultValue="ca">
-              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectTrigger id="sa-state" className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="ca">California</SelectItem>
                 <SelectItem value="ny">New York</SelectItem>
@@ -338,9 +338,9 @@ export function ShippingAddress() {
             <Input id="sa-zip" placeholder="94102" />
           </div>
           <div className="grid gap-2">
-            <Label>Country</Label>
+            <Label htmlFor="sa-country">Country</Label>
             <Select defaultValue="us">
-              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectTrigger id="sa-country" className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="us">United States</SelectItem>
                 <SelectItem value="es">Spain</SelectItem>
@@ -375,7 +375,7 @@ export function ProfileCard() {
         <div className="grid gap-2">
           <Label htmlFor="pr-email">Public Email</Label>
           <Select defaultValue="m">
-            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+            <SelectTrigger id="pr-email" className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="m">m@logic2b.com</SelectItem>
               <SelectItem value="hi">hi@logic2b.com</SelectItem>

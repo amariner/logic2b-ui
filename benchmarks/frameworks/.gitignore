@@ -1,0 +1,6 @@
+node_modules/
+generated/
+apps/*/dist/
+apps/*/.astro/
+apps/*/.next/
+apps/*/.output/

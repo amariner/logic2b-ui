@@ -1,0 +1,57 @@
+---
+title: Cross-platform tokens
+description: Export one logic2b preset to DTCG JSON, CSS, iOS Swift and Android resources.
+---
+
+The theme tables in `@logic2b/tokens` are the single source for web and native
+design tokens. One `/create` preset id resolves to the same semantic light and
+dark roles on every platform.
+
+## Published default artifacts
+
+The default theme is generated with exact-pinned Style Dictionary 5.5.2 and
+served as static, integrity-addressed build artifacts:
+
+| Artifact | Path |
+| --- | --- |
+| Manifest + SHA-256 integrity | [`/tokens/default/manifest.json`](/tokens/default/manifest.json) |
+| Portable DTCG-shaped source | [`/tokens/default/logic2b.tokens.json`](/tokens/default/logic2b.tokens.json) |
+| CSS custom properties | [`/tokens/default/logic2b.css`](/tokens/default/logic2b.css) |
+| Android light resources | [`/tokens/default/android/values/logic2b_tokens.xml`](/tokens/default/android/values/logic2b_tokens.xml) |
+| Android dark resources | [`/tokens/default/android/values-night/logic2b_tokens.xml`](/tokens/default/android/values-night/logic2b_tokens.xml) |
+| iOS light tokens | [`/tokens/default/ios/Logic2bLightTokens.swift`](/tokens/default/ios/Logic2bLightTokens.swift) |
+| iOS dark tokens | [`/tokens/default/ios/Logic2bDarkTokens.swift`](/tokens/default/ios/Logic2bDarkTokens.swift) |
+
+CSS preserves the source OKLCH colors. Native outputs use deterministic,
+gamut-clamped sRGB conversions: Android gets `values` and `values-night`
+resources, while iOS gets explicit light and dark `UIColor` classes. Radius is
+converted from `0.625rem` to 10 platform points. Font stacks remain in the
+portable JSON and CSS because registering a native font is application-specific.
+
+## Export any preset through MCP
+
+Call `export_tokens` with a preset id from `/create`, or with the same explicit
+options accepted by `apply_preset`:
+
+```json
+{
+  "preset": "<preset-id>"
+}
+```
+
+The result is a portable bundle with three namespaces: `global` for radius and
+typography, plus `light` and `dark` for semantic colors. It can be fed into
+Style Dictionary or another DTCG-compatible pipeline without scraping CSS.
+
+## Regenerate from the repository
+
+Contributors can emit the default artifacts or a custom preset to another
+directory:
+
+```bash
+pnpm --filter @logic2b/tokens build
+pnpm --filter @logic2b/tokens build -- --preset <preset-id> --out-dir ./build/tokens
+```
+
+The build is deterministic and CI verifies every generated file against the
+SHA-256 manifest and against the current shared token tables.

@@ -13,8 +13,41 @@ import {
 } from "@/registry/ui/command"
 import type { SearchIndexItem } from "@/lib/search-index"
 
-export function CommandMenu({ items }: { items: SearchIndexItem[] }) {
+export function CommandMenu({
+  items,
+  locale = "en",
+}: {
+  items: SearchIndexItem[]
+  locale?: "en" | "es"
+}) {
   const [open, setOpen] = React.useState(false)
+  const copy = locale === "es"
+    ? {
+        title: "Buscar en la documentación",
+        description: "Busca componentes y documentación",
+        placeholder: "Buscar en docs y componentes...",
+        empty: "No se encontraron resultados.",
+        button: "Buscar documentación...",
+        groups: {
+          Components: "Componentes",
+          Blocks: "Bloques",
+          Charts: "Gráficos",
+          Guides: "Guías",
+        },
+      }
+    : {
+        title: "Search docs",
+        description: "Search components and documentation",
+        placeholder: "Search docs and components...",
+        empty: "No results found.",
+        button: "Search documentation...",
+        groups: {
+          Components: "Components",
+          Blocks: "Blocks",
+          Charts: "Charts",
+          Guides: "Guides",
+        },
+      }
 
   React.useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -49,13 +82,12 @@ export function CommandMenu({ items }: { items: SearchIndexItem[] }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Search docs"
         title="Search (⌘K)"
         className="hidden h-8 w-56 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm text-muted-foreground shadow-xs transition-colors hover:bg-accent hover:text-foreground md:inline-flex lg:w-64"
       >
         <SearchIcon className="size-3.5 shrink-0" />
         <span className="flex-1 truncate text-left text-xs">
-          Search documentation...
+          {copy.button}
         </span>
         <kbd className="pointer-events-none flex h-5 items-center gap-0.5 rounded border bg-background px-1.5 font-mono text-[10px] font-medium">
           ⌘K
@@ -64,7 +96,7 @@ export function CommandMenu({ items }: { items: SearchIndexItem[] }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Search docs"
+        aria-label={copy.title}
         title="Search (⌘K)"
         className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:hidden"
       >
@@ -73,14 +105,17 @@ export function CommandMenu({ items }: { items: SearchIndexItem[] }) {
       <CommandDialog
         open={open}
         onOpenChange={setOpen}
-        title="Search docs"
-        description="Search components and documentation"
+        title={copy.title}
+        description={copy.description}
       >
-        <CommandInput placeholder="Search docs and components..." />
+        <CommandInput placeholder={copy.placeholder} />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{copy.empty}</CommandEmpty>
           {groups.map(([group, groupItems]) => (
-            <CommandGroup key={group} heading={group}>
+            <CommandGroup
+              key={group}
+              heading={copy.groups[group as keyof typeof copy.groups] ?? group}
+            >
               {groupItems.map((item) => (
                 <CommandItem
                   key={item.url}

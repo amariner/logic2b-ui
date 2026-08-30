@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-composed-02",
+  "type": "registry:block",
+  "title": "Composed Chart - Area + Line",
+  "description": "A composed chart with a filled traffic area beneath a conversions line. Use to show a total alongside a derived rate over the same period.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-composed-02.tsx",
+      "type": "registry:block",
+      "content": "import {\n  Area,\n  CartesianGrid,\n  ComposedChart,\n  Line,\n  XAxis,\n} from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport {\n  ChartContainer,\n  ChartLegend,\n  ChartLegendContent,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from \"@/components/ui/chart\"\n\nconst chartData = [\n  { month: \"January\", traffic: 400, conversions: 90 },\n  { month: \"February\", traffic: 520, conversions: 130 },\n  { month: \"March\", traffic: 480, conversions: 120 },\n  { month: \"April\", traffic: 610, conversions: 170 },\n  { month: \"May\", traffic: 700, conversions: 210 },\n  { month: \"June\", traffic: 760, conversions: 250 },\n]\n\nconst chartConfig = {\n  traffic: { label: \"Traffic\", color: \"var(--chart-3)\" },\n  conversions: { label: \"Conversions\", color: \"var(--chart-1)\" },\n} satisfies ChartConfig\n\nexport default function ChartComposed02() {\n  return (\n    <Card>\n      <CardHeader>\n        <CardTitle>Composed Chart - Area + Line</CardTitle>\n        <CardDescription>Traffic area under a conversions line</CardDescription>\n      </CardHeader>\n      <CardContent>\n        <ChartContainer config={chartConfig}>\n          <ComposedChart accessibilityLayer data={chartData} margin={{ left: 12, right: 12 }}>\n            <CartesianGrid vertical={false} />\n            <XAxis\n              dataKey=\"month\"\n              tickLine={false}\n              axisLine={false}\n              tickMargin={8}\n              tickFormatter={(value) => value.slice(0, 3)}\n            />\n            <ChartTooltip content={<ChartTooltipContent />} />\n            <ChartLegend content={<ChartLegendContent />} />\n            <Area\n              dataKey=\"traffic\"\n              type=\"natural\"\n              fill=\"var(--color-traffic)\"\n              fillOpacity={0.2}\n              stroke=\"var(--color-traffic)\"\n            />\n            <Line\n              dataKey=\"conversions\"\n              type=\"natural\"\n              stroke=\"var(--color-conversions)\"\n              strokeWidth={2}\n              dot={false}\n            />\n          </ComposedChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-composed"
+  ]
+}

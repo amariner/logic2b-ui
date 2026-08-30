@@ -13,7 +13,7 @@ export default function ButtonGroupDemo() {
       <ButtonGroup>
         <Button variant="outline">Copy</Button>
         <Button variant="outline">Paste</Button>
-        <Button variant="outline" size="icon">
+        <Button aria-label="More clipboard actions" variant="outline" size="icon">
           <ChevronDownIcon />
         </Button>
       </ButtonGroup>

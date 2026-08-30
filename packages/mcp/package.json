@@ -1,13 +1,14 @@
 {
   "name": "@logic2b/mcp",
-  "version": "0.2.0",
+  "version": "1.0.0-rc.2",
   "description": "MCP server that exposes the logic2b ui registry to coding agents.",
   "type": "module",
   "bin": {
     "logic2b-mcp": "dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "logic2b",
@@ -38,13 +39,17 @@
     "dev": "tsx src/index.ts",
     "lint": "tsc --noEmit -p tsconfig.json",
     "test": "node --import tsx --test test/*.test.ts",
-    "prepublishOnly": "tsup"
+    "test:release-artifacts": "node --import tsx scripts/verify-release-artifacts.mts",
+    "test:scaffolds": "node --import tsx scripts/verify-scaffolds.mts",
+    "prepack": "tsup"
   },
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0"
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "semver": "7.8.5"
   },
   "devDependencies": {
+    "@logic2b/scaffold": "workspace:*",
     "@logic2b/tokens": "workspace:*",
     "@types/node": "^26.1.0",
     "tsup": "^8.5.0",

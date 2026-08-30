@@ -1,0 +1,56 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "sonner",
+  "type": "registry:ui",
+  "description": "An opinionated toast notification component. Use to show brief, auto-dismissing messages to the user.",
+  "dependencies": [
+    "sonner"
+  ],
+  "files": [
+    {
+      "path": "ui/sonner.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Toaster as Sonner, type ToasterProps } from \"sonner\"\n\nfunction Toaster({ theme = \"system\", ...props }: ToasterProps) {\n  return (\n    <Sonner\n      theme={theme}\n      className=\"toaster group\"\n      style={\n        {\n          \"--normal-bg\": \"var(--popover)\",\n          \"--normal-text\": \"var(--popover-foreground)\",\n          \"--normal-border\": \"var(--border)\",\n        } as React.CSSProperties\n      }\n      {...props}\n    />\n  )\n}\n\nexport { Toaster }\n"
+    }
+  ],
+  "categories": [
+    "feedback"
+  ],
+  "accessibility": {
+    "support": "authored",
+    "pattern": "toast status messages",
+    "primitive": "Sonner",
+    "keyboard": [
+      {
+        "keys": [
+          "Escape"
+        ],
+        "action": "Close the open surface and restore focus."
+      }
+    ],
+    "aria": [
+      "Toast messages use status/alert semantics appropriate to their urgency and expose dismiss actions when configured."
+    ],
+    "consumer": [
+      "Keep messages concise, avoid moving focus automatically and provide a persistent recovery path for consequential actions."
+    ]
+  },
+  "api": {
+    "source": "src/ui/sonner.tsx",
+    "exports": [
+      {
+        "name": "Toaster",
+        "kind": "component",
+        "propsType": "ToasterProps",
+        "props": [
+          {
+            "name": "theme",
+            "type": "\"light\" | \"dark\" | \"system\"",
+            "required": false,
+            "default": "\"system\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -6,6 +6,8 @@ import { getSearchIndex } from "@/lib/search-index";
 interface Props {
   title: string;
   description?: string;
+  lang?: "en" | "es";
+  alternateHref?: string;
   /** Social card image (absolute or root-relative). Defaults to the brand card. */
   image?: string;
   /** Header CTA: "new" links to /create; "get-code" swaps in the creator
@@ -18,6 +20,8 @@ interface Props {
 const {
   title,
   description = "logic2b ui — Build interfaces fast, AI-assisted. Beautifully designed components you copy into your project and make your own.",
+  lang = "en",
+  alternateHref,
   image = "/og.svg",
   cta = "new",
 } = Astro.props;
@@ -26,10 +30,48 @@ const {
 const headerInner = "flex h-14 w-full items-center gap-6 px-6";
 const searchItems = await getSearchIndex();
 const ogImage = new URL(image, Astro.site ?? Astro.url).href;
+const alternateUrl = alternateHref
+  ? new URL(alternateHref, Astro.site ?? Astro.url).href
+  : undefined;
+const alternateLang = lang === "es" ? "en" : "es";
+const xDefaultUrl = lang === "es" && alternateUrl ? alternateUrl : Astro.url.href;
+const nav = lang === "es"
+  ? {
+      home: "Inicio",
+      docs: "Docs",
+      components: "Componentes",
+      blocks: "Bloques",
+      charts: "Gráficos",
+      demos: "Demos",
+      create: "Crear",
+      typeset: "Tipografía",
+      primary: "Principal",
+      menu: "Menú",
+      toggleMenu: "Abrir o cerrar el menú",
+      toggleTheme: "Cambiar tema",
+      new: "Nuevo",
+      newProject: "Nuevo proyecto",
+    }
+  : {
+      home: "Home",
+      docs: "Docs",
+      components: "Components",
+      blocks: "Blocks",
+      charts: "Charts",
+      demos: "Demos",
+      create: "Create",
+      typeset: "Typeset",
+      primary: "Primary",
+      menu: "Menu",
+      toggleMenu: "Toggle menu",
+      toggleTheme: "Toggle theme",
+      new: "New",
+      newProject: "New Project",
+    };
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,13 +82,18 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url.href} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content={image.endsWith(".png") ? "image/png" : "image/svg+xml"} />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={title} />
     <link rel="canonical" href={Astro.url.href} />
+    {alternateUrl && <link rel="alternate" hreflang={alternateLang} href={alternateUrl} />}
+    {alternateUrl && <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />}
     <link rel="icon" href="/logo-mark.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap.xml" />
     {/* Header wordmark: the three subsets weigh ~2.3 kB together and sit in the
@@ -85,34 +132,36 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
     <a
       href="#main"
       class="sr-only rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-[100]"
-      >Skip to content</a
+      >{lang === "es" ? "Saltar al contenido" : "Skip to content"}</a
     >
     <header
       class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur"
     >
       <div class={headerInner}>
-        <a href="/" class="flex items-center" aria-label="logic2b UI — home">
+        <a href="/" class="flex items-center">
           <span class="wordmark"
             >Logic<span class="wm-2b">2B</span><span class="wm-ui">UI</span></span
           >
         </a>
         <nav
+          aria-label={nav.primary}
           class="hidden flex-1 items-center gap-4 text-sm text-muted-foreground md:flex"
         >
-          <a href="/" class="transition-colors hover:text-foreground">Home</a>
-          <a href="/docs" class="transition-colors hover:text-foreground">Docs</a>
+          <a href="/" class="transition-colors hover:text-foreground">{nav.home}</a>
+          <a href="/docs" class="transition-colors hover:text-foreground">{nav.docs}</a>
           <a href="/docs/components" class="transition-colors hover:text-foreground"
-            >Components</a
+            >{nav.components}</a
           >
-          <a href="/blocks" class="transition-colors hover:text-foreground">Blocks</a>
+          <a href="/blocks" class="transition-colors hover:text-foreground">{nav.blocks}</a>
           <a href="/charts/area" class="transition-colors hover:text-foreground"
-            >Charts</a
+            >{nav.charts}</a
           >
-          <a href="/create" class="transition-colors hover:text-foreground">Create</a>
-          <a href="/typeset" class="transition-colors hover:text-foreground">Typeset</a>
+          <a href="/demos" class="transition-colors hover:text-foreground">{nav.demos}</a>
+          <a href="/create" class="transition-colors hover:text-foreground">{nav.create}</a>
+          <a href="/typeset" class="transition-colors hover:text-foreground">{nav.typeset}</a>
         </nav>
         <div class="ml-auto flex items-center gap-1">
-          <CommandMenu client:idle items={searchItems} />
+          <CommandMenu client:idle items={searchItems} locale={lang} />
           <a
             href="https://github.com/amariner/logic2b-ui"
             target="_blank"
@@ -124,7 +173,7 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
           </a>
           <button
             id="theme-toggle"
-            aria-label="Toggle theme"
+            aria-label={nav.toggleTheme}
             class="btn btn-icon btn-ghost"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
@@ -148,13 +197,13 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
             ) : (
               <a href="/create" class="btn btn-primary ml-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14" /></svg>
-                New
+                  {nav.new}
               </a>
             )
           }
           <button
             id="mobile-menu-toggle"
-            aria-label="Toggle menu"
+            aria-label={nav.toggleMenu}
             aria-expanded="false"
             aria-controls="mobile-menu"
             class="btn btn-icon btn-ghost ml-1 md:hidden"
@@ -168,18 +217,19 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
         id="mobile-menu"
         class="hidden max-h-[calc(100dvh-3.5rem)] flex-col gap-1 overflow-y-auto border-t border-border/40 bg-background px-4 py-4 text-base shadow-lg md:!hidden"
       >
-        <p class="px-3 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Menu</p>
-        <a href="/" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Home</a>
-        <a href="/docs" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Docs</a>
-        <a href="/docs/components" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Components</a>
-        <a href="/blocks" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Blocks</a>
-        <a href="/charts/area" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Charts</a>
-        <a href="/create" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Create</a>
-        <a href="/typeset" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">Typeset</a>
+        <p class="px-3 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">{nav.menu}</p>
+        <a href="/" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.home}</a>
+        <a href="/docs" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.docs}</a>
+        <a href="/docs/components" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.components}</a>
+        <a href="/blocks" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.blocks}</a>
+        <a href="/charts/area" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.charts}</a>
+        <a href="/demos" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.demos}</a>
+        <a href="/create" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.create}</a>
+        <a href="/typeset" class="rounded-md px-3 py-2.5 font-medium transition-colors hover:bg-accent">{nav.typeset}</a>
         <div class="mt-2 border-t border-border/40 pt-3">
           <a href="/create" class="btn btn-primary w-full">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14" /></svg>
-            New Project
+            {nav.newProject}
           </a>
         </div>
       </nav>

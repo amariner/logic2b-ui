@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "chart-radar-01",
+  "type": "registry:block",
+  "title": "Radar Chart",
+  "description": "A radar chart plotting one series across categorical axes on a polar grid. Use it to compare a profile of values across dimensions.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "card",
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "charts/chart-radar-01.tsx",
+      "type": "registry:block",
+      "content": "import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from \"recharts\"\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\"\nimport {\n  ChartContainer,\n  ChartTooltip,\n  ChartTooltipContent,\n  type ChartConfig,\n} from \"@/components/ui/chart\"\n\nconst chartData = [\n  { month: \"January\", desktop: 186 },\n  { month: \"February\", desktop: 305 },\n  { month: \"March\", desktop: 237 },\n  { month: \"April\", desktop: 273 },\n  { month: \"May\", desktop: 209 },\n  { month: \"June\", desktop: 214 },\n]\n\nconst chartConfig = {\n  desktop: {\n    label: \"Desktop\",\n    color: \"var(--chart-1)\",\n  },\n} satisfies ChartConfig\n\nexport default function ChartRadar01() {\n  return (\n    <Card>\n      <CardHeader className=\"items-center pb-4\">\n        <CardTitle>Radar Chart</CardTitle>\n        <CardDescription>January - June 2024</CardDescription>\n      </CardHeader>\n      <CardContent className=\"pb-0\">\n        <ChartContainer\n          config={chartConfig}\n          className=\"mx-auto aspect-square max-h-[250px]\"\n        >\n          <RadarChart data={chartData}>\n            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />\n            <PolarGrid />\n            <PolarAngleAxis dataKey=\"month\" />\n            <Radar\n              dataKey=\"desktop\"\n              fill=\"var(--color-desktop)\"\n              fillOpacity={0.6}\n              stroke=\"var(--color-desktop)\"\n            />\n          </RadarChart>\n        </ChartContainer>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "charts",
+    "charts-radar"
+  ]
+}

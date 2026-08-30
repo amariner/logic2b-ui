@@ -346,6 +346,15 @@ export const FLOWS: Record<string, string> = {
   relaxed: "1.25em",
 }
 
+export const ICON_LIBRARIES = {
+  lucide: { label: "Lucide", package: "lucide-react" },
+  tabler: { label: "Tabler", package: "@tabler/icons-react" },
+  phosphor: { label: "Phosphor", package: "@phosphor-icons/react" },
+  hugeicons: { label: "Hugeicons", package: "@hugeicons/react" },
+} as const
+
+export type IconLibrary = keyof typeof ICON_LIBRARIES
+
 /* -- Config + serialization -- */
 export interface ThemeConfig {
   base: string
@@ -364,6 +373,8 @@ export interface ThemeConfig {
   leading: string
   /** Block rhythm (space between paragraphs/elements). */
   flow: string
+  /** Icon package used when registry sources are installed or scaffolded. */
+  iconLibrary: IconLibrary
 }
 
 export const DEFAULT_CONFIG: ThemeConfig = {
@@ -378,12 +389,13 @@ export const DEFAULT_CONFIG: ThemeConfig = {
   size: "default",
   leading: "default",
   flow: "default",
+  iconLibrary: "lucide",
 }
 
 /** Compact, URL-safe preset id: base64url of the ordered config values.
  *
- *  `ORDER` grew from 6 fields (color/radius/font) to 11 (added the /typeset
- *  studio's mono/measure/size/leading/flow) without breaking preset ids
+ *  `ORDER` grew from 6 fields (color/radius/font) to 12 (added the /typeset
+ *  studio's mono/measure/size/leading/flow and the icon library) without breaking preset ids
  *  minted before the typeset fields existed: `decodePreset` accepts any
  *  length from `LEGACY_LENGTH` up to `ORDER.length` and pads whatever's
  *  missing from `DEFAULT_CONFIG`, so a 6-field id shared before this change
@@ -401,6 +413,7 @@ const ORDER: (keyof ThemeConfig)[] = [
   "size",
   "leading",
   "flow",
+  "iconLibrary",
 ]
 
 const LEGACY_LENGTH = 6
@@ -423,7 +436,7 @@ export function decodePreset(id: string): ThemeConfig | null {
   if (parts.length < LEGACY_LENGTH || parts.length > ORDER.length) return null
   const cfg = { ...DEFAULT_CONFIG }
   ORDER.forEach((k, i) => {
-    if (parts[i] !== undefined) cfg[k] = parts[i]
+    if (parts[i] !== undefined) Object.assign(cfg, { [k]: parts[i] })
   })
   // Validate against known tables; theme and chart also accept a custom
   // "h<hue>c<chroma>" key.
@@ -438,6 +451,7 @@ export function decodePreset(id: string): ThemeConfig | null {
   if (!SIZES[cfg.size]) return null
   if (!LEADINGS[cfg.leading]) return null
   if (!FLOWS[cfg.flow]) return null
+  if (!ICON_LIBRARIES[cfg.iconLibrary]) return null
   return cfg
 }
 

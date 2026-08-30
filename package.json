@@ -10,7 +10,12 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
-    "test": "turbo test"
+    "test": "turbo test",
+    "test:release-artifacts": "pnpm --filter @logic2b/mcp test:release-artifacts",
+    "benchmark:frameworks": "pnpm --dir benchmarks/frameworks benchmark",
+    "benchmark:agents:test": "pnpm --dir benchmarks/agents test",
+    "benchmark:agents:run": "pnpm --dir benchmarks/agents benchmark",
+    "benchmark:agents:score": "pnpm --dir benchmarks/agents score"
   },
   "devDependencies": {
     "turbo": "^2"

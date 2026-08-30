@@ -1,0 +1,81 @@
+---
+title: Gráfico
+description: Gráficos componibles basados en Recharts y tematizados con tus tokens CSS.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="chart-area-01" wide install locale="es" />
+
+Los gráficos forman una capa fina y componible sobre [Recharts](https://recharts.org). Tú aportas sus primitivas; logic2b añade `ChartContainer`, el tipo `ChartConfig` que vincula cada serie con una etiqueta y un color, y `ChartTooltip` y `ChartLegend` compatibles con el tema. Los colores proceden de los tokens `--chart-1…5`, por lo que se adaptan automáticamente a los modos claro y oscuro.
+
+## Instalación
+
+<Install name="chart" locale="es" />
+
+¿Prefieres un gráfico ya preparado? Todos los ejemplos de esta página y de la [galería de gráficos](/charts/area) son elementos instalables del registro. Por ejemplo, `npx logic2b@latest add chart-area-01` copia el gráfico completo en `components/charts/`.
+
+## Uso
+
+```tsx
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+
+const chartData = [
+  { month: "Enero", desktop: 186 },
+  { month: "Febrero", desktop: 305 },
+  { month: "Marzo", desktop: 237 },
+]
+
+const chartConfig = {
+  desktop: { label: "Escritorio", color: "var(--chart-1)" },
+} satisfies ChartConfig
+
+export function Example() {
+  return (
+    <ChartContainer config={chartConfig} className="h-[240px] w-full">
+      <AreaChart data={chartData}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Area dataKey="desktop" fill="var(--color-desktop)" stroke="var(--color-desktop)" />
+      </AreaChart>
+    </ChartContainer>
+  )
+}
+```
+
+Cada clave de `chartConfig` se convierte en una variable CSS `--color-<clave>` dentro del contenedor. Usa `var(--color-desktop)` en vez de fijar un color manualmente.
+
+## Ejemplos
+
+### Barras
+
+<ComponentPreview name="chart-bar-01" wide install locale="es" />
+
+### Líneas con varias series
+
+<ComponentPreview name="chart-line-02" wide install locale="es" />
+
+### Área apilada
+
+<ComponentPreview name="chart-area-02" wide install locale="es" />
+
+### Radar
+
+<ComponentPreview name="chart-radar-01" wide install locale="es" />
+
+### Radial
+
+<ComponentPreview name="chart-radial-01" wide install locale="es" />
+
+### Anillo
+
+<ComponentPreview name="chart-pie-02" wide install locale="es" />

@@ -232,6 +232,27 @@ export const items: RegistryItem[] = [
     files: [{ path: "src/blocks/footer-01/footer.tsx", type: "registry:block" }],
   },
   {
+    name: "landing-page-01",
+    type: "registry:block",
+    title: "Complete marketing landing page",
+    description:
+      "A complete, responsive landing page that composes the canonical navbar, animated hero, animated feature grid, call to action and footer. Install one item to get the whole marketing surface and every transitive dependency.",
+    categories: ["marketing"],
+    registryDependencies: [
+      "navbar-01",
+      "hero-01-animated",
+      "feature-grid-01-animated",
+      "cta-01",
+      "footer-01",
+    ],
+    files: [
+      {
+        path: "src/blocks/landing-page-01/landing-page.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
     name: "chat-01",
     type: "registry:block",
     title: "Chat",
@@ -241,6 +262,61 @@ export const items: RegistryItem[] = [
     dependencies: ["lucide-react"],
     registryDependencies: ["avatar", "button", "card", "input"],
     files: [{ path: "src/blocks/chat-01/chat.tsx", type: "registry:block" }],
+  },
+  {
+    name: "ai-chat-01",
+    type: "registry:block",
+    title: "AI chat workspace",
+    description:
+      "A responsive AI conversation workspace with token context, accessible message history, prompt composer, deterministic streaming, stop and continue states, and a context rail. Use for copilots, assistants or agent products.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils", "avatar", "badge", "button", "separator", "textarea"],
+    files: [
+      {
+        path: "src/blocks/ai-chat-01/ai-chat.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "mail-client-01",
+    type: "registry:block",
+    title: "Mail client",
+    description:
+      "A responsive three-pane mail client with folder navigation, search, message selection, unread and label states, a complete reading view and interactive starring. Use as an inbox or team communication surface.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "utils",
+      "avatar",
+      "badge",
+      "button",
+      "input",
+      "separator",
+    ],
+    files: [
+      {
+        path: "src/blocks/mail-client-01/mail-client.tsx",
+        type: "registry:block",
+      },
+    ],
+  },
+  {
+    name: "calendar-app-01",
+    type: "registry:block",
+    title: "Calendar application",
+    description:
+      "A responsive team calendar with month navigation, filterable calendars, event selection, a scroll-safe month grid and an event detail rail. Use for scheduling, planning or resource-management products.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils", "avatar", "badge", "button", "separator"],
+    files: [
+      {
+        path: "src/blocks/calendar-app-01/calendar-app.tsx",
+        type: "registry:block",
+      },
+    ],
   },
   {
     name: "team-01",

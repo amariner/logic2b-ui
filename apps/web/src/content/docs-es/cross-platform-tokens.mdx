@@ -1,0 +1,57 @@
+---
+title: Tokens multiplataforma
+description: Exporta un preset de logic2b a JSON DTCG, CSS, Swift para iOS y recursos Android.
+---
+
+Las tablas de temas de `@logic2b/tokens` son la única fuente para los tokens de
+diseño web y nativos. Un id de preset creado en `/create` resuelve los mismos
+roles semánticos claros y oscuros en todas las plataformas.
+
+## Artefactos predeterminados publicados
+
+El tema por defecto se genera con Style Dictionary 5.5.2 fijado exactamente y
+se sirve como artefactos estáticos con integridad basada en contenido:
+
+| Artefacto | Ruta |
+| --- | --- |
+| Manifiesto e integridad SHA-256 | [`/tokens/default/manifest.json`](/tokens/default/manifest.json) |
+| Fuente portable con forma DTCG | [`/tokens/default/logic2b.tokens.json`](/tokens/default/logic2b.tokens.json) |
+| Propiedades CSS personalizadas | [`/tokens/default/logic2b.css`](/tokens/default/logic2b.css) |
+| Recursos Android claros | [`/tokens/default/android/values/logic2b_tokens.xml`](/tokens/default/android/values/logic2b_tokens.xml) |
+| Recursos Android oscuros | [`/tokens/default/android/values-night/logic2b_tokens.xml`](/tokens/default/android/values-night/logic2b_tokens.xml) |
+| Tokens iOS claros | [`/tokens/default/ios/Logic2bLightTokens.swift`](/tokens/default/ios/Logic2bLightTokens.swift) |
+| Tokens iOS oscuros | [`/tokens/default/ios/Logic2bDarkTokens.swift`](/tokens/default/ios/Logic2bDarkTokens.swift) |
+
+CSS conserva los colores OKLCH originales. Las salidas nativas usan
+conversiones sRGB deterministas y limitadas al gamut: Android recibe recursos
+`values` y `values-night`, e iOS clases `UIColor` claras y oscuras. El radio se
+convierte de `0.625rem` a 10 puntos de plataforma. Las pilas tipográficas se
+mantienen en JSON y CSS porque registrar una fuente nativa depende de la app.
+
+## Exporta cualquier preset mediante MCP
+
+Llama a `export_tokens` con un id de preset de `/create`, o con las mismas
+opciones explícitas que acepta `apply_preset`:
+
+```json
+{
+  "preset": "<preset-id>"
+}
+```
+
+La respuesta es un paquete portable con tres espacios: `global` para radio y
+tipografía, más `light` y `dark` para colores semánticos. Puedes entregarlo a
+Style Dictionary u otro pipeline compatible con DTCG sin extraer CSS.
+
+## Regenera desde el repositorio
+
+Los contribuidores pueden emitir los artefactos predeterminados o un preset
+personalizado en otro directorio:
+
+```bash
+pnpm --filter @logic2b/tokens build
+pnpm --filter @logic2b/tokens build -- --preset <preset-id> --out-dir ./build/tokens
+```
+
+El build es determinista. CI verifica cada archivo contra el manifiesto SHA-256
+y contra las tablas de tokens compartidas actuales.

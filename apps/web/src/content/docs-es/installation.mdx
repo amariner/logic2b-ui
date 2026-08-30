@@ -1,0 +1,106 @@
+---
+title: Instalación
+description: Configura tu proyecto y empieza a usar los componentes de logic2b ui.
+---
+
+## Requisitos
+
+- React 18 o posterior (React 19 recomendado)
+- Tailwind CSS v4
+
+## 1. Instala las dependencias base
+
+```bash
+pnpm add clsx tailwind-merge class-variance-authority radix-ui lucide-react
+```
+
+## 2. Añade el helper cn()
+
+Crea `src/lib/utils.ts`:
+
+```ts
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+También puedes instalarlo desde el registro:
+
+```bash
+npx logic2b@latest add utils
+```
+
+## 3. Añade los tokens del tema
+
+Copia las variables CSS de la página de [Temas](/es/docs/theming) a tu hoja de
+estilos global. Los componentes usan tokens como `bg-primary` y
+`text-muted-foreground`; sin ellos el diseño no será correcto.
+
+## 4. Añade componentes
+
+```bash
+npx logic2b@latest add button
+```
+
+También puedes copiar el código desde cualquier página de componente.
+
+Para instalar una superficie de marketing completa como una sola composición:
+
+```bash
+npx logic2b@latest add landing-page-01
+```
+
+El registro resuelve de forma transitiva su navbar, hero animado, cuadrícula de
+funcionalidades, CTA y footer. Cada pieza sigue siendo instalable y actualizable
+por separado.
+
+## Instalaciones versionadas y actualizaciones seguras
+
+Inicializa el proyecto para fijar la versión exacta del registro:
+
+```bash
+npx logic2b@latest init
+npx logic2b@latest add button card
+npx logic2b@latest status
+```
+
+`init` escribe `logic2b.version` en `components.json`. Cada instalación también
+queda registrada en `.logic2b/manifest.json` con la versión resuelta, la
+integridad SHA-256 de cada elemento y sus archivos. Así los mismos datos de
+entrada se pueden reproducir aunque un canal avance más tarde.
+
+Los presets de [/create](/create) también guardan la librería de iconos. Elige
+Lucide, Tabler, Phosphor o Hugeicons; `init --preset <id>` conserva la selección
+como `iconLibrary`, y `add`/`update` reescriben juntos imports, dependencias npm y
+snapshots de mezcla.
+
+Puedes seleccionar una versión exacta, un rango semver o un canal publicado:
+
+```bash
+npx logic2b@latest add button --registry-version 1.0.0-rc.16
+npx logic2b@latest status --registry-version next
+npx logic2b@latest update --registry-version "^1.0.0"
+```
+
+`logic2b update` solo considera los elementos registrados en el manifiesto, a
+menos que indiques nombres. Realiza una mezcla de tres vías contra el snapshot
+capturado al instalar: actualiza archivos intactos, conserva cambios locales,
+mezcla cambios compatibles y marca los solapamientos para revisión. Consulta
+`/r/changelog/<name>.json` antes de ampliar un rango.
+
+## Uso con un asistente de IA
+
+Cada bloque de instalación incluye una pestaña **Agent** y el estudio de temas
+incluye una vista **Prompt**. Un asistente conectado al MCP de logic2b puede
+partir de un directorio vacío: pídele que use `scaffold_plan` con un framework
+(`next`, `vite` o `astro`) y un starter (`marketing`, `dashboard` o `auth`). La
+respuesta contiene todos los archivos, el tema, dependencias transitivas y la
+integridad de la versión resuelta.
+
+## Alias de rutas
+
+Los componentes importan desde `@/lib/utils` y `@/components/ui/*`. Configura
+el alias `@` en `tsconfig.json` y en tu bundler para que apunte a `src/`.

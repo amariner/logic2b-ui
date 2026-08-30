@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "use-in-view",
+  "type": "registry:hook",
+  "title": "useInView",
+  "description": "A React hook that tracks whether an element is scrolled into view via IntersectionObserver. Returns [ref, inView] with `once`, `amount` (threshold), `margin` (rootMargin) and a `root` scroll-container option. Falls back to visible when IntersectionObserver is unavailable. Powers scroll-reveal.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "hooks/use-in-view.ts",
+      "type": "registry:hook",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nexport interface UseInViewOptions {\n  /** Stop observing after the first time the element enters view. Default `true`. */\n  once?: boolean\n  /** Fraction of the element that must be visible to count as in view (0–1).\n   *  Default `0.3`. */\n  amount?: number\n  /** IntersectionObserver `rootMargin`, e.g. `\"-10% 0px\"`. Default `\"0px\"`. */\n  margin?: string\n  /** Scroll container to observe within. Defaults to the viewport. */\n  root?: React.RefObject<Element | null>\n}\n\n/**\n * Tracks whether the referenced element is scrolled into view, via\n * IntersectionObserver. Returns `[ref, inView]`. Falls back to `true` when\n * IntersectionObserver is unavailable (old browsers / SSR consumers) so content\n * is never trapped hidden.\n */\nexport function useInView<T extends Element = HTMLDivElement>(\n  options: UseInViewOptions = {}\n): [React.RefObject<T | null>, boolean] {\n  const { once = true, amount = 0.3, margin = \"0px\", root } = options\n  const ref = React.useRef<T>(null)\n  const [inView, setInView] = React.useState(false)\n\n  React.useEffect(() => {\n    const el = ref.current\n    if (!el) return\n    if (typeof IntersectionObserver === \"undefined\") {\n      setInView(true)\n      return\n    }\n\n    const observer = new IntersectionObserver(\n      ([entry]) => {\n        if (entry.isIntersecting) {\n          setInView(true)\n          if (once) observer.disconnect()\n        } else if (!once) {\n          setInView(false)\n        }\n      },\n      { threshold: amount, rootMargin: margin, root: root?.current ?? null }\n    )\n\n    observer.observe(el)\n    return () => observer.disconnect()\n  }, [once, amount, margin, root])\n\n  return [ref, inView]\n}\n"
+    }
+  ]
+}

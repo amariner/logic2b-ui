@@ -33,6 +33,7 @@ export default function ComboboxDemo() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          aria-label="Select framework"
           variant="outline"
           role="combobox"
           aria-expanded={open}

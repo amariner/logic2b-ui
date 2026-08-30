@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "kanban-01",
+  "type": "registry:block",
+  "title": "Kanban board",
+  "description": "A three-column kanban board (to do / in progress / done) with cards you drag between columns, using native HTML5 drag-and-drop — no dependencies. Columns show a live count and highlight while a card is dragged over them. Use as the base for a task board or pipeline view.",
+  "registryDependencies": [
+    "utils",
+    "badge"
+  ],
+  "files": [
+    {
+      "path": "blocks/kanban-01/kanban.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Badge } from \"@/components/ui/badge\"\n\ntype Task = { id: string; title: string; tag?: string }\ntype ColumnId = \"todo\" | \"doing\" | \"done\"\n\nconst COLUMNS: { id: ColumnId; title: string }[] = [\n  { id: \"todo\", title: \"To do\" },\n  { id: \"doing\", title: \"In progress\" },\n  { id: \"done\", title: \"Done\" },\n]\n\nconst INITIAL: Record<ColumnId, Task[]> = {\n  todo: [\n    { id: \"t1\", title: \"Draft the launch post\", tag: \"Marketing\" },\n    { id: \"t2\", title: \"Audit color contrast\", tag: \"A11y\" },\n  ],\n  doing: [\n    { id: \"t3\", title: \"Wire up the MCP endpoint\", tag: \"Backend\" },\n    { id: \"t4\", title: \"Motion presets\", tag: \"Design\" },\n  ],\n  done: [{ id: \"t5\", title: \"Ship the registry\", tag: \"Platform\" }],\n}\n\nexport function Kanban({ className, ...props }: React.ComponentProps<\"div\">) {\n  const [columns, setColumns] = React.useState(INITIAL)\n  const [dragging, setDragging] = React.useState<{\n    task: Task\n    from: ColumnId\n  } | null>(null)\n  const [over, setOver] = React.useState<ColumnId | null>(null)\n\n  const drop = (to: ColumnId) => {\n    setOver(null)\n    if (!dragging) return\n    const { task, from } = dragging\n    setDragging(null)\n    if (from === to) return\n    setColumns((prev) => ({\n      ...prev,\n      [from]: prev[from].filter((t) => t.id !== task.id),\n      [to]: [...prev[to], task],\n    }))\n  }\n\n  return (\n    <div\n      className={cn(\n        \"mx-auto grid w-full max-w-5xl gap-4 px-6 py-10 sm:grid-cols-3\",\n        className\n      )}\n      {...props}\n    >\n      {COLUMNS.map((column) => (\n        <div\n          key={column.id}\n          data-over={over === column.id ? \"\" : undefined}\n          onDragOver={(e) => {\n            e.preventDefault()\n            setOver(column.id)\n          }}\n          onDragLeave={(e) => {\n            if (!e.currentTarget.contains(e.relatedTarget as Node))\n              setOver((c) => (c === column.id ? null : c))\n          }}\n          onDrop={() => drop(column.id)}\n          className=\"bg-muted/30 data-over:border-ring data-over:bg-accent/40 flex flex-col rounded-lg border p-3 transition-colors\"\n        >\n          <div className=\"mb-3 flex items-center justify-between\">\n            <h3 className=\"text-sm font-medium\">{column.title}</h3>\n            <Badge variant=\"secondary\" className=\"tabular-nums\">\n              {columns[column.id].length}\n            </Badge>\n          </div>\n          <div className=\"flex min-h-16 flex-col gap-2\">\n            {columns[column.id].map((task) => (\n              <div\n                key={task.id}\n                draggable\n                onDragStart={() => setDragging({ task, from: column.id })}\n                onDragEnd={() => {\n                  setDragging(null)\n                  setOver(null)\n                }}\n                data-slot=\"kanban-card\"\n                className=\"bg-card cursor-grab rounded-md border p-3 shadow-xs transition-shadow hover:shadow-md active:cursor-grabbing\"\n              >\n                <p className=\"text-sm font-medium\">{task.title}</p>\n                {task.tag && (\n                  <Badge variant=\"outline\" className=\"mt-2 text-xs\">\n                    {task.tag}\n                  </Badge>\n                )}\n              </div>\n            ))}\n          </div>\n        </div>\n      ))}\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "application"
+  ]
+}

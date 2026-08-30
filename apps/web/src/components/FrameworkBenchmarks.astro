@@ -1,0 +1,77 @@
+---
+import benchmark from "../../../../benchmarks/frameworks/results/latest.json";
+
+interface Props {
+  locale?: "en" | "es";
+}
+
+const { locale = "en" } = Astro.props;
+
+const format = (value: number) =>
+  new Intl.NumberFormat(locale === "es" ? "es-ES" : "en-US", { maximumFractionDigits: 1 }).format(value);
+const generated = new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-GB", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  timeZone: "UTC",
+}).format(new Date(benchmark.generatedAt));
+const copy = locale === "es"
+  ? {
+      framework: "Framework",
+      build: "Build ms",
+      client: "Cliente gzip",
+      transferred: "JS transferido",
+      hydration: "Hidratación lista",
+      runs: "Mediana de",
+      runsSuffix: "ejecuciones. Generado",
+      lower: "Menos es mejor. Versiones exactas:",
+      cores: "núcleos lógicos",
+    }
+  : {
+      framework: "Framework",
+      build: "Build ms",
+      client: "Client gzip",
+      transferred: "JS transferred",
+      hydration: "Hydration ready",
+      runs: "Median of",
+      runsSuffix: "runs. Generated",
+      lower: "Lower is better. Exact versions:",
+      cores: "logical cores",
+    };
+---
+
+<div class="not-prose mt-6 overflow-x-auto rounded-lg border">
+  <table class="w-full text-sm">
+    <thead class="bg-muted/50 text-left">
+      <tr>
+        <th class="px-3 py-2 font-medium">{copy.framework}</th>
+        <th class="px-3 py-2 text-right font-medium">{copy.build}</th>
+        <th class="px-3 py-2 text-right font-medium">{copy.client}</th>
+        <th class="px-3 py-2 text-right font-medium">{copy.transferred}</th>
+        <th class="px-3 py-2 text-right font-medium">{copy.hydration}</th>
+        <th class="px-3 py-2 text-right font-medium">LCP</th>
+        <th class="px-3 py-2 text-right font-medium">TTFB</th>
+      </tr>
+    </thead>
+    <tbody>
+      {benchmark.results.map((result) => (
+        <tr class="border-t">
+          <td class="whitespace-nowrap px-3 py-2 font-medium">{result.framework}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{format(result.buildMs)}</td>
+          <td class="px-3 py-2 text-right tabular-nums">{format(result.clientGzipKiB)} KiB</td>
+          <td class="px-3 py-2 text-right tabular-nums">{format(result.transferredJsKiB)} KiB</td>
+          <td class="px-3 py-2 text-right tabular-nums">{format(result.hydrationReadyMs)} ms</td>
+          <td class="px-3 py-2 text-right tabular-nums">{format(result.lcpMs)} ms</td>
+          <td class="px-3 py-2 text-right tabular-nums">{format(result.ttfbMs)} ms</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-3 text-xs text-muted-foreground">
+  {copy.runs} {benchmark.runs} {copy.runsSuffix} {generated} UTC — {benchmark.host.cpu}
+  ({benchmark.host.cores} {copy.cores}). {copy.lower}
+  {Object.entries(benchmark.versions).map(([name, version], index) => (
+    <>{index ? ", " : " "}{name} {version}</>
+  ))}.
+</p>

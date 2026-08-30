@@ -14,6 +14,8 @@ export interface FileDropzoneProps
   /** Allow selecting more than one file. Default `false`. */
   multiple?: boolean
   disabled?: boolean
+  /** Accessible name for the native file input. Default `"Upload files"`. */
+  inputLabel?: string
   /** Replace the default icon/prompt with your own content. */
   children?: React.ReactNode
 }
@@ -30,6 +32,7 @@ function FileDropzone({
   accept,
   multiple = false,
   disabled,
+  inputLabel = "Upload files",
   children,
   ...props
 }: FileDropzoneProps) {
@@ -46,42 +49,12 @@ function FileDropzone({
   }
 
   return (
-    <div
-      data-slot="file-dropzone"
-      data-dragging={dragging ? "" : undefined}
-      data-disabled={disabled ? "" : undefined}
-      role="button"
-      tabIndex={disabled ? -1 : 0}
-      aria-disabled={disabled}
-      onClick={open}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          open()
-        }
-      }}
-      onDragOver={(e) => {
-        e.preventDefault()
-        if (!disabled) setDragging(true)
-      }}
-      onDragLeave={() => setDragging(false)}
-      onDrop={(e) => {
-        e.preventDefault()
-        setDragging(false)
-        if (!disabled) emit(e.dataTransfer.files)
-      }}
-      className={cn(
-        "border-input flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-8 text-center transition-colors outline-none",
-        "hover:bg-accent/40 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "data-dragging:border-ring data-dragging:bg-accent/60",
-        "data-disabled:pointer-events-none data-disabled:opacity-50",
-        className
-      )}
-      {...props}
-    >
+    <>
       <input
         ref={inputRef}
         type="file"
+        tabIndex={-1}
+        aria-label={inputLabel}
         accept={accept}
         multiple={multiple}
         disabled={disabled}
@@ -91,16 +64,50 @@ function FileDropzone({
           e.target.value = ""
         }}
       />
-      {children ?? (
-        <>
-          <UploadIcon className="text-muted-foreground size-6" />
-          <div className="text-sm">
-            <span className="font-medium">Click to upload</span>
-            <span className="text-muted-foreground"> or drag and drop</span>
-          </div>
-        </>
-      )}
-    </div>
+      <div
+        data-slot="file-dropzone"
+        data-dragging={dragging ? "" : undefined}
+        data-disabled={disabled ? "" : undefined}
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-disabled={disabled}
+        onClick={open}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            open()
+          }
+        }}
+        onDragOver={(e) => {
+          e.preventDefault()
+          if (!disabled) setDragging(true)
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault()
+          setDragging(false)
+          if (!disabled) emit(e.dataTransfer.files)
+        }}
+        className={cn(
+          "border-input flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-8 text-center transition-colors outline-none",
+          "hover:bg-accent/40 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+          "data-dragging:border-ring data-dragging:bg-accent/60",
+          "data-disabled:pointer-events-none data-disabled:opacity-50",
+          className
+        )}
+        {...props}
+      >
+        {children ?? (
+          <>
+            <UploadIcon className="text-muted-foreground size-6" />
+            <div className="text-sm">
+              <span className="font-medium">Click to upload</span>
+              <span className="text-muted-foreground"> or drag and drop</span>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   )
 }
 

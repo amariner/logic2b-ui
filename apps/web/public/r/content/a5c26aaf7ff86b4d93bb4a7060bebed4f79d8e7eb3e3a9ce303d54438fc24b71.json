@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "hero-01-animated",
+  "type": "registry:block",
+  "title": "Marketing hero (animated)",
+  "description": "The animated twin of hero-01: the same centered marketing hero, revealed as a staggered fade-up on mount. Drop-in replacement — same Hero export. Built on the motion engine (tw-animate-css), respects prefers-reduced-motion.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "badge",
+    "button",
+    "motion"
+  ],
+  "files": [
+    {
+      "path": "blocks/hero-01-animated/hero.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\nimport { ArrowRightIcon, StarIcon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Badge } from \"@/components/ui/badge\"\nimport { Button } from \"@/components/ui/button\"\nimport { Motion } from \"@/components/ui/motion\"\n\n// The animated twin of hero-01: identical markup, revealed as a staggered\n// fade-up on mount. Each direct child is wrapped with <Motion asChild> so the\n// animation rides the existing element (no extra layout node) and the delays\n// cascade top to bottom. Respects prefers-reduced-motion via the motion engine.\nexport function Hero({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\n        \"mx-auto flex w-full max-w-4xl flex-col items-center gap-6 px-6 py-24 text-center\",\n        className\n      )}\n      {...props}\n    >\n      <Motion asChild preset=\"fade-up\" delay={0}>\n        <Badge variant=\"secondary\" className=\"gap-1.5 rounded-full\">\n          <StarIcon className=\"size-3\" />\n          v0.2 is out\n        </Badge>\n      </Motion>\n      <Motion asChild preset=\"fade-up\" delay={90}>\n        <h1 className=\"font-heading max-w-3xl text-4xl font-bold tracking-tighter text-balance md:text-6xl md:leading-[1.05]\">\n          The design system that ships with the code\n        </h1>\n      </Motion>\n      <Motion asChild preset=\"fade-up\" delay={180}>\n        <p className=\"text-muted-foreground max-w-xl text-lg text-balance\">\n          A monochrome, dark-first component registry you copy into your project.\n          Open source, framework-agnostic, and built to be read by humans and\n          agents alike.\n        </p>\n      </Motion>\n      <Motion asChild preset=\"fade-up\" delay={270}>\n        <div className=\"flex flex-wrap items-center justify-center gap-3\">\n          <Button size=\"lg\">\n            Get started\n            <ArrowRightIcon className=\"size-4\" />\n          </Button>\n          <Button size=\"lg\" variant=\"outline\">\n            Browse components\n          </Button>\n        </div>\n      </Motion>\n      <Motion asChild preset=\"fade-up\" delay={360}>\n        <p className=\"text-muted-foreground font-mono text-xs\">\n          npx logic2b@latest init\n        </p>\n      </Motion>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "marketing"
+  ]
+}

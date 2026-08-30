@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-08-29T10:33:46.768Z",
+  "scenario": "stats-01-animated",
+  "runs": 5,
+  "profile": {
+    "cpuSlowdown": 4,
+    "latencyMs": 150,
+    "downloadKiBps": 195.3
+  },
+  "host": {
+    "platform": "darwin 25.2.0",
+    "cpu": "Apple M2",
+    "cores": 8
+  },
+  "versions": {
+    "Next.js": "16.3.3",
+    "Vite": "8.2.2",
+    "Astro": "7.2.9",
+    "TanStack Start": "1.168.49"
+  },
+  "results": [
+    {
+      "framework": "Next.js",
+      "buildMs": 5436.2,
+      "clientFiles": 11,
+      "clientRawKiB": 604.1,
+      "clientGzipKiB": 184.6,
+      "hydrationReadyMs": 1254.3,
+      "lcpMs": 468,
+      "transferredJsKiB": 143.5,
+      "ttfbMs": 2.3
+    },
+    {
+      "framework": "Vite",
+      "buildMs": 621.4,
+      "clientFiles": 2,
+      "clientRawKiB": 237.4,
+      "clientGzipKiB": 73.2,
+      "hydrationReadyMs": 822.4,
+      "lcpMs": 832,
+      "transferredJsKiB": 69.6,
+      "ttfbMs": 1.3
+    },
+    {
+      "framework": "Astro",
+      "buildMs": 1586.2,
+      "clientFiles": 4,
+      "clientRawKiB": 238.7,
+      "clientGzipKiB": 74.6,
+      "hydrationReadyMs": 981.9,
+      "lcpMs": 400,
+      "transferredJsKiB": 71.5,
+      "ttfbMs": 1.5
+    },
+    {
+      "framework": "TanStack Start",
+      "buildMs": 1208.2,
+      "clientFiles": 3,
+      "clientRawKiB": 355.9,
+      "clientGzipKiB": 112,
+      "hydrationReadyMs": 1043.3,
+      "lcpMs": 424,
+      "transferredJsKiB": 108.7,
+      "ttfbMs": 3.2
+    }
+  ]
+}

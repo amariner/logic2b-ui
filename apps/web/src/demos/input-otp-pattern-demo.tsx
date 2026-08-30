@@ -4,7 +4,11 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/registry/ui/input-otp"
 
 export default function InputOTPPatternDemo() {
   return (
-    <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS}>
+    <InputOTP
+      aria-label="Six-digit verification code"
+      maxLength={6}
+      pattern={REGEXP_ONLY_DIGITS}
+    >
       <InputOTPGroup>
         <InputOTPSlot index={0} />
         <InputOTPSlot index={1} />

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "hero-01",
+  "type": "registry:block",
+  "title": "Marketing hero",
+  "description": "A centered marketing hero with a badge, a large display headline, supporting copy and two calls to action. Use as the top of a landing page.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "badge",
+    "button"
+  ],
+  "files": [
+    {
+      "path": "blocks/hero-01/hero.tsx",
+      "type": "registry:block",
+      "content": "import * as React from \"react\"\nimport { ArrowRightIcon, StarIcon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Badge } from \"@/components/ui/badge\"\nimport { Button } from \"@/components/ui/button\"\n\nexport function Hero({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      className={cn(\n        \"mx-auto flex w-full max-w-4xl flex-col items-center gap-6 px-6 py-24 text-center\",\n        className\n      )}\n      {...props}\n    >\n      <Badge variant=\"secondary\" className=\"gap-1.5 rounded-full\">\n        <StarIcon className=\"size-3\" />\n        v0.2 is out\n      </Badge>\n      <h1 className=\"font-heading max-w-3xl text-4xl font-bold tracking-tighter text-balance md:text-6xl md:leading-[1.05]\">\n        The design system that ships with the code\n      </h1>\n      <p className=\"text-muted-foreground max-w-xl text-lg text-balance\">\n        A monochrome, dark-first component registry you copy into your project.\n        Open source, framework-agnostic, and built to be read by humans and\n        agents alike.\n      </p>\n      <div className=\"flex flex-wrap items-center justify-center gap-3\">\n        <Button size=\"lg\">\n          Get started\n          <ArrowRightIcon className=\"size-4\" />\n        </Button>\n        <Button size=\"lg\" variant=\"outline\">\n          Browse components\n        </Button>\n      </div>\n      <p className=\"text-muted-foreground font-mono text-xs\">\n        npx logic2b@latest init\n      </p>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "marketing"
+  ]
+}

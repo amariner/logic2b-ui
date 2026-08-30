@@ -1,0 +1,44 @@
+---
+title: Introducción
+description: Crea interfaces rápidamente con ayuda de IA. Componentes React que copias y haces tuyos.
+---
+
+logic2b ui es una colección de componentes React accesibles y cuidadosamente
+diseñados que copias dentro de tu proyecto. **No es una librería de componentes
+que instalas desde npm: el código es tuyo.**
+
+## Principios
+
+- **Código abierto.** Cada componente se entrega como código fuente. Léelo,
+  modifícalo y hazlo tuyo.
+- **Componible.** Construido sobre primitivas de
+  [Radix UI](https://www.radix-ui.com) y Tailwind CSS, con una API pequeña y
+  predecible.
+- **Preparado para IA.** El registro y la documentación pueden ser consumidos
+  por LLM: registro JSON en [/r/index.json](/r/index.json), versiones Markdown
+  de cada página y [/llms.txt](/llms.txt).
+- **Edge-first.** El sitio y el registro son estáticos y se sirven desde el edge
+  de Cloudflare.
+
+## Instala con un comando
+
+Cada componente está disponible desde el registro de logic2b mediante la CLI,
+que copia el código y resuelve sus dependencias:
+
+```bash
+npx logic2b@latest add button
+```
+
+El registro usa un formato JSON abierto y compatible con shadcn, por lo que
+otras herramientas y agentes también pueden consumirlo.
+
+## Por dónde continuar
+
+- [Instalación](/es/docs/installation) — prepara tu proyecto.
+- [Temas](/es/docs/theming) — variables CSS, modo oscuro y radio.
+- [Catálogo de componentes](/docs/components) — documentación completa en
+  inglés mientras avanza la traducción.
+- [Demos de starters](/demos) — ejecuta las composiciones completas generadas
+  por CLI y MCP.
+- [Índice para agentes en español](/es/llms.txt) — rutas Markdown de todas las
+  guías traducidas.

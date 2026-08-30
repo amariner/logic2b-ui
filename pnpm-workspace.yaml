@@ -1,6 +1,10 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "benchmarks/agents"
+# Installs are explicit (`pnpm install` / CI frozen-lockfile). Never mutate
+# node_modules as a side effect of lint, test, build or Turbo task execution.
+verifyDepsBeforeRun: false
 allowBuilds:
   esbuild: true
   sharp: true
