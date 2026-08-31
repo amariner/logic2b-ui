@@ -1,0 +1,55 @@
+---
+title: Panel lateral
+description: Extiende Dialog para mostrar contenido complementario al contenido principal de la pantalla.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="sheet-demo" locale="es" />
+
+## Instalación
+
+<Install name="sheet" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+
+<Sheet>
+  <SheetTrigger>Abrir</SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Editar perfil</SheetTitle>
+      <SheetDescription>Modifica aquí los datos de tu perfil.</SheetDescription>
+    </SheetHeader>
+  </SheetContent>
+</Sheet>
+```
+
+## Ejemplos
+
+### Desde cualquier lado
+
+<ComponentPreview name="sheet-sides-demo" locale="es" />
+
+### Panel de navegación
+
+<ComponentPreview name="sheet-navigation-demo" locale="es" />
+
+## Accesibilidad
+
+`Sheet` está construido sobre [Dialog de Radix](https://www.radix-ui.com/primitives/docs/components/dialog/), por lo que hereda el comportamiento de diálogo modal WAI-ARIA.
+
+- El foco queda contenido dentro del panel mientras está abierto y vuelve al disparador al cerrarse.
+- <kbd>Escape</kbd> o un clic en la capa exterior cierran el panel.
+- El contenido situado detrás queda inerte y oculto para los lectores de pantalla.
+- Incluye un `SheetTitle` y, preferiblemente, un `SheetDescription` para etiquetar correctamente el diálogo.

@@ -1,0 +1,42 @@
+---
+title: Alerta
+description: Muestra un aviso que requiere la atención del usuario.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="alert-demo" locale="es" />
+
+## Instalación
+
+<Install name="alert" locale="es" />
+
+## Uso
+
+```tsx
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+
+<Alert variant="destructive">
+  <AlertTitle>Error</AlertTitle>
+  <AlertDescription>Algo ha salido mal.</AlertDescription>
+</Alert>
+```
+
+## Notas de uso
+
+Un icono `svg` opcional como primer elemento se coloca automáticamente en su propia columna. `AlertTitle` y `AlertDescription` aceptan las propiedades estándar de un `div`.
+
+## Ejemplos
+
+### Con icono
+
+Añade un icono de Lucide como primer hijo para mostrarlo junto al título.
+
+<ComponentPreview name="alert-with-icon-demo" locale="es" />
+
+### Destructiva
+
+Usa `variant="destructive"` para señalar un estado de error.
+
+<ComponentPreview name="alert-destructive-demo" locale="es" />

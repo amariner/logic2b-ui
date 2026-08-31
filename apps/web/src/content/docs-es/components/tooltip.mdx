@@ -1,0 +1,46 @@
+---
+title: Descripción emergente
+description: Ventana emergente con información relacionada con un elemento al recibir el foco o pasar el puntero por encima.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="tooltip-demo" locale="es" />
+
+## Instalación
+
+<Install name="tooltip" locale="es" />
+
+## Uso
+
+```tsx
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+
+<Tooltip>
+  <TooltipTrigger>Pasa el cursor</TooltipTrigger>
+  <TooltipContent>Añadir a la biblioteca</TooltipContent>
+</Tooltip>
+```
+
+## Notas de uso
+
+`Tooltip` incluye su propio `TooltipProvider`, por lo que funciona de forma independiente. Envuelve la aplicación en un único `TooltipProvider` para compartir los retardos entre varias descripciones emergentes.
+
+`TooltipContent` también acepta propiedades de posición de Radix como `side` (`top \| right \| bottom \| left`) y `align`.
+
+## Ejemplos
+
+### Posiciones
+
+<ComponentPreview name="tooltip-sides-demo" locale="es" />
+
+### En un botón de icono
+
+<ComponentPreview name="tooltip-icon-demo" locale="es" />
+
+## Accesibilidad
+
+- Se abre al pasar el puntero y al recibir el foco de teclado en el disparador; se cierra con <kbd>Escape</kbd>.
+- Usa `TooltipTrigger asChild` para asociarla a un elemento interactivo real, como un `Button`, que pueda recibir el foco.
+- Las descripciones emergentes complementan, pero no sustituyen, el nombre accesible: añade un `aria-label` propio a los disparadores que solo contienen un icono.
