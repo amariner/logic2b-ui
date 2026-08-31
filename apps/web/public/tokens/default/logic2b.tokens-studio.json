@@ -1,0 +1,337 @@
+{
+  "global": {
+    "radius": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.625,
+        "unit": "rem"
+      }
+    },
+    "font-sans": {
+      "$type": "string",
+      "$value": "'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif"
+    },
+    "font-heading": {
+      "$type": "string",
+      "$value": "'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif"
+    },
+    "font-mono": {
+      "$type": "string",
+      "$value": "ui-monospace, SFMono-Regular, Menlo, monospace"
+    },
+    "type-measure": {
+      "$type": "dimension",
+      "$value": {
+        "value": 68,
+        "unit": "ch"
+      }
+    },
+    "type-size-base": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "type-leading-base": {
+      "$type": "number",
+      "$value": 1.6
+    },
+    "type-flow": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.15,
+        "unit": "em"
+      }
+    }
+  },
+  "light": {
+    "background": {
+      "$type": "color",
+      "$value": "oklch(1 0 0)"
+    },
+    "foreground": {
+      "$type": "color",
+      "$value": "oklch(0.145 0 0)"
+    },
+    "card": {
+      "$type": "color",
+      "$value": "oklch(1 0 0)"
+    },
+    "card-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.145 0 0)"
+    },
+    "popover": {
+      "$type": "color",
+      "$value": "oklch(1 0 0)"
+    },
+    "popover-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.145 0 0)"
+    },
+    "primary": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "primary-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "oklch(0.97 0 0)"
+    },
+    "secondary-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "oklch(0.97 0 0)"
+    },
+    "muted-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.556 0 0)"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "oklch(0.97 0 0)"
+    },
+    "accent-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "destructive": {
+      "$type": "color",
+      "$value": "oklch(0.577 0.245 27.325)"
+    },
+    "destructive-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "border": {
+      "$type": "color",
+      "$value": "oklch(0.922 0 0)"
+    },
+    "input": {
+      "$type": "color",
+      "$value": "oklch(0.922 0 0)"
+    },
+    "ring": {
+      "$type": "color",
+      "$value": "oklch(0.708 0 0)"
+    },
+    "chart-1": {
+      "$type": "color",
+      "$value": "oklch(0.646 0.222 41.116)"
+    },
+    "chart-2": {
+      "$type": "color",
+      "$value": "oklch(0.6 0.118 184.704)"
+    },
+    "chart-3": {
+      "$type": "color",
+      "$value": "oklch(0.398 0.07 227.392)"
+    },
+    "chart-4": {
+      "$type": "color",
+      "$value": "oklch(0.828 0.189 84.429)"
+    },
+    "chart-5": {
+      "$type": "color",
+      "$value": "oklch(0.769 0.188 70.08)"
+    },
+    "sidebar": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "sidebar-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.145 0 0)"
+    },
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "sidebar-primary-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "sidebar-accent": {
+      "$type": "color",
+      "$value": "oklch(0.97 0 0)"
+    },
+    "sidebar-accent-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "sidebar-border": {
+      "$type": "color",
+      "$value": "oklch(0.922 0 0)"
+    },
+    "sidebar-ring": {
+      "$type": "color",
+      "$value": "oklch(0.708 0 0)"
+    }
+  },
+  "dark": {
+    "background": {
+      "$type": "color",
+      "$value": "oklch(0.145 0 0)"
+    },
+    "foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "card": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "card-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "popover": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "popover-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "primary": {
+      "$type": "color",
+      "$value": "oklch(0.922 0 0)"
+    },
+    "primary-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "oklch(0.269 0 0)"
+    },
+    "secondary-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "oklch(0.269 0 0)"
+    },
+    "muted-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.708 0 0)"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "oklch(0.269 0 0)"
+    },
+    "accent-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "destructive": {
+      "$type": "color",
+      "$value": "oklch(0.704 0.191 22.216)"
+    },
+    "destructive-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "border": {
+      "$type": "color",
+      "$value": "oklch(1 0 0 / 10%)"
+    },
+    "input": {
+      "$type": "color",
+      "$value": "oklch(1 0 0 / 15%)"
+    },
+    "ring": {
+      "$type": "color",
+      "$value": "oklch(0.556 0 0)"
+    },
+    "chart-1": {
+      "$type": "color",
+      "$value": "oklch(0.488 0.243 264.376)"
+    },
+    "chart-2": {
+      "$type": "color",
+      "$value": "oklch(0.696 0.17 162.48)"
+    },
+    "chart-3": {
+      "$type": "color",
+      "$value": "oklch(0.769 0.188 70.08)"
+    },
+    "chart-4": {
+      "$type": "color",
+      "$value": "oklch(0.627 0.265 303.9)"
+    },
+    "chart-5": {
+      "$type": "color",
+      "$value": "oklch(0.645 0.246 16.439)"
+    },
+    "sidebar": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "sidebar-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "oklch(0.922 0 0)"
+    },
+    "sidebar-primary-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.205 0 0)"
+    },
+    "sidebar-accent": {
+      "$type": "color",
+      "$value": "oklch(0.269 0 0)"
+    },
+    "sidebar-accent-foreground": {
+      "$type": "color",
+      "$value": "oklch(0.985 0 0)"
+    },
+    "sidebar-border": {
+      "$type": "color",
+      "$value": "oklch(1 0 0 / 10%)"
+    },
+    "sidebar-ring": {
+      "$type": "color",
+      "$value": "oklch(0.556 0 0)"
+    }
+  },
+  "$metadata": {
+    "tokenSetOrder": [
+      "global",
+      "light",
+      "dark"
+    ]
+  },
+  "$themes": [
+    {
+      "id": "logic2b:bmV1dHJhbHxiYXNlfGRlZmF1bHR8ZGVmYXVsdHxpbnRlcnxpbnRlcnxtb25vfGRlZmF1bHR8ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8bHVjaWRl:light",
+      "name": "Light",
+      "group": "Logic2b",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "light": "enabled",
+        "dark": "disabled"
+      }
+    },
+    {
+      "id": "logic2b:bmV1dHJhbHxiYXNlfGRlZmF1bHR8ZGVmYXVsdHxpbnRlcnxpbnRlcnxtb25vfGRlZmF1bHR8ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8bHVjaWRl:dark",
+      "name": "Dark",
+      "group": "Logic2b",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "light": "disabled",
+        "dark": "enabled"
+      }
+    }
+  ]
+}

@@ -1,11 +1,13 @@
 import assert from "node:assert/strict"
 import { describe, test } from "node:test"
 
-import { DEFAULT_CONFIG } from "../src/index.ts"
+import { DEFAULT_CONFIG, encodePreset } from "../src/index.ts"
 import {
   oklchToHex8,
+  portableGlobalTokens,
   portableModeTokens,
   portableTokenBundle,
+  tokensStudioBundle,
 } from "../src/export.ts"
 
 describe("portable token export", () => {
@@ -33,6 +35,56 @@ describe("portable token export", () => {
     })
     assert.match(String(native.background.$value), /^#[0-9A-F]{8}$/)
     assert.equal(native.background.$type, "color")
+  })
+
+  test("emits a Tokens Studio collection with light and dark variable modes", () => {
+    const bundle = tokensStudioBundle(DEFAULT_CONFIG)
+
+    assert.deepEqual(bundle.$metadata.tokenSetOrder, ["global", "light", "dark"])
+    assert.deepEqual(bundle.global, portableGlobalTokens(DEFAULT_CONFIG))
+    assert.deepEqual(
+      bundle.light,
+      portableModeTokens(DEFAULT_CONFIG, "light", { includeGlobals: false }),
+    )
+    assert.deepEqual(
+      bundle.dark,
+      portableModeTokens(DEFAULT_CONFIG, "dark", { includeGlobals: false }),
+    )
+    assert.deepEqual(
+      bundle.$themes.map(({ name, group, selectedTokenSets }) => ({
+        name,
+        group,
+        selectedTokenSets,
+      })),
+      [
+        {
+          name: "Light",
+          group: "Logic2b",
+          selectedTokenSets: {
+            global: "enabled",
+            light: "enabled",
+            dark: "disabled",
+          },
+        },
+        {
+          name: "Dark",
+          group: "Logic2b",
+          selectedTokenSets: {
+            global: "enabled",
+            light: "disabled",
+            dark: "enabled",
+          },
+        },
+      ],
+    )
+    assert.equal(new Set(bundle.$themes.map(({ id }) => id)).size, 2)
+    assert.ok(
+      bundle.$themes.every(({ id }) =>
+        id.startsWith(`logic2b:${encodePreset(DEFAULT_CONFIG)}:`),
+      ),
+    )
+    assert.equal(Object.hasOwn(bundle, "$schema"), false)
+    assert.equal(Object.hasOwn(bundle, "$extensions"), false)
   })
 
   test("rejects values that are not oklch colors", () => {

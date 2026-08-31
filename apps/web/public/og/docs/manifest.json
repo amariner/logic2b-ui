@@ -567,8 +567,8 @@
       "id": "cross-platform-tokens",
       "title": "Cross-platform tokens",
       "image": "/og/docs/cross-platform-tokens.png",
-      "bytes": 25149,
-      "sha256": "7492ec14010ca234357a5e6a637d7807644efb141892760a757e8c6c93a31575"
+      "bytes": 26882,
+      "sha256": "3899c95730cb5b19a1c957ac2128c7d6f9c97ab102e97bf04f312e9d5be016eb"
     },
     {
       "id": "es/3d-extras",
@@ -1127,8 +1127,8 @@
       "id": "es/cross-platform-tokens",
       "title": "Tokens multiplataforma",
       "image": "/og/docs/es/cross-platform-tokens.png",
-      "bytes": 25861,
-      "sha256": "dc46f04514c09a6e4893fa269fd362cb70d914a35714be973dcf308ea9b21b08"
+      "bytes": 25215,
+      "sha256": "19a83c95ad86fabab17642c624eddf4d95368decdb5ba04651f8ac89c6f89b0f"
     },
     {
       "id": "es/index",

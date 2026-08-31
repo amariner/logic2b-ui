@@ -379,7 +379,13 @@ documented recipes, never a runtime framework of our own.
 
 ### Ecosystem & distribution
 
-- 💡 Figma library generated from the token tables.
+- ✅ **Figma Variables bridge** — the shared token tables now generate a
+  Tokens Studio single-file contract with DTCG values, ordered token sets and
+  one `Logic2b` collection mapped to deterministic Light/Dark modes. The public
+  default artifact carries manifest integrity, custom presets are available
+  through MCP, and English/Spanish docs cover GitHub sync and local import.
+- 💡 Published Figma component library generated from the registry and token
+  tables.
 - 💡 VS Code extension: browse the registry, insert components, apply presets.
 - 💡 Community namespace (`logic2b add @user/item`) with registry auth for
   private registries.
@@ -412,9 +418,10 @@ long-term bets keep widening the gap between "an agent can read our docs" and
   selected range. MCP exposes the same selection and audit trail.
 - ✅ **Cross-platform token export** — the shared `@logic2b/tokens` data is
   emitted through exact-pinned Style Dictionary to portable DTCG JSON, CSS,
-  iOS Swift and Android light/dark resources. Public artifacts carry SHA-256
-  integrity, CI checks source parity, and MCP `export_tokens` resolves any
-  preset id into the same platform-neutral contract.
+  iOS Swift and Android light/dark resources, plus a Tokens Studio contract for
+  Figma Variables. Public artifacts carry SHA-256 integrity, CI checks source
+  parity, and MCP `export_tokens` resolves any preset id into the same
+  platform-neutral contracts.
 - 💡 **Agent telemetry (opt-in)** — anonymized signal on what agents install,
   where prompts fail and which items get hand-edited after install, feeding
   the agent benchmark and the prompt/MCP surfaces as a real feedback loop.
