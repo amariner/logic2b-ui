@@ -87,6 +87,30 @@ export function buildComponentGroups(): NavGroup[] {
 
 export const componentGroups: NavGroup[] = buildComponentGroups();
 
+/** Spanish labels for component pages that have a localized content entry. */
+export const SPANISH_COMPONENT_LABELS: Record<string, string> = {
+  accordion: "Acordeón",
+  alert: "Alerta",
+  "alert-dialog": "Diálogo de alerta",
+  avatar: "Avatar",
+  badge: "Insignia",
+  button: "Botón",
+  card: "Tarjeta",
+  chart: "Gráfico",
+  checkbox: "Casilla de verificación",
+  dialog: "Diálogo",
+  "dropdown-menu": "Menú desplegable",
+  form: "Formulario",
+  input: "Campo de entrada",
+  select: "Selector",
+  sheet: "Panel lateral",
+  switch: "Interruptor",
+  table: "Tabla",
+  tabs: "Pestañas",
+  textarea: "Área de texto",
+  tooltip: "Descripción emergente",
+};
+
 export const docsNav: NavSection[] = [
   {
     title: "Getting Started",

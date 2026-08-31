@@ -599,6 +599,41 @@
       "sha256": "ce29e3058cc44a2f35e5e129630bb992432e5ff55422750893696836eb76fb0c"
     },
     {
+      "id": "es/components/accordion",
+      "title": "Acordeón",
+      "image": "/og/docs/es/components/accordion.png",
+      "bytes": 34722,
+      "sha256": "f90869791eb442ce121a22241560e72a80a4c8263d114c188ad27b717c7e53c7"
+    },
+    {
+      "id": "es/components/alert",
+      "title": "Alerta",
+      "image": "/og/docs/es/components/alert.png",
+      "bytes": 27176,
+      "sha256": "94ca7c9540fff459de2eb2251e55cda01cbf7ba5a3e3dd308f99b3d4049e4781"
+    },
+    {
+      "id": "es/components/alert-dialog",
+      "title": "Diálogo de alerta",
+      "image": "/og/docs/es/components/alert-dialog.png",
+      "bytes": 33082,
+      "sha256": "b125f18aafde2af67cad7902dfa365ad1cb9ec7566e6d217727f16bd1afb06ab"
+    },
+    {
+      "id": "es/components/avatar",
+      "title": "Avatar",
+      "image": "/og/docs/es/components/avatar.png",
+      "bytes": 33474,
+      "sha256": "042b524d511eaded48bc13cfae5a640de717b0e8575023e34e626f465ca4d8f2"
+    },
+    {
+      "id": "es/components/badge",
+      "title": "Insignia",
+      "image": "/og/docs/es/components/badge.png",
+      "bytes": 28195,
+      "sha256": "82a4bb7d023b03d5b0c76610a95a2ae48d9fe00f18a905e8889b2761ad191d8f"
+    },
+    {
       "id": "es/components/button",
       "title": "Botón",
       "image": "/og/docs/es/components/button.png",
@@ -634,6 +669,13 @@
       "sha256": "a4d758051f55d2b81d2342b20b0460b56f3461311be91b359ee54caee842007b"
     },
     {
+      "id": "es/components/dropdown-menu",
+      "title": "Menú desplegable",
+      "image": "/og/docs/es/components/dropdown-menu.png",
+      "bytes": 32998,
+      "sha256": "2b3847853868ccd862c23453a9d9d9ebcdeb96c463e9d79f2fa7085d9a266915"
+    },
+    {
       "id": "es/components/form",
       "title": "Formulario",
       "image": "/og/docs/es/components/form.png",
@@ -655,6 +697,13 @@
       "sha256": "4bcab05bf57583c31b98f96b54745991f20b1ff6b644d1c989116729f95d4cc4"
     },
     {
+      "id": "es/components/sheet",
+      "title": "Panel lateral",
+      "image": "/og/docs/es/components/sheet.png",
+      "bytes": 33289,
+      "sha256": "e401d66e1388a792ce86ff3895904d193a497458d068f9b9bdbdb3fd0c7025a5"
+    },
+    {
       "id": "es/components/switch",
       "title": "Interruptor",
       "image": "/og/docs/es/components/switch.png",
@@ -662,11 +711,32 @@
       "sha256": "6a25f40486695860075e3f3a2ba2f737e602be114629c664fca473ae3103e548"
     },
     {
+      "id": "es/components/table",
+      "title": "Tabla",
+      "image": "/og/docs/es/components/table.png",
+      "bytes": 26124,
+      "sha256": "d4a7435ef58ff1dcbd8349476623fa7c0adeba68a58dc8fd6b047a5ef9480ade"
+    },
+    {
+      "id": "es/components/tabs",
+      "title": "Pestañas",
+      "image": "/og/docs/es/components/tabs.png",
+      "bytes": 29569,
+      "sha256": "810bc9f2ec6bccfb4cf0b12a049122b3bfe50744afba60264e0bf69307cf147e"
+    },
+    {
       "id": "es/components/textarea",
       "title": "Área de texto",
       "image": "/og/docs/es/components/textarea.png",
       "bytes": 28824,
       "sha256": "3a239a38a4634e9b75d82caabb53e7b66f593e5a9468a7562281f1ec252c419a"
+    },
+    {
+      "id": "es/components/tooltip",
+      "title": "Descripción emergente",
+      "image": "/og/docs/es/components/tooltip.png",
+      "bytes": 36873,
+      "sha256": "be35d3a6c782b8a6166c7c92da04ed339ddaee4e1b71af225d00863790548a75"
     },
     {
       "id": "es/cross-platform-tokens",

@@ -1,0 +1,37 @@
+---
+title: Insignia
+description: Muestra una insignia o un componente con apariencia de insignia.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="badge-demo" locale="es" />
+
+## Instalación
+
+<Install name="badge" locale="es" />
+
+## Uso
+
+```tsx
+import { Badge } from "@/components/ui/badge"
+
+<Badge variant="outline">Insignia</Badge>
+```
+
+Usa `asChild` para renderizar un enlace con apariencia de insignia.
+
+## Ejemplos
+
+### Con icono
+
+El tamaño y el espacio de un icono `svg` inicial se ajustan automáticamente.
+
+<ComponentPreview name="badge-icon-demo" locale="es" />
+
+### Como enlace
+
+Usa `asChild` para renderizar un enlace con apariencia de insignia.
+
+<ComponentPreview name="badge-link-demo" locale="es" />

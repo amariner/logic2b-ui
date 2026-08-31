@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, test } from "node:test";
+import { SPANISH_COMPONENT_LABELS } from "../src/config/docs.ts";
 
 const read = (path: string) => readFileSync(resolve(path), "utf8");
 function docsIds(dir: string, prefix = ""): string[] {
@@ -13,24 +14,37 @@ function docsIds(dir: string, prefix = ""): string[] {
 }
 
 const translatedIds = docsIds("src/content/docs-es").sort();
+const translatedComponents = [
+  "accordion",
+  "alert",
+  "alert-dialog",
+  "avatar",
+  "badge",
+  "button",
+  "card",
+  "chart",
+  "checkbox",
+  "dialog",
+  "dropdown-menu",
+  "form",
+  "input",
+  "select",
+  "sheet",
+  "switch",
+  "table",
+  "tabs",
+  "textarea",
+  "tooltip",
+];
 
 describe("Spanish documentation", () => {
-  test("publishes a deliberate first-wave translation set", () => {
+  test("publishes a deliberate two-wave translation set", () => {
     assert.deepEqual(translatedIds, [
       "3d-extras",
       "agent-benchmarks",
       "backend",
       "benchmarks",
-      "components/button",
-      "components/card",
-      "components/chart",
-      "components/checkbox",
-      "components/dialog",
-      "components/form",
-      "components/input",
-      "components/select",
-      "components/switch",
-      "components/textarea",
+      ...translatedComponents.map((name) => `components/${name}`),
       "cross-platform-tokens",
       "index",
       "installation",
@@ -104,22 +118,17 @@ describe("Spanish documentation", () => {
     );
   });
 
-  test("publishes ten complete core component translations", () => {
-    for (const name of [
-      "button",
-      "card",
-      "chart",
-      "checkbox",
-      "dialog",
-      "form",
-      "input",
-      "select",
-      "switch",
-      "textarea",
-    ]) {
+  test("publishes twenty complete core component translations", () => {
+    assert.deepEqual(Object.keys(SPANISH_COMPONENT_LABELS).sort(), translatedComponents);
+    for (const name of translatedComponents) {
       const source = read(`src/content/docs-es/components/${name}.mdx`);
-      assert.match(source, /<ComponentPreview[^>]+locale="es"/);
-      assert.match(source, new RegExp(`<Install name="${name}" locale="es"`));
+      const previews = source.match(/<ComponentPreview\b[^>]*\/>/g) ?? [];
+      const installs = source.match(/<Install\b[^>]*\/>/g) ?? [];
+      assert.ok(previews.length > 0, `${name} has no preview`);
+      for (const preview of previews) assert.match(preview, /locale="es"/);
+      assert.equal(installs.length, 1, `${name} must have one install surface`);
+      assert.match(installs[0], new RegExp(`name="${name}"`));
+      assert.match(installs[0], /locale="es"/);
     }
 
     const markdown = read("src/lib/docs-md.ts");

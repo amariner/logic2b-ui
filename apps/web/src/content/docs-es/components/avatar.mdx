@@ -1,0 +1,42 @@
+---
+title: Avatar
+description: Imagen con contenido alternativo para representar a una persona usuaria.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="avatar-demo" locale="es" />
+
+## Instalación
+
+<Install name="avatar" locale="es" />
+
+## Uso
+
+```tsx
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+<Avatar>
+  <AvatarImage src="https://github.com/vercel.png" alt="@logic2b" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+```
+
+## Notas de uso
+
+`Avatar`, `AvatarImage` y `AvatarFallback` también reenvían las propiedades estándar de sus elementos. Ajusta el tamaño con `className`, por ejemplo `size-12`.
+
+## Ejemplos
+
+### Grupo
+
+Superpone varios avatares para representar un conjunto de personas.
+
+<ComponentPreview name="avatar-group-demo" locale="es" />
+
+### Alternativa
+
+Si la imagen falta o no se puede cargar, se muestra el contenido alternativo.
+
+<ComponentPreview name="avatar-fallback-demo" locale="es" />

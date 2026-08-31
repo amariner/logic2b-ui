@@ -1,0 +1,52 @@
+---
+title: Menú desplegable
+description: Muestra un menú de acciones u opciones activado por un botón.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="dropdown-menu-demo" locale="es" />
+
+## Instalación
+
+<Install name="dropdown-menu" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+<DropdownMenu>
+  <DropdownMenuTrigger>Abrir</DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>Perfil</DropdownMenuItem>
+    <DropdownMenuItem>Facturación</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Ejemplos
+
+### Casillas
+
+<ComponentPreview name="dropdown-menu-checkboxes-demo" locale="es" />
+
+### Grupo de opciones
+
+<ComponentPreview name="dropdown-menu-radio-group-demo" locale="es" />
+
+## Accesibilidad
+
+- Envuelve [Dropdown Menu de Radix](https://www.radix-ui.com/primitives/docs/components/dropdown-menu): se abre con <kbd>Intro</kbd>, <kbd>Espacio</kbd> o las flechas y se cierra con <kbd>Escape</kbd>.
+- Las flechas mueven el foco entre elementos, la búsqueda por escritura salta a una etiqueta y <kbd>Flecha derecha</kbd> abre los submenús, siguiendo el patrón de menú WAI-ARIA.
+- Los elementos de casilla y opción exponen los roles `menuitemcheckbox` y `menuitemradio`, y anuncian su estado a las tecnologías de asistencia.

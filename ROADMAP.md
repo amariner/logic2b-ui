@@ -350,11 +350,13 @@ documented recipes, never a runtime framework of our own.
   per-image/total byte budgets prevent stale or oversized social assets.
 - 🔜 i18n of the docs (Spanish first) — locale-aware HTML and Markdown routes,
   `lang`, canonical alternates, navigation, search, sitemap, agent indexes and
-  OG generation are shipped. All 10 top-level guides plus 10 core component
-  references (Button, Card, Chart, Dialog, Form and five common form controls)
-  now exist in Spanish, including localized playground, install, generated API
-  and accessibility shells. Untranslated component links still resolve
-  explicitly to English instead of presenting partial translations.
+  OG generation are shipped. All 10 top-level guides plus 20 core component
+  references now exist in Spanish: the original form/foundation set plus a
+  second cross-category wave covering Accordion, Alert, Alert Dialog, Avatar,
+  Badge, Dropdown Menu, Sheet, Table, Tabs and Tooltip. Localized playground,
+  install, generated API and accessibility shells follow every translated
+  route; untranslated component links still resolve explicitly to English
+  instead of presenting partial translations.
 - ✅ Accessibility notes per component — all 71 UI docs render their validated
   keyboard/ARIA contract from the same metadata shipped in registry JSON and
   exposed through MCP.
