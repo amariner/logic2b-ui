@@ -1,0 +1,156 @@
+{
+  "name": "logic2b-ui",
+  "displayName": "logic2b ui",
+  "description": "Browse the logic2b registry, install source components and apply design presets from VS Code.",
+  "version": "0.1.0",
+  "publisher": "logic2b-preview",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "logic2b",
+    "components",
+    "design system",
+    "registry",
+    "themes"
+  ],
+  "preview": true,
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onView:logic2b.registry",
+    "onCommand:logic2b.installItems",
+    "onCommand:logic2b.initializeWorkspace",
+    "onCommand:logic2b.applyPreset"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "Installing components runs a task and applying a preset edits workspace files."
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amariner/logic2b-ui.git",
+    "directory": "packages/vscode"
+  },
+  "homepage": "https://ui.logic2b.com/docs/vscode",
+  "bugs": {
+    "url": "https://github.com/amariner/logic2b-ui/issues"
+  },
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "logic2b",
+          "title": "logic2b",
+          "icon": "media/logic2b.svg"
+        }
+      ]
+    },
+    "views": {
+      "logic2b": [
+        {
+          "id": "logic2b.registry",
+          "name": "Registry",
+          "contextualTitle": "logic2b Registry"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "logic2b.refreshRegistry",
+        "title": "logic2b: Refresh Registry",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "logic2b.searchRegistry",
+        "title": "logic2b: Search Registry",
+        "icon": "$(search)"
+      },
+      {
+        "command": "logic2b.installItem",
+        "title": "logic2b: Install Item"
+      },
+      {
+        "command": "logic2b.installItems",
+        "title": "logic2b: Install Components…"
+      },
+      {
+        "command": "logic2b.initializeWorkspace",
+        "title": "logic2b: Initialize Workspace"
+      },
+      {
+        "command": "logic2b.applyPreset",
+        "title": "logic2b: Apply Preset…"
+      },
+      {
+        "command": "logic2b.openCreate",
+        "title": "logic2b: Open Theme Studio"
+      },
+      {
+        "command": "logic2b.openDocumentation",
+        "title": "logic2b: Open Documentation"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "logic2b.searchRegistry",
+          "when": "view == logic2b.registry",
+          "group": "navigation@1"
+        },
+        {
+          "command": "logic2b.refreshRegistry",
+          "when": "view == logic2b.registry",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "logic2b.installItem",
+          "when": "view == logic2b.registry && viewItem == logic2b.registryItem",
+          "group": "inline@1"
+        },
+        {
+          "command": "logic2b.openDocumentation",
+          "when": "view == logic2b.registry && viewItem == logic2b.registryItem",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "logic2b",
+      "properties": {
+        "logic2b.registryUrl": {
+          "type": "string",
+          "default": "https://ui.logic2b.com",
+          "description": "Registry origin used by the explorer and by workspace initialization. HTTPS is required except for localhost development."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "test": "pnpm build && node --import tsx --test test/*.test.ts && node test/load-bundle.cjs",
+    "package:vsix": "pnpm build && vsce package --no-dependencies --out dist/logic2b-ui.vsix"
+  },
+  "dependencies": {
+    "@logic2b/tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/vscode": "1.95.0",
+    "@vscode/vsce": "3.9.2",
+    "esbuild": "0.28.2",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  }
+}

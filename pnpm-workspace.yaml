@@ -6,6 +6,8 @@ packages:
 # node_modules as a side effect of lint, test, build or Turbo task execution.
 verifyDepsBeforeRun: false
 allowBuilds:
+  '@vscode/vsce-sign': false
   esbuild: true
+  keytar: false
   sharp: true
   workerd: true

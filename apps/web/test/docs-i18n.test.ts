@@ -106,6 +106,7 @@ describe("Spanish documentation", () => {
       "integration-paths",
       "llms",
       "theming",
+      "vscode",
     ]);
     for (const id of translatedIds) {
       assert.ok(read(`src/content/docs-es/${id}.mdx`).includes("description:"));

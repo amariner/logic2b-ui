@@ -1166,6 +1166,13 @@
       "sha256": "adaf7c289dd0a3912df8367f783b364e320c8fcc27161a83b02fbb42f2c04d59"
     },
     {
+      "id": "es/vscode",
+      "title": "Extensión de VS Code",
+      "image": "/og/docs/es/vscode.png",
+      "bytes": 28371,
+      "sha256": "2edd566f7a17de73296cd27956f039dd5b01bd297ee85a37aec6a7f8b25fe350"
+    },
+    {
       "id": "index",
       "title": "Introduction",
       "image": "/og/docs/index.png",
@@ -1199,6 +1206,13 @@
       "image": "/og/docs/theming.png",
       "bytes": 21181,
       "sha256": "742b2ea93c417af519ed30dc3b7a780134e8d3cf77fc14afbcfb29e4ab9de3f7"
+    },
+    {
+      "id": "vscode",
+      "title": "VS Code extension",
+      "image": "/og/docs/vscode.png",
+      "bytes": 26532,
+      "sha256": "e63e799855646c23e8433d4df53392bb8b4dd70851c3ebc86f8599c8cac09d5c"
     }
   ]
 }
