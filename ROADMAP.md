@@ -343,20 +343,22 @@ documented recipes, never a runtime framework of our own.
   pixel gates cover the complete inventory without breaking the browser-JS
   budget.
 - ✅ Theme-aware OG images per docs page — all 85 English content entries, the
-  20 Spanish translations and the component index get deterministic
+  40 Spanish translations and the component index get deterministic
   1200×630 PNG cards during the web build.
   Section palettes and paired light/dark component surfaces make the theme
   visible at share time; a SHA-256 manifest, exact route coverage tests and
-  per-image/total byte budgets prevent stale or oversized social assets.
+  per-image/total byte budgets prevent stale or oversized social assets. The
+  indexed PNG palette runs without dithering so all 126 cards fit in 2.65 MiB
+  while retaining capacity for the remaining Spanish routes.
 - 🔜 i18n of the docs (Spanish first) — locale-aware HTML and Markdown routes,
   `lang`, canonical alternates, navigation, search, sitemap, agent indexes and
-  OG generation are shipped. All 10 top-level guides plus 20 core component
-  references now exist in Spanish: the original form/foundation set plus a
-  second cross-category wave covering Accordion, Alert, Alert Dialog, Avatar,
-  Badge, Dropdown Menu, Sheet, Table, Tabs and Tooltip. Localized playground,
-  install, generated API and accessibility shells follow every translated
-  route; untranslated component links still resolve explicitly to English
-  instead of presenting partial translations.
+  OG generation are shipped. All 10 top-level guides plus 30 core component
+  references now exist in Spanish. The third component wave adds Breadcrumb,
+  Calendar, Command, Pagination, Popover, Progress, Radio Group, Separator,
+  Skeleton and Slider. Localized playground, install, generated API and
+  accessibility shells follow every translated route; untranslated component
+  links still resolve explicitly to English instead of presenting partial
+  translations.
 - ✅ Accessibility notes per component — all 71 UI docs render their validated
   keyboard/ARIA contract from the same metadata shipped in registry JSON and
   exposed through MCP.

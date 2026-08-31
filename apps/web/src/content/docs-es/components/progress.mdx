@@ -1,0 +1,31 @@
+---
+title: Progreso
+description: Muestra un indicador del avance de una tarea.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="progress-demo" locale="es" />
+
+## Instalación
+
+<Install name="progress" locale="es" />
+
+## Uso
+
+```tsx
+import { Progress } from "@/components/ui/progress"
+
+<Progress value={66} aria-label="Progreso de carga" />
+```
+
+## Ejemplos
+
+### Animado
+
+<ComponentPreview name="progress-animated-demo" locale="es" />
+
+### Con etiqueta
+
+<ComponentPreview name="progress-labeled-demo" locale="es" />

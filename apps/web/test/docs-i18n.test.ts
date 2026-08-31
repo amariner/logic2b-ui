@@ -20,16 +20,26 @@ const translatedComponents = [
   "alert-dialog",
   "avatar",
   "badge",
+  "breadcrumb",
   "button",
+  "calendar",
   "card",
   "chart",
   "checkbox",
+  "command",
   "dialog",
   "dropdown-menu",
   "form",
   "input",
+  "pagination",
+  "popover",
+  "progress",
+  "radio-group",
   "select",
+  "separator",
   "sheet",
+  "skeleton",
+  "slider",
   "switch",
   "table",
   "tabs",
@@ -38,7 +48,7 @@ const translatedComponents = [
 ];
 
 describe("Spanish documentation", () => {
-  test("publishes a deliberate two-wave translation set", () => {
+  test("publishes a deliberate translation set", () => {
     assert.deepEqual(translatedIds, [
       "3d-extras",
       "agent-benchmarks",
@@ -118,7 +128,7 @@ describe("Spanish documentation", () => {
     );
   });
 
-  test("publishes twenty complete core component translations", () => {
+  test("publishes thirty complete core component translations", () => {
     assert.deepEqual(Object.keys(SPANISH_COMPONENT_LABELS).sort(), translatedComponents);
     for (const name of translatedComponents) {
       const source = read(`src/content/docs-es/components/${name}.mdx`);

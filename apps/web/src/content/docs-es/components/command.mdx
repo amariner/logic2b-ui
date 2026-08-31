@@ -1,0 +1,72 @@
+---
+title: Paleta de comandos
+description: Menú de comandos rápido y componible para React.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="command-demo" locale="es" />
+
+## Instalación
+
+<Install name="command" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+
+<Command>
+  <CommandInput placeholder="Escribe un comando o busca…" />
+  <CommandList>
+    <CommandEmpty>No se han encontrado resultados.</CommandEmpty>
+    <CommandGroup heading="Sugerencias">
+      <CommandItem>Calendario</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>
+```
+
+### CommandDialog
+
+Usa `CommandDialog` para mostrar la paleta dentro de un modal al estilo <kbd>⌘ K</kbd>. Depende del componente `dialog`.
+
+```tsx
+import { CommandDialog, CommandInput, CommandList } from "@/components/ui/command"
+
+<CommandDialog open={open} onOpenChange={setOpen}>
+  <CommandInput placeholder="Escribe un comando o busca…" />
+  <CommandList>...</CommandList>
+</CommandDialog>
+```
+
+## Notas de uso
+
+Está construido sobre [cmdk](https://cmdk.paco.me/). Las propiedades se reenvían a las primitivas subyacentes.
+
+## Ejemplos
+
+### Con iconos
+
+<ComponentPreview name="command-icons-demo" locale="es" />
+
+### Diálogo de comandos
+
+Muestra el menú dentro de un modal y ábrelo mediante un atajo de teclado.
+
+<ComponentPreview name="command-dialog-demo" locale="es" />
+
+## Accesibilidad
+
+- Se controla completamente con el teclado: las flechas mueven la selección, <kbd>Intro</kbd> ejecuta el elemento resaltado e <kbd>Inicio</kbd> y <kbd>Fin</kbd> saltan a los extremos de la lista.
+- `CommandInput` es un combobox que controla la lista mediante `aria-activedescendant`; el foco permanece en la entrada mientras se anuncian los elementos activos.
+- `CommandSeparator` es decorativo por defecto, por lo que queda fuera del contrato de roles hijos de `listbox` sin perder su agrupación visual.
+- `CommandDialog` mantiene el foco dentro, se cierra con <kbd>Escape</kbd> e incluye título y descripción solo para lectores de pantalla.

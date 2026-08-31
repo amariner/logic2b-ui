@@ -1,0 +1,36 @@
+---
+title: Separador
+description: Separa contenido de forma visual o semántica.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="separator-demo" locale="es" />
+
+## Instalación
+
+<Install name="separator" locale="es" />
+
+## Uso
+
+```tsx
+import { Separator } from "@/components/ui/separator"
+
+<Separator />
+<Separator orientation="vertical" />
+```
+
+## Notas de uso
+
+Para ser visibles, los separadores verticales necesitan un contenedor padre con altura definida, por ejemplo una fila flex con `h-5`.
+
+## Ejemplos
+
+### Vertical
+
+<ComponentPreview name="separator-vertical-demo" locale="es" />
+
+### Como divisor con etiqueta
+
+<ComponentPreview name="separator-labeled-demo" locale="es" />

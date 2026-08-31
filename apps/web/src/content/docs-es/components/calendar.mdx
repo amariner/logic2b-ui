@@ -1,0 +1,44 @@
+---
+title: Calendario
+description: Campo de fecha con una cuadrícula para elegir un día, varios días o un intervalo.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="calendar-demo" locale="es" />
+
+## Instalación
+
+<Install name="calendar" locale="es" />
+
+## Uso
+
+```tsx
+import { useState } from "react"
+import { Calendar } from "@/components/ui/calendar"
+
+const [date, setDate] = useState<Date | undefined>(new Date())
+
+<Calendar mode="single" selected={date} onSelect={setDate} className="rounded-md border" />
+```
+
+Está construido sobre [react-day-picker](https://daypicker.dev). Consulta también el [selector de fecha](/docs/components/date-picker), una composición con Popover que convierte el calendario en un campo similar a una entrada de texto.
+
+## Notas de uso
+
+Se reenvían todas las demás propiedades `DayPicker` de [react-day-picker](https://daypicker.dev).
+
+## Ejemplos
+
+### Intervalo
+
+Usa `mode="range"` y guarda un `DateRange` en el estado para elegir los días inicial y final.
+
+<ComponentPreview name="calendar-range-demo" locale="es" />
+
+### Selector de mes y año
+
+Usa `captionLayout="dropdown"` para cambiar de mes y año mediante selectores.
+
+<ComponentPreview name="calendar-dropdown-demo" locale="es" />
