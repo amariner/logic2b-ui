@@ -1,0 +1,40 @@
+---
+title: Campo numérico
+description: Campo numérico con controles para reducir o aumentar el valor, límites mínimo y máximo y tamaño de paso.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="number-field-demo" locale="es" />
+
+## Instalación
+
+<Install name="number-field" locale="es" />
+
+## Uso
+
+```tsx
+import { NumberField } from "@/components/ui/number-field"
+
+<NumberField defaultValue={1} min={0} max={10} />
+```
+
+Controlado:
+
+```tsx
+const [value, setValue] = React.useState(3)
+
+<NumberField value={value} onValueChange={setValue} min={0} max={10} />
+```
+
+Genera un `<input type="number">` real, por lo que admite el envío nativo de
+formularios y la introducción mediante teclado. Los controles propios del
+navegador se ocultan en favor de los botones con estilo, que se desactivan al
+alcanzar los límites `min` y `max`.
+
+## Ejemplos
+
+### Paso
+
+<ComponentPreview name="number-field-step-demo" locale="es" />

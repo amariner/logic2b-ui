@@ -1,0 +1,43 @@
+---
+title: Valoración
+description: Campo de valoración por estrellas basado en el patrón de grupo de opciones, con previsualización al pasar el puntero y modo de solo lectura.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="rating-demo" locale="es" />
+
+## Instalación
+
+<Install name="rating" locale="es" />
+
+## Uso
+
+```tsx
+import { Rating } from "@/components/ui/rating"
+
+const [value, setValue] = React.useState(0)
+
+<Rating value={value} onValueChange={setValue} aria-label="Valorar" />
+```
+
+Al volver a pulsar el valor actual, la valoración se restablece a `0`.
+
+## Ejemplos
+
+### Solo lectura
+
+Para mostrar puntuaciones, el grupo pasa a tener `role="img"` y una etiqueta con
+el formato «<em>etiqueta</em>: n de máximo». Puedes usar cualquier icono.
+
+<ComponentPreview name="rating-readonly-demo" locale="es" />
+
+## Accesibilidad
+
+- Sigue el patrón de grupo de opciones: cada paso es un botón con `role="radio"`,
+  `aria-checked` y una etiqueta «n de máximo».
+- Las teclas de <kbd>flecha</kbd> cambian el valor y la selección sigue al foco;
+  <kbd>Inicio</kbd> y <kbd>Fin</kbd> saltan a 1 y al máximo.
+- Las valoraciones de solo lectura se anuncian como una única imagen con la
+  puntuación en su etiqueta, no como un control desactivado.

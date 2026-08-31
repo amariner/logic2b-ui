@@ -1,0 +1,49 @@
+---
+title: Botón de alternancia
+description: Botón de dos estados que puede estar activado o desactivado.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="toggle-demo" locale="es" />
+
+## Instalación
+
+<Install name="toggle" locale="es" />
+
+## Uso
+
+```tsx
+import { Toggle } from "@/components/ui/toggle"
+
+<Toggle aria-label="Alternar cursiva">
+  <ItalicIcon />
+</Toggle>
+```
+
+## Notas de uso
+
+Construido sobre `Toggle.Root` de Radix con variantes de `cva`.
+
+## Ejemplos
+
+### Contorno
+
+<ComponentPreview name="toggle-outline-demo" locale="es" />
+
+### Con texto
+
+<ComponentPreview name="toggle-text-demo" locale="es" />
+
+### Tamaños
+
+<ComponentPreview name="toggle-sizes-demo" locale="es" />
+
+## Accesibilidad
+
+- Expone `aria-pressed` para que se anuncie su estado activado o desactivado.
+- Se alterna con <kbd>Espacio</kbd> o <kbd>Intro</kbd> cuando tiene el foco y se
+  alcanza con <kbd>Tab</kbd>.
+- Los botones que solo muestran un icono necesitan un `aria-label` como nombre
+  accesible.

@@ -1,0 +1,41 @@
+---
+title: Grupo de entrada
+description: Envuelve un campo de entrada o un área de texto con complementos alineados en cualquiera de sus extremos.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="input-group-demo" locale="es" />
+
+## Instalación
+
+<Install name="input-group" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group"
+
+<InputGroup>
+  <InputGroupAddon>
+    <SearchIcon />
+  </InputGroupAddon>
+  <InputGroupInput placeholder="Buscar..." />
+</InputGroup>
+```
+
+## Ejemplos
+
+### Con botón
+
+<ComponentPreview name="input-group-button-demo" locale="es" />
+
+### Área de texto
+
+<ComponentPreview name="input-group-textarea-demo" locale="es" />
