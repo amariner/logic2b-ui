@@ -1,0 +1,376 @@
+{
+  "schemaVersion": 1,
+  "protocolVersion": "1.1.0",
+  "classification": "real",
+  "runId": "gpt-5.6-sol-codex-0.148.0-alpha.15-2026-08-31",
+  "model": {
+    "name": "gpt-5.6-sol",
+    "version": "service alias observed 2026-08-31"
+  },
+  "agent": {
+    "name": "OpenAI Codex CLI",
+    "version": "0.148.0-alpha.15"
+  },
+  "environment": {
+    "os": "darwin 25.6.0",
+    "arch": "arm64",
+    "node": "v24.13.1"
+  },
+  "capabilities": {
+    "network": true,
+    "shell": true,
+    "mcp": true
+  },
+  "execution": {
+    "runner": "logic2b-agent-runner",
+    "runnerVersion": "1.0.0",
+    "configSha256": "sha256-De6XAz0TjP2s0u2lmc2c3H7L7syU2T6gFE1pawb9DVc=",
+    "protocolSha256": "sha256-tGbiH9ygt6/2qdaUQiDSu+6G9sQOAohY94ZJ1hJyT6Q=",
+    "artifactExcludes": [
+      ".astro",
+      ".git",
+      ".next",
+      ".output",
+      ".turbo",
+      "dist",
+      "node_modules"
+    ]
+  },
+  "startedAt": "2026-08-31T10:05:57.192Z",
+  "finishedAt": "2026-08-31T10:18:18.584Z",
+  "score": 294,
+  "maxScore": 300,
+  "percent": 98,
+  "durationMs": 737600,
+  "tasks": [
+    {
+      "id": "install-and-theme",
+      "title": "Install and theme",
+      "score": 100,
+      "maxScore": 100,
+      "percent": 100,
+      "durationMs": 310772,
+      "toolCalls": 23,
+      "rules": [
+        {
+          "id": "button-file",
+          "description": "Button registry source installed",
+          "passed": true,
+          "points": 10,
+          "maxPoints": 10,
+          "evidence": "src/components/ui/button.tsx"
+        },
+        {
+          "id": "card-file",
+          "description": "Card registry source installed",
+          "passed": true,
+          "points": 10,
+          "maxPoints": 10,
+          "evidence": "src/components/ui/card.tsx"
+        },
+        {
+          "id": "dialog-file",
+          "description": "Dialog registry source installed",
+          "passed": true,
+          "points": 10,
+          "maxPoints": 10,
+          "evidence": "src/components/ui/dialog.tsx"
+        },
+        {
+          "id": "utils-file",
+          "description": "Shared cn helper installed",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/lib/utils.ts"
+        },
+        {
+          "id": "theme-file",
+          "description": "Theme stylesheet installed",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/styles/theme.css"
+        },
+        {
+          "id": "button-provenance",
+          "description": "Button keeps the registry data-slot contract",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/components/ui/button.tsx"
+        },
+        {
+          "id": "card-provenance",
+          "description": "Card keeps the registry data-slot contract",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/components/ui/card.tsx"
+        },
+        {
+          "id": "dialog-provenance",
+          "description": "Dialog uses the registry primitive dependency",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/components/ui/dialog.tsx"
+        },
+        {
+          "id": "registry-config",
+          "description": "components.json points at logic2b",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "components.json#logic2b.registry: \"https://ui.logic2b.com\""
+        },
+        {
+          "id": "preset-config",
+          "description": "components.json records the exact preset",
+          "passed": true,
+          "points": 7,
+          "maxPoints": 7,
+          "evidence": "components.json#logic2b.preset: \"bmV1dHJhbHxibHVlfHZpb2xldHx4bHxpbnRlcnxncm90ZXNrfG1vbm98ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8ZGVmYXVsdA\""
+        },
+        {
+          "id": "package-dependency",
+          "description": "Registry runtime dependency recorded",
+          "passed": true,
+          "points": 7,
+          "maxPoints": 7,
+          "evidence": "package.json#dependencies.radix-ui: \"^1.6.7\""
+        },
+        {
+          "id": "build",
+          "description": "Evaluator-observed production build succeeds",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "verification.buildExitCode: 0"
+        }
+      ]
+    },
+    {
+      "id": "compose-settings",
+      "title": "Compose an accessible settings screen",
+      "score": 100,
+      "maxScore": 100,
+      "percent": 100,
+      "durationMs": 202442,
+      "toolCalls": 4,
+      "rules": [
+        {
+          "id": "app",
+          "description": "Settings screen created at the requested entry",
+          "passed": true,
+          "points": 10,
+          "maxPoints": 10,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "card",
+          "description": "Composes the registry Card",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "tabs",
+          "description": "Composes the registry Tabs",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "label",
+          "description": "Uses the registry Label for form naming",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "input",
+          "description": "Uses the registry Input",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "switch",
+          "description": "Uses the registry Switch",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "button",
+          "description": "Uses the registry Button",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "label-link",
+          "description": "Labels are explicitly linked to controls",
+          "passed": true,
+          "points": 10,
+          "maxPoints": 10,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "tokens",
+          "description": "Screen uses semantic design tokens",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "no-raw-palette",
+          "description": "No raw Tailwind palette colors",
+          "passed": true,
+          "points": 10,
+          "maxPoints": 10,
+          "evidence": "src/App.tsx"
+        },
+        {
+          "id": "preset-primary",
+          "description": "Exact blue primary token applied",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/styles/theme.css"
+        },
+        {
+          "id": "preset-radius",
+          "description": "Exact xl radius applied",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "src/styles/theme.css"
+        },
+        {
+          "id": "build",
+          "description": "Evaluator-observed production build succeeds",
+          "passed": true,
+          "points": 14,
+          "maxPoints": 14,
+          "evidence": "verification.buildExitCode: 0"
+        }
+      ]
+    },
+    {
+      "id": "scaffold-dashboard",
+      "title": "Scaffold a dashboard from empty",
+      "score": 94,
+      "maxScore": 100,
+      "percent": 94,
+      "durationMs": 224386,
+      "toolCalls": 17,
+      "rules": [
+        {
+          "id": "manifest",
+          "description": "Runnable package manifest generated",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "package.json"
+        },
+        {
+          "id": "vite",
+          "description": "Vite framework shell generated",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "vite.config.ts"
+        },
+        {
+          "id": "entry",
+          "description": "React entry generated",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/main.tsx"
+        },
+        {
+          "id": "starter",
+          "description": "Starter composition generated",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/components/starter-page.tsx"
+        },
+        {
+          "id": "dashboard",
+          "description": "Dashboard registry block installed",
+          "passed": true,
+          "points": 14,
+          "maxPoints": 14,
+          "evidence": "src/components/dashboard-02/analytics-dashboard.tsx"
+        },
+        {
+          "id": "chart",
+          "description": "Transitive chart dependency installed",
+          "passed": true,
+          "points": 12,
+          "maxPoints": 12,
+          "evidence": "src/components/ui/chart.tsx"
+        },
+        {
+          "id": "theme",
+          "description": "Theme installed at the framework entry",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "src/styles/theme.css"
+        },
+        {
+          "id": "config",
+          "description": "Registry configuration generated",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "components.json"
+        },
+        {
+          "id": "pinned-react",
+          "description": "React version is exact-pinned",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "package.json#dependencies.react: \"19.2.7\""
+        },
+        {
+          "id": "pinned-vite",
+          "description": "Vite version is exact-pinned",
+          "passed": true,
+          "points": 6,
+          "maxPoints": 6,
+          "evidence": "package.json#devDependencies.vite: \"8.2.2\""
+        },
+        {
+          "id": "preset",
+          "description": "Exact preset recorded",
+          "passed": false,
+          "points": 0,
+          "maxPoints": 6,
+          "evidence": "components.json#logic2b.preset: \"bmV1dHJhbHxibHVlfHZpb2xldHx4bHxpbnRlcnxncm90ZXNrfG1vbm98ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8ZGVmYXVsdHxsdWNpZGU\""
+        },
+        {
+          "id": "build",
+          "description": "Evaluator-observed production build succeeds",
+          "passed": true,
+          "points": 8,
+          "maxPoints": 8,
+          "evidence": "verification.buildExitCode: 0"
+        }
+      ]
+    }
+  ]
+}

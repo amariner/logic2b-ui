@@ -1,5 +1,39 @@
 {
   "schemaVersion": 1,
-  "generatedAt": null,
-  "entries": []
+  "generatedAt": "2026-08-31T10:18:29.042Z",
+  "entries": [
+    {
+      "rank": 1,
+      "runId": "gpt-5.6-sol-codex-0.148.0-alpha.15-2026-08-31",
+      "model": {
+        "name": "gpt-5.6-sol",
+        "version": "service alias observed 2026-08-31"
+      },
+      "agent": {
+        "name": "OpenAI Codex CLI",
+        "version": "0.148.0-alpha.15"
+      },
+      "score": 294,
+      "maxScore": 300,
+      "percent": 98,
+      "durationMs": 737600,
+      "tasks": [
+        {
+          "id": "install-and-theme",
+          "percent": 100,
+          "durationMs": 310772
+        },
+        {
+          "id": "compose-settings",
+          "percent": 100,
+          "durationMs": 202442
+        },
+        {
+          "id": "scaffold-dashboard",
+          "percent": 94,
+          "durationMs": 224386
+        }
+      ]
+    }
+  ]
 }
