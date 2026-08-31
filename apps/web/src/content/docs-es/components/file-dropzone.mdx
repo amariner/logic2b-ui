@@ -1,0 +1,39 @@
+---
+title: Zona de archivos
+description: Superficie para arrastrar y soltar archivos que también abre el explorador mediante clic o teclado, construida sobre DnD nativo.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="file-dropzone-demo" locale="es" />
+
+## Instalación
+
+<Install name="file-dropzone" locale="es" />
+
+## Uso
+
+```tsx
+import { FileDropzone } from "@/components/ui/file-dropzone"
+
+<FileDropzone
+  inputLabel="Subir imágenes de producto"
+  multiple
+  accept="image/*"
+  onFiles={(files) => upload(files)}
+/>
+```
+
+Se resalta mientras se arrastra un archivo sobre ella y llama a `onFiles` con
+el `File[]` soltado o seleccionado. La lista de archivos, las previsualizaciones
+y el progreso de subida quedan a tu cargo: pasa contenido propio como `children`
+para sustituir el icono y mensaje predeterminados.
+
+## Accesibilidad
+
+La superficie es una región con `role="button"`, admite foco y responde a
+<kbd>Intro</kbd> o <kbd>Espacio</kbd> para abrir el selector de archivos, por lo
+que funciona sin ratón. Junto a ella se genera un `<input type="file">` nativo
+con etiqueta, fuera de la región de botón, para evitar controles interactivos
+anidados. Usa `inputLabel` para describir la finalidad de la subida.

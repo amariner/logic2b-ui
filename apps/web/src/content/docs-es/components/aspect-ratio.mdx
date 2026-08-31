@@ -1,0 +1,38 @@
+---
+title: Relación de aspecto
+description: Muestra contenido dentro de una proporción determinada.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="aspect-ratio-demo" locale="es" />
+
+## Instalación
+
+<Install name="aspect-ratio" locale="es" />
+
+## Uso
+
+```tsx
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+
+<AspectRatio ratio={16 / 9}>
+  <img src="..." alt="Imagen" className="rounded-md object-cover" />
+</AspectRatio>
+```
+
+## Notas de uso
+
+También acepta cualquier propiedad estándar de `div`, que se reenvía al
+envoltorio.
+
+## Ejemplos
+
+### Cuadrado
+
+<ComponentPreview name="aspect-ratio-square-demo" locale="es" />
+
+### Vertical
+
+<ComponentPreview name="aspect-ratio-portrait-demo" locale="es" />

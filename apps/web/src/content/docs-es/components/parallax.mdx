@@ -1,0 +1,46 @@
+---
+title: Paralaje
+description: Capa de paralaje vinculada al desplazamiento para secciones de marketing, impulsada por animaciones CSS con fallback estático progresivo.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="parallax-demo" locale="es" />
+
+## Instalación
+
+<Install name="parallax" locale="es" />
+
+## Uso
+
+Asigna una altura al contenedor y coloca dentro una imagen sobredimensionada con
+`object-cover`, o un gradiente. La capa interior se desplaza mientras la sección
+atraviesa el viewport:
+
+```tsx
+import { Parallax } from "@/components/ui/parallax"
+
+<Parallax range="16%" className="h-72 rounded-xl">
+  <img
+    src="/hero.jpg"
+    alt=""
+    className="size-full object-cover"
+  />
+</Parallax>
+```
+
+## Cómo funciona
+
+El desplazamiento se basa por completo en **animaciones CSS vinculadas al
+scroll** mediante `animation-timeline: view()`. No hay JavaScript en la ruta de
+desplazamiento ni nada que limitar. La capa es intencionadamente más alta que el
+contenedor —`range` a cada lado— para que el movimiento no descubra un borde, y
+el contenedor la recorta con `overflow-hidden`.
+
+## Mejora progresiva
+
+La animación vive dentro de `@supports (animation-timeline: view())`. Los
+navegadores sin soporte muestran la capa **estática**: el contenido siempre es
+visible y el movimiento es una mejora. También respeta `prefers-reduced-motion`
+y mantiene la capa inmóvil para quienes solicitan menos movimiento.

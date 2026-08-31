@@ -1,0 +1,28 @@
+---
+title: Selector de color
+description: Selector de color HSV autónomo con área de saturación y valor, control de tono y entrada hexadecimal.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="color-picker-demo" locale="es" />
+
+## Instalación
+
+<Install name="color-picker" locale="es" />
+
+## Uso
+
+```tsx
+import { ColorPicker } from "@/components/ui/color-picker"
+
+const [color, setColor] = React.useState("#3b82f6")
+
+<ColorPicker value={color} onValueChange={setColor} />
+```
+
+Arrastra dentro del cuadrado para definir la saturación y el brillo, desplaza
+la barra de tono para cambiarlo o escribe un valor hexadecimal directamente.
+Emite una cadena `#rrggbb`, funciona por completo con el puntero y no añade
+dependencias.

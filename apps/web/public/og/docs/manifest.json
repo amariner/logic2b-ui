@@ -620,6 +620,13 @@
       "sha256": "f1e0a4317029a4adc1dcb480d31992ac9b706da1f1ebf0640094f1f50dd568b4"
     },
     {
+      "id": "es/components/aspect-ratio",
+      "title": "Relación de aspecto",
+      "image": "/og/docs/es/components/aspect-ratio.png",
+      "bytes": 22846,
+      "sha256": "023ccfad630fabf97a8397aea0670407736effac22357e60da0da4206617e345"
+    },
+    {
       "id": "es/components/autocomplete",
       "title": "Autocompletado",
       "image": "/og/docs/es/components/autocomplete.png",
@@ -711,6 +718,13 @@
       "sha256": "9088a9b81f48ea5009d48434943eb7704097253283a57475897a52fa9d21aa63"
     },
     {
+      "id": "es/components/color-picker",
+      "title": "Selector de color",
+      "image": "/og/docs/es/components/color-picker.png",
+      "bytes": 24857,
+      "sha256": "eca48d5f9fb2fa450f08d941c4a827e1201d7e0eb88fffc042410578178916d4"
+    },
+    {
       "id": "es/components/combobox",
       "title": "Cuadro combinado",
       "image": "/og/docs/es/components/combobox.png",
@@ -781,6 +795,13 @@
       "sha256": "0f7f2e7f00fb434bf287ae7e5894b92d9e18d92c5675bc74a7d0d4a72560b2d3"
     },
     {
+      "id": "es/components/file-dropzone",
+      "title": "Zona de archivos",
+      "image": "/og/docs/es/components/file-dropzone.png",
+      "bytes": 27528,
+      "sha256": "c108e5db2cee2e34e44dd3600473d8f76f99bc7bba6cae292f2efcc7605c1a5b"
+    },
+    {
       "id": "es/components/form",
       "title": "Formulario",
       "image": "/og/docs/es/components/form.png",
@@ -837,6 +858,48 @@
       "sha256": "8744654ebca9439599a31a7ccbbe597819f62d96753cfe5eceecd782c1a637c1"
     },
     {
+      "id": "es/components/menubar",
+      "title": "Barra de menús",
+      "image": "/og/docs/es/components/menubar.png",
+      "bytes": 23149,
+      "sha256": "b2944e32e1f00c84522666506c040846bed15c56b2121fc586fad79e785764ce"
+    },
+    {
+      "id": "es/components/motion",
+      "title": "Movimiento",
+      "image": "/og/docs/es/components/motion.png",
+      "bytes": 27565,
+      "sha256": "9a0cc51980dfbf5626814564e6afb0013e0d77612f1d0776dc96ab72b56ca02a"
+    },
+    {
+      "id": "es/components/motion-blur",
+      "title": "Movimiento con desenfoque",
+      "image": "/og/docs/es/components/motion-blur.png",
+      "bytes": 29904,
+      "sha256": "d6b8896aa911aec08609a448059789fdf89c482f700a554543394a474edf6514"
+    },
+    {
+      "id": "es/components/motion-fade",
+      "title": "Fundido en movimiento",
+      "image": "/og/docs/es/components/motion-fade.png",
+      "bytes": 27477,
+      "sha256": "3a7cd712e3d8e140b9bc84e3ba29ef63c1531ce25ed215f790a5541689278d44"
+    },
+    {
+      "id": "es/components/motion-scale",
+      "title": "Escala en movimiento",
+      "image": "/og/docs/es/components/motion-scale.png",
+      "bytes": 27487,
+      "sha256": "e0c1ac92193c61bb26e697291b74f6c813a9e002e589ea7c153b3620833544ae"
+    },
+    {
+      "id": "es/components/motion-slide",
+      "title": "Deslizamiento en movimiento",
+      "image": "/og/docs/es/components/motion-slide.png",
+      "bytes": 29540,
+      "sha256": "1b3517132e0c01cda529eda03fa36e175c0afe859c6dde3da076771c478185bb"
+    },
+    {
       "id": "es/components/native-select",
       "title": "Selector nativo",
       "image": "/og/docs/es/components/native-select.png",
@@ -865,6 +928,13 @@
       "sha256": "e0a4404d98635775f203b9780998fbd47349aafed73850562b998be0d08fd90c"
     },
     {
+      "id": "es/components/parallax",
+      "title": "Paralaje",
+      "image": "/og/docs/es/components/parallax.png",
+      "bytes": 26303,
+      "sha256": "6eca6285b41127fd91eb34f02430ebe19747eb71948191f641912791cbef1ac9"
+    },
+    {
       "id": "es/components/popover",
       "title": "Panel emergente",
       "image": "/og/docs/es/components/popover.png",
@@ -891,6 +961,27 @@
       "image": "/og/docs/es/components/rating.png",
       "bytes": 27423,
       "sha256": "6115e5e658f0ad2696fb3322edaadb221a5bf200d04e1856d32a03a0bdaa2b70"
+    },
+    {
+      "id": "es/components/resizable",
+      "title": "Paneles redimensionables",
+      "image": "/og/docs/es/components/resizable.png",
+      "bytes": 23806,
+      "sha256": "12bc96a114310ea9afbb7712d3d7a82ea25169a4ef92d57056134630fdfadf46"
+    },
+    {
+      "id": "es/components/scroll-area",
+      "title": "Área de desplazamiento",
+      "image": "/og/docs/es/components/scroll-area.png",
+      "bytes": 25511,
+      "sha256": "e90b89617ec2ea5d09030849691d35ae861d2255b7ce5953f14dbd95c0b719bf"
+    },
+    {
+      "id": "es/components/scroll-reveal",
+      "title": "Revelado al desplazar",
+      "image": "/og/docs/es/components/scroll-reveal.png",
+      "bytes": 27380,
+      "sha256": "3930d8bafb9d3d39629715a471ff03303864355445c9a2c19dee4fb4e17b7013"
     },
     {
       "id": "es/components/select",
@@ -947,6 +1038,13 @@
       "image": "/og/docs/es/components/spinner.png",
       "bytes": 20719,
       "sha256": "5b0b9d4ea826bdadf7fac9ad8ffadd711c6b76f2fca66b0851110eda71578b61"
+    },
+    {
+      "id": "es/components/stepper",
+      "title": "Indicador de pasos",
+      "image": "/og/docs/es/components/stepper.png",
+      "bytes": 25920,
+      "sha256": "6dc4828f8dc61db200296324a2d7d8de3fa8b9bc86676852129eab23692b462c"
     },
     {
       "id": "es/components/switch",
@@ -1017,6 +1115,13 @@
       "image": "/og/docs/es/components/tree-view.png",
       "bytes": 26715,
       "sha256": "45285c1edda0bf4a6e4704bd6958e79dc45fe322614af92c8fe5104a2649f9bd"
+    },
+    {
+      "id": "es/components/typography",
+      "title": "Tipografía",
+      "image": "/og/docs/es/components/typography.png",
+      "bytes": 23037,
+      "sha256": "20b3ab60adfbaa623427835fbbafea6dda613c5c12e04cd7d5e2df85e2468130"
     },
     {
       "id": "es/cross-platform-tokens",
