@@ -1,0 +1,51 @@
+---
+title: Vista de árbol
+description: Lista jerárquica para explorar archivos, carpetas o categorías con expansión, selección y navegación completa mediante teclado.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="tree-view-demo" locale="es" />
+
+## Instalación
+
+<Install name="tree-view" locale="es" />
+
+## Uso
+
+```tsx
+import { TreeItem, TreeView } from "@/components/ui/tree-view"
+
+<TreeView aria-label="Archivos" defaultExpanded={["src"]}>
+  <TreeItem value="src" label="src">
+    <TreeItem value="button" label="button.tsx" />
+    <TreeItem value="card" label="card.tsx" />
+  </TreeItem>
+  <TreeItem value="readme" label="README.md" />
+</TreeView>
+```
+
+Anidar elementos `TreeItem` convierte un elemento en una rama. El chevrón, el
+estado `aria-expanded` y la sangría se derivan de forma automática.
+
+## Ejemplos
+
+### Controlado
+
+Gestiona externamente la expansión y la selección: expande o contrae todo desde
+fuera y reacciona al valor seleccionado.
+
+<ComponentPreview name="tree-view-controlled-demo" locale="es" />
+
+## Accesibilidad
+
+- Sigue el [patrón Tree View de WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/).
+- <kbd>Flecha arriba</kbd> y <kbd>Flecha abajo</kbd> recorren los elementos
+  visibles; <kbd>Inicio</kbd> y <kbd>Fin</kbd> saltan al primero o al último.
+- <kbd>Flecha derecha</kbd> expande una rama contraída y después entra en ella;
+  <kbd>Flecha izquierda</kbd> contrae una rama expandida o lleva al nivel padre.
+- <kbd>Intro</kbd> o <kbd>Espacio</kbd> seleccionan el elemento con foco y
+  alternan las ramas.
+- Los elementos exponen `aria-level`, `aria-expanded` y `aria-selected`; los
+  desactivados usan `aria-disabled` y se omiten durante la navegación.
