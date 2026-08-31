@@ -18,6 +18,7 @@ const translatedComponents = [
   "accordion",
   "alert",
   "alert-dialog",
+  "aspect-ratio",
   "autocomplete",
   "avatar",
   "badge",
@@ -31,6 +32,7 @@ const translatedComponents = [
   "checkbox",
   "code-block",
   "collapsible",
+  "color-picker",
   "combobox",
   "command",
   "context-menu",
@@ -41,6 +43,7 @@ const translatedComponents = [
   "dropdown-menu",
   "empty",
   "field",
+  "file-dropzone",
   "form",
   "hover-card",
   "input",
@@ -49,14 +52,24 @@ const translatedComponents = [
   "item",
   "kbd",
   "label",
+  "menubar",
+  "motion",
+  "motion-blur",
+  "motion-fade",
+  "motion-scale",
+  "motion-slide",
   "native-select",
   "navigation-menu",
   "number-field",
   "pagination",
+  "parallax",
   "popover",
   "progress",
   "radio-group",
   "rating",
+  "resizable",
+  "scroll-area",
+  "scroll-reveal",
   "select",
   "separator",
   "sheet",
@@ -65,6 +78,7 @@ const translatedComponents = [
   "slider",
   "sonner",
   "spinner",
+  "stepper",
   "switch",
   "table",
   "tabs",
@@ -75,6 +89,7 @@ const translatedComponents = [
   "toggle-group",
   "tooltip",
   "tree-view",
+  "typography",
 ];
 
 describe("Spanish documentation", () => {
@@ -158,17 +173,27 @@ describe("Spanish documentation", () => {
     );
   });
 
-  test("publishes sixty complete component translations", () => {
+  test("publishes the complete Spanish component catalog", () => {
     assert.deepEqual(Object.keys(SPANISH_COMPONENT_LABELS).sort(), translatedComponents);
+    assert.deepEqual(
+      docsIds("src/content/docs/components").filter((name) => name !== "index").sort(),
+      translatedComponents,
+    );
     const compositionInstalls: Record<string, string> = {
       combobox: "npx logic2b@latest add popover command",
       "data-table": "npx logic2b@latest add table input button badge",
       "date-picker": "npx logic2b@latest add popover calendar",
     };
+    const documentationGuides = new Set(["typography"]);
     for (const name of translatedComponents) {
       const source = read(`src/content/docs-es/components/${name}.mdx`);
       const previews = source.match(/<ComponentPreview\b[^>]*\/>/g) ?? [];
       const installs = source.match(/<Install\b[^>]*\/>/g) ?? [];
+      if (documentationGuides.has(name)) {
+        assert.equal(previews.length, 0, `${name} must remain a documentation guide`);
+        assert.equal(installs.length, 0, `${name} must not imply a registry item`);
+        continue;
+      }
       assert.ok(previews.length > 0, `${name} has no preview`);
       for (const preview of previews) assert.match(preview, /locale="es"/);
       if (compositionInstalls[name]) {

@@ -1,0 +1,53 @@
+---
+title: Paneles redimensionables
+description: Paneles divididos que pueden redimensionarse arrastrando en horizontal o vertical.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="resizable-demo" locale="es" />
+
+## Instalación
+
+<Install name="resizable" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
+
+<ResizablePanelGroup direction="horizontal" className="h-64">
+  <ResizablePanel defaultSize="40%">Uno</ResizablePanel>
+  <ResizableHandle withHandle />
+  <ResizablePanel defaultSize="60%">Dos</ResizablePanel>
+</ResizablePanelGroup>
+```
+
+## Notas de uso
+
+Construido sobre [react-resizable-panels](https://github.com/bvaughn/react-resizable-panels)
+v4. Este registry envuelve sus exportaciones `Group`, `Panel` y `Separator` como
+`ResizablePanelGroup`, `ResizablePanel` y `ResizableHandle`, y mantiene la
+propiedad conocida `direction` —asignada internamente a `orientation`— para
+preservar la estabilidad de la API entre versiones de la dependencia.
+
+Los paneles ocultan el desbordamiento implícito por defecto para que un
+envoltorio interno de la biblioteca no se convierta en una región desplazable
+sin nombre ni acceso por teclado. Si el contenido debe desplazarse, añade tu
+propio contenedor `overflow-auto` dentro del panel, asígnale un nombre accesible
+y usa `tabIndex={0}`.
+
+## Ejemplos
+
+### Vertical
+
+<ComponentPreview name="resizable-vertical-demo" locale="es" />
+
+### Tamaños limitados
+
+<ComponentPreview name="resizable-constrained-demo" locale="es" />

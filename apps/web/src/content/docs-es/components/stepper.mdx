@@ -1,0 +1,65 @@
+---
+title: Indicador de pasos
+description: Indicador de progreso con varios pasos para asistentes, compras e incorporación, en horizontal o vertical.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="stepper-demo" locale="es" />
+
+## Instalación
+
+<Install name="stepper" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Stepper,
+  StepperIndicator,
+  StepperItem,
+  StepperSeparator,
+  StepperTitle,
+  StepperTrigger,
+} from "@/components/ui/stepper"
+
+<Stepper defaultValue={1}>
+  <StepperItem step={1}>
+    <StepperTrigger>
+      <StepperIndicator />
+      <StepperTitle>Cuenta</StepperTitle>
+    </StepperTrigger>
+    <StepperSeparator />
+  </StepperItem>
+  <StepperItem step={2}>
+    <StepperTrigger>
+      <StepperIndicator />
+      <StepperTitle>Confirmación</StepperTitle>
+    </StepperTrigger>
+  </StepperItem>
+</Stepper>
+```
+
+Cada paso deriva su estado del valor raíz: los anteriores están `completed` y
+el indicador se convierte en una marca; el coincidente está `active` y lleva
+`aria-current="step"`; los demás están `upcoming`.
+
+## Ejemplos
+
+### Vertical
+
+Usa `orientation="vertical"` en flujos altos. Los separadores se convierten en
+líneas entre indicadores y dejan espacio para las descripciones.
+
+<ComponentPreview name="stepper-vertical-demo" locale="es" />
+
+## Accesibilidad
+
+- Se genera como lista ordenada (`<ol>` y `<li>`), por lo que el número y orden
+  de pasos se anuncian de forma nativa.
+- El paso activo expone `aria-current="step"`.
+- Los activadores son botones reales: admiten foco, se desactivan cuando el
+  elemento está `disabled` y usan `data-state` para aplicar los estilos de los
+  estados completado, activo y siguiente.
+- Los separadores llevan `aria-hidden` porque son puramente decorativos.

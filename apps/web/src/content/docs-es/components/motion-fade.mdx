@@ -1,0 +1,28 @@
+---
+title: Fundido en movimiento
+description: Hace aparecer un elemento al montarse mediante el preset de fundido, construido con tw-animate-css sin dependencias de runtime.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-fade-demo" locale="es" />
+
+## Instalación
+
+<Install name="motion-fade" locale="es" />
+
+## Uso
+
+```tsx
+import { MotionFade } from "@/components/ui/motion-fade"
+
+<MotionFade duration={600}>
+  <Card>…</Card>
+</MotionFade>
+```
+
+`MotionFade` equivale a `<Motion preset="fade">`. Consulta
+[Movimiento](/es/docs/components/motion) para las propiedades compartidas
+`duration`, `delay`, `hover` y `asChild`, las recetas de salida y el
+comportamiento con movimiento reducido.

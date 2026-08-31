@@ -1,0 +1,69 @@
+---
+title: Tipografía
+description: Sistema tipográfico basado en Inter, ajustado por función mediante peso e interletraje.
+---
+
+logic2b usa deliberadamente una única familia: **Inter** cubre titulares,
+encabezados, cuerpo, navegación y controles de interfaz, diferenciados por peso
+e interletraje. Los encabezados comprimen el interlineado y estrechan el
+interletraje; el cuerpo mantiene una lectura cómoda. El código y los metadatos
+técnicos usan la pila monoespaciada del sistema. La fuente web se sirve desde el
+propio proyecto mediante `@fontsource-variable`, sin peticiones a terceros.
+
+Los tokens son `--font-heading`, `--font-sans` —ambos Inter por defecto— y
+`--font-mono`. Los encabezados de `h1` a `h4` heredan `--font-heading` de la capa
+base; el resto usa `--font-sans`. Un proyecto puede asignar a `--font-heading`
+su propia familia display —el [estudio de temas](/create) ofrece varias— sin
+modificar ningún componente.
+
+## Encabezado
+
+Los encabezados usan Inter 600–700 con interletraje negativo. Mantén el
+interlineado comprimido en tamaños display.
+
+### Subencabezado
+
+El tercer nivel reduce el tamaño, pero mantiene la misma voz.
+
+## Párrafo
+
+El cuerpo usa Inter a 16 px, interlineado de 1,5 y un interletraje ligeramente
+negativo. Debe resultar cómodo en textos extensos, no bajar nunca de 12 px ni
+mezclar familias dentro de un mismo bloque.
+
+## Cita
+
+> La profundidad no procede de las sombras, sino de la escala de luminancia y
+> los bordes finos. Contención en todas partes.
+
+## Lista
+
+- Canaliza todos los colores mediante tokens semánticos (`text-foreground`, `text-muted-foreground`).
+- Una familia, muchas voces: diferencia mediante peso e interletraje, no fuentes.
+- Reserva el color para las series de gráficos y el estado destructivo.
+
+## Código en línea
+
+Envuelve los tokens técnicos en `código en línea`: se muestra con la pila
+monoespaciada sobre una superficie atenuada, por ejemplo
+`npx logic2b@latest add button`.
+
+## Tabla
+
+| Función | Fuente | Tamaño | Interletraje |
+| --- | --- | --- | --- |
+| Display | Inter 700 | 48–68 px | -0.035em |
+| Encabezado | Inter 700 | 30–36 px | -0.025em |
+| Cuerpo | Inter 400 | 16 px | -0.011em |
+| Leyenda | Inter 400 | 12 px | -0.01em |
+
+## Utilidades
+
+Aplica las familias directamente con Tailwind cuando salgas de los valores
+predeterminados:
+
+```tsx
+<h2 className="font-heading tracking-tighter">Fundamentos</h2>
+<p className="font-sans text-muted-foreground">Disciplina monocroma.</p>
+<code className="font-mono">--radius: 0.625rem</code>
+```

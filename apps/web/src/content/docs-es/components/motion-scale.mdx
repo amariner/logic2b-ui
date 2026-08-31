@@ -1,0 +1,28 @@
+---
+title: Escala en movimiento
+description: Amplía al montarse un elemento desde el 95 % mientras aparece, preset construido con tw-animate-css sin dependencias de runtime.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-scale-demo" locale="es" />
+
+## Instalación
+
+<Install name="motion-scale" locale="es" />
+
+## Uso
+
+```tsx
+import { MotionScale } from "@/components/ui/motion-scale"
+
+<MotionScale hover="lift">
+  <Card>…</Card>
+</MotionScale>
+```
+
+`MotionScale` equivale a `<Motion preset="scale">`. Consulta
+[Movimiento](/es/docs/components/motion) para las propiedades compartidas
+`duration`, `delay`, `hover` y `asChild`, las recetas de salida y el
+comportamiento con movimiento reducido.

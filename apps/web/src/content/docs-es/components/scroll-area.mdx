@@ -1,0 +1,44 @@
+---
+title: Área de desplazamiento
+description: Amplía el desplazamiento nativo con estilos personalizados coherentes entre navegadores.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="scroll-area-demo" locale="es" />
+
+## Instalación
+
+<Install name="scroll-area" locale="es" />
+
+## Uso
+
+```tsx
+import { ScrollArea } from "@/components/ui/scroll-area"
+
+<ScrollArea className="h-72 w-48 rounded-md border">
+  El bufón comenzó a colarse en el castillo en mitad de la noche...
+</ScrollArea>
+```
+
+Define el tamaño del viewport con `className` —alto y ancho— y el contenido se
+desplazará en su interior. Para desplazamiento horizontal, genera un `ScrollBar`
+con `orientation="horizontal"` dentro de `ScrollArea`.
+
+## Accesibilidad
+
+El viewport admite foco mediante teclado por defecto, así que las flechas,
+<kbd>Re Pág</kbd>, <kbd>Av Pág</kbd>, <kbd>Inicio</kbd> y <kbd>Fin</kbd> siguen
+disponibles aunque el contenido no tenga descendientes interactivos. El anillo
+de foco visible identifica qué región controla esas teclas.
+
+## Ejemplos
+
+### Horizontal
+
+<ComponentPreview name="scroll-area-horizontal-demo" locale="es" />
+
+### Texto largo
+
+<ComponentPreview name="scroll-area-prose-demo" locale="es" />
