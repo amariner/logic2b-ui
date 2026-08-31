@@ -1,0 +1,43 @@
+---
+title: Panel emergente
+description: Muestra contenido enriquecido en un portal activado por un botón.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="popover-demo" locale="es" />
+
+## Instalación
+
+<Install name="popover" locale="es" />
+
+## Uso
+
+```tsx
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
+<Popover>
+  <PopoverTrigger>Abrir</PopoverTrigger>
+  <PopoverContent>Coloca aquí el contenido del panel.</PopoverContent>
+</Popover>
+```
+
+## Ejemplos
+
+### Contenido de formulario
+
+<ComponentPreview name="popover-form-demo" locale="es" />
+
+### Lado y alineación
+
+<ComponentPreview name="popover-align-demo" locale="es" />
+
+## Accesibilidad
+
+Está construido sobre [Popover de Radix](https://www.radix-ui.com/primitives/docs/components/popover).
+
+- El disparador alterna el panel al hacer clic y gestiona `aria-expanded` y `aria-controls`.
+- Al abrirse, el foco pasa al panel y vuelve al disparador al cerrarse.
+- <kbd>Escape</kbd> o un clic en el exterior cierran el panel.
+- Usa `PopoverAnchor` para colocar el contenido respecto a un elemento distinto del disparador.

@@ -205,7 +205,8 @@ async function main() {
         compressionLevel: 9,
         adaptiveFiltering: true,
         palette: true,
-        quality: 95,
+        quality: 90,
+        dither: 0,
         effort: 10,
       })
       .toBuffer()

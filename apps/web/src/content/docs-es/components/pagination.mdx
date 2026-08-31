@@ -1,0 +1,54 @@
+---
+title: Paginación
+description: Muestra enlaces de navegación para contenido dividido en páginas.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="pagination-demo" locale="es" />
+
+## Instalación
+
+<Install name="pagination" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href="#" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="#" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+## Notas de uso
+
+`Pagination` es un conjunto de elementos con estilo. Sus partes son wrappers sencillos de `nav`, `ul`, `li` y `a`, por lo que aceptan los atributos HTML habituales como `href` y `onClick`.
+
+## Ejemplos
+
+### Solo anterior y siguiente
+
+<ComponentPreview name="pagination-simple-demo" locale="es" />
+
+### Con puntos suspensivos
+
+<ComponentPreview name="pagination-ellipsis-demo" locale="es" />

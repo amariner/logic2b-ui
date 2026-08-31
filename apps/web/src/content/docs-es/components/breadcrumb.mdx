@@ -1,0 +1,56 @@
+---
+title: Migas de pan
+description: Muestra la ruta al recurso actual mediante una jerarquía de enlaces.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="breadcrumb-demo" locale="es" />
+
+## Instalación
+
+<Install name="breadcrumb" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Migas de pan</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+## Notas de uso
+
+Todas las partes son wrappers semánticos (`nav`, `ol`, `li`, `a`, `span`) y reenvían sus propiedades nativas. `BreadcrumbPage` marca la página actual con `aria-current="page"`; `BreadcrumbEllipsis` es decorativo e incluye la etiqueta «Más» solo para lectores de pantalla.
+
+## Ejemplos
+
+### Separador personalizado
+
+Pasa contenido a `BreadcrumbSeparator` para sustituir el chevron predeterminado.
+
+<ComponentPreview name="breadcrumb-separator-demo" locale="es" />
+
+### Con menú desplegable
+
+En rutas largas, agrupa un segmento intermedio dentro de un menú desplegable.
+
+<ComponentPreview name="breadcrumb-dropdown-demo" locale="es" />
