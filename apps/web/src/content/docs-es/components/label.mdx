@@ -1,0 +1,39 @@
+---
+title: Etiqueta
+description: Renderiza una etiqueta accesible asociada a un control.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="label-demo" locale="es" />
+
+## Instalación
+
+<Install name="label" locale="es" />
+
+## Uso
+
+```tsx
+import { Label } from "@/components/ui/label"
+
+<Label htmlFor="email">Tu dirección de correo</Label>
+```
+
+## Notas de uso
+
+`Label` reenvía todas las propiedades a `Label.Root` de Radix, que renderiza
+un `<label>` nativo, por lo que admite los atributos estándar de una etiqueta.
+
+También aplica automáticamente los estilos `peer-disabled` y
+`group-data-[disabled=true]` cuando se coloca junto a un control desactivado.
+
+## Ejemplos
+
+### Con una casilla de verificación
+
+<ComponentPreview name="label-checkbox-demo" locale="es" />
+
+### Campo obligatorio
+
+<ComponentPreview name="label-required-demo" locale="es" />

@@ -1,0 +1,44 @@
+---
+title: Selector de fecha
+description: Campo de fecha compuesto con los componentes Popover y Calendar.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="date-picker-demo" locale="es" />
+
+El selector de fecha no es un elemento independiente del registry: es una
+composición de [panel emergente](/es/docs/components/popover) y
+[calendario](/es/docs/components/calendar). Instala ambos y combínalos como se
+muestra a continuación.
+
+## Instalación
+
+```bash
+npx logic2b@latest add popover calendar
+```
+
+## Uso
+
+```tsx
+import { useState } from "react"
+import { CalendarIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
+const [date, setDate] = useState<Date | undefined>()
+
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">
+      <CalendarIcon />
+      {date ? date.toLocaleDateString() : "Elige una fecha"}
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-auto p-0" align="start">
+    <Calendar mode="single" selected={date} onSelect={setDate} />
+  </PopoverContent>
+</Popover>
+```

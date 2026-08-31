@@ -1,0 +1,46 @@
+---
+title: Notificaciones Sonner
+description: Componente deliberadamente opinionado para mostrar notificaciones emergentes.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="sonner-demo" locale="es" />
+
+## Instalación
+
+<Install name="sonner" locale="es" />
+
+## Uso
+
+Añade una vez el componente `Toaster` y después llama a `toast()` desde
+cualquier lugar.
+
+```tsx
+import { Toaster } from "@/components/ui/sonner"
+
+<Toaster />
+```
+
+```tsx
+import { toast } from "sonner"
+
+toast("El evento se ha creado")
+```
+
+## Notas de uso
+
+El componente `Toaster` envuelve el `Toaster` de Sonner y reenvía todas sus
+[`ToasterProps`](https://sonner.emilkowal.ski/toaster). Las notificaciones se
+crean de forma imperativa mediante `toast()`.
+
+## Ejemplos
+
+### Con una acción
+
+<ComponentPreview name="sonner-action-demo" locale="es" />
+
+### Promesa
+
+<ComponentPreview name="sonner-promise-demo" locale="es" />
