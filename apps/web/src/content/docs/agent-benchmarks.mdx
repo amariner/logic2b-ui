@@ -61,6 +61,10 @@ pnpm --dir benchmarks/agents benchmark config.json
 pnpm --dir benchmarks/agents score <run-id>
 ```
 
-Real run artifacts will be committed alongside their detailed score JSON. The
-leaderboard is deliberately empty until those executions exist; synthetic test
-fixtures are tagged and mechanically excluded from publication.
+Real run artifacts are committed alongside their detailed score JSON. The first
+published entry is `gpt-5.6-sol` through Codex CLI `0.148.0-alpha.15`: 294/300
+(98%), with all three evaluator-observed builds passing. Its only deduction is
+visible in the rule evidence: the dashboard scaffold canonicalized the legacy
+preset id by appending the resolved Lucide icon field instead of preserving the
+input string literally. Synthetic fixtures remain tagged and mechanically
+excluded from publication; more real agent/model combinations are planned.

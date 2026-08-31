@@ -56,6 +56,12 @@ contains names to forward from the evaluator environment.
 
 The wrapper must print the configured `toolCallMarker` once for every tool call
 so the runner can count them without depending on one vendor's event schema.
+The repository includes a Codex JSONL adapter at
+`scripts/adapters/codex.mjs`; it disables unrelated app, browser, plugin and
+multi-agent surfaces, confines generated commands to the task workspace and emits one
+marker for every completed Codex tool event. Pass the Codex executable and
+model as adapter arguments from the run config; pass `--mcp-url` when the run
+declares the remote logic2b MCP capability.
 Validate the config without executing the agent:
 
 ```bash
@@ -90,6 +96,9 @@ transcript limits, observed builds and the real/synthetic publication boundary.
 
 ## Current publication status
 
-The protocol and scorer are ready. The leaderboard intentionally remains empty
-until real isolated model runs have been recorded. An empty table is stronger
-evidence than invented or incomparable numbers.
+The first isolated real run is published: `gpt-5.6-sol` through Codex CLI
+`0.148.0-alpha.15` scored 294/300 (98%) with all three evaluator-observed
+production builds passing. Its raw artifacts, transcripts, metadata and detailed
+rule evidence live under `runs/` and `results/`. Synthetic fixtures remain
+mechanically excluded; additional real agent/model combinations are still needed
+before the leaderboard supports broad comparisons.

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "registry": {
+    "url": "https://ui.logic2b.com",
+    "requestedVersion": "1.0.0-rc.16",
+    "resolvedVersion": "1.0.0-rc.16"
+  },
+  "items": {
+    "button": {
+      "version": "1.0.0-rc.8",
+      "integrity": "sha256-T8A9xf+Lu4GHQlyXmgKiFViQ3n+Hf3jRJcHfXQA8+5Q=",
+      "files": [
+        "ui/button.tsx"
+      ]
+    },
+    "card": {
+      "version": "1.0.0-rc.8",
+      "integrity": "sha256-okjDSm8xPL33Ad4rpGDM5aq9DZsXpKuXYk2U0eKWArs=",
+      "files": [
+        "ui/card.tsx"
+      ]
+    },
+    "dialog": {
+      "version": "1.0.0-rc.8",
+      "integrity": "sha256-YxeKVj0/5aelEopp9sketOSWlBgp4RHCVWYzKzbqveg=",
+      "files": [
+        "ui/dialog.tsx"
+      ]
+    },
+    "theme": {
+      "version": "1.0.0-rc.1",
+      "integrity": "sha256-lccfTDkVT1QAkPBHuEblUissl4BowDbVvF+gN6VLbcg=",
+      "files": [
+        "theme.css"
+      ]
+    },
+    "utils": {
+      "version": "1.0.0-rc.1",
+      "integrity": "sha256-CBGmAr6zsnkELQSLEqq/vXR8EabLWi7Qg1vLpr4zzT8=",
+      "files": [
+        "lib/utils.ts"
+      ]
+    }
+  }
+}

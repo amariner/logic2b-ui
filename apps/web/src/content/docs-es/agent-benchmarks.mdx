@@ -51,6 +51,10 @@ pnpm --dir benchmarks/agents benchmark config.json
 pnpm --dir benchmarks/agents score <run-id>
 ```
 
-Los artefactos reales se publicarán junto a su puntuación detallada. El
-leaderboard permanece vacío hasta que existan ejecuciones aisladas reales; los
-fixtures sintéticos están etiquetados y se excluyen mecánicamente.
+Los artefactos reales se publican junto a su puntuación detallada. La primera
+entrada es `gpt-5.6-sol` mediante Codex CLI `0.148.0-alpha.15`: 294/300 (98 %),
+con los tres builds observados en verde. La única deducción está expuesta en la
+evidencia: el scaffold del dashboard normalizó el preset legado añadiendo el
+campo de iconos Lucide en vez de conservar literalmente el identificador de
+entrada. Los fixtures sintéticos siguen etiquetados y excluidos mecánicamente;
+faltan más combinaciones reales de agente y modelo para ampliar la comparación.
