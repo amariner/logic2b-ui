@@ -96,9 +96,11 @@ transcript limits, observed builds and the real/synthetic publication boundary.
 
 ## Current publication status
 
-The first isolated real run is published: `gpt-5.6-sol` through Codex CLI
-`0.148.0-alpha.15` scored 294/300 (98%) with all three evaluator-observed
-production builds passing. Its raw artifacts, transcripts, metadata and detailed
-rule evidence live under `runs/` and `results/`. Synthetic fixtures remain
-mechanically excluded; additional real agent/model combinations are still needed
-before the leaderboard supports broad comparisons.
+Three isolated real runs are published under the same Codex CLI
+`0.148.0-alpha.15` host and capability profile, making the model comparison
+controlled: `gpt-5.6-sol` scored 294/300 (98%), `gpt-5.5` scored 272/300
+(90.7%) and `gpt-5.6-terra` scored 266/300 (88.7%). Every
+evaluator-observed production build passed. Raw artifacts, transcripts,
+metadata and detailed rule evidence live under `runs/` and `results/`.
+Synthetic fixtures remain mechanically excluded; future runs can broaden the
+table to other agent hosts without changing the v1 protocol.

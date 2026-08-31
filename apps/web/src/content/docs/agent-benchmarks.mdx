@@ -61,10 +61,12 @@ pnpm --dir benchmarks/agents benchmark config.json
 pnpm --dir benchmarks/agents score <run-id>
 ```
 
-Real run artifacts are committed alongside their detailed score JSON. The first
-published entry is `gpt-5.6-sol` through Codex CLI `0.148.0-alpha.15`: 294/300
-(98%), with all three evaluator-observed builds passing. Its only deduction is
-visible in the rule evidence: the dashboard scaffold canonicalized the legacy
-preset id by appending the resolved Lucide icon field instead of preserving the
-input string literally. Synthetic fixtures remain tagged and mechanically
-excluded from publication; more real agent/model combinations are planned.
+Real run artifacts are committed alongside their detailed score JSON. The
+first controlled comparison uses the same Codex CLI `0.148.0-alpha.15` host
+and capabilities for all three models: `gpt-5.6-sol` leads with 294/300 (98%),
+followed by `gpt-5.5` at 272/300 (90.7%) and `gpt-5.6-terra` at 266/300
+(88.7%). Every evaluator-observed build passed. The rule evidence still shows
+meaningful differences: Sol only canonicalized the legacy preset id, 5.5 lost
+scaffold fidelity on the starter/theme/pins, and Terra produced a runnable but
+non-canonical dashboard rather than the requested registry block. Synthetic
+fixtures remain tagged and mechanically excluded from publication.

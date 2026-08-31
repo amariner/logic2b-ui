@@ -308,17 +308,17 @@ documented recipes, never a runtime framework of our own.
   time under a shared throttled profile. Exact-pinned fixtures, raw JSON,
   methodology and scripts ship in `benchmarks/frameworks`; the living public
   table is `/docs/benchmarks`.
-- 🔜 **Agent benchmark / leaderboard** — the public v1 protocol, 300-point
+- ✅ **Agent benchmark / leaderboard** — the public v1 protocol, 300-point
   objective rubric, safe static scorer, reproducible evaluator runner,
   deterministic SHA-256 fixtures, timeout/transcript controls, regression
   tests and living status page are shipped. Synthetic results are mechanically
-  excluded from publication. The first isolated real entry is now published:
-  `gpt-5.6-sol` through Codex CLI `0.148.0-alpha.15` scored 294/300 (98%) in
-  737.6 s, with all three evaluator-observed builds passing; raw artifacts,
-  transcripts and per-rule evidence ship in the repository. Remaining: run
-  additional real model/agent combinations so the leaderboard becomes a useful
-  comparison rather than a single data point. The harness already doubles as a
-  regression suite for the MCP/prompt surfaces.
+  excluded from publication. Three isolated real entries now form a controlled
+  comparison under Codex CLI `0.148.0-alpha.15`: `gpt-5.6-sol` scored 294/300
+  (98%), `gpt-5.5` 272/300 (90.7%) and `gpt-5.6-terra` 266/300 (88.7%). All
+  nine evaluator-observed builds passed; raw artifacts, transcripts and
+  per-rule evidence ship in the repository. The harness also doubles as a
+  regression suite for the MCP/prompt surfaces and remains open to future
+  agent hosts without making launch depend on them.
 
 ### Site & docs
 
@@ -455,20 +455,19 @@ that green light. Working backwards:
    workspaces and update-ready install manifests. The public
    integration-path comparison and its machine-readable twin are also live;
    the live starter gallery and its machine-readable catalog complete the launch
-   demos ✅. The first real isolated agent benchmark is published ✅; remaining:
-   broaden the leaderboard with additional model/agent combinations.
+   demos ✅. The agent benchmark now publishes a controlled three-model
+   leaderboard with immutable evidence and nine observed builds ✅.
 4. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
    post, community namespace opens.
 
 _Status (31 Aug 2026): ahead of plan — the polish and September trust passes
 are complete. The verified `1.0.0-rc.2` CLI/MCP artifacts are published under
-npm's `next` tag, and the first real isolated agent benchmark is public. The
-remaining launch-path objective is to add enough real model/agent combinations
-for a comparative leaderboard. The CLI and shell-less MCP starter lanes, live
-launch demos, public comparison, benchmark harness and RC artifact gate are complete.
+npm's `next` tag, and the real isolated agent benchmark now has a comparative
+three-model leaderboard. The CLI and shell-less MCP starter lanes, live launch
+demos, public comparison, benchmark harness and RC artifact gate are complete.
 The local registry has advanced through `1.0.0-rc.16` with the composed landing,
-mail, calendar and AI chat applications, and compact delivery mirrors, while CLI/MCP
-packages remain the verified `1.0.0-rc.2` artifacts awaiting publication._
+mail, calendar and AI chat applications, and compact delivery mirrors, while
+CLI/MCP remain the verified `1.0.0-rc.2` artifacts published under `next`._
 
 ## Watching
 
