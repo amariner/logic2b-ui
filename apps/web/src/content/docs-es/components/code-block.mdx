@@ -1,0 +1,33 @@
+---
+title: Bloque de código
+description: Contenedor de código con estilo y botón para copiar con un clic, sin dependencias.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="code-block-demo" locale="es" />
+
+## Instalación
+
+<Install name="code-block" locale="es" />
+
+## Uso
+
+```tsx
+import { CodeBlock } from "@/components/ui/code-block"
+
+<CodeBlock language="tsx" code={`const respuesta = 42`} />
+```
+
+El botón de copia escribe `code` en el portapapeles y muestra una marca de
+confirmación durante dos segundos. Omite `language` para generar un bloque
+sencillo con un botón de copia flotante en la esquina.
+
+## Resaltado
+
+`CodeBlock` no incluye dependencias ni un resaltador de sintaxis de forma
+deliberada. Para añadir resaltado, genera la salida de tu herramienta dentro de
+`<pre>` —por ejemplo, pasa HTML de Shiki o Prism— o envuelve el componente.
+Mantener la base sin resaltador hace que sea pequeña e independiente del
+framework.

@@ -343,24 +343,24 @@ documented recipes, never a runtime framework of our own.
   pixel gates cover the complete inventory without breaking the browser-JS
   budget.
 - ✅ Theme-aware OG images per docs page — all 85 English content entries, the
-  60 Spanish translations and the component index get deterministic
+  70 Spanish translations and the component index get deterministic
   1200×630 PNG cards during the web build.
   Section palettes and paired light/dark component surfaces make the theme
   visible at share time; a SHA-256 manifest, exact route coverage tests and
   per-image/total byte budgets prevent stale or oversized social assets. The
-  indexed PNG palette runs without dithering so all 146 cards fit in 3.11 MiB
+  indexed PNG palette runs without dithering so all 156 cards fit in 3.33 MiB
   while retaining capacity for the remaining Spanish routes.
 - 🔜 i18n of the docs (Spanish first) — locale-aware HTML and Markdown routes,
   `lang`, canonical alternates, navigation, search, sitemap, agent indexes and
-  OG generation are shipped. All 10 top-level guides plus 50 component
-  references now exist in Spanish. The fifth wave completes ten more form
-  controls: Autocomplete, Button Group, Field, Input Group, Native Select,
-  Number Field, Rating, Tags Input, Toggle and Toggle Group. The three
-  translated composition guides preserve their real multi-item install commands
-  instead of implying standalone registry items. Localized playground, install,
-  generated API and accessibility shells follow every applicable translated
-  route; untranslated component links still resolve explicitly to English
-  instead of presenting partial translations.
+  OG generation are shipped. All 10 top-level guides plus 60 component
+  references now exist in Spanish. The sixth wave adds Code Block, Collapsible,
+  Context Menu, Empty, Hover Card, Item, Kbd, Spinner, Timeline and Tree View,
+  closing most remaining data-display and feedback gaps. The three translated
+  composition guides preserve their real multi-item install commands instead of
+  implying standalone registry items. Localized playground, install, generated
+  API and accessibility shells follow every applicable translated route;
+  untranslated component links still resolve explicitly to English instead of
+  presenting partial translations.
 - ✅ Accessibility notes per component — all 71 UI docs render their validated
   keyboard/ARIA contract from the same metadata shipped in registry JSON and
   exposed through MCP.

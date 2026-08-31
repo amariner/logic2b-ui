@@ -1,0 +1,53 @@
+---
+title: Menú contextual
+description: Muestra un menú de acciones u opciones al hacer clic derecho sobre un elemento.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="context-menu-demo" locale="es" />
+
+## Instalación
+
+<Install name="context-menu" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+
+<ContextMenu>
+  <ContextMenuTrigger>Haz clic derecho aquí</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Atrás</ContextMenuItem>
+    <ContextMenuItem>Recargar</ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>
+```
+
+## Ejemplos
+
+### Casillas y opciones
+
+<ComponentPreview name="context-menu-checkbox-demo" locale="es" />
+
+### Con submenú
+
+<ComponentPreview name="context-menu-submenu-demo" locale="es" />
+
+## Accesibilidad
+
+- Se abre con clic derecho o con la tecla de menú contextual y permite navegar
+  por completo con las flechas. <kbd>Intro</kbd> o <kbd>Espacio</kbd> activan el
+  elemento con foco.
+- Envuelve el [menú contextual de Radix](https://www.radix-ui.com/primitives/docs/components/context-menu),
+  que gestiona las semánticas `role="menu"`, `menuitem`, `menuitemcheckbox` y
+  `menuitemradio`.
+- La búsqueda incremental permite saltar a un elemento escribiendo su etiqueta;
+  <kbd>Esc</kbd> cierra el menú y devuelve el foco al activador.

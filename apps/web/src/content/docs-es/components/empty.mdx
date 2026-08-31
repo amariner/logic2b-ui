@@ -1,0 +1,51 @@
+---
+title: Estado vacío
+description: Muestra un estado vacío con icono, título, descripción y acciones.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="empty-demo" locale="es" />
+
+## Instalación
+
+<Install name="empty" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
+
+<Empty>
+  <EmptyHeader>
+    <EmptyMedia variant="icon">
+      <InboxIcon />
+    </EmptyMedia>
+    <EmptyTitle>Todavía no hay mensajes</EmptyTitle>
+    <EmptyDescription>
+      Cuando recibas un mensaje, aparecerá aquí.
+    </EmptyDescription>
+  </EmptyHeader>
+  <EmptyContent>
+    <Button size="sm">Redactar mensaje</Button>
+  </EmptyContent>
+</Empty>
+```
+
+## Ejemplos
+
+### Con acciones
+
+<ComponentPreview name="empty-actions-demo" locale="es" />
+
+### Mínimo
+
+<ComponentPreview name="empty-simple-demo" locale="es" />

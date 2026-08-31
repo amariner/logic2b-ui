@@ -29,18 +29,25 @@ const translatedComponents = [
   "carousel",
   "chart",
   "checkbox",
+  "code-block",
+  "collapsible",
   "combobox",
   "command",
+  "context-menu",
   "data-table",
   "date-picker",
   "dialog",
   "drawer",
   "dropdown-menu",
+  "empty",
   "field",
   "form",
+  "hover-card",
   "input",
   "input-group",
   "input-otp",
+  "item",
+  "kbd",
   "label",
   "native-select",
   "navigation-menu",
@@ -57,14 +64,17 @@ const translatedComponents = [
   "skeleton",
   "slider",
   "sonner",
+  "spinner",
   "switch",
   "table",
   "tabs",
   "tags-input",
   "textarea",
+  "timeline",
   "toggle",
   "toggle-group",
   "tooltip",
+  "tree-view",
 ];
 
 describe("Spanish documentation", () => {
@@ -148,7 +158,7 @@ describe("Spanish documentation", () => {
     );
   });
 
-  test("publishes fifty complete component translations", () => {
+  test("publishes sixty complete component translations", () => {
     assert.deepEqual(Object.keys(SPANISH_COMPONENT_LABELS).sort(), translatedComponents);
     const compositionInstalls: Record<string, string> = {
       combobox: "npx logic2b@latest add popover command",

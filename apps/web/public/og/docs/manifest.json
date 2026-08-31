@@ -697,6 +697,20 @@
       "sha256": "c6a3deb8a44d54a8bc7d1fbaffb9b6ece464cab87a67b260ca96a5342aa28e7b"
     },
     {
+      "id": "es/components/code-block",
+      "title": "Bloque de código",
+      "image": "/og/docs/es/components/code-block.png",
+      "bytes": 23347,
+      "sha256": "ab5c50cf009605723c8870bab71c32b76e71cd320a1c0ad867f8779bf3754982"
+    },
+    {
+      "id": "es/components/collapsible",
+      "title": "Panel plegable",
+      "image": "/og/docs/es/components/collapsible.png",
+      "bytes": 21932,
+      "sha256": "9088a9b81f48ea5009d48434943eb7704097253283a57475897a52fa9d21aa63"
+    },
+    {
       "id": "es/components/combobox",
       "title": "Cuadro combinado",
       "image": "/og/docs/es/components/combobox.png",
@@ -709,6 +723,13 @@
       "image": "/og/docs/es/components/command.png",
       "bytes": 23024,
       "sha256": "6600bdb9cb0a3ee502017ed9fac109059e8eb7379585c48b733b528e42d6d6f6"
+    },
+    {
+      "id": "es/components/context-menu",
+      "title": "Menú contextual",
+      "image": "/og/docs/es/components/context-menu.png",
+      "bytes": 21657,
+      "sha256": "34d15b774059cf10d01f32e359af68643aaaf666396ec6c699bd5b487abd0e27"
     },
     {
       "id": "es/components/data-table",
@@ -746,6 +767,13 @@
       "sha256": "a61e352f825f86287a9dfa85ad6d9fb86a46398af6081f202c35a89f87b62774"
     },
     {
+      "id": "es/components/empty",
+      "title": "Estado vacío",
+      "image": "/og/docs/es/components/empty.png",
+      "bytes": 21988,
+      "sha256": "7bb4b1ded10eb83d7e150a65b66563b80f89e2006acef3fb30999f7014321780"
+    },
+    {
       "id": "es/components/field",
       "title": "Campo de formulario",
       "image": "/og/docs/es/components/field.png",
@@ -758,6 +786,13 @@
       "image": "/og/docs/es/components/form.png",
       "bytes": 23157,
       "sha256": "9c777ed7ed56d0618cf3ce97f710a7330f536aa53e89f91af453f8c84f3a0131"
+    },
+    {
+      "id": "es/components/hover-card",
+      "title": "Tarjeta al pasar",
+      "image": "/og/docs/es/components/hover-card.png",
+      "bytes": 23491,
+      "sha256": "a2eaa7342e62a044dd2021fd7c57d886ba2fc5704c2deac825eb047cc35e71f7"
     },
     {
       "id": "es/components/input",
@@ -779,6 +814,20 @@
       "image": "/og/docs/es/components/input-otp.png",
       "bytes": 23352,
       "sha256": "c21bca2b59a56b67d73ba3c48e2a55c40e085225ba0244704bbd3c4bc0d95081"
+    },
+    {
+      "id": "es/components/item",
+      "title": "Elemento",
+      "image": "/og/docs/es/components/item.png",
+      "bytes": 24221,
+      "sha256": "95471295034197d483b5f8cf0b2781a02cc7f14db880eebc1671ec1c3a0a5e08"
+    },
+    {
+      "id": "es/components/kbd",
+      "title": "Tecla",
+      "image": "/og/docs/es/components/kbd.png",
+      "bytes": 20388,
+      "sha256": "100ac5ff2fb1832797fc810824e18d2019bcb6ac0fc40a53b8141780c14433c6"
     },
     {
       "id": "es/components/label",
@@ -893,6 +942,13 @@
       "sha256": "291a1d59f30842e34041871795efdef141263902de78a8c6391e8bba65f1fc62"
     },
     {
+      "id": "es/components/spinner",
+      "title": "Indicador de carga",
+      "image": "/og/docs/es/components/spinner.png",
+      "bytes": 20719,
+      "sha256": "5b0b9d4ea826bdadf7fac9ad8ffadd711c6b76f2fca66b0851110eda71578b61"
+    },
+    {
       "id": "es/components/switch",
       "title": "Interruptor",
       "image": "/og/docs/es/components/switch.png",
@@ -928,6 +984,13 @@
       "sha256": "561718b59162b1e4d0e9e7a3f46d364dcc35ac7f5588b3a8d685a6d9e546cea0"
     },
     {
+      "id": "es/components/timeline",
+      "title": "Cronología",
+      "image": "/og/docs/es/components/timeline.png",
+      "bytes": 22948,
+      "sha256": "bf2f54ed7b56b8e30ff21049a8120b23528ebdd7ba5cf34347c8dbf2123e63c6"
+    },
+    {
       "id": "es/components/toggle",
       "title": "Botón de alternancia",
       "image": "/og/docs/es/components/toggle.png",
@@ -947,6 +1010,13 @@
       "image": "/og/docs/es/components/tooltip.png",
       "bytes": 26421,
       "sha256": "02d35deb3ad600f18d062b66c46b4d31a6064ba70ac05e25c87c8a05401b0534"
+    },
+    {
+      "id": "es/components/tree-view",
+      "title": "Vista de árbol",
+      "image": "/og/docs/es/components/tree-view.png",
+      "bytes": 26715,
+      "sha256": "45285c1edda0bf4a6e4704bd6958e79dc45fe322614af92c8fe5104a2649f9bd"
     },
     {
       "id": "es/cross-platform-tokens",
