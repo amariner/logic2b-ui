@@ -662,6 +662,13 @@
       "sha256": "07fd57c19d01c48c25aef8003012146ba4f7981fa6e399fc3f48ef5682d9077b"
     },
     {
+      "id": "es/components/carousel",
+      "title": "Carrusel",
+      "image": "/og/docs/es/components/carousel.png",
+      "bytes": 22546,
+      "sha256": "518a79e76881bf12e250275d13a3b31b519faba2c2ac1fe10a72da222bc8eb1c"
+    },
+    {
       "id": "es/components/chart",
       "title": "Gráfico",
       "image": "/og/docs/es/components/chart.png",
@@ -676,6 +683,13 @@
       "sha256": "c6a3deb8a44d54a8bc7d1fbaffb9b6ece464cab87a67b260ca96a5342aa28e7b"
     },
     {
+      "id": "es/components/combobox",
+      "title": "Cuadro combinado",
+      "image": "/og/docs/es/components/combobox.png",
+      "bytes": 23935,
+      "sha256": "cee94e8cfb23e76f66aaddcf86a3a08509ab97b46916098560c048ae54e11cbe"
+    },
+    {
       "id": "es/components/command",
       "title": "Paleta de comandos",
       "image": "/og/docs/es/components/command.png",
@@ -683,11 +697,32 @@
       "sha256": "6600bdb9cb0a3ee502017ed9fac109059e8eb7379585c48b733b528e42d6d6f6"
     },
     {
+      "id": "es/components/data-table",
+      "title": "Tabla de datos",
+      "image": "/og/docs/es/components/data-table.png",
+      "bytes": 23675,
+      "sha256": "3cfe2516297be14941bb3704c7c789e959f66ddc42cb97d6218200574114fafc"
+    },
+    {
+      "id": "es/components/date-picker",
+      "title": "Selector de fecha",
+      "image": "/og/docs/es/components/date-picker.png",
+      "bytes": 23603,
+      "sha256": "a00e0bb9d8575b0759b63cc34cc24096dea23b9bded0a3b7dc0b446e0975d283"
+    },
+    {
       "id": "es/components/dialog",
       "title": "Diálogo",
       "image": "/og/docs/es/components/dialog.png",
       "bytes": 23715,
       "sha256": "206ce461be072475fa9791e3ecb6e809b0b0be9cccbc70bb86141e9387cd8f05"
+    },
+    {
+      "id": "es/components/drawer",
+      "title": "Cajón deslizante",
+      "image": "/og/docs/es/components/drawer.png",
+      "bytes": 24553,
+      "sha256": "574a732e3f7b029483a3f0bb7c97694bb476ae3c86d32a50180830ea82ef21b8"
     },
     {
       "id": "es/components/dropdown-menu",
@@ -709,6 +744,27 @@
       "image": "/og/docs/es/components/input.png",
       "bytes": 19955,
       "sha256": "ea41f9cd514f4369e3448842ba2f8cdfb19536ea82da13d27f9bf298fd7f9492"
+    },
+    {
+      "id": "es/components/input-otp",
+      "title": "Entrada OTP",
+      "image": "/og/docs/es/components/input-otp.png",
+      "bytes": 23352,
+      "sha256": "c21bca2b59a56b67d73ba3c48e2a55c40e085225ba0244704bbd3c4bc0d95081"
+    },
+    {
+      "id": "es/components/label",
+      "title": "Etiqueta",
+      "image": "/og/docs/es/components/label.png",
+      "bytes": 20640,
+      "sha256": "8744654ebca9439599a31a7ccbbe597819f62d96753cfe5eceecd782c1a637c1"
+    },
+    {
+      "id": "es/components/navigation-menu",
+      "title": "Menú de navegación",
+      "image": "/og/docs/es/components/navigation-menu.png",
+      "bytes": 23538,
+      "sha256": "9cb24aae0c4b07a50680edfc3d501983dabf7c6fd9fab73c7fa2f25ac6795ee6"
     },
     {
       "id": "es/components/pagination",
@@ -760,6 +816,13 @@
       "sha256": "d479c3e1b40eef871f0340b309d0d6301709f529bd9f6930039e9df713f79b3b"
     },
     {
+      "id": "es/components/sidebar",
+      "title": "Barra lateral",
+      "image": "/og/docs/es/components/sidebar.png",
+      "bytes": 22951,
+      "sha256": "faedb6050dc9bdbb3f8733f7bac3e2ddc6c725b9f6f8e3270354fa2766fb7570"
+    },
+    {
       "id": "es/components/skeleton",
       "title": "Esqueleto",
       "image": "/og/docs/es/components/skeleton.png",
@@ -772,6 +835,13 @@
       "image": "/og/docs/es/components/slider.png",
       "bytes": 23179,
       "sha256": "efd6a92f9310f5beaf9a1eb69c8fc6cfa00fa8bac69cf81a003108085f8f3e3d"
+    },
+    {
+      "id": "es/components/sonner",
+      "title": "Notificaciones Sonner",
+      "image": "/og/docs/es/components/sonner.png",
+      "bytes": 23964,
+      "sha256": "291a1d59f30842e34041871795efdef141263902de78a8c6391e8bba65f1fc62"
     },
     {
       "id": "es/components/switch",

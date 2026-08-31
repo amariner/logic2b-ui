@@ -1,0 +1,65 @@
+---
+title: Entrada OTP
+description: Entrada accesible para códigos de un solo uso con casillas por carácter.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="input-otp-demo" locale="es" />
+
+## Instalación
+
+<Install name="input-otp" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
+
+<InputOTP aria-label="Código de un solo uso" maxLength={6}>
+  <InputOTPGroup>
+    <InputOTPSlot index={0} />
+    <InputOTPSlot index={1} />
+    <InputOTPSlot index={2} />
+  </InputOTPGroup>
+  <InputOTPSeparator />
+  <InputOTPGroup>
+    <InputOTPSlot index={3} />
+    <InputOTPSlot index={4} />
+    <InputOTPSlot index={5} />
+  </InputOTPGroup>
+</InputOTP>
+```
+
+Está construido sobre [input-otp](https://github.com/guilhermerodz/input-otp).
+
+## Ejemplos
+
+### Solo dígitos
+
+Pasa un `pattern` para restringir la entrada. `input-otp` reexporta
+`REGEXP_ONLY_DIGITS`.
+
+<ComponentPreview name="input-otp-pattern-demo" locale="es" />
+
+### Controlado
+
+<ComponentPreview name="input-otp-controlled-demo" locale="es" />
+
+## Accesibilidad
+
+- Renderiza un único `<input>` real detrás de las casillas, por lo que el
+  autocompletado de códigos (`autocomplete="one-time-code"`) y los gestores de
+  contraseñas funcionan, y los lectores de pantalla anuncian el campo con normalidad.
+- Se puede manejar completamente con el teclado: escribir avanza, <kbd>Retroceso</kbd>
+  vuelve a la casilla anterior y la primitiva gestiona las flechas y el pegado.
+- `aria-invalid` controla el estado no válido y aplica el anillo destructivo a
+  la casilla activa.
+- Da al campo un nombre accesible con un `<label>` visible, `aria-label` o
+  `aria-labelledby`; todos los ejemplos incluidos lo hacen explícitamente.

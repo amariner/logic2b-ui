@@ -24,13 +24,21 @@ const translatedComponents = [
   "button",
   "calendar",
   "card",
+  "carousel",
   "chart",
   "checkbox",
+  "combobox",
   "command",
+  "data-table",
+  "date-picker",
   "dialog",
+  "drawer",
   "dropdown-menu",
   "form",
   "input",
+  "input-otp",
+  "label",
+  "navigation-menu",
   "pagination",
   "popover",
   "progress",
@@ -38,8 +46,10 @@ const translatedComponents = [
   "select",
   "separator",
   "sheet",
+  "sidebar",
   "skeleton",
   "slider",
+  "sonner",
   "switch",
   "table",
   "tabs",
@@ -128,14 +138,28 @@ describe("Spanish documentation", () => {
     );
   });
 
-  test("publishes thirty complete core component translations", () => {
+  test("publishes forty complete component translations", () => {
     assert.deepEqual(Object.keys(SPANISH_COMPONENT_LABELS).sort(), translatedComponents);
+    const compositionInstalls: Record<string, string> = {
+      combobox: "npx logic2b@latest add popover command",
+      "data-table": "npx logic2b@latest add table input button badge",
+      "date-picker": "npx logic2b@latest add popover calendar",
+    };
     for (const name of translatedComponents) {
       const source = read(`src/content/docs-es/components/${name}.mdx`);
       const previews = source.match(/<ComponentPreview\b[^>]*\/>/g) ?? [];
       const installs = source.match(/<Install\b[^>]*\/>/g) ?? [];
       assert.ok(previews.length > 0, `${name} has no preview`);
       for (const preview of previews) assert.match(preview, /locale="es"/);
+      if (compositionInstalls[name]) {
+        assert.equal(installs.length, 0, `${name} must use its composition command`);
+        assert.equal(
+          source.match(new RegExp(compositionInstalls[name], "g"))?.length,
+          1,
+          `${name} must publish its composition command exactly once`,
+        );
+        continue;
+      }
       assert.equal(installs.length, 1, `${name} must have one install surface`);
       assert.match(installs[0], new RegExp(`name="${name}"`));
       assert.match(installs[0], /locale="es"/);
