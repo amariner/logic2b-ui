@@ -45,8 +45,9 @@ LLMs and coding agents.
   SHA-256 integrity contracts and per-item update history.
 - Every `registry:ui` payload includes an accessibility contract: semantic
   ownership, keyboard behavior, consumer responsibilities and known gaps.
-- `/tokens/default` — deterministic Style Dictionary exports of the semantic
-  theme contract as DTCG JSON, CSS, iOS Swift and Android resources.
+- `/tokens/default` — deterministic exports of the semantic theme contract as
+  Tokens Studio / Figma Variables, DTCG JSON, CSS, iOS Swift and Android
+  resources.
 - `/demos` + `/demos/index.json` — live marketing, dashboard and auth starters
   backed by the same canonical catalog used by CLI and MCP scaffolding.
 - `landing-page-01` — the canonical marketing starter as one installable block;
