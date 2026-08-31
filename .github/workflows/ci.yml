@@ -33,6 +33,17 @@ jobs:
 
       - run: pnpm test
 
+      # Bundle the native VS Code extension and validate its Marketplace
+      # manifest by producing the same unsigned preview VSIX documented for
+      # contributors. Publishing remains a separate credentialed release step.
+      - run: pnpm package:vscode
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logic2b-ui-vscode-preview
+          path: packages/vscode/dist/logic2b-ui.vsix
+          if-no-files-found: error
+
       # Benchmark contract: all rubric points are reachable; runner fixture
       # hashes, time/output termination and observed-build metadata are tested;
       # synthetic fixtures never enter the published leaderboard.
@@ -64,7 +75,7 @@ jobs:
       # from source imports.
       - run: pnpm --filter @logic2b/web test:budgets
 
-      # Accessibility gate: 654 hydrated axe analyses over all block previews,
+      # Accessibility gate: 706 hydrated axe analyses over all block previews,
       # component/chart demos, launch docs and 71 prop playgrounds, light + dark,
       # asserting no serious/critical violations. Structural and semantic
       # a11y — accessible names, roles, labels, valid ARIA and keyboard access.

@@ -5,7 +5,7 @@ description: Choose the right logic2b workflow for a developer, coding agent or 
 
 import IntegrationPaths from "@/components/IntegrationPaths.astro";
 
-There is one source registry and five ways to consume it. The component code is
+There is one source registry and six ways to consume it. The component code is
 the same; what changes is who resolves dependencies, who writes files and
 whether a terminal is available.
 
@@ -17,6 +17,9 @@ whether a terminal is available.
   return source, a CLI command or a self-contained Copy Prompt.
 - **You have a terminal and an existing repository:** use the CLI. It resolves
   registry dependencies and writes the source into your configured aliases.
+- **You work primarily in VS Code:** use the extension preview to browse and
+  search visually, launch CLI-backed installs and apply exact presets in local
+  or remote workspaces.
 - **Your agent has no shell or local Node runtime:** connect the remote MCP at
   `https://ui.logic2b.com/mcp`. `install_plan` and `scaffold_plan` return the
   complete writes as structured tool results.
@@ -28,7 +31,7 @@ whether a terminal is available.
 ## The maintenance boundary
 
 Installation is only the first step. A `/create` preset can travel through the
-studio, CLI and MCP without losing choices. Later, an MCP-connected agent can
+studio, CLI, VS Code and MCP without losing choices. Later, an MCP-connected agent can
 pass the repository's stylesheet to `lint_theme` to detect missing, duplicate
 or invalid tokens, derived-token drift, exact-preset drift and measured
 contrast regressions. The stylesheet is parsed as text and never executed.

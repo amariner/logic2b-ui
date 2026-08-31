@@ -34,6 +34,9 @@ identification purposes only.
 | [commander](https://github.com/tj/commander.js) | MIT | © 2011 TJ Holowaychuk |
 | [zod](https://github.com/colinhacks/zod) | MIT | © 2025 Colin McDonnell |
 | [astro](https://github.com/withastro/astro) | MIT | © Astro contributors |
+| [esbuild](https://github.com/evanw/esbuild) | MIT | © 2020 Evan Wallace |
+| [@vscode/vsce](https://github.com/microsoft/vscode-vsce) | MIT | © Microsoft Corporation |
+| [@types/vscode](https://github.com/DefinitelyTyped/DefinitelyTyped) | MIT | © Microsoft Corporation and contributors |
 
 ## Adapted code
 

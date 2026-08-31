@@ -21,6 +21,9 @@ LLMs and coding agents.
 - **`packages/mcp`** — an MCP server that exposes the registry to coding
   agents (search, scaffold, install and maintain components and themes).
   Also served remotely at `https://ui.logic2b.com/mcp` — no install, no shell.
+- **`packages/vscode`** — a native VS Code extension preview: browse and search
+  the registry, install items through the public CLI, and apply `/create`
+  presets to local or remote workspaces. CI produces a validated VSIX.
 
 ## LLM-first
 
@@ -87,6 +90,7 @@ pnpm --filter logic2b test:scaffold     # install/build a generated monorepo
 pnpm --filter @logic2b/web test:e2e  # 706 axe analyses + 650 visual checks (after build)
 pnpm --filter @logic2b/web test:budgets
 pnpm --filter @logic2b/web test:lighthouse
+pnpm package:vscode                   # build a locally installable VSIX
 pnpm benchmark:frameworks             # isolated Next/Vite/Astro/TanStack lab
 pnpm benchmark:agents:test            # validate agent protocol + scorer
 pnpm --dir benchmarks/agents test:fixtures # install/build agent fixtures

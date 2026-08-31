@@ -386,7 +386,13 @@ documented recipes, never a runtime framework of our own.
   through MCP, and English/Spanish docs cover GitHub sync and local import.
 - 💡 Published Figma component library generated from the registry and token
   tables.
-- 💡 VS Code extension: browse the registry, insert components, apply presets.
+- ✅ **VS Code extension preview** — a native Activity Bar explorer browses and
+  searches components, blocks and charts, delegates source installation to
+  `npx logic2b@latest`, and applies `/create` presets through the shared token
+  codec using remote-workspace-safe VS Code APIs. Unit tests, a bundled 22 KiB
+  host entry and CI-validated VSIX cover the complete preview contract.
+- 💡 Publish the extension after approving and creating the Marketplace
+  publisher identity; attach signed VSIX files to tagged releases.
 - 💡 Community namespace (`logic2b add @user/item`) with registry auth for
   private registries.
 - 💡 Starter templates repo (SaaS dashboard, marketing site, docs site) wired
