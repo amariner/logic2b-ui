@@ -620,6 +620,13 @@
       "sha256": "f1e0a4317029a4adc1dcb480d31992ac9b706da1f1ebf0640094f1f50dd568b4"
     },
     {
+      "id": "es/components/autocomplete",
+      "title": "Autocompletado",
+      "image": "/og/docs/es/components/autocomplete.png",
+      "bytes": 25450,
+      "sha256": "ca1f6cf45880692c4e074a90886e25df9ec9ccd773fd167cbc1256963bc31470"
+    },
+    {
       "id": "es/components/avatar",
       "title": "Avatar",
       "image": "/og/docs/es/components/avatar.png",
@@ -646,6 +653,13 @@
       "image": "/og/docs/es/components/button.png",
       "bytes": 20087,
       "sha256": "5227fa6efada1b894b6bab2c3d919d87e0504f91896e3cec92df70920ef45ff8"
+    },
+    {
+      "id": "es/components/button-group",
+      "title": "Grupo de botones",
+      "image": "/og/docs/es/components/button-group.png",
+      "bytes": 24902,
+      "sha256": "f7853b5f93e5052f1a1b89a26860ffac9b4d652e22051e31e596f4485b7f91db"
     },
     {
       "id": "es/components/calendar",
@@ -732,6 +746,13 @@
       "sha256": "a61e352f825f86287a9dfa85ad6d9fb86a46398af6081f202c35a89f87b62774"
     },
     {
+      "id": "es/components/field",
+      "title": "Campo de formulario",
+      "image": "/og/docs/es/components/field.png",
+      "bytes": 24178,
+      "sha256": "0f7f2e7f00fb434bf287ae7e5894b92d9e18d92c5675bc74a7d0d4a72560b2d3"
+    },
+    {
       "id": "es/components/form",
       "title": "Formulario",
       "image": "/og/docs/es/components/form.png",
@@ -744,6 +765,13 @@
       "image": "/og/docs/es/components/input.png",
       "bytes": 19955,
       "sha256": "ea41f9cd514f4369e3448842ba2f8cdfb19536ea82da13d27f9bf298fd7f9492"
+    },
+    {
+      "id": "es/components/input-group",
+      "title": "Grupo de entrada",
+      "image": "/og/docs/es/components/input-group.png",
+      "bytes": 24864,
+      "sha256": "c7966fcc4386651d896d37da9da36c1c3622ec999a131e3225ee5976fa4eb66f"
     },
     {
       "id": "es/components/input-otp",
@@ -760,11 +788,25 @@
       "sha256": "8744654ebca9439599a31a7ccbbe597819f62d96753cfe5eceecd782c1a637c1"
     },
     {
+      "id": "es/components/native-select",
+      "title": "Selector nativo",
+      "image": "/og/docs/es/components/native-select.png",
+      "bytes": 26427,
+      "sha256": "24255690bc8a0e91a6629900ca6bb74786d11026992145a4b845d5bb9d3fbefa"
+    },
+    {
       "id": "es/components/navigation-menu",
       "title": "Menú de navegación",
       "image": "/og/docs/es/components/navigation-menu.png",
       "bytes": 23538,
       "sha256": "9cb24aae0c4b07a50680edfc3d501983dabf7c6fd9fab73c7fa2f25ac6795ee6"
+    },
+    {
+      "id": "es/components/number-field",
+      "title": "Campo numérico",
+      "image": "/og/docs/es/components/number-field.png",
+      "bytes": 24372,
+      "sha256": "1c615abcfcb8a9a56b16ca47492b04e4d8384780fc46c33728e70bbd0f46cdfa"
     },
     {
       "id": "es/components/pagination",
@@ -793,6 +835,13 @@
       "image": "/og/docs/es/components/radio-group.png",
       "bytes": 26328,
       "sha256": "285718c998e18680b2e64686fa362297b22624a6e0e3d3b5aa31ca8909055ba3"
+    },
+    {
+      "id": "es/components/rating",
+      "title": "Valoración",
+      "image": "/og/docs/es/components/rating.png",
+      "bytes": 27423,
+      "sha256": "6115e5e658f0ad2696fb3322edaadb221a5bf200d04e1856d32a03a0bdaa2b70"
     },
     {
       "id": "es/components/select",
@@ -865,11 +914,32 @@
       "sha256": "5579d1f84e8a61d714a27e4e9d4085a69fd241c75a8836e1ca1f3922b8d45ed1"
     },
     {
+      "id": "es/components/tags-input",
+      "title": "Entrada de etiquetas",
+      "image": "/og/docs/es/components/tags-input.png",
+      "bytes": 27465,
+      "sha256": "b6291d82682197f2894a9a0daf63eef1d7cc20c86379cfd5c1ec61f578c616e5"
+    },
+    {
       "id": "es/components/textarea",
       "title": "Área de texto",
       "image": "/og/docs/es/components/textarea.png",
       "bytes": 21760,
       "sha256": "561718b59162b1e4d0e9e7a3f46d364dcc35ac7f5588b3a8d685a6d9e546cea0"
+    },
+    {
+      "id": "es/components/toggle",
+      "title": "Botón de alternancia",
+      "image": "/og/docs/es/components/toggle.png",
+      "bytes": 23795,
+      "sha256": "acb7525ecd4ab73b1db4fdd2da7185d82866a60894db7268a1356b3436df034c"
+    },
+    {
+      "id": "es/components/toggle-group",
+      "title": "Grupo de alternancia",
+      "image": "/og/docs/es/components/toggle-group.png",
+      "bytes": 23931,
+      "sha256": "422c78369d92d6dbce055fa2df9a766d5d0acb700266fe7306a94ee5ce687e07"
     },
     {
       "id": "es/components/tooltip",

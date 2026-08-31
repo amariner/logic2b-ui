@@ -1,0 +1,46 @@
+---
+title: Grupo de botones
+description: Agrupa botones relacionados sin espacio entre ellos, en horizontal o vertical.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="button-group-demo" locale="es" />
+
+## Instalación
+
+<Install name="button-group" locale="es" />
+
+## Uso
+
+```tsx
+import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group"
+
+<ButtonGroup>
+  <Button variant="outline">Copiar</Button>
+  <Button variant="outline">Pegar</Button>
+</ButtonGroup>
+
+<ButtonGroup>
+  <ButtonGroupText>https://</ButtonGroupText>
+  <ButtonGroupSeparator />
+  <Button variant="outline">ejemplo.com</Button>
+</ButtonGroup>
+```
+
+## Notas de uso
+
+Las tres partes también reenvían las propiedades nativas del elemento que
+representan: `ButtonGroup` y `ButtonGroupText` generan un `<div>`, mientras que
+`ButtonGroupSeparator` genera un `Separator`.
+
+## Ejemplos
+
+### Vertical
+
+<ComponentPreview name="button-group-vertical-demo" locale="es" />
+
+### Con un campo de entrada
+
+<ComponentPreview name="button-group-input-demo" locale="es" />
