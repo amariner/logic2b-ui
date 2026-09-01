@@ -111,10 +111,12 @@ or environment variables required.
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (the release
-candidate on the path to v1.0) and what we're exploring. The reproducible
-framework lab and latest measurements live in
-[benchmarks/frameworks](./benchmarks/frameworks).
+See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (the **user
+lane**: states contracts, `review_ui`, proposal links, `compose_plan`, the AI
+product kit, user preferences) and what we're exploring. Each initiative has
+an executable implementation guide under [docs/guides](./docs/guides/README.md)
+written for coding agents and humans alike. The reproducible framework lab and
+latest measurements live in [benchmarks/frameworks](./benchmarks/frameworks).
 
 ## Contributing
 
