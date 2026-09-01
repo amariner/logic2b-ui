@@ -13,6 +13,13 @@ the registry an agent can browse, theme and install from **without a shell** —
 a remote MCP endpoint, tools that return file writes instead of commands, and
 the design system itself shipped as agent-readable context.
 
+And the version of the goal that matters after the agent lane is built: **the
+agent is the builder, but a person is the user.** Speed is solved; the next
+gap is whether what agents build is good for the human on the other side —
+right screens, real states, honest copy, respected preferences, and a look
+before anything lands. That is the **user lane** below; each item has an
+implementation guide under [`docs/guides`](./docs/guides/README.md).
+
 Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 ## Shipped
@@ -26,9 +33,9 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   onboarding, settings, team, products, stats, FAQ, CTA, contact, navbar,
   footer, kanban, the e-commerce set (cart, checkout, product detail), the
   admin set (orders, reservations, customers, analytics) and animated twins.
-- ✅ **Charts** — 26 installable Recharts variants across area/bar/line/pie/
-  radar/radial plus sparklines, KPI tiles, composed charts and an activity
-  heatmap.
+- ✅ **Charts** — 27 installable Recharts variants across area/bar/line/pie/
+  radar/radial plus sparklines, KPI tiles, composed charts, an activity
+  heatmap and a deterministic realtime chart.
 - ✅ **Theme studio (`/create`)** — base color, accent, chart palette, radius and
   fonts with a live two-page canvas; round-trippable preset ids; CSS,
   `components.json` and generated `DESIGN.md` + `AGENTS.md` export.
@@ -147,11 +154,96 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   behavior, consumer responsibilities and honest known limitations in the
   installable JSON. Component docs render the same contract, MCP exposes it,
   and registry tests fail if any current or future UI item ships without one.
+- ✅ **Release candidate on npm** — `logic2b@1.0.0-rc.2` and
+  `@logic2b/mcp@1.0.0-rc.2` are published under the `next` dist-tag
+  (`latest` stays on the pre-RC 0.x line until the trademark green light),
+  after the release-artifacts gate in `RELEASING.md`. The remote registry,
+  `/llms.txt` and the `/mcp` endpoint are live at `ui.logic2b.com`.
 
-## Now (🔜) — Jul–Aug polish, in priority order
+## Now (🔜) — Sep–Oct: the user lane, in priority order
 
-The site IA, the typeset studio and CI validation (the previous Now lane) all
-shipped. What's left of the polish window before the September trust pass:
+Everything an agent needs to *build* with logic2b ui exists. This lane is
+about what the **person using the result** gets. Nine initiatives, four
+levers; the guides are the executable spec, this list is the order.
+
+**Guarantee quality** — the states, copy, a11y and motion a real user hits:
+
+1. 🔜 **UI states & content contract** — every block declares which of
+   `loading / empty / error / success / offline / partial` it renders,
+   exposes as a slot or leaves to the consumer; where its copy lives (one
+   typed `content` object per block); the intents it serves; and the
+   viewports it was designed for. Docs get a States tab, MCP returns it,
+   `Copy Prompt` and `AGENTS.md` carry the consumer duties, and the registry
+   test fails without it — the accessibility contract, applied to behavior.
+   → [guide 02](./docs/guides/02-ui-states-and-content-contract.md) · v1.0
+2. 🔜 **`review_ui` — design review as a tool** — a static, non-executing
+   rule engine over TSX (`packages/review`) surfaced as an MCP tool and
+   `logic2b review`: hand-rolled primitives, hardcoded colors, dialogs
+   without titles, unlabeled inputs, icon buttons without names, lists
+   without empty states, motion without reduced-motion, wrong icon package,
+   sub-24 px targets. Stable rule ids, a docs page per rule, and the agent
+   benchmark scores with the same ids so the tool and the leaderboard agree.
+   → [guide 03](./docs/guides/03-review-ui.md) · v1.0
+
+**Keep the human in the loop** — see it before it lands:
+
+3. 🔜 **Proposal links** — a composition codec next to the preset codec
+   (`c1.…`) and a `/proposal` page that renders any composition in any theme,
+   light/dark, per viewport, with section swap and the theme rail. No server
+   state: the URL is the proposal. `scaffold_plan`, `install_plan` and the CLI
+   return the link; Approve hands back the id and the exact command / MCP
+   call / prompt that reproduces it. → [guide 04](./docs/guides/04-proposal-links.md) · v1.0
+4. 🔜 **Agent rules distribution** — `AGENTS.md` + `DESIGN.md` written by
+   `init` and every scaffold, refreshed between markers by `add`/`update`,
+   returned by an `agent_rules` MCP tool, emitted as Cursor rules / Copilot
+   instructions / `CLAUDE.md` import, and shipped as a Claude Code skill in
+   the MCP tarball. The managed block is budgeted at 6 KB because context
+   costs the user too. → [guide 07](./docs/guides/07-agent-rules-distribution.md) · v1.0
+
+**Understand intent** — the right screens for the brief:
+
+5. 🔜 **`compose_plan`** — brief → composition made only of real registry
+   items, with page templates, intent matching, transitive closure, named
+   gaps and a confidence level, deterministic so it is testable and
+   benchmarkable; `logic2b compose "<brief>"` and a Compose tab in the studio
+   share the core. No model runs in the tool — grounding and completeness do.
+   → [guide 01](./docs/guides/01-compose-plan.md) · v1.1
+6. 🔜 **`form_plan` and `table_plan`** — JSON Schema / zod → a `Form`/`Field`
+   composition with labels, linked errors, `autoComplete` and wizard steps;
+   a data sample → a `data-table` with inferred column kinds, toolbar,
+   empty/loading/error states and a mobile strategy. Verified by `review_ui`
+   as a test. → [guide 06](./docs/guides/06-form-and-table-plan.md) · v1.1
+
+**Guarantee quality, continued** — the surfaces people increasingly use:
+
+7. 🔜 **AI product kit** — `message`, `streaming-markdown`, `tool-call`,
+   `reasoning`, `citations`, `feedback`, `prompt-composer`, `suggestions`,
+   `usage-meter`, `model-picker`, `approval-bar`; blocks for a chat, an
+   in-app assistant panel, inline AI edits with a diff, and an agent-run
+   timeline with approvals; a patterns guide on streaming, consent, cost and
+   live-region accessibility. Deterministic demos, no keys, tokens only.
+   → [guide 05](./docs/guides/05-ai-product-kit.md) · v1.1
+8. 🔜 **User preferences** — `density` and `contrast` as preset axes (12 → 14
+   fields, old ids keep decoding), a `use-preferences` hook and
+   `preferences-menu` honoring `prefers-reduced-motion` / `prefers-contrast`
+   with runtime overrides for motion and text size, a Preferences section in
+   `settings-01`, studio controls, and the contrast audit run on the
+   high-contrast ladder. → [guide 08](./docs/guides/08-user-preferences.md) · v1.1
+
+**Learn from outcomes** — close the loop:
+
+9. 💡 **Opt-in outcome feedback** — `report_outcome` / `logic2b telemetry`
+   sending closed-vocabulary counts only (item names, rule ids, intents,
+   confidence — never briefs, paths, contents or preset ids) to an aggregate
+   endpoint, published daily as `/r/insights.json` with re-identification
+   thresholds, feeding the roadmap, prompts and benchmark weights.
+   → [guide 09](./docs/guides/09-outcome-feedback-loop.md) · v1.2
+
+## Done — Jul–Aug polish and the September trust pass
+
+The site IA, the typeset studio, CI validation, scope cleanup, the
+accessibility gate, the visual suite and the trust gates all shipped. Kept
+here as the record of what "release candidate" means:
 
 ### 1. Scope cleanup — the registry ships UI, not services
 
@@ -409,9 +501,8 @@ long-term bets keep widening the gap between "an agent can read our docs" and
   iOS Swift and Android light/dark resources. Public artifacts carry SHA-256
   integrity, CI checks source parity, and MCP `export_tokens` resolves any
   preset id into the same platform-neutral contract.
-- 💡 **Agent telemetry (opt-in)** — anonymized signal on what agents install,
-  where prompts fail and which items get hand-edited after install, feeding
-  the agent benchmark and the prompt/MCP surfaces as a real feedback loop.
+- 💡 **Agent telemetry (opt-in)** — promoted to the user lane as the outcome
+  feedback loop, see [guide 09](./docs/guides/09-outcome-feedback-loop.md).
 
 ## Beyond the browser (💡 exploring)
 
@@ -451,19 +542,26 @@ that green light. Working backwards:
    workspaces and update-ready install manifests. The public
    integration-path comparison and its machine-readable twin are also live;
    the live starter gallery and its machine-readable catalog complete the launch
-   demos ✅. Remaining: publish the RC under npm's `next` tag and run real
-   isolated agent benchmarks.
-4. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
+   demos ✅. The RC is published under npm's `next` tag ✅. Remaining: run
+   real isolated agent benchmarks and publish their artifacts.
+4. **Sep–Oct** — the user lane's v1.0 items: states & content contract,
+   `review_ui`, proposal links and agent rules distribution
+   ([guides 02, 03, 04, 07](./docs/guides/README.md)). These are the four
+   that change what a person gets from an agent-built interface, and they
+   are cheap relative to what is already built; the rest of the lane
+   (`compose_plan`, planners, AI kit, preferences) ships in v1.1.
+5. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
    post, community namespace opens.
 
-_Status (30 Aug 2026): ahead of plan — the polish and September trust passes
-are complete. The remaining launch-path objectives are to publish the verified
-`1.0.0-rc.2` CLI/MCP artifacts under npm's `next` tag and run real isolated
-agent benchmarks. The CLI and shell-less MCP starter lanes, live launch demos,
-public comparison, benchmark harness and RC artifact gate are already complete.
-The local registry has advanced through `1.0.0-rc.16` with the composed landing,
-mail, calendar and AI chat applications, and compact delivery mirrors, while CLI/MCP
-packages remain the verified `1.0.0-rc.2` artifacts awaiting publication._
+_Status (1 Sep 2026): ahead of plan. Polish and trust passes are complete;
+`logic2b@1.0.0-rc.2` and `@logic2b/mcp@1.0.0-rc.2` are on npm under `next`;
+the site, registry and remote MCP are healthy; lint and the unit suites pass
+on `main`. The local registry is at `1.0.0-rc.16` (71 components, 38 blocks,
+27 charts, 141 items). The only launch-path objective still open is running
+real isolated agent benchmarks — the leaderboard is empty by design until a
+real run lands. The user lane above is the work between now and the trademark
+decision; its four v1.0 items are specified in `docs/guides` and ready to
+execute._
 
 ## Watching
 
@@ -471,6 +569,13 @@ packages remain the verified `1.0.0-rc.2` artifacts awaiting publication._
   ("Unstyled components for React"). If the ecosystem migrates from Radix to
   those, "shadcn-compatible" changes meaning and our Radix-based ports need a
   strategy. No action yet; re-evaluate as it matures.
+- 👀 **UI inside MCP hosts (MCP Apps)** — when hosts render tool-provided UI,
+  proposal links (guide 04) become inline previews in the conversation. The
+  `/proposal` page is stateless and iframe-friendly on purpose so adoption
+  is a thin wrapper. Track the spec; do not build ahead of it.
+- 👀 **Agent skills as a distribution format** — `SKILL.md`-style procedural
+  files are becoming how agents learn a tool. Guide 07 ships one in the MCP
+  tarball; if a shared registry for skills stabilizes, list it there.
 
 ---
 
