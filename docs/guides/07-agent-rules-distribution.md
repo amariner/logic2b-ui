@@ -108,7 +108,15 @@ and documented in `/docs/llms`.
 - `test:scaffold` (CLI) and `test:scaffolds` (MCP) assert the generated
   projects contain the rules and that `update` refreshes only the block.
 
+## VS Code extension
+
+`packages/vscode` already installs items and applies presets through the
+shared codec. Once the generator lives in `packages/scaffold`, add a
+"Generate agent rules" command that writes the same files through the
+workspace API (remote-safe, like preset application) and refreshes the
+managed block after an install. No second implementation.
+
 ## Out of scope
 
-- Per-editor extensions or marketplace listings beyond the skill file.
+- Marketplace listings beyond the skill file and the existing VSIX.
 - Rules for non-logic2b registries.
