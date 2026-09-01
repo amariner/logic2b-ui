@@ -1,0 +1,39 @@
+---
+title: Indicador de carga
+description: Indicador giratorio de carga.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="spinner-demo" locale="es" />
+
+## Instalación
+
+<Install name="spinner" locale="es" />
+
+## Uso
+
+```tsx
+import { Spinner } from "@/components/ui/spinner"
+
+<Spinner />
+<Spinner className="size-6 text-primary" />
+```
+
+## Notas de uso
+
+Genera el `Loader2Icon` de `lucide-react` con `animate-spin` y reenvía cualquier
+propiedad aceptada por un elemento `<svg>`, como `className` para cambiar tamaño
+o color. Incluye `role="status"` y `aria-label="Loading"` para que las
+tecnologías de asistencia lo anuncien.
+
+## Ejemplos
+
+### Tamaños
+
+<ComponentPreview name="spinner-sizes-demo" locale="es" />
+
+### En un botón
+
+<ComponentPreview name="spinner-button-demo" locale="es" />

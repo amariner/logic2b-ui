@@ -30,6 +30,25 @@ export interface PortableTokenBundle {
   dark: PortableTokenSet
 }
 
+export type TokensStudioSetStatus = "enabled" | "disabled" | "source"
+
+export interface TokensStudioTheme {
+  id: string
+  name: string
+  group: string
+  selectedTokenSets: Record<string, TokensStudioSetStatus>
+}
+
+export interface TokensStudioBundle {
+  global: PortableTokenSet
+  light: PortableTokenSet
+  dark: PortableTokenSet
+  $metadata: {
+    tokenSetOrder: readonly ["global", "light", "dark"]
+  }
+  $themes: readonly [TokensStudioTheme, TokensStudioTheme]
+}
+
 function dimension(value: string): { value: number; unit: string } | null {
   const match = value.trim().match(/^(-?[\d.]+)(rem|px|em|ch)$/)
   return match ? { value: Number(match[1]), unit: match[2] } : null
@@ -112,5 +131,42 @@ export function portableTokenBundle(config: ThemeConfig): PortableTokenBundle {
     global: portableGlobalTokens(config),
     light: portableModeTokens(config, "light", { includeGlobals: false }),
     dark: portableModeTokens(config, "dark", { includeGlobals: false }),
+  }
+}
+
+/** Tokens Studio single-file storage contract. The token values are the same
+ * DTCG data as portableTokenBundle, while the plugin-specific metadata maps one
+ * Logic2b collection to light and dark Figma Variable modes. */
+export function tokensStudioBundle(config: ThemeConfig): TokensStudioBundle {
+  const preset = encodePreset(config)
+  return {
+    global: portableGlobalTokens(config),
+    light: portableModeTokens(config, "light", { includeGlobals: false }),
+    dark: portableModeTokens(config, "dark", { includeGlobals: false }),
+    $metadata: {
+      tokenSetOrder: ["global", "light", "dark"],
+    },
+    $themes: [
+      {
+        id: `logic2b:${preset}:light`,
+        name: "Light",
+        group: "Logic2b",
+        selectedTokenSets: {
+          global: "enabled",
+          light: "enabled",
+          dark: "disabled",
+        },
+      },
+      {
+        id: `logic2b:${preset}:dark`,
+        name: "Dark",
+        group: "Logic2b",
+        selectedTokenSets: {
+          global: "enabled",
+          light: "disabled",
+          dark: "enabled",
+        },
+      },
+    ],
   }
 }

@@ -1,0 +1,42 @@
+---
+title: Grupo de opciones
+description: Conjunto de botones seleccionables en el que solo puede estar marcada una opción a la vez.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="radio-group-demo" locale="es" />
+
+## Instalación
+
+<Install name="radio-group" locale="es" />
+
+## Uso
+
+```tsx
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
+<RadioGroup defaultValue="comfortable">
+  <RadioGroupItem value="default" id="r1" />
+  <RadioGroupItem value="comfortable" id="r2" />
+</RadioGroup>
+```
+
+## Ejemplos
+
+### Tarjetas
+
+<ComponentPreview name="radio-group-cards-demo" locale="es" />
+
+### Con una opción desactivada
+
+<ComponentPreview name="radio-group-disabled-demo" locale="es" />
+
+## Accesibilidad
+
+Está construido sobre [Radio Group de Radix](https://www.radix-ui.com/primitives/docs/components/radio-group) y sigue el patrón WAI-ARIA `radiogroup`.
+
+- Las flechas mueven y seleccionan opciones; solo un elemento puede estar marcado a la vez.
+- Se llega al grupo con <kbd>Tab</kbd>; el foco cae sobre la opción marcada o sobre la primera si no hay ninguna seleccionada.
+- Asocia cada `RadioGroupItem` con un `Label` mediante valores coincidentes de `id` y `htmlFor` para que el área interactiva y el nombre accesible sean correctos.

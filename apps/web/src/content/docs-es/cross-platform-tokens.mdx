@@ -1,6 +1,6 @@
 ---
 title: Tokens multiplataforma
-description: Exporta un preset de logic2b a JSON DTCG, CSS, Swift para iOS y recursos Android.
+description: Exporta un preset de logic2b a Variables de Figma, JSON DTCG, CSS, Swift para iOS y recursos Android.
 ---
 
 Las tablas de temas de `@logic2b/tokens` son la única fuente para los tokens de
@@ -16,6 +16,7 @@ se sirve como artefactos estáticos con integridad basada en contenido:
 | --- | --- |
 | Manifiesto e integridad SHA-256 | [`/tokens/default/manifest.json`](/tokens/default/manifest.json) |
 | Fuente portable con forma DTCG | [`/tokens/default/logic2b.tokens.json`](/tokens/default/logic2b.tokens.json) |
+| Tokens Studio / Variables de Figma | [`/tokens/default/logic2b.tokens-studio.json`](/tokens/default/logic2b.tokens-studio.json) |
 | Propiedades CSS personalizadas | [`/tokens/default/logic2b.css`](/tokens/default/logic2b.css) |
 | Recursos Android claros | [`/tokens/default/android/values/logic2b_tokens.xml`](/tokens/default/android/values/logic2b_tokens.xml) |
 | Recursos Android oscuros | [`/tokens/default/android/values-night/logic2b_tokens.xml`](/tokens/default/android/values-night/logic2b_tokens.xml) |
@@ -28,6 +29,25 @@ conversiones sRGB deterministas y limitadas al gamut: Android recibe recursos
 convierte de `0.625rem` a 10 puntos de plataforma. Las pilas tipográficas se
 mantienen en JSON y CSS porque registrar una fuente nativa depende de la app.
 
+## Variables de Figma mediante Tokens Studio
+
+Usa `logic2b.tokens-studio.json` como fuente de almacenamiento en un único
+archivo para el
+[plugin Tokens Studio para Figma](https://docs.tokens.studio/token-storage/remote/sync-git-github).
+El artefacto sigue el
+[formato W3C DTCG del plugin](https://docs.tokens.studio/manage-settings/token-format)
+y contiene los conjuntos `global`, `light` y `dark`. Sus dos registros de tema
+comparten el grupo `Logic2b`, para que el plugin pueda convertirlos en una
+colección de Variables de Figma con los modos `Light` y `Dark`.
+
+Para sincronizar desde GitHub, configura el repositorio
+`amariner/logic2b-ui`, la rama `main` y el archivo
+`apps/web/public/tokens/default/logic2b.tokens-studio.json`; después recupera
+los conjuntos y temas. También puedes descargar el archivo público desde la
+tabla anterior e importarlo localmente. Usa el artefacto genérico
+`logic2b.tokens.json` cuando el consumidor no necesite metadatos de Tokens
+Studio.
+
 ## Exporta cualquier preset mediante MCP
 
 Llama a `export_tokens` con un id de preset de `/create`, o con las mismas
@@ -39,9 +59,11 @@ opciones explícitas que acepta `apply_preset`:
 }
 ```
 
-La respuesta es un paquete portable con tres espacios: `global` para radio y
-tipografía, más `light` y `dark` para colores semánticos. Puedes entregarlo a
-Style Dictionary u otro pipeline compatible con DTCG sin extraer CSS.
+La respuesta incluye el paquete portable y el contrato equivalente para Tokens
+Studio. Ambos usan `global` para radio y tipografía, más `light` y `dark` para
+colores semánticos. Entrega el paquete genérico a Style Dictionary u otro
+pipeline compatible con DTCG; usa `tokensStudio` para un preset personalizado
+en Figma.
 
 ## Regenera desde el repositorio
 

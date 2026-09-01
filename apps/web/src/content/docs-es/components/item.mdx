@@ -1,0 +1,76 @@
+---
+title: Elemento
+description: Contenedor flexible para título, descripción y acciones; agrúpalo con ItemGroup para crear una lista de entradas compuestas.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="item-demo" locale="es" />
+
+## Instalación
+
+<Install name="item" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+import { Button } from "@/components/ui/button"
+
+<Item variant="outline">
+  <ItemContent>
+    <ItemTitle>Elemento básico</ItemTitle>
+    <ItemDescription>Un elemento sencillo con título y descripción.</ItemDescription>
+  </ItemContent>
+  <ItemActions>
+    <Button variant="outline" size="sm">Acción</Button>
+  </ItemActions>
+</Item>
+```
+
+Usa `asChild` para generar el elemento como su nodo hijo, por ejemplo un `<a>`,
+en vez de un `div`. Así toda la fila se convierte en enlace sin alterar su
+distribución.
+
+## Ejemplos
+
+### Agrupado, con separadores e iconos
+
+Envuelve los elementos en `ItemGroup` e intercala un `ItemSeparator` para crear
+una lista similar a la de ajustes. `ItemMedia variant="icon"` añade al icono
+inicial un fondo cuadrado atenuado; `variant="image"` dimensiona y recorta un
+`<img>` del mismo modo para contenido similar a un avatar.
+
+<ComponentPreview name="item-group-demo" locale="es" />
+
+## Partes
+
+| Componente | Uso |
+| --- | --- |
+| `Item` | Raíz de la fila o tarjeta: contenedor flexible de las demás partes. |
+| `ItemGroup` | Agrupa visualmente elementos con semántica neutra; combínalo con `ItemSeparator`. |
+| `ItemSeparator` | Línea horizontal entre elementos agrupados. |
+| `ItemMedia` | Icono, imagen o avatar inicial. |
+| `ItemContent` | Envuelve `ItemTitle` y `ItemDescription`; varios bloques no crecen dentro de un mismo `Item`. |
+| `ItemTitle` | Línea de título del elemento. |
+| `ItemDescription` | Texto complementario limitado a dos líneas. |
+| `ItemActions` | Botones, interruptores o iconos finales. |
+| `ItemHeader` / `ItemFooter` | Filas opcionales de ancho completo antes o después del contenido principal. |
+
+## Accesibilidad
+
+`ItemGroup` es semánticamente neutro por defecto porque no todos los grupos
+compuestos son listas. Para contenido que sí lo sea, pasa `role="list"` a
+`ItemGroup` y `role="listitem"` a cada `Item`. Si un `Item` es interactivo, usa
+`asChild` y genera un `<a>` o `<button>` real como nodo hijo; no añadas `onClick`
+a un `<div>` sin semántica, que los lectores de pantalla y métodos de entrada
+nativos no reconocerán como accionable. Asigna un nombre accesible a cada botón
+de icono o interruptor final.

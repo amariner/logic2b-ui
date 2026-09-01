@@ -1,0 +1,50 @@
+---
+title: Tarjeta al pasar
+description: Permite a las personas videntes previsualizar el contenido disponible tras un enlace.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="hover-card-demo" locale="es" />
+
+## Instalación
+
+<Install name="hover-card" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
+<HoverCard>
+  <HoverCardTrigger>@logic2b</HoverCardTrigger>
+  <HoverCardContent>
+    Componentes listos para crear interfaces atractivas con rapidez.
+  </HoverCardContent>
+</HoverCard>
+```
+
+## Ejemplos
+
+### Perfil
+
+<ComponentPreview name="hover-card-profile-demo" locale="es" />
+
+### Retraso y alineación personalizados
+
+<ComponentPreview name="hover-card-align-demo" locale="es" />
+
+## Accesibilidad
+
+- Construido sobre [Hover Card de Radix](https://www.radix-ui.com/primitives/docs/components/hover-card):
+  se abre al pasar el puntero o al enfocar el activador con el teclado, por lo
+  que se alcanza mediante <kbd>Tab</kbd>.
+- Es una previsualización complementaria para personas videntes. No atrapa el
+  foco ni se anuncia como diálogo, así que nunca debe contener en exclusiva
+  información o acciones esenciales.
+- <kbd>Esc</kbd> cierra una tarjeta abierta.

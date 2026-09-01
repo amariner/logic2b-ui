@@ -1,0 +1,35 @@
+---
+title: Esqueleto
+description: Marcador de posición que se muestra mientras se carga el contenido.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="skeleton-demo" locale="es" />
+
+## Instalación
+
+<Install name="skeleton" locale="es" />
+
+## Uso
+
+```tsx
+import { Skeleton } from "@/components/ui/skeleton"
+
+<Skeleton className="h-4 w-[250px]" />
+```
+
+## Notas de uso
+
+`Skeleton` renderiza un único `<div>` y reenvía todas sus propiedades nativas. Define su forma y tamaño mediante `className`.
+
+## Ejemplos
+
+### Tarjeta
+
+<ComponentPreview name="skeleton-card-demo" locale="es" />
+
+### Lista
+
+<ComponentPreview name="skeleton-list-demo" locale="es" />

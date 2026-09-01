@@ -1,0 +1,51 @@
+---
+title: Campo de formulario
+description: Primitivas componibles para distribuir un campo de formulario sin depender de react-hook-form.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="field-demo" locale="es" />
+
+## Instalación
+
+<Install name="field" locale="es" />
+
+## Uso
+
+```tsx
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+
+<FieldGroup>
+  <Field>
+    <FieldLabel htmlFor="username">Nombre de usuario</FieldLabel>
+    <Input id="username" placeholder="logic2b" />
+    <FieldDescription>Este será tu nombre público.</FieldDescription>
+  </Field>
+  <Field>
+    <FieldLabel htmlFor="email">Correo electrónico</FieldLabel>
+    <Input id="email" type="email" aria-invalid />
+    <FieldError>Introduce una dirección de correo válida.</FieldError>
+  </Field>
+</FieldGroup>
+```
+
+Usa `field` en formularios sencillos o para envolver un único control sin
+`react-hook-form`. Si necesitas conectar la validación mediante esquemas con el
+estado de los campos, usa el componente
+[formulario](/es/docs/components/form), basado en `react-hook-form` y `zod`.
+
+## Ejemplos
+
+### Horizontal
+
+Sitúa un control junto a su etiqueta y descripción.
+
+<ComponentPreview name="field-horizontal-demo" locale="es" />
+
+### Conjunto de campos
+
+Agrupa campos relacionados bajo un `FieldLegend`.
+
+<ComponentPreview name="field-set-demo" locale="es" />

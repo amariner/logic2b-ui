@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "registry": {
+    "url": "https://ui.logic2b.com"
+  },
+  "items": {
+    "card": {
+      "files": [
+        "ui/card.tsx"
+      ]
+    },
+    "chart": {
+      "files": [
+        "ui/chart.tsx"
+      ]
+    },
+    "chart-area-04": {
+      "files": [
+        "charts/chart-area-04.tsx"
+      ]
+    },
+    "chart-bar-04": {
+      "files": [
+        "charts/chart-bar-04.tsx"
+      ]
+    },
+    "chart-pie-03": {
+      "files": [
+        "charts/chart-pie-03.tsx"
+      ]
+    },
+    "chart-radial-02": {
+      "files": [
+        "charts/chart-radial-02.tsx"
+      ]
+    },
+    "dashboard-02": {
+      "files": [
+        "blocks/dashboard-02/analytics-dashboard.tsx"
+      ]
+    },
+    "select": {
+      "files": [
+        "ui/select.tsx"
+      ]
+    },
+    "theme": {
+      "files": [
+        "theme.css"
+      ]
+    },
+    "utils": {
+      "files": [
+        "lib/utils.ts"
+      ]
+    }
+  }
+}

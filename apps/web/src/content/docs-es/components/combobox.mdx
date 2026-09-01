@@ -1,0 +1,90 @@
+---
+title: Cuadro combinado
+description: Campo de autocompletado y paleta de comandos compuesto con Popover y Command.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="combobox-demo" locale="es" />
+
+El cuadro combinado no es un elemento independiente del registry: es una
+composición de los componentes [panel emergente](/es/docs/components/popover)
+y [paleta de comandos](/es/docs/components/command), igual que en la referencia
+compatible. Instala ambos y conecta el estado de selección en tu aplicación.
+
+## Instalación
+
+```bash
+npx logic2b@latest add popover command
+```
+
+## Uso
+
+```tsx
+import * as React from "react"
+import { Check, ChevronsUpDown } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
+const frameworks = [
+  { value: "next", label: "Next.js" },
+  { value: "vite", label: "Vite" },
+]
+
+export function Combobox() {
+  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState("")
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" aria-expanded={open}>
+          {value ? frameworks.find((f) => f.value === value)?.label : "Selecciona…"}
+          <ChevronsUpDown className="ml-2 size-4 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[220px] p-0">
+        <Command>
+          <CommandInput placeholder="Buscar…" />
+          <CommandList>
+            <CommandEmpty>Sin resultados.</CommandEmpty>
+            <CommandGroup>
+              {frameworks.map((f) => (
+                <CommandItem
+                  key={f.value}
+                  value={f.value}
+                  onSelect={(v) => {
+                    setValue(v === value ? "" : v)
+                    setOpen(false)
+                  }}
+                >
+                  <Check className={cn("mr-2 size-4", value === f.value ? "opacity-100" : "opacity-0")} />
+                  {f.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}
+```
+
+## Accesibilidad
+
+- El disparador define `role="combobox"` y `aria-expanded`, de modo que las
+  tecnologías de asistencia anuncian si está contraído o expandido.
+- Command gestiona la navegación de la lista: <kbd>↑</kbd>/<kbd>↓</kbd> mueve
+  la selección, <kbd>Intro</kbd> confirma y escribir filtra los resultados.
+- <kbd>Escape</kbd> cierra el panel y devuelve el foco al disparador.

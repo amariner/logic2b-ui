@@ -1,5 +1,105 @@
 {
   "schemaVersion": 1,
-  "generatedAt": null,
-  "entries": []
+  "generatedAt": "2026-08-31T10:55:40.353Z",
+  "entries": [
+    {
+      "rank": 1,
+      "runId": "gpt-5.6-sol-codex-0.148.0-alpha.15-2026-08-31",
+      "model": {
+        "name": "gpt-5.6-sol",
+        "version": "service alias observed 2026-08-31"
+      },
+      "agent": {
+        "name": "OpenAI Codex CLI",
+        "version": "0.148.0-alpha.15"
+      },
+      "score": 294,
+      "maxScore": 300,
+      "percent": 98,
+      "durationMs": 737600,
+      "tasks": [
+        {
+          "id": "install-and-theme",
+          "percent": 100,
+          "durationMs": 310772
+        },
+        {
+          "id": "compose-settings",
+          "percent": 100,
+          "durationMs": 202442
+        },
+        {
+          "id": "scaffold-dashboard",
+          "percent": 94,
+          "durationMs": 224386
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "runId": "gpt-5.5-codex-0.148.0-alpha.15-2026-08-31",
+      "model": {
+        "name": "gpt-5.5",
+        "version": "service alias observed 2026-08-31"
+      },
+      "agent": {
+        "name": "OpenAI Codex CLI",
+        "version": "0.148.0-alpha.15"
+      },
+      "score": 272,
+      "maxScore": 300,
+      "percent": 90.7,
+      "durationMs": 751789,
+      "tasks": [
+        {
+          "id": "install-and-theme",
+          "percent": 100,
+          "durationMs": 184456
+        },
+        {
+          "id": "compose-settings",
+          "percent": 100,
+          "durationMs": 128666
+        },
+        {
+          "id": "scaffold-dashboard",
+          "percent": 72,
+          "durationMs": 438667
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "runId": "gpt-5.6-terra-codex-0.148.0-alpha.15-2026-08-31",
+      "model": {
+        "name": "gpt-5.6-terra",
+        "version": "service alias observed 2026-08-31"
+      },
+      "agent": {
+        "name": "OpenAI Codex CLI",
+        "version": "0.148.0-alpha.15"
+      },
+      "score": 266,
+      "maxScore": 300,
+      "percent": 88.7,
+      "durationMs": 430712,
+      "tasks": [
+        {
+          "id": "install-and-theme",
+          "percent": 100,
+          "durationMs": 170219
+        },
+        {
+          "id": "compose-settings",
+          "percent": 100,
+          "durationMs": 98585
+        },
+        {
+          "id": "scaffold-dashboard",
+          "percent": 66,
+          "durationMs": 161908
+        }
+      ]
+    }
+  ]
 }

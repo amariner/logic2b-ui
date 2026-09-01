@@ -1,0 +1,70 @@
+---
+title: Diálogo de alerta
+description: Diálogo modal que interrumpe al usuario con contenido importante y requiere una respuesta.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="alert-dialog-demo" locale="es" />
+
+## Instalación
+
+<Install name="alert-dialog" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
+<AlertDialog>
+  <AlertDialogTrigger>Eliminar cuenta</AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>¿Confirmas la acción?</AlertDialogTitle>
+      <AlertDialogDescription>
+        Esta acción no se puede deshacer.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+      <AlertDialogAction>Continuar</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+## Notas de uso
+
+`AlertDialogAction` y `AlertDialogCancel` usan respectivamente las variantes de botón predeterminada y outline. Pasa `className` para cambiar su estilo, por ejemplo en una acción destructiva.
+
+## Ejemplos
+
+### Acción destructiva
+
+Aplica la variante destructiva al botón de confirmación en operaciones irreversibles.
+
+<ComponentPreview name="alert-dialog-destructive-demo" locale="es" />
+
+### Controlado
+
+Abre el diálogo desde tu propio estado con `open` y `onOpenChange`.
+
+<ComponentPreview name="alert-dialog-controlled-demo" locale="es" />
+
+## Accesibilidad
+
+- Sigue el [patrón WAI-ARIA de diálogo de alerta](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/) y mantiene el foco dentro mientras está abierto.
+- Al abrirse mueve el foco al diálogo; al cerrarse lo devuelve al disparador.
+- <kbd>Escape</kbd> cierra el diálogo y dispara `AlertDialogCancel`. A diferencia de un diálogo normal, un clic en la capa exterior no lo cierra: es necesario responder.
+- `AlertDialogTitle` etiqueta el contenido y `AlertDialogDescription` lo describe.

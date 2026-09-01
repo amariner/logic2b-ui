@@ -1,5 +1,8 @@
 import { auditTokens } from "@logic2b/tokens/contrast"
-import { portableTokenBundle } from "@logic2b/tokens/export"
+import {
+  portableTokenBundle,
+  tokensStudioBundle,
+} from "@logic2b/tokens/export"
 import { lintThemeCss } from "@logic2b/tokens/lint"
 import { buildInstallPlan } from "./plan.ts"
 import { PACKAGE_VERSION } from "./version.ts"
@@ -232,7 +235,7 @@ export const TOOLS = [
   {
     name: "export_tokens",
     description:
-      "Export a /create preset as a portable DTCG-shaped light/dark token bundle. The same source drives the public Style Dictionary CSS, iOS and Android artifacts.",
+      "Export a /create preset as portable DTCG-shaped light/dark tokens plus a Tokens Studio theme contract for Figma Variables. The same source drives the public CSS, iOS and Android artifacts.",
     inputSchema: {
       type: "object",
       properties: {
@@ -640,17 +643,21 @@ export async function runTool(
       const cfg = resolveThemeArgs(args)
       if (typeof cfg === "string") return errorResult(cfg)
       const bundle = portableTokenBundle(cfg)
+      const tokensStudio = tokensStudioBundle(cfg)
       return textResult({
         preset: encodePreset(cfg),
         bundle,
+        tokensStudio,
         defaultArtifacts: {
           manifest: `${base}/tokens/default/manifest.json`,
+          tokensStudio: `${base}/tokens/default/logic2b.tokens-studio.json`,
           css: `${base}/tokens/default/logic2b.css`,
           android: `${base}/tokens/default/android/`,
           ios: `${base}/tokens/default/ios/`,
         },
         notes: [
           "The bundle preserves CSS oklch values and separates global, light and dark semantic tokens.",
+          "The Tokens Studio contract groups Light and Dark as modes of one Logic2b Figma Variable collection.",
           "Feed this DTCG-shaped source into Style Dictionary or another design-token pipeline for a custom preset.",
         ],
       })

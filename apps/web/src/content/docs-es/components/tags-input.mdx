@@ -1,0 +1,48 @@
+---
+title: Entrada de etiquetas
+description: Campo libre con varios valores representados como etiquetas eliminables; añade con Intro o coma y quita con Retroceso o el botón de cierre.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="tags-input-demo" locale="es" />
+
+## Instalación
+
+<Install name="tags-input" locale="es" />
+
+## Uso
+
+```tsx
+import { TagsInput } from "@/components/ui/tags-input"
+
+const [tags, setTags] = React.useState<string[]>([])
+
+<TagsInput
+  value={tags}
+  onValueChange={setTags}
+  placeholder="Añadir una etiqueta…"
+/>
+```
+
+Intro o coma confirman el borrador. El texto pegado y separado por comas se
+divide en etiquetas, Retroceso sobre un campo vacío elimina la última y perder
+el foco confirma cualquier texto pendiente. Los duplicados se ignoran.
+
+## Ejemplos
+
+### Máximo de etiquetas
+
+Limita la lista con `max`: los valores pegados que excedan el máximo se descartan
+y el campo queda desactivado hasta que se elimine una etiqueta.
+
+<ComponentPreview name="tags-input-max-demo" locale="es" />
+
+## Accesibilidad
+
+- La parte editable es un `<input>` real. Dale una etiqueta con
+  `<Label htmlFor>` —se reenvía el `id`— o mediante `aria-label`.
+- El botón de cierre de cada etiqueta expone `aria-label="Remove <tag>"`.
+- <kbd>Retroceso</kbd> sobre un campo vacío elimina la última etiqueta, por lo
+  que todo el control funciona sin puntero.

@@ -1,0 +1,53 @@
+---
+title: Panel plegable
+description: Componente interactivo que expande y contrae un panel de contenido.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="collapsible-demo" locale="es" />
+
+## Instalación
+
+<Install name="collapsible" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+
+<Collapsible>
+  <CollapsibleTrigger>¿Puedo usarlo en mi proyecto?</CollapsibleTrigger>
+  <CollapsibleContent>
+    Sí. Puedes usarlo en proyectos personales y comerciales.
+  </CollapsibleContent>
+</Collapsible>
+```
+
+## Ejemplos
+
+### Controlado
+
+Gestiona el estado abierto mediante `open` y `onOpenChange`.
+
+<ComponentPreview name="collapsible-controlled-demo" locale="es" />
+
+### Pregunta frecuente
+
+Compón un panel expandible autónomo con un activador delimitado.
+
+<ComponentPreview name="collapsible-faq-demo" locale="es" />
+
+## Accesibilidad
+
+- El activador expone `aria-expanded` y `aria-controls`, que apunta al contenido
+  plegable.
+- <kbd>Espacio</kbd> o <kbd>Intro</kbd> sobre el activador con foco alternan el
+  panel.
+- Cuando está contraído, el contenido queda oculto para las tecnologías de
+  asistencia y sale del orden de tabulación.

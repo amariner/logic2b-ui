@@ -1,0 +1,2 @@
+# Benchmark transcripts are immutable raw process output, not normalized source.
+benchmarks/agents/runs/*/transcripts/*.log -whitespace

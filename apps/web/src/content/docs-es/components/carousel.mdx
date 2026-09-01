@@ -1,0 +1,68 @@
+---
+title: Carrusel
+description: Carrusel de diapositivas con controles anterior/siguiente y navegación por teclado.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="carousel-demo" locale="es" />
+
+## Instalación
+
+<Install name="carousel" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+
+<Carousel>
+  <CarouselContent>
+    <CarouselItem>1</CarouselItem>
+    <CarouselItem>2</CarouselItem>
+    <CarouselItem>3</CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+</Carousel>
+```
+
+Está construido sobre
+[embla-carousel-react](https://www.embla-carousel.com/get-started/react/).
+Pasa las opciones de Embla mediante `opts`, los plugins mediante `plugins` o
+recibe la API imperativa con `setApi`.
+
+## Notas de uso
+
+`CarouselPrevious` y `CarouselNext` aceptan las propiedades estándar de
+`Button`, como `variant` y `size`, y se desactivan automáticamente en los extremos.
+
+## Ejemplos
+
+### Varios elementos
+
+Define el `basis` de cada `CarouselItem` para mostrar varias diapositivas a la vez.
+
+<ComponentPreview name="carousel-multiple-demo" locale="es" />
+
+### Vertical
+
+Usa `orientation="vertical"` para desplazar las diapositivas de arriba abajo.
+
+<ComponentPreview name="carousel-vertical-demo" locale="es" />
+
+## Accesibilidad
+
+- La raíz usa `role="region"` y `aria-roledescription="carousel"`; cada
+  diapositiva es un `role="group"` identificado como tal.
+- Cuando el carrusel tiene el foco, <kbd>Flecha izquierda</kbd> y
+  <kbd>Flecha derecha</kbd> avanzan a la diapositiva anterior o siguiente.
+- Los botones incluyen etiquetas solo para lectores de pantalla y pasan a
+  `disabled` cuando no queda contenido en esa dirección.

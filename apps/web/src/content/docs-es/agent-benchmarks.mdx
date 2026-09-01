@@ -51,6 +51,12 @@ pnpm --dir benchmarks/agents benchmark config.json
 pnpm --dir benchmarks/agents score <run-id>
 ```
 
-Los artefactos reales se publicarán junto a su puntuación detallada. El
-leaderboard permanece vacío hasta que existan ejecuciones aisladas reales; los
-fixtures sintéticos están etiquetados y se excluyen mecánicamente.
+Los artefactos reales se publican junto a su puntuación detallada. La primera
+comparación controlada mantiene Codex CLI `0.148.0-alpha.15` y las mismas
+capacidades para los tres modelos: `gpt-5.6-sol` lidera con 294/300 (98 %),
+seguido por `gpt-5.5` con 272/300 (90,7 %) y `gpt-5.6-terra` con 266/300
+(88,7 %). Todos los builds observados están en verde. La evidencia conserva
+las diferencias relevantes: Sol solo normalizó el preset legado, 5.5 perdió
+fidelidad en starter/tema/versiones y Terra produjo un dashboard compilable
+pero no el bloque canónico solicitado. Los fixtures sintéticos siguen
+etiquetados y excluidos mecánicamente.

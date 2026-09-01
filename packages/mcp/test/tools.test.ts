@@ -409,6 +409,19 @@ describe("runTool — acting tools", () => {
     assert.equal(exported.bundle.light.primary.$type, "color")
     assert.match(exported.bundle.light.primary.$value, /^oklch\(/)
     assert.equal(exported.bundle.dark.primary.$type, "color")
+    assert.deepEqual(exported.tokensStudio.$metadata.tokenSetOrder, [
+      "global",
+      "light",
+      "dark",
+    ])
+    assert.deepEqual(
+      exported.tokensStudio.$themes.map((theme: { name: string }) => theme.name),
+      ["Light", "Dark"],
+    )
+    assert.match(
+      exported.defaultArtifacts.tokensStudio,
+      /logic2b\.tokens-studio\.json$/,
+    )
   })
 
   test("decode_preset explains an invalid id", async () => {

@@ -1,0 +1,80 @@
+---
+title: Barra lateral
+description: Barra lateral componible y tematizable para construir shells de aplicaciones y dashboards.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="sidebar-demo" locale="es" wide />
+
+## Instalación
+
+<Install name="sidebar" locale="es" />
+
+## Uso
+
+Envuelve el layout con `SidebarProvider`, coloca `Sidebar` y `SidebarInset`
+como hermanos y usa `SidebarTrigger` para alternar su estado. Este persiste
+entre recargas mediante una cookie y también se alterna con
+<kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>B</kbd>.
+
+```tsx
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+
+export function AppLayout() {
+  return (
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>Mi aplicación</SidebarHeader>
+        <SidebarContent>{/* SidebarGroup, SidebarMenu… */}</SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <header>
+          <SidebarTrigger />
+        </header>
+        {/* Contenido de la página */}
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
+```
+
+`Sidebar` acepta `side` (`left` | `right`), `variant` (`sidebar` | `floating` |
+`inset`) y `collapsible` (`offcanvas` | `icon` | `none`). En viewports estrechos
+se convierte automáticamente en un `Sheet`. Consulta el estado actual (`state`,
+`open`, `isMobile`, `toggleSidebar`) con el hook `useSidebar()` desde cualquier
+descendiente.
+
+## Notas de uso
+
+`SidebarTrigger` es un `Button` que llama a `toggleSidebar()` y reenvía todas
+las propiedades del botón.
+
+## Ejemplos
+
+### Rail de iconos
+
+<ComponentPreview name="sidebar-icon-demo" locale="es" wide />
+
+### Variante flotante
+
+<ComponentPreview name="sidebar-floating-demo" locale="es" wide />
+
+## Accesibilidad
+
+- La barra lateral se alterna con <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>B</kbd>,
+  además del botón `SidebarTrigger`.
+- `SidebarTrigger` renderiza un botón etiquetado mediante texto solo para
+  lectores de pantalla y conectado a `toggleSidebar()`.
+- En móvil se convierte en un `Sheet`, del que hereda la retención de foco y
+  el cierre mediante <kbd>Escape</kbd>.
+- Al contraerla a `icon`, añade un `tooltip` a cada `SidebarMenuButton` para
+  que el destino siga siendo reconocible.

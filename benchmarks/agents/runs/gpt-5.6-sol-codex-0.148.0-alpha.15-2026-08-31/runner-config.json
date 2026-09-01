@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "runId": "gpt-5.6-sol-codex-0.148.0-alpha.15-2026-08-31",
+  "model": {
+    "name": "gpt-5.6-sol",
+    "version": "service alias observed 2026-08-31"
+  },
+  "agent": {
+    "name": "OpenAI Codex CLI",
+    "version": "0.148.0-alpha.15"
+  },
+  "capabilities": {
+    "network": true,
+    "shell": true,
+    "mcp": true
+  },
+  "command": {
+    "executable": "node",
+    "args": [
+      "/Users/es00500546/Desktop/Proyectos/ui-logic2b/benchmarks/agents/scripts/adapters/codex.mjs",
+      "--codex",
+      "/Users/es00500546/Aplicaciones/ChatGPT.app/Contents/Resources/codex",
+      "--model",
+      "gpt-5.6-sol",
+      "--mcp-url",
+      "http://ui.logic2b.com/mcp"
+    ],
+    "passEnv": [],
+    "toolCallMarker": "LOGIC2B_TOOL_CALL"
+  },
+  "outputLimitBytes": 20000000,
+  "artifactLimitBytes": 100000000
+}

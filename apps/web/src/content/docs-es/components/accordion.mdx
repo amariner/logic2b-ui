@@ -1,0 +1,54 @@
+---
+title: Acordeón
+description: Conjunto vertical de encabezados interactivos que muestran u ocultan su sección de contenido.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="accordion-demo" locale="es" />
+
+## Instalación
+
+<Install name="accordion" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>¿Es accesible?</AccordionTrigger>
+    <AccordionContent>
+      Sí. Sigue el patrón de diseño WAI-ARIA.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+## Ejemplos
+
+### Múltiple
+
+Usa `type="multiple"` para mantener abiertas varias secciones a la vez.
+
+<ComponentPreview name="accordion-multiple-demo" locale="es" />
+
+### Controlado
+
+Controla externamente el elemento abierto con `value` y `onValueChange`.
+
+<ComponentPreview name="accordion-controlled-demo" locale="es" />
+
+## Accesibilidad
+
+- Sigue el [patrón de acordeón WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/).
+- <kbd>Espacio</kbd> o <kbd>Intro</kbd> alternan la sección que tiene el foco.
+- <kbd>Flecha arriba</kbd> y <kbd>Flecha abajo</kbd> mueven el foco entre disparadores; <kbd>Inicio</kbd> y <kbd>Fin</kbd> saltan al primero o al último.
+- Cada disparador está dentro de un encabezado y expone `aria-expanded` y `aria-controls` para enlazarlo con su panel.

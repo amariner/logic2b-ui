@@ -1,0 +1,54 @@
+---
+title: Cronología
+description: Cronología vertical para registros de actividad, historiales de cambios y procesos.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="timeline-demo" locale="es" />
+
+## Instalación
+
+<Install name="timeline" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Timeline,
+  TimelineItem,
+  TimelineIndicator,
+  TimelineContent,
+  TimelineTime,
+  TimelineTitle,
+  TimelineDescription,
+} from "@/components/ui/timeline"
+
+<Timeline>
+  <TimelineItem>
+    <TimelineIndicator />
+    <TimelineContent>
+      <TimelineTime>Mar 2024</TimelineTime>
+      <TimelineTitle>Registry publicado</TimelineTitle>
+      <TimelineDescription>Más de 50 componentes servidos como JSON.</TimelineDescription>
+    </TimelineContent>
+  </TimelineItem>
+</Timeline>
+```
+
+`TimelineIndicator` dibuja la línea que conecta los elementos y la oculta de
+forma automática en el último. Pasa tu propio nodo —un icono o una insignia
+numerada— a `TimelineIndicator` para sustituir el punto predeterminado.
+
+## Anatomía
+
+| Parte | Función |
+| --- | --- |
+| `Timeline` | Lista raíz `<ol>`. |
+| `TimelineItem` | Fila de un único evento `<li>`. |
+| `TimelineIndicator` | Punto y línea de conexión con el siguiente elemento. |
+| `TimelineContent` | Envuelve la columna de texto. |
+| `TimelineTime` | Marca temporal atenuada con cifras tabulares. |
+| `TimelineTitle` | Encabezado del evento. |
+| `TimelineDescription` | Texto complementario. |

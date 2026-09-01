@@ -1,0 +1,57 @@
+---
+title: Barra de menús
+description: Barra horizontal de menús similar a la de una aplicación de escritorio.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="menubar-demo" locale="es" />
+
+## Instalación
+
+<Install name="menubar" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@/components/ui/menubar"
+
+<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>Archivo</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Nueva pestaña</MenubarItem>
+      <MenubarItem>Nueva ventana</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>
+```
+
+## Ejemplos
+
+### Casillas y opciones
+
+<ComponentPreview name="menubar-checkbox-demo" locale="es" />
+
+### Submenús
+
+<ComponentPreview name="menubar-submenu-demo" locale="es" />
+
+## Accesibilidad
+
+Construida sobre [Menubar de Radix](https://www.radix-ui.com/primitives/docs/components/menubar),
+que sigue el patrón de barra de menús de WAI-ARIA.
+
+- Las flechas desplazan el foco entre menús y elementos; <kbd>Intro</kbd> o
+  <kbd>Espacio</kbd> activan el elemento con foco.
+- <kbd>Esc</kbd> cierra el menú abierto y devuelve el foco a su activador.
+- La búsqueda incremental permite saltar a un elemento escribiendo su etiqueta.
+- Las casillas y opciones exponen la función y el estado seleccionado correctos
+  a las tecnologías de asistencia.

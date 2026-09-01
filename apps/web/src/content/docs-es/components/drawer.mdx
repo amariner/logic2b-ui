@@ -1,0 +1,66 @@
+---
+title: Cajón deslizante
+description: Extiende Dialog para mostrar contenido que entra desde un borde y se arrastra mediante un tirador.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="drawer-demo" locale="es" />
+
+## Instalación
+
+<Install name="drawer" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+
+<Drawer>
+  <DrawerTrigger>Abrir</DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Editar perfil</DrawerTitle>
+      <DrawerDescription>Modifica aquí los datos de tu perfil.</DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose>Cancelar</DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+Está construido sobre [vaul](https://vaul.emilkowal.ski/). A diferencia del
+[panel lateral](/es/docs/components/sheet), que es un Dialog de Radix que entra
+desde un borde, el cajón admite arrastrar para cerrar y puntos de anclaje, por lo
+que resulta más adecuado como panel inferior en móvil.
+
+## Ejemplos
+
+### Desde la derecha
+
+<ComponentPreview name="drawer-direction-demo" locale="es" />
+
+### Contenido desplazable
+
+<ComponentPreview name="drawer-content-demo" locale="es" />
+
+## Accesibilidad
+
+- Extiende el [Dialog de Radix](https://www.radix-ui.com/primitives/docs/components/dialog)
+  mediante [vaul](https://vaul.emilkowal.ski/), así que retiene el foco mientras
+  está abierto y lo devuelve al disparador al cerrarse.
+- Incluye un `DrawerTitle` y, preferiblemente, un `DrawerDescription` para que
+  los lectores de pantalla anuncien el cajón con nombre y descripción.
+- Se cierra con <kbd>Escape</kbd>, al pulsar el overlay o al arrastrar hacia el
+  borde desde el que apareció.

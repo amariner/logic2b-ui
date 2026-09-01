@@ -21,6 +21,9 @@ LLMs and coding agents.
 - **`packages/mcp`** — an MCP server that exposes the registry to coding
   agents (search, scaffold, install and maintain components and themes).
   Also served remotely at `https://ui.logic2b.com/mcp` — no install, no shell.
+- **`packages/vscode`** — a native VS Code extension preview: browse and search
+  the registry, install items through the public CLI, and apply `/create`
+  presets to local or remote workspaces. CI produces a validated VSIX.
 
 ## LLM-first
 
@@ -45,8 +48,9 @@ LLMs and coding agents.
   SHA-256 integrity contracts and per-item update history.
 - Every `registry:ui` payload includes an accessibility contract: semantic
   ownership, keyboard behavior, consumer responsibilities and known gaps.
-- `/tokens/default` — deterministic Style Dictionary exports of the semantic
-  theme contract as DTCG JSON, CSS, iOS Swift and Android resources.
+- `/tokens/default` — deterministic exports of the semantic theme contract as
+  Tokens Studio / Figma Variables, DTCG JSON, CSS, iOS Swift and Android
+  resources.
 - `/demos` + `/demos/index.json` — live marketing, dashboard and auth starters
   backed by the same canonical catalog used by CLI and MCP scaffolding.
 - `landing-page-01` — the canonical marketing starter as one installable block;
@@ -86,6 +90,7 @@ pnpm --filter logic2b test:scaffold     # install/build a generated monorepo
 pnpm --filter @logic2b/web test:e2e  # 706 axe analyses + 650 visual checks (after build)
 pnpm --filter @logic2b/web test:budgets
 pnpm --filter @logic2b/web test:lighthouse
+pnpm package:vscode                   # build a locally installable VSIX
 pnpm benchmark:frameworks             # isolated Next/Vite/Astro/TanStack lab
 pnpm benchmark:agents:test            # validate agent protocol + scorer
 pnpm --dir benchmarks/agents test:fixtures # install/build agent fixtures

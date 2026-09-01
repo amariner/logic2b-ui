@@ -1,0 +1,50 @@
+---
+title: Grupo de alternancia
+description: Conjunto de botones de dos estados que pueden activarse o desactivarse.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="toggle-group-demo" locale="es" />
+
+## Instalación
+
+<Install name="toggle-group" locale="es" />
+
+## Uso
+
+```tsx
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+
+<ToggleGroup type="multiple">
+  <ToggleGroupItem value="bold" aria-label="Alternar negrita">
+    <BoldIcon />
+  </ToggleGroupItem>
+</ToggleGroup>
+```
+
+## Notas de uso
+
+Construido sobre `ToggleGroup` de Radix. Las propiedades `variant` y `size` del
+grupo se comparten con cada `ToggleGroupItem` mediante el contexto.
+
+## Ejemplos
+
+### Selección única
+
+<ComponentPreview name="toggle-group-single-demo" locale="es" />
+
+### Tamaños
+
+<ComponentPreview name="toggle-group-sizes-demo" locale="es" />
+
+## Accesibilidad
+
+- Con `type="single"`, los elementos se comportan como un grupo de opciones y
+  las teclas de <kbd>flecha</kbd> desplazan la selección.
+- Con `type="multiple"`, cada elemento se alterna de forma independiente y
+  expone `aria-pressed`.
+- <kbd>Tab</kbd> lleva el foco al grupo y las teclas de <kbd>flecha</kbd> lo
+  desplazan entre sus elementos. Los que solo tienen icono necesitan un
+  `aria-label`.
