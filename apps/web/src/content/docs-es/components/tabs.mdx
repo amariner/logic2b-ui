@@ -1,0 +1,44 @@
+---
+title: Pestañas
+description: Conjunto de secciones de contenido superpuestas de las que solo se muestra una a la vez.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="tabs-demo" locale="es" />
+
+## Instalación
+
+<Install name="tabs" locale="es" />
+
+## Uso
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+<Tabs defaultValue="account">
+  <TabsList>
+    <TabsTrigger value="account">Cuenta</TabsTrigger>
+    <TabsTrigger value="password">Contraseña</TabsTrigger>
+  </TabsList>
+  <TabsContent value="account">Ajustes de la cuenta.</TabsContent>
+  <TabsContent value="password">Ajustes de la contraseña.</TabsContent>
+</Tabs>
+```
+
+## Ejemplos
+
+### Con iconos
+
+<ComponentPreview name="tabs-icons-demo" locale="es" />
+
+### Pestaña desactivada
+
+<ComponentPreview name="tabs-disabled-demo" locale="es" />
+
+## Accesibilidad
+
+- Sigue el patrón de pestañas WAI-ARIA: <kbd>Tab</kbd> mueve el foco al disparador activo y las flechas lo desplazan entre disparadores.
+- <kbd>Inicio</kbd> y <kbd>Fin</kbd> saltan al primer y último disparador; los disparadores desactivados se omiten.
+- Cada `TabsContent` se expone como un `tabpanel` etiquetado por su disparador para que se anuncie la relación.

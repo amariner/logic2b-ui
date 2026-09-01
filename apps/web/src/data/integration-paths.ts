@@ -14,6 +14,13 @@ export const INTEGRATION_PATHS = [
     bestFor: "A developer adding source directly to an existing repository.",
   },
   {
+    id: "vscode",
+    name: "VS Code",
+    href: "/docs/vscode",
+    access: "Editor extension",
+    bestFor: "Developers who want visual discovery, CLI-backed installs and presets in their workspace.",
+  },
+  {
     id: "remote-mcp",
     name: "Remote MCP",
     href: "/docs/llms",
@@ -53,6 +60,7 @@ export const INTEGRATION_CAPABILITIES: IntegrationCapability[] = [
     values: {
       website: "Yes",
       cli: "No",
+      vscode: "Yes",
       "remote-mcp": "Yes",
       "local-mcp": "No",
       registry: "Yes",
@@ -64,6 +72,7 @@ export const INTEGRATION_CAPABILITIES: IntegrationCapability[] = [
     values: {
       website: "Yes",
       cli: "Yes",
+      vscode: "Yes",
       "remote-mcp": "Yes",
       "local-mcp": "Yes",
       registry: "Yes",
@@ -75,6 +84,7 @@ export const INTEGRATION_CAPABILITIES: IntegrationCapability[] = [
     values: {
       website: "Guided",
       cli: "Yes",
+      vscode: "Yes",
       "remote-mcp": "Yes",
       "local-mcp": "Yes",
       registry: "Manual",
@@ -86,6 +96,7 @@ export const INTEGRATION_CAPABILITIES: IntegrationCapability[] = [
     values: {
       website: "No",
       cli: "Yes",
+      vscode: "Yes",
       "remote-mcp": "Plan only",
       "local-mcp": "Plan only",
       registry: "No",
@@ -97,6 +108,7 @@ export const INTEGRATION_CAPABILITIES: IntegrationCapability[] = [
     values: {
       website: "Guided",
       cli: "No",
+      vscode: "No",
       "remote-mcp": "Yes",
       "local-mcp": "Yes",
       registry: "Manual",
@@ -108,6 +120,7 @@ export const INTEGRATION_CAPABILITIES: IntegrationCapability[] = [
     values: {
       website: "Guided",
       cli: "Yes",
+      vscode: "Yes",
       "remote-mcp": "Yes",
       "local-mcp": "Yes",
       registry: "Manual",
@@ -119,6 +132,7 @@ export const INTEGRATION_CAPABILITIES: IntegrationCapability[] = [
     values: {
       website: "No",
       cli: "No",
+      vscode: "No",
       "remote-mcp": "Yes",
       "local-mcp": "Yes",
       registry: "No",
@@ -136,6 +150,11 @@ const PATHS_ES: Record<IntegrationPathId, { name: string; access: string; bestFo
     name: "CLI",
     access: "Terminal",
     bestFor: "Desarrolladores que añaden código a un repositorio existente.",
+  },
+  vscode: {
+    name: "VS Code",
+    access: "Extensión del editor",
+    bestFor: "Desarrolladores que quieren descubrimiento visual, instalación mediante CLI y presets en su workspace.",
   },
   "remote-mcp": {
     name: "MCP remoto",

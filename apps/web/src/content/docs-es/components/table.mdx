@@ -1,0 +1,58 @@
+---
+title: Tabla
+description: Componente de tabla adaptable.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="table-demo" locale="es" />
+
+## Instalación
+
+<Install name="table" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+<Table>
+  <TableCaption>Lista de tus facturas recientes.</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Factura</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>FAC001</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## Notas de uso
+
+Cada parte es un wrapper ligero del elemento HTML correspondiente y reenvía sus propiedades nativas. `Table` también coloca `<table>` dentro de un contenedor con desplazamiento horizontal.
+
+Todos aceptan `className` y las propiedades estándar del elemento que renderizan.
+
+## Ejemplos
+
+### Con estado
+
+<ComponentPreview name="table-status-demo" locale="es" />
+
+### Simple
+
+<ComponentPreview name="table-simple-demo" locale="es" />

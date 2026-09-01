@@ -1,0 +1,40 @@
+---
+title: Tecla
+description: Muestra un atajo de teclado o una combinación de teclas.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="kbd-demo" locale="es" />
+
+## Instalación
+
+<Install name="kbd" locale="es" />
+
+## Uso
+
+```tsx
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
+
+<KbdGroup>
+  <Kbd>⌘</Kbd>
+  <Kbd>K</Kbd>
+</KbdGroup>
+```
+
+## Notas de uso
+
+Ambos generan elementos sencillos —`Kbd` un `<kbd>` y `KbdGroup` un `<div>`— y
+reenvían todos los atributos nativos. Usa `KbdGroup` para distribuir una
+combinación de varias teclas.
+
+## Ejemplos
+
+### En un botón
+
+<ComponentPreview name="kbd-button-demo" locale="es" />
+
+### Combinaciones de teclas
+
+<ComponentPreview name="kbd-combination-demo" locale="es" />

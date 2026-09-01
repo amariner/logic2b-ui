@@ -1,0 +1,27 @@
+---
+title: Deslizamiento en movimiento
+description: Desliza un elemento desde una dirección mientras aparece al montarse, preset construido con tw-animate-css sin dependencias de runtime.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-slide-demo" locale="es" />
+
+## Instalación
+
+<Install name="motion-slide" locale="es" />
+
+## Uso
+
+```tsx
+import { MotionSlide } from "@/components/ui/motion-slide"
+
+<MotionSlide direction="up" delay={80}>
+  <Card>…</Card>
+</MotionSlide>
+```
+
+`MotionSlide` asigna `direction` al preset `fade-*` correspondiente de
+[Movimiento](/es/docs/components/motion), como `up` a `fade-up`, y comparte las
+propiedades `duration`, `delay`, `hover` y `asChild`.

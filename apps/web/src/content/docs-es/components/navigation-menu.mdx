@@ -1,0 +1,59 @@
+---
+title: Menú de navegación
+description: Colección de enlaces y paneles desplegables para navegar por un sitio o aplicación.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="navigation-menu-demo" locale="es" />
+
+## Instalación
+
+<Install name="navigation-menu" locale="es" />
+
+## Uso
+
+```tsx
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
+
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Componentes</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <NavigationMenuLink href="/docs">Documentación</NavigationMenuLink>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+```
+
+## Ejemplos
+
+### Barra de enlaces
+
+<ComponentPreview name="navigation-menu-links-demo" locale="es" />
+
+### Desplegable en línea
+
+<ComponentPreview name="navigation-menu-inline-demo" locale="es" />
+
+## Accesibilidad
+
+Está construido sobre el
+[Navigation Menu de Radix](https://www.radix-ui.com/primitives/docs/components/navigation-menu).
+
+- Los disparadores reciben el foco; <kbd>Intro</kbd>/<kbd>Espacio</kbd> y las
+  flechas abren el menú y desplazan la selección.
+- <kbd>Escape</kbd> cierra el panel abierto y devuelve el foco al disparador.
+- El enlace activo usa `data-active`, que se asocia a `aria-current`, para que
+  los lectores de pantalla anuncien la página actual.
+- Cada panel de contenido queda etiquetado por su disparador.

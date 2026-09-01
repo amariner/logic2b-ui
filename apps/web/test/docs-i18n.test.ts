@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, test } from "node:test";
+import { SPANISH_COMPONENT_LABELS } from "../src/config/docs.ts";
 
 const read = (path: string) => readFileSync(resolve(path), "utf8");
 function docsIds(dir: string, prefix = ""): string[] {
@@ -13,30 +14,99 @@ function docsIds(dir: string, prefix = ""): string[] {
 }
 
 const translatedIds = docsIds("src/content/docs-es").sort();
+const translatedComponents = [
+  "accordion",
+  "alert",
+  "alert-dialog",
+  "aspect-ratio",
+  "autocomplete",
+  "avatar",
+  "badge",
+  "breadcrumb",
+  "button",
+  "button-group",
+  "calendar",
+  "card",
+  "carousel",
+  "chart",
+  "checkbox",
+  "code-block",
+  "collapsible",
+  "color-picker",
+  "combobox",
+  "command",
+  "context-menu",
+  "data-table",
+  "date-picker",
+  "dialog",
+  "drawer",
+  "dropdown-menu",
+  "empty",
+  "field",
+  "file-dropzone",
+  "form",
+  "hover-card",
+  "input",
+  "input-group",
+  "input-otp",
+  "item",
+  "kbd",
+  "label",
+  "menubar",
+  "motion",
+  "motion-blur",
+  "motion-fade",
+  "motion-scale",
+  "motion-slide",
+  "native-select",
+  "navigation-menu",
+  "number-field",
+  "pagination",
+  "parallax",
+  "popover",
+  "progress",
+  "radio-group",
+  "rating",
+  "resizable",
+  "scroll-area",
+  "scroll-reveal",
+  "select",
+  "separator",
+  "sheet",
+  "sidebar",
+  "skeleton",
+  "slider",
+  "sonner",
+  "spinner",
+  "stepper",
+  "switch",
+  "table",
+  "tabs",
+  "tags-input",
+  "textarea",
+  "timeline",
+  "toggle",
+  "toggle-group",
+  "tooltip",
+  "tree-view",
+  "typography",
+];
 
 describe("Spanish documentation", () => {
-  test("publishes a deliberate first-wave translation set", () => {
+  test("publishes a deliberate translation set", () => {
     assert.deepEqual(translatedIds, [
       "3d-extras",
       "agent-benchmarks",
       "backend",
       "benchmarks",
-      "components/button",
-      "components/card",
-      "components/chart",
-      "components/checkbox",
-      "components/dialog",
-      "components/form",
-      "components/input",
-      "components/select",
-      "components/switch",
-      "components/textarea",
+      ...translatedComponents.map((name) => `components/${name}`),
       "cross-platform-tokens",
       "index",
       "installation",
       "integration-paths",
       "llms",
       "theming",
+      "vscode",
     ]);
     for (const id of translatedIds) {
       assert.ok(read(`src/content/docs-es/${id}.mdx`).includes("description:"));
@@ -104,22 +174,41 @@ describe("Spanish documentation", () => {
     );
   });
 
-  test("publishes ten complete core component translations", () => {
-    for (const name of [
-      "button",
-      "card",
-      "chart",
-      "checkbox",
-      "dialog",
-      "form",
-      "input",
-      "select",
-      "switch",
-      "textarea",
-    ]) {
+  test("publishes the complete Spanish component catalog", () => {
+    assert.deepEqual(Object.keys(SPANISH_COMPONENT_LABELS).sort(), translatedComponents);
+    assert.deepEqual(
+      docsIds("src/content/docs/components").filter((name) => name !== "index").sort(),
+      translatedComponents,
+    );
+    const compositionInstalls: Record<string, string> = {
+      combobox: "npx logic2b@latest add popover command",
+      "data-table": "npx logic2b@latest add table input button badge",
+      "date-picker": "npx logic2b@latest add popover calendar",
+    };
+    const documentationGuides = new Set(["typography"]);
+    for (const name of translatedComponents) {
       const source = read(`src/content/docs-es/components/${name}.mdx`);
-      assert.match(source, /<ComponentPreview[^>]+locale="es"/);
-      assert.match(source, new RegExp(`<Install name="${name}" locale="es"`));
+      const previews = source.match(/<ComponentPreview\b[^>]*\/>/g) ?? [];
+      const installs = source.match(/<Install\b[^>]*\/>/g) ?? [];
+      if (documentationGuides.has(name)) {
+        assert.equal(previews.length, 0, `${name} must remain a documentation guide`);
+        assert.equal(installs.length, 0, `${name} must not imply a registry item`);
+        continue;
+      }
+      assert.ok(previews.length > 0, `${name} has no preview`);
+      for (const preview of previews) assert.match(preview, /locale="es"/);
+      if (compositionInstalls[name]) {
+        assert.equal(installs.length, 0, `${name} must use its composition command`);
+        assert.equal(
+          source.match(new RegExp(compositionInstalls[name], "g"))?.length,
+          1,
+          `${name} must publish its composition command exactly once`,
+        );
+        continue;
+      }
+      assert.equal(installs.length, 1, `${name} must have one install surface`);
+      assert.match(installs[0], new RegExp(`name="${name}"`));
+      assert.match(installs[0], /locale="es"/);
     }
 
     const markdown = read("src/lib/docs-md.ts");

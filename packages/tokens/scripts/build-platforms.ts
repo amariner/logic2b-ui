@@ -17,6 +17,7 @@ import {
   portableGlobalTokens,
   portableModeTokens,
   portableTokenBundle,
+  tokensStudioBundle,
   type PortableTokenSet,
 } from "../src/export.ts"
 
@@ -120,6 +121,10 @@ const [lightCss, darkCss, androidLight, androidDark, iosLight, iosDark] =
 
 const artifacts = new Map<string, string>([
   ["logic2b.tokens.json", `${JSON.stringify(portableTokenBundle(config), null, 2)}\n`],
+  [
+    "logic2b.tokens-studio.json",
+    `${JSON.stringify(tokensStudioBundle(config), null, 2)}\n`,
+  ],
   ["logic2b.css", `${lightCss.trim()}\n\n${darkCss.trim()}\n`],
   ["android/values/logic2b_tokens.xml", androidLight],
   ["android/values-night/logic2b_tokens.xml", androidDark],
@@ -149,6 +154,7 @@ await writeFile(
       files: integrity,
       notes: [
         "CSS preserves the source oklch values.",
+        "The Tokens Studio single-file artifact maps one Logic2b collection to Light and Dark Figma Variable modes.",
         "Native colors are deterministic, gamut-clamped sRGB conversions of the same semantic tokens.",
         "iOS and Android receive separate light/dark resources; CSS font stacks remain in the DTCG and web artifacts because native font registration is application-specific.",
       ],

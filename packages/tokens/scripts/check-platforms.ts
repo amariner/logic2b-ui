@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
 import { DEFAULT_CONFIG, encodePreset } from "../src/index.ts"
-import { portableTokenBundle } from "../src/export.ts"
+import { portableTokenBundle, tokensStudioBundle } from "../src/export.ts"
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const outDir = resolve(packageRoot, "../../apps/web/public/tokens/default")
@@ -44,6 +44,18 @@ const generatedBundle = JSON.parse(
 )
 if (JSON.stringify(generatedBundle) !== JSON.stringify(portableTokenBundle(DEFAULT_CONFIG))) {
   errors.push("DTCG token bundle is stale; run pnpm --filter @logic2b/tokens build")
+}
+
+const generatedTokensStudioBundle = JSON.parse(
+  await readFile(resolve(outDir, "logic2b.tokens-studio.json"), "utf8"),
+)
+if (
+  JSON.stringify(generatedTokensStudioBundle) !==
+  JSON.stringify(tokensStudioBundle(DEFAULT_CONFIG))
+) {
+  errors.push(
+    "Tokens Studio bundle is stale; run pnpm --filter @logic2b/tokens build",
+  )
 }
 
 if (errors.length > 0) {

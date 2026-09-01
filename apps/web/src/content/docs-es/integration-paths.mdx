@@ -5,7 +5,7 @@ description: Elige el flujo de logic2b adecuado para una persona desarrolladora,
 
 import IntegrationPaths from "@/components/IntegrationPaths.astro";
 
-Hay un único registro fuente y cinco formas de consumirlo. El código de los
+Hay un único registro fuente y seis formas de consumirlo. El código de los
 componentes es el mismo; cambia quién resuelve dependencias, quién escribe
 archivos y si hay un terminal disponible.
 
@@ -17,6 +17,9 @@ archivos y si hay un terminal disponible.
   devuelve código, un comando CLI o un Copy Prompt autocontenido.
 - **Tienes terminal y un repositorio existente:** usa la CLI. Resuelve las
   dependencias del registro y escribe el código en los alias configurados.
+- **Trabajas principalmente en VS Code:** usa la preview de la extensión para
+  explorar y buscar visualmente, lanzar instalaciones respaldadas por la CLI y
+  aplicar presets exactos en workspaces locales o remotos.
 - **Tu agente no tiene shell ni Node local:** conecta el MCP remoto en
   `https://ui.logic2b.com/mcp`. `install_plan` y `scaffold_plan` devuelven todas
   las escrituras como resultados estructurados.
@@ -28,7 +31,7 @@ archivos y si hay un terminal disponible.
 ## La frontera de mantenimiento
 
 La instalación solo es el primer paso. Un preset de `/create` viaja por el
-estudio, CLI y MCP sin perder elecciones. Más tarde, un agente conectado puede
+estudio, CLI, VS Code y MCP sin perder elecciones. Más tarde, un agente conectado puede
 enviar la hoja de estilos a `lint_theme` para detectar tokens ausentes,
 duplicados o inválidos, deriva, fidelidad exacta y regresiones de contraste. La
 hoja se analiza como texto y nunca se ejecuta.

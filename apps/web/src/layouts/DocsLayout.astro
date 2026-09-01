@@ -1,6 +1,11 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { docsNav, docsNavEs, componentGroups } from "@/config/docs";
+import {
+  SPANISH_COMPONENT_LABELS,
+  componentGroups,
+  docsNav,
+  docsNavEs,
+} from "@/config/docs";
 import type { MarkdownHeading } from "astro";
 
 interface Props {
@@ -68,18 +73,6 @@ const spanishGroupLabels: Record<string, string> = {
   motion: "Movimiento y scroll",
   guides: "Guías",
 };
-const spanishComponentLabels: Record<string, string> = {
-  button: "Botón",
-  card: "Tarjeta",
-  chart: "Gráfico",
-  dialog: "Diálogo",
-  form: "Formulario",
-  input: "Campo de entrada",
-  textarea: "Área de texto",
-  checkbox: "Casilla de verificación",
-  select: "Selector",
-  switch: "Interruptor",
-};
 const localizedComponentGroups = locale === "es"
   ? componentGroups.map((group) => ({
       ...group,
@@ -89,7 +82,7 @@ const localizedComponentGroups = locale === "es"
         return spanishComponentNames.has(name)
           ? {
               ...item,
-              title: spanishComponentLabels[name ?? ""] ?? item.title,
+              title: SPANISH_COMPONENT_LABELS[name ?? ""] ?? item.title,
               href: `/es/docs/components/${name}`,
             }
           : item;

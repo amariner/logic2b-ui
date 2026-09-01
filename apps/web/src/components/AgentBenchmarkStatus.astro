@@ -20,8 +20,10 @@ interface LeaderboardEntry {
 
 const totalPoints = protocol.tasks.reduce((sum, task) => sum + task.maxPoints, 0);
 const entries = leaderboard.entries as LeaderboardEntry[];
+const numberFormat = new Intl.NumberFormat(locale === "es" ? "es-ES" : "en-US");
 const formatDuration = (value: number | null) =>
-  value == null ? "—" : `${new Intl.NumberFormat(locale === "es" ? "es-ES" : "en-US").format(value / 1000)} s`;
+  value == null ? "—" : `${numberFormat.format(value / 1000)} s`;
+const formatPercent = (value: number) => numberFormat.format(value);
 const TASKS_ES: Record<string, { title: string; prompt: string }> = {
   "install-and-theme": {
     title: "Instalar y aplicar tema",
@@ -100,7 +102,7 @@ const copy = locale === "es"
               <td class="px-3 py-2 font-medium">{entry.model.name}</td>
               <td class="px-3 py-2 text-muted-foreground">{entry.agent?.name ?? "—"}</td>
               <td class="px-3 py-2 text-right tabular-nums">
-                {entry.score}/{entry.maxScore} ({entry.percent}%)
+                {entry.score}/{entry.maxScore} ({formatPercent(entry.percent)}%)
               </td>
               <td class="px-3 py-2 text-right tabular-nums">
                 {formatDuration(entry.durationMs)}

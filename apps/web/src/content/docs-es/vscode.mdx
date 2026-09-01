@@ -1,0 +1,60 @@
+---
+title: Extensión de VS Code
+description: Explora el registro de logic2b, instala componentes como código fuente y aplica presets desde un workspace local o remoto de VS Code.
+---
+
+La extensión de VS Code de logic2b es una preview construida desde el
+repositorio para llevar el flujo al editor nativo. Usa la barra de actividad y
+la paleta de comandos: no introduce una webview, una copia oculta de los
+componentes ni un segundo instalador.
+
+## Qué hace la preview
+
+| Superficie | Contrato |
+| --- | --- |
+| Explorador del registro | Recupera `/r/index.json`, valida cada ítem y agrupa Componentes, Bloques y Gráficos. |
+| Búsqueda y documentación | Filtra por nombre, título, descripción y categorías; abre la ruta pública correspondiente. |
+| Instalación | Ejecuta `npx logic2b@latest add <name>` como tarea del workspace; la CLI sigue siendo dueña de dependencias, iconos y lock. |
+| Inicialización | Ejecuta `npx logic2b@latest init`; puedes configurar un registro HTTPS con `logic2b.registryUrl`. |
+| Aplicar preset | Parchea `theme.css` con el codec compartido de `@logic2b/tokens` y actualiza `components.json` con preset canónico, base e iconos. |
+
+Los ítems instalados se leen desde `.logic2b/manifest.json` y se marcan en el
+árbol. En workspaces multirraíz eliges el destino. Las escrituras usan la API de
+workspace de VS Code, por lo que SSH, WSL y contenedores conservan los archivos
+en su host remoto en vez de atravesar rutas locales de `node:fs`.
+
+## Construye e instala la preview
+
+Todavía no se afirma que exista una publicación en Marketplace. Construye el
+VSIX validado desde el repositorio:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm package:vscode
+code --install-extension packages/vscode/dist/logic2b-ui.vsix
+```
+
+El comando comprueba tipos, empaqueta la extensión y usa la versión exacta de
+VSCE para generar un archivo instalable. CI ejecuta el mismo contrato y sube el
+VSIX como artefacto del workflow. La preview ocupa 11,82 KiB e incluye
+manifiesto, documentación, licencia, un único bundle de 22 KiB para el host de
+extensiones y el icono de la barra de actividad.
+
+## Comandos
+
+- **logic2b: Search Registry** y **Refresh Registry** controlan el explorador.
+- **logic2b: Install Item** aparece en cada ítem; **Install Components…** permite
+  selección múltiple desde la paleta.
+- **logic2b: Initialize Workspace** crea `components.json`, tema y lock mediante
+  la CLI.
+- **logic2b: Apply Preset…** acepta el id copiado desde [/create](/create) y
+  actualiza tema y metadatos del proyecto en una sola edición de workspace.
+- **logic2b: Open Theme Studio** abre `/create` para diseñar otro preset.
+
+El modo restringido no está soportado: las instalaciones ejecutan una tarea y
+los presets escriben archivos. Los registros deben usar HTTPS; solo se acepta
+HTTP para desarrollo en localhost. La extensión valida los nombres de ítem
+antes de convertir cualquier valor en argumento de CLI.
+
+El código, README específico y changelog están en
+[`packages/vscode`](https://github.com/amariner/logic2b-ui/tree/main/packages/vscode).

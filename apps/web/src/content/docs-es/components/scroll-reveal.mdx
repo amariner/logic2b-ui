@@ -1,0 +1,66 @@
+---
+title: Revelado al desplazar
+description: Reproduce una receta de entrada cuando un elemento aparece en el viewport, con IntersectionObserver y el motor de movimiento sin dependencias de runtime.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="scroll-reveal-demo" locale="es" />
+
+## Instalación
+
+<Install name="scroll-reveal" locale="es" />
+
+## Uso
+
+```tsx
+import { ScrollReveal } from "@/components/ui/scroll-reveal"
+
+<ScrollReveal preset="fade-up">
+  <Card>…</Card>
+</ScrollReveal>
+```
+
+`ScrollReveal` es la variante activada por desplazamiento de
+[`Motion`](/es/docs/components/motion): en vez de reproducirse al montar, espera
+a que el elemento aparezca en el viewport mediante el hook
+[`useInView`](#useinview) de `IntersectionObserver` y ejecuta la misma receta de
+entrada. Comparte todos los presets —`fade`, `fade-up/down/left/right`, `scale` y
+`blur`—, las propiedades `duration`, `delay` y `asChild`, y el fallback de
+`prefers-reduced-motion`.
+
+El contenido permanece visible hasta que se monta y arma, por lo que buscadores
+y clientes sin JavaScript siempre pueden verlo. El revelado es una mejora
+progresiva.
+
+## Escalonar un grupo
+
+Asigna un `delay` creciente a cada elemento para encadenar una lista al entrar:
+
+```tsx
+{posts.map((post, i) => (
+  <ScrollReveal key={post.id} preset="fade-up" delay={i * 80}>
+    <PostCard {...post} />
+  </ScrollReveal>
+))}
+```
+
+## Revelar en cada pasada
+
+Por defecto, el revelado se ejecuta una vez y permanece. Usa `once={false}` para
+volver a ocultar y reproducir la receta cada vez que el elemento sale y entra en
+el viewport.
+
+## useInView
+
+`scroll-reveal` instala el hook `useInView`, que también puede usarse por sí solo
+para condicionar cualquier contenido a la visibilidad, como un gráfico con carga
+diferida, un contador [`useCountUp`](/es/docs/components/motion) o un vídeo con
+reproducción automática:
+
+```tsx
+const [ref, inView] = useInView({ amount: 0.5 })
+
+<section ref={ref}>{inView && <Chart />}</section>
+```

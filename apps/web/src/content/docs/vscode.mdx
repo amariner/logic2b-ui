@@ -1,0 +1,59 @@
+---
+title: VS Code extension
+description: Browse the logic2b registry, install source components and apply theme presets from a local or remote VS Code workspace.
+---
+
+The logic2b VS Code extension is a repository-built preview of the native
+editor workflow. It uses the Activity Bar and Command Palette — there is no
+webview, hidden component fork or second installer.
+
+## What the preview does
+
+| Surface | Contract |
+| --- | --- |
+| Registry explorer | Fetches `/r/index.json`, validates every item and groups Components, Blocks and Charts. |
+| Search and docs | Filters name, title, description and categories; opens the matching public documentation route. |
+| Install | Runs `npx logic2b@latest add <name>` as a workspace task, so dependency resolution, icon rewriting and the install lock remain owned by the CLI. |
+| Initialize | Runs `npx logic2b@latest init`; a custom HTTPS registry can be configured with `logic2b.registryUrl`. |
+| Apply preset | Patches `theme.css` with the shared `@logic2b/tokens` codec and updates `components.json` with the canonical preset, base color and icon library. |
+
+Installed items are read from `.logic2b/manifest.json` and marked in the tree.
+Multi-root workspaces ask which root should receive a command. File edits use
+the VS Code workspace API, so SSH, WSL and container workspaces remain on their
+workspace host instead of leaking through local `node:fs` paths.
+
+## Build and install the preview
+
+Marketplace publication is deliberately not claimed yet. Build the validated
+VSIX from the repository:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm package:vscode
+code --install-extension packages/vscode/dist/logic2b-ui.vsix
+```
+
+The package command type-checks and bundles the extension, then uses the exact
+pinned VSCE version to produce an installable archive. CI runs the same command
+and uploads the VSIX as a workflow artifact. The preview is 11.82 KiB and
+contains the manifest, docs, license, one 22 KiB extension-host bundle and its
+Activity Bar icon.
+
+## Commands
+
+- **logic2b: Search Registry** and **Refresh Registry** control the explorer.
+- **logic2b: Install Item** is available on every item; **Install Components…**
+  supports multi-select from the Command Palette.
+- **logic2b: Initialize Workspace** establishes `components.json`, theme and
+  install lock through the CLI.
+- **logic2b: Apply Preset…** accepts the id copied from [/create](/create) and
+  updates both theme and project metadata in one workspace edit.
+- **logic2b: Open Theme Studio** opens `/create` for a new preset.
+
+Restricted Mode is intentionally unsupported because install commands execute
+a task and presets write project files. Registry origins must use HTTPS; plain
+HTTP is accepted only for localhost development. The extension validates item
+names before any value can become a CLI argument.
+
+The source, extension-specific README and changelog live in
+[`packages/vscode`](https://github.com/amariner/logic2b-ui/tree/main/packages/vscode).

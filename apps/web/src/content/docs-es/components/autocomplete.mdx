@@ -1,0 +1,41 @@
+---
+title: Autocompletado
+description: Campo de texto libre con una lista de sugerencias filtradas que sigue el patrón de cuadro combinado editable de ARIA.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="autocomplete-demo" locale="es" />
+
+## Instalación
+
+<Install name="autocomplete" locale="es" />
+
+## Uso
+
+```tsx
+import { Autocomplete } from "@/components/ui/autocomplete"
+
+const [value, setValue] = React.useState("")
+
+<Autocomplete
+  options={["Next.js", "Vite", "Astro"]}
+  value={value}
+  onValueChange={setValue}
+  placeholder="Buscar framework..."
+/>
+```
+
+La lista filtra lo que escribe el usuario mediante `includes`, sin distinguir
+mayúsculas y minúsculas, pero el campo **acepta cualquier texto**. Esa es la
+diferencia con un [cuadro combinado](/es/docs/components/combobox) de tipo
+selector. Usa `Autocomplete` cuando las sugerencias sean orientativas, como en
+una búsqueda o una entrada de etiquetas; usa `Combobox` cuando el valor deba
+pertenecer a un conjunto cerrado.
+
+## Teclado
+
+- <kbd>↓</kbd> / <kbd>↑</kbd> desplazan la sugerencia activa.
+- <kbd>Intro</kbd> elige la sugerencia activa.
+- <kbd>Esc</kbd> cierra la lista y conserva el texto escrito.

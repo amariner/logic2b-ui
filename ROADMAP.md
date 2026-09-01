@@ -162,9 +162,11 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 ## Now (🔜) — Sep–Oct: the user lane, in priority order
 
-Everything an agent needs to *build* with logic2b ui exists. This lane is
-about what the **person using the result** gets. Nine initiatives, four
-levers; the guides are the executable spec, this list is the order.
+Everything an agent needs to *build* with logic2b ui exists — and the real
+agent benchmark shows top models scoring 98% on install, compose and
+scaffold. This lane is about what the **person using the result** gets. Nine
+initiatives, four levers; the guides are the executable spec, this list is
+the order.
 
 **Guarantee quality** — the states, copy, a11y and motion a real user hits:
 
@@ -196,9 +198,10 @@ levers; the guides are the executable spec, this list is the order.
 4. 🔜 **Agent rules distribution** — `AGENTS.md` + `DESIGN.md` written by
    `init` and every scaffold, refreshed between markers by `add`/`update`,
    returned by an `agent_rules` MCP tool, emitted as Cursor rules / Copilot
-   instructions / `CLAUDE.md` import, and shipped as a Claude Code skill in
-   the MCP tarball. The managed block is budgeted at 6 KB because context
-   costs the user too. → [guide 07](./docs/guides/07-agent-rules-distribution.md) · v1.0
+   instructions / `CLAUDE.md` import, exposed by the VS Code extension, and
+   shipped as a Claude Code skill in the MCP tarball. The managed block is
+   budgeted at 6 KB because context costs the user too.
+   → [guide 07](./docs/guides/07-agent-rules-distribution.md) · v1.0
 
 **Understand intent** — the right screens for the brief:
 
@@ -400,14 +403,17 @@ documented recipes, never a runtime framework of our own.
   time under a shared throttled profile. Exact-pinned fixtures, raw JSON,
   methodology and scripts ship in `benchmarks/frameworks`; the living public
   table is `/docs/benchmarks`.
-- 🔜 **Agent benchmark / leaderboard** — the public v1 protocol, 300-point
+- ✅ **Agent benchmark / leaderboard** — the public v1 protocol, 300-point
   objective rubric, safe static scorer, reproducible evaluator runner,
   deterministic SHA-256 fixtures, timeout/transcript controls, regression
   tests and living status page are shipped. Synthetic results are mechanically
-  excluded from publication. Remaining: execute the runner in disposable
-  sandboxes against real model/agent combinations and publish their raw
-  artifacts, scores and timing. The harness already doubles as a regression
-  suite for the MCP/prompt surfaces.
+  excluded from publication. Three isolated real entries now form a controlled
+  comparison under Codex CLI `0.148.0-alpha.15`: `gpt-5.6-sol` scored 294/300
+  (98%), `gpt-5.5` 272/300 (90.7%) and `gpt-5.6-terra` 266/300 (88.7%). All
+  nine evaluator-observed builds passed; raw artifacts, transcripts and
+  per-rule evidence ship in the repository. The harness also doubles as a
+  regression suite for the MCP/prompt surfaces and remains open to future
+  agent hosts without making launch depend on them.
 
 ### Site & docs
 
@@ -432,18 +438,21 @@ documented recipes, never a runtime framework of our own.
   pixel gates cover the complete inventory without breaking the browser-JS
   budget.
 - ✅ Theme-aware OG images per docs page — all 85 English content entries, the
-  20 Spanish translations and the component index get deterministic
+  85 Spanish translations and the component index get deterministic
   1200×630 PNG cards during the web build.
   Section palettes and paired light/dark component surfaces make the theme
   visible at share time; a SHA-256 manifest, exact route coverage tests and
-  per-image/total byte budgets prevent stale or oversized social assets.
-- 🔜 i18n of the docs (Spanish first) — locale-aware HTML and Markdown routes,
+  per-image/total byte budgets prevent stale or oversized social assets. The
+  indexed PNG palette runs without dithering so all 171 cards fit in 3.70 MiB.
+- ✅ i18n of the docs (Spanish first) — locale-aware HTML and Markdown routes,
   `lang`, canonical alternates, navigation, search, sitemap, agent indexes and
-  OG generation are shipped. All 10 top-level guides plus 10 core component
-  references (Button, Card, Chart, Dialog, Form and five common form controls)
-  now exist in Spanish, including localized playground, install, generated API
-  and accessibility shells. Untranslated component links still resolve
-  explicitly to English instead of presenting partial translations.
+  OG generation are shipped. All 10 top-level guides and all 75 component
+  references now exist in Spanish with exact source-catalog parity. The final
+  wave closes forms, navigation, layout, motion and Typography; all 71 registry
+  items keep localized install and preview surfaces, the three composition
+  guides preserve their real multi-item commands, and Typography remains an
+  honest documentation-only guide. Generated playground, API and accessibility
+  shells follow every applicable route.
 - ✅ Accessibility notes per component — all 71 UI docs render their validated
   keyboard/ARIA contract from the same metadata shipped in registry JSON and
   exposed through MCP.
@@ -465,8 +474,20 @@ documented recipes, never a runtime framework of our own.
 
 ### Ecosystem & distribution
 
-- 💡 Figma library generated from the token tables.
-- 💡 VS Code extension: browse the registry, insert components, apply presets.
+- ✅ **Figma Variables bridge** — the shared token tables now generate a
+  Tokens Studio single-file contract with DTCG values, ordered token sets and
+  one `Logic2b` collection mapped to deterministic Light/Dark modes. The public
+  default artifact carries manifest integrity, custom presets are available
+  through MCP, and English/Spanish docs cover GitHub sync and local import.
+- 💡 Published Figma component library generated from the registry and token
+  tables.
+- ✅ **VS Code extension preview** — a native Activity Bar explorer browses and
+  searches components, blocks and charts, delegates source installation to
+  `npx logic2b@latest`, and applies `/create` presets through the shared token
+  codec using remote-workspace-safe VS Code APIs. Unit tests, a bundled 22 KiB
+  host entry and CI-validated VSIX cover the complete preview contract.
+- 💡 Publish the extension after approving and creating the Marketplace
+  publisher identity; attach signed VSIX files to tagged releases.
 - 💡 Community namespace (`logic2b add @user/item`) with registry auth for
   private registries.
 - 💡 Starter templates repo (SaaS dashboard, marketing site, docs site) wired
@@ -498,9 +519,10 @@ long-term bets keep widening the gap between "an agent can read our docs" and
   selected range. MCP exposes the same selection and audit trail.
 - ✅ **Cross-platform token export** — the shared `@logic2b/tokens` data is
   emitted through exact-pinned Style Dictionary to portable DTCG JSON, CSS,
-  iOS Swift and Android light/dark resources. Public artifacts carry SHA-256
-  integrity, CI checks source parity, and MCP `export_tokens` resolves any
-  preset id into the same platform-neutral contract.
+  iOS Swift and Android light/dark resources, plus a Tokens Studio contract for
+  Figma Variables. Public artifacts carry SHA-256 integrity, CI checks source
+  parity, and MCP `export_tokens` resolves any preset id into the same
+  platform-neutral contracts.
 - 💡 **Agent telemetry (opt-in)** — promoted to the user lane as the outcome
   feedback loop, see [guide 09](./docs/guides/09-outcome-feedback-loop.md).
 
@@ -537,31 +559,37 @@ that green light. Working backwards:
 3. **Oct** — release candidate: shell-less starter templates through MCP
    `scaffold_plan` ✅, the public agent benchmark v1 harness + isolated-runner
    contract ✅ and locally
-   verified CLI/MCP `1.0.0-rc.2` tarballs + consumer smoke gate ✅. The CLI now
+   verified CLI/MCP `1.0.0-rc.2` tarballs + consumer smoke gate ✅, published
+   under npm's `next` tag ✅. The CLI now
    generates the same exact-pinned starters as MCP, including real Turbo
    workspaces and update-ready install manifests. The public
    integration-path comparison and its machine-readable twin are also live;
    the live starter gallery and its machine-readable catalog complete the launch
-   demos ✅. The RC is published under npm's `next` tag ✅. Remaining: run
-   real isolated agent benchmarks and publish their artifacts.
+   demos ✅. The agent benchmark now publishes a controlled three-model
+   leaderboard with immutable evidence and nine observed builds ✅.
 4. **Sep–Oct** — the user lane's v1.0 items: states & content contract,
    `review_ui`, proposal links and agent rules distribution
    ([guides 02, 03, 04, 07](./docs/guides/README.md)). These are the four
    that change what a person gets from an agent-built interface, and they
    are cheap relative to what is already built; the rest of the lane
-   (`compose_plan`, planners, AI kit, preferences) ships in v1.1.
+   (`compose_plan`, planners, AI kit, preferences) ships in v1.1. Also in
+   this window: approve the Marketplace publisher identity so the VS Code
+   extension preview can ship as signed VSIX files.
 5. **Nov** — trademark green light → v1.0 announcement; npm majors, blog
    post, community namespace opens.
 
 _Status (1 Sep 2026): ahead of plan. Polish and trust passes are complete;
 `logic2b@1.0.0-rc.2` and `@logic2b/mcp@1.0.0-rc.2` are on npm under `next`;
 the site, registry and remote MCP are healthy; lint and the unit suites pass
-on `main`. The local registry is at `1.0.0-rc.16` (71 components, 38 blocks,
-27 charts, 141 items). The only launch-path objective still open is running
-real isolated agent benchmarks — the leaderboard is empty by design until a
-real run lands. The user lane above is the work between now and the trademark
-decision; its four v1.0 items are specified in `docs/guides` and ready to
-execute._
+on `main`. The real isolated agent benchmark has a comparative three-model
+leaderboard (best 294/300), the Spanish docs reached full parity (10 guides,
+75 component references), the Figma Variables bridge and the VS Code
+extension preview landed. The local registry is at `1.0.0-rc.16` (71
+components, 38 blocks, 27 charts, 141 items) while CLI/MCP remain the
+verified `1.0.0-rc.2` artifacts under `next`. Every original launch-path
+objective is done; what remains before the trademark decision is the user
+lane above, whose four v1.0 items are specified in `docs/guides` and ready to
+execute, plus the Marketplace publisher approval for the extension._
 
 ## Watching
 

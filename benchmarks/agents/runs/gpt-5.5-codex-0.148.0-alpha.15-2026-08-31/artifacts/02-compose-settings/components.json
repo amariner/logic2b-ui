@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.logic2b.com/schema.json",
+  "style": "default",
+  "tailwind": {
+    "css": "src/styles/theme.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "ui": "@/components/ui",
+    "utils": "@/lib/utils",
+    "hooks": "@/hooks",
+    "lib": "@/lib"
+  },
+  "logic2b": {
+    "registry": "https://ui.logic2b.com",
+    "preset": "bmV1dHJhbHxibHVlfHZpb2xldHx4bHxpbnRlcnxncm90ZXNrfG1vbm98ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8ZGVmYXVsdA"
+  }
+}

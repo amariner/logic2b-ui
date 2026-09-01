@@ -1,0 +1,47 @@
+---
+title: Control deslizante
+description: Entrada con la que el usuario selecciona un valor dentro de un intervalo.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="slider-demo" locale="es" />
+
+## Instalación
+
+<Install name="slider" locale="es" />
+
+## Uso
+
+```tsx
+import { Slider } from "@/components/ui/slider"
+
+<Slider aria-label="Volumen" defaultValue={[50]} max={100} step={1} />
+```
+
+## Notas de uso
+
+Está construido sobre `Slider.Root` de Radix. Los valores siempre son arrays: un control de un solo tirador usa `[value]` y un intervalo usa `[start, end]`.
+
+## Ejemplos
+
+### Intervalo
+
+<ComponentPreview name="slider-range-demo" locale="es" />
+
+### Controlado
+
+<ComponentPreview name="slider-controlled-demo" locale="es" />
+
+### Vertical
+
+<ComponentPreview name="slider-vertical-demo" locale="es" />
+
+## Accesibilidad
+
+- Cada tirador tiene el rol `slider` y se puede manejar completamente con el teclado.
+- Las flechas avanzan según `step`; <kbd>Re Pág</kbd> y <kbd>Av Pág</kbd> usan un incremento mayor; <kbd>Inicio</kbd> y <kbd>Fin</kbd> saltan a `min` y `max`.
+- Añade un `aria-label` contextual o enlaza `aria-labelledby` con el id de una etiqueta visible para que los lectores de pantalla anuncien su finalidad.
+- En un intervalo, usa `thumbLabels`, por ejemplo `["Precio mínimo", "Precio máximo"]`, cuando los nombres numerados generados no sean suficientemente descriptivos.
+- En controles de intervalo, cada tirador recibe el foco de forma independiente y no puede cruzar al adyacente.

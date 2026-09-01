@@ -1,0 +1,64 @@
+---
+title: Selector nativo
+description: Envoltorio con estilo para el elemento <select> nativo, con la lista y el comportamiento de la plataforma y un aspecto adaptado a los tokens.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="native-select-demo" locale="es" />
+
+## Instalación
+
+<Install name="native-select" locale="es" />
+
+## Uso
+
+```tsx
+import { NativeSelect } from "@/components/ui/native-select"
+
+<NativeSelect
+  aria-label="Fruta favorita"
+  defaultValue="manzana"
+  className="w-[180px]"
+>
+  <option value="manzana">Manzana</option>
+  <option value="platano">Plátano</option>
+</NativeSelect>
+```
+
+## Selector nativo o Selector
+
+Usa `NativeSelect` en vez de [`Select`](/es/docs/components/select) cuando
+prefieras el selector del navegador a una lista personalizada:
+
+- **Móviles**: abre la rueda o panel nativo del sistema operativo, que es el
+  comportamiento habitual en dispositivos táctiles.
+- **Listas de opciones extensas**: aporta desplazamiento y búsqueda incremental
+  nativos sin necesidad de virtualización.
+- **Formularios sin presupuesto para interactividad JavaScript**: es un
+  `<select>` real, por lo que funciona directamente con el envío y la validación
+  nativos del formulario.
+
+Elige `Select` cuando necesites contenido personalizado en las opciones, como
+iconos, descripciones o encabezados de grupo, o una lista cuyo aspecto coincida
+exactamente con el de los paneles emergentes.
+
+## Ejemplos
+
+### Desactivado
+
+<ComponentPreview name="native-select-disabled-demo" locale="es" />
+
+## Accesibilidad
+
+Genera un elemento `<select>` real, por lo que hereda la semántica de lista y el
+soporte de teclado del navegador:
+
+- Se abre con <kbd>Intro</kbd>, <kbd>Espacio</kbd> o <kbd>↓</kbd>, y se cierra con
+  <kbd>Esc</kbd> o al elegir una opción.
+- La búsqueda incremental salta a la primera opción coincidente.
+- Las tecnologías de asistencia anuncian el control como selector nativo sin
+  configuración ARIA adicional.
+- Asócialo a un `<label htmlFor>` o envuélvelo en un
+  [`Field`](/es/docs/components/field) para darle un nombre accesible.

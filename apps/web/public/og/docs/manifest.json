@@ -7,743 +7,1212 @@
       "id": "3d-extras",
       "title": "3D extras",
       "image": "/og/docs/3d-extras.png",
-      "bytes": 31460,
-      "sha256": "2d8577f064ad246a0947ebdbd20aec1263b3e91586d7ba33c0776dc424b8e442"
+      "bytes": 23102,
+      "sha256": "0a3237eae619eaff79895fbc58f8bcb3fb94cd423b01e056a55712967a4fd2d7"
     },
     {
       "id": "agent-benchmarks",
       "title": "Agent Benchmarks",
       "image": "/og/docs/agent-benchmarks.png",
-      "bytes": 30252,
-      "sha256": "9ae73effa54b2ef0c06e6e3f50dbe7e249eacc22d87aaff26f837b1e202421ee"
+      "bytes": 21848,
+      "sha256": "fd63f415a5dd93ac2c5235f7598cf85b3e8093cc94aaf2a0ee9e316fb4e32893"
     },
     {
       "id": "backend",
       "title": "Bring your own backend",
       "image": "/og/docs/backend.png",
-      "bytes": 37555,
-      "sha256": "4efa1be374c7b3fdefc783805ee6722f5b5b8d20cc9858e6c948aafe1b6b1f8c"
+      "bytes": 26877,
+      "sha256": "ad85551485e08e4ff746a7be95f3f3cb9d4182e30f41fdcd17074acf3f917ce5"
     },
     {
       "id": "benchmarks",
       "title": "Framework Benchmarks",
       "image": "/og/docs/benchmarks.png",
-      "bytes": 32228,
-      "sha256": "86a2b18993cf61216926052b1d86f661e69050909103b29049cf30c6ef844a5e"
+      "bytes": 24565,
+      "sha256": "475444fade99457d2e2ebe26eb3dbba28c9c07c236e07cd3835ba675d44d7c76"
     },
     {
       "id": "components/accordion",
       "title": "Accordion",
       "image": "/og/docs/components/accordion.png",
-      "bytes": 33509,
-      "sha256": "c8ef7424e03e4ccb65cc441fc6007d8ce129ebfac7c9ab7c230308bca88a1727"
+      "bytes": 22650,
+      "sha256": "5d36d523d0a1788d9f3e36dcbca80f49322472871fa84e75afb7295f42e9a89a"
     },
     {
       "id": "components/alert",
       "title": "Alert",
       "image": "/og/docs/components/alert.png",
-      "bytes": 25449,
-      "sha256": "0f17802bf87041bb118664ccdc8ed46485ae72ac8cf000d7f6179b7d0266d2db"
+      "bytes": 17271,
+      "sha256": "a26c3f7591d4a3066611355edf7a42a1f2f14beb08d1064ff675eb0e7eb9a510"
     },
     {
       "id": "components/alert-dialog",
       "title": "Alert Dialog",
       "image": "/og/docs/components/alert-dialog.png",
-      "bytes": 34181,
-      "sha256": "a97cccf1e94438fa13534e8b91cf0c336efd2ae01b60e885829dc1635d31809b"
+      "bytes": 22069,
+      "sha256": "9ac41d8a050ad56b7b949ef50d37792ad915172966271c9ec925cd632b8eb562"
     },
     {
       "id": "components/aspect-ratio",
       "title": "Aspect Ratio",
       "image": "/og/docs/components/aspect-ratio.png",
-      "bytes": 34986,
-      "sha256": "c971f7796afe309dbdcda5ac4d373cbce32efd2ac93312f6041b85cff4d7dfc6"
+      "bytes": 20645,
+      "sha256": "396daf451877d441b1ba8b2361f62e2905568f4f8b2e689de522cd49fc18e979"
     },
     {
       "id": "components/autocomplete",
       "title": "Autocomplete",
       "image": "/og/docs/components/autocomplete.png",
-      "bytes": 36020,
-      "sha256": "5b3c17676467992a5007a0d2e1e4eb0d0d5b0805f5d92441a9a3484042d53387"
+      "bytes": 23859,
+      "sha256": "b949e2bb4f39da859787d82584c58f30241b81a6560020de9af530515cfe6300"
     },
     {
       "id": "components/avatar",
       "title": "Avatar",
       "image": "/og/docs/components/avatar.png",
-      "bytes": 31268,
-      "sha256": "e0fd081c3c11e628e28247faa2fc0669f5c1a1be49323811a91a2ea03a0b122a"
+      "bytes": 19177,
+      "sha256": "9da0f6c4c245add726a7805366bab9f6fb0eae8e176ea2abb218594f6256ce20"
     },
     {
       "id": "components/badge",
       "title": "Badge",
       "image": "/og/docs/components/badge.png",
-      "bytes": 31150,
-      "sha256": "844e9efd18271635aa91898ef955913203d3dbf3d7dc95f36ce83883af75d4ec"
+      "bytes": 19478,
+      "sha256": "13a26b24dff63581e3c8da15015b7368c87ce60cfacf364c3981cf707bf2f9b6"
     },
     {
       "id": "components/breadcrumb",
       "title": "Breadcrumb",
       "image": "/og/docs/components/breadcrumb.png",
-      "bytes": 34395,
-      "sha256": "ea3b47453c6a3d528261657679b97376407596c69f6b960f8a8f29f9c4007dcb"
+      "bytes": 21653,
+      "sha256": "2ba9cf4046013d15d755eaf22c6e785c22e817a5b74fc69b8b5b3597760b96ca"
     },
     {
       "id": "components/button",
       "title": "Button",
       "image": "/og/docs/components/button.png",
-      "bytes": 30856,
-      "sha256": "72bd09b92f892c5828efb77be63f51642bf2945d145bb646c251c1181b5a5d6c"
+      "bytes": 19326,
+      "sha256": "5439c76b0bde8d453bf76b14df48e2bc03083dd03779084b3b22fe0dc6f1a878"
     },
     {
       "id": "components/button-group",
       "title": "Button Group",
       "image": "/og/docs/components/button-group.png",
-      "bytes": 34040,
-      "sha256": "3f43f1f89442cd40fbd0d2f2548581d25b7bb23763ebe814ea77fdd90a47a1c7"
+      "bytes": 21758,
+      "sha256": "db17ade23523e225ddcc217f76336e5ee1a873b01f547f82de95506031425bff"
     },
     {
       "id": "components/calendar",
       "title": "Calendar",
       "image": "/og/docs/components/calendar.png",
-      "bytes": 36684,
-      "sha256": "a9f5e45560c7e0a2aedcc681455deac51f0e7e51eda3290fe030d2a546bad2e1"
+      "bytes": 22834,
+      "sha256": "a3c8cad57bb477c91089c2700349b336474bb67b62739804a42dbd15546d221b"
     },
     {
       "id": "components/card",
       "title": "Card",
       "image": "/og/docs/components/card.png",
-      "bytes": 30633,
-      "sha256": "ff811469aaf157a0d12637e1ac4c7d6ef1c951ea24fa12cfe9d63eb2c5f870ed"
+      "bytes": 18827,
+      "sha256": "38886306c8430c92b5c1689a5a0f9c3859110fe379338c57cd9649b08c3873f8"
     },
     {
       "id": "components/carousel",
       "title": "Carousel",
       "image": "/og/docs/components/carousel.png",
-      "bytes": 33752,
-      "sha256": "deb6c07dbdead42d2be8f63dd21d3750393130e9632228059d43118e5aa25a79"
+      "bytes": 21422,
+      "sha256": "a7d8e17ec33ed7888347c1e7f3dbe29f81553380e2217d47692efb1d904d3533"
     },
     {
       "id": "components/chart",
       "title": "Chart",
       "image": "/og/docs/components/chart.png",
-      "bytes": 29395,
-      "sha256": "4881c48cfc0bfd6568caac72d2ab020e9b283fad7856dc67d2822651c01b29be"
+      "bytes": 20240,
+      "sha256": "92500d75daebf3adcd5f20eee90d5e96aa70e27ed7c5b620e7c7dbfa75e185c0"
     },
     {
       "id": "components/checkbox",
       "title": "Checkbox",
       "image": "/og/docs/components/checkbox.png",
-      "bytes": 31230,
-      "sha256": "ba37ab40833f28bf14b5100a35c0e1f9615282fed0cfb1de37ceae7b953a7d79"
+      "bytes": 22359,
+      "sha256": "0b737b3539fa938addc962d97c5da4a7d81e46bef82b372e7253e67063d48690"
     },
     {
       "id": "components/code-block",
       "title": "Code Block",
       "image": "/og/docs/components/code-block.png",
-      "bytes": 30932,
-      "sha256": "754c43673498d8f83b583aa2bf5f9d49f084f0b7842b0534c984c63685e5582c"
+      "bytes": 21909,
+      "sha256": "3353d5a503ba5c58a5a19371144165f18f2717a1b1ac8678cb6aac09e6fd2f61"
     },
     {
       "id": "components/collapsible",
       "title": "Collapsible",
       "image": "/og/docs/components/collapsible.png",
-      "bytes": 35726,
-      "sha256": "53d6bf4d028f0da93314db0996ea2b5ffe541835990313efbae1a8fba889796c"
+      "bytes": 20879,
+      "sha256": "d590ecf1f0d3cbd6dfe44e2eb2bfb10948b62f821e695e0c8c197b13970483ad"
     },
     {
       "id": "components/color-picker",
       "title": "Color Picker",
       "image": "/og/docs/components/color-picker.png",
-      "bytes": 35653,
-      "sha256": "5452f77c055d159fde6899f29ca098cac06bb6e5bef71f9f7c2800c1a0cfc3d2"
+      "bytes": 23098,
+      "sha256": "bbe8d65483d5ab425c1ec6cf5b7ccc2408bf51c8c76815d48d752c2ec7980bab"
     },
     {
       "id": "components/combobox",
       "title": "Combobox",
       "image": "/og/docs/components/combobox.png",
-      "bytes": 35315,
-      "sha256": "7370c0c97a35d13b9bf2fede61a77e74f6be6887348663c62fd6f7f0dd26a5cb"
+      "bytes": 21745,
+      "sha256": "11931fc29258bbdc84eda16ee2fd8c64e724542c68de3bdecfd672c73bfba82d"
     },
     {
       "id": "components/command",
       "title": "Command",
       "image": "/og/docs/components/command.png",
-      "bytes": 28610,
-      "sha256": "621f3ebd05ffa6ab64060d3e7b7a5365aa4a7371e6c866c125b9b91bf96f3a20"
+      "bytes": 19137,
+      "sha256": "2de2ffa1b1618f8b3965ca7db67037e3e993c1f61533d59812ac4b7543373ade"
     },
     {
       "id": "components/context-menu",
       "title": "Context Menu",
       "image": "/og/docs/components/context-menu.png",
-      "bytes": 35180,
-      "sha256": "091010e5f2bb592e1e3137879653927af79393a5ce2ad4d92e3d9b720f188c5b"
+      "bytes": 20700,
+      "sha256": "bf4e14792084be7424cbab83d5cd0b212b2ebadcce48791136287af7a26c3a55"
     },
     {
       "id": "components/data-table",
       "title": "Data Table",
       "image": "/og/docs/components/data-table.png",
-      "bytes": 33491,
-      "sha256": "a17709870d91638f8e3e706a6edde772aef713edfc8fa43e08d3d4aae8409043"
+      "bytes": 21120,
+      "sha256": "e3d1b9230f24299710d6de1f7a62ac69f3a77c02576b13072198704fad3a76d3"
     },
     {
       "id": "components/date-picker",
       "title": "Date Picker",
       "image": "/og/docs/components/date-picker.png",
-      "bytes": 32271,
-      "sha256": "873a4ed69bbe3c01494ea0bc1734922d0cfed942d2529a08a939e7ab26a2c7ad"
+      "bytes": 22753,
+      "sha256": "5bf038e9874b2b4324ad016a2681a8ce05e5648d9b90cfb6a6900643130ce17f"
     },
     {
       "id": "components/dialog",
       "title": "Dialog",
       "image": "/og/docs/components/dialog.png",
-      "bytes": 30649,
-      "sha256": "f5cc73c5a04a83296de358f1f2d9f4ac5addd086182a9f551ccd0e86a6ed8a8f"
+      "bytes": 21414,
+      "sha256": "09f3bf9f715bd6882f38f67d61b85e5b48d87b8d187586ba24e9d626af5b79dd"
     },
     {
       "id": "components/drawer",
       "title": "Drawer",
       "image": "/og/docs/components/drawer.png",
-      "bytes": 35781,
-      "sha256": "5882b5abf9418a0fa0f11b4141f6f4a5725f1720f1e3addb7d798ea784044aea"
+      "bytes": 23220,
+      "sha256": "8014d708a1e08fff1498a20aeb82ebf6f4f55a5b39551d53ec15644f2f45ad31"
     },
     {
       "id": "components/dropdown-menu",
       "title": "Dropdown Menu",
       "image": "/og/docs/components/dropdown-menu.png",
-      "bytes": 34569,
-      "sha256": "3af2ae3f8755771aecff82b8af8b86dd6eb0fe1ef7a08b3c55fc691baf7dd3b6"
+      "bytes": 21694,
+      "sha256": "b4e764f918d34a2eca1f0936030213218bbba340469a88690c5b23c1a8c86619"
     },
     {
       "id": "components/empty",
       "title": "Empty",
       "image": "/og/docs/components/empty.png",
-      "bytes": 35423,
-      "sha256": "bde8293bad4c9d754b9a08ba4a515f0a57bf037276d61d04d63027c27a7469a5"
+      "bytes": 20660,
+      "sha256": "e863564fb8273cd130a62f320fe0a24d2c30ec79daf57cfb4cc000d459b3a7fd"
     },
     {
       "id": "components/field",
       "title": "Field",
       "image": "/og/docs/components/field.png",
-      "bytes": 29335,
-      "sha256": "51272eeb7a75fa42dcd5a4b09d04b012d1fd34f45d2c1cdb789ed57891d02d17"
+      "bytes": 20428,
+      "sha256": "7c38a1f57d1a5306cbf83fcc8f8fc153bbc9e8975d05098cbc7794bff4f7a06a"
     },
     {
       "id": "components/file-dropzone",
       "title": "File Dropzone",
       "image": "/og/docs/components/file-dropzone.png",
-      "bytes": 32774,
-      "sha256": "34fb469dc862e2c21481864c97e501a85ccd852a72a0cc5858d72c2f514a88e5"
+      "bytes": 22089,
+      "sha256": "7a3c0a77f7d5f82e89041a012688ea437bc22d10da944462290f52f368f9cc90"
     },
     {
       "id": "components/form",
       "title": "Form",
       "image": "/og/docs/components/form.png",
-      "bytes": 31814,
-      "sha256": "de9383c0464315dbaa08ed565a00abb8ec58c46d548c9bc711539949a022ee8a"
+      "bytes": 17897,
+      "sha256": "9864b3e064227baa20babba8374d1aebb35e4b556b73997398d0101d1ee2ecb3"
     },
     {
       "id": "components/hover-card",
       "title": "Hover Card",
       "image": "/og/docs/components/hover-card.png",
-      "bytes": 28712,
-      "sha256": "2040eb6afc093ad5f6235aac99bf00e52ccb5143d85c70ddb7e667aec0f39b0a"
+      "bytes": 20460,
+      "sha256": "6eb29788198d6ecc0e1c72494c024d672f329713adbc8c5432ccfe1e557f3226"
     },
     {
       "id": "components/index",
       "title": "Components",
       "image": "/og/docs/components/index.png",
-      "bytes": 35184,
-      "sha256": "480568d58412afa9b9845fa1e9fcae99df3a088b4ac8b187d6c3a9748c1c178a"
+      "bytes": 21826,
+      "sha256": "efbcc258ab2cc62dec3733ac3d59a189bb5b31e3c279f3553aa5e66cdecdbc2d"
     },
     {
       "id": "components/input",
       "title": "Input",
       "image": "/og/docs/components/input.png",
-      "bytes": 26698,
-      "sha256": "b872aaa74b0d4fa4bd114b694879e31b6b339c1cdef48966e86679379cf2a4d7"
+      "bytes": 16480,
+      "sha256": "a1e7a0b07916b198e6b0518600a61cedc4fc534e6a49765bcdfb1378a9b2e587"
     },
     {
       "id": "components/input-group",
       "title": "Input Group",
       "image": "/og/docs/components/input-group.png",
-      "bytes": 31688,
-      "sha256": "4d2338be922af76ebdfef8e9ca82428ac0c766bcbfcc445cf8881a3d76f4ebe8"
+      "bytes": 20640,
+      "sha256": "de93973c349511e2a5b31c92c011ee661864ee0acb6ddc3311b9a5a099e50564"
     },
     {
       "id": "components/input-otp",
       "title": "Input OTP",
       "image": "/og/docs/components/input-otp.png",
-      "bytes": 30939,
-      "sha256": "3946d8ab9b1a73853c55b340f6bfd177fb26329b66d2e5450a598a253daf3065"
+      "bytes": 21189,
+      "sha256": "559bfbfda9d5de1767cb2d569a38e772904c80768aeb190397920a680b24d500"
     },
     {
       "id": "components/item",
       "title": "Item",
       "image": "/og/docs/components/item.png",
-      "bytes": 31291,
-      "sha256": "e19900c1ae4a201b1f381bc72ba515c6a85429cf9af4ef1904e4f907b8a950d7"
+      "bytes": 21951,
+      "sha256": "154c357fc0934d6ac060103ce9b2f8600e4529fb80e11e0460489d8cb8b068b9"
     },
     {
       "id": "components/kbd",
       "title": "Kbd",
       "image": "/og/docs/components/kbd.png",
-      "bytes": 30421,
-      "sha256": "3e60070b2208d381dd8dbd90db868e010d89e84f23bccc1236d17682e6eb36e6"
+      "bytes": 18351,
+      "sha256": "3b87294f81ebee12b665f12af028a2a7283cdd013fd2be6d45acd5a5a82ba10a"
     },
     {
       "id": "components/label",
       "title": "Label",
       "image": "/og/docs/components/label.png",
-      "bytes": 27884,
-      "sha256": "0c6f15868949de01d6def9f2dfc53586a78b37e6b27002fdf96f066c824c44bc"
+      "bytes": 18871,
+      "sha256": "ff3bd3dd578891b2938c8a33913aec7d025d37c2f2d2ba97ab8cd3ff0d0e3d6a"
     },
     {
       "id": "components/menubar",
       "title": "Menubar",
       "image": "/og/docs/components/menubar.png",
-      "bytes": 29572,
-      "sha256": "e15b35c982f38950583debcac9870025ca32a95627f21738b3f1f9683a555128"
+      "bytes": 19413,
+      "sha256": "c48c5d1e15086c0968b25b9a9b9dc56db877289f3999fe75049e01a04e69d36b"
     },
     {
       "id": "components/motion",
       "title": "Motion",
       "image": "/og/docs/components/motion.png",
-      "bytes": 37300,
-      "sha256": "f8951500c5650ae192c3ffb6b5d4fcdb1d9a529de114371be3e34ce252ca592f"
+      "bytes": 24710,
+      "sha256": "b18e3a596f89f64cbd4c515bc319df3233c6ff24a9fe44060aa8b55079f3befe"
     },
     {
       "id": "components/motion-blur",
       "title": "Motion Blur",
       "image": "/og/docs/components/motion-blur.png",
-      "bytes": 35965,
-      "sha256": "fc215a653571395077de023f0a32bd814bd9b0eb6a3884bef3a099cb24e85ec7"
+      "bytes": 26644,
+      "sha256": "1e7a99290558abf10e0517ea2813fd5409081596820466556639cb9ba0f40e47"
     },
     {
       "id": "components/motion-fade",
       "title": "Motion Fade",
       "image": "/og/docs/components/motion-fade.png",
-      "bytes": 35410,
-      "sha256": "401cbf02aa588f05b74bd019e9d3451f97c7770382f0faa4e48fa47701f3693e"
+      "bytes": 24273,
+      "sha256": "8aff00e96e76e0b3d2f23cf144b341fb24e41f59f884cda0482ff7c5ea5c23ac"
     },
     {
       "id": "components/motion-scale",
       "title": "Motion Scale",
       "image": "/og/docs/components/motion-scale.png",
-      "bytes": 37444,
-      "sha256": "f7263f4bac324bc216e437894491a4b8389a7ed580acd7863b2b1bbbd875cd94"
+      "bytes": 26830,
+      "sha256": "f01509cf2e0a232cf91d255a193290739fbbb23e7a279c6bdfbff38bd8a16ea3"
     },
     {
       "id": "components/motion-slide",
       "title": "Motion Slide",
       "image": "/og/docs/components/motion-slide.png",
-      "bytes": 39057,
-      "sha256": "1395ce0c464ce5cff1806aedb38992d0a003f10eb56222ae7da6a7d98136cde4"
+      "bytes": 26261,
+      "sha256": "cfa9c73bd89610ff346d9ccfd782d1dcc03e6d3756268a40e0936421f275859a"
     },
     {
       "id": "components/native-select",
       "title": "Native Select",
       "image": "/og/docs/components/native-select.png",
-      "bytes": 36972,
-      "sha256": "9cce264d703feb0cdb2a3e17675a949be9567950f2b128f4eca713ddc873c1a9"
+      "bytes": 25267,
+      "sha256": "8bb98ac238e51b98521bcd1c07285c927ea1daaf39082ae719c00485e9eea1c1"
     },
     {
       "id": "components/navigation-menu",
       "title": "Navigation Menu",
       "image": "/og/docs/components/navigation-menu.png",
-      "bytes": 33001,
-      "sha256": "f8cbcd3a98e22010eb169bd4194d16bf143dcef87461b6c52d855bfecd5db4ab"
+      "bytes": 22193,
+      "sha256": "f70651497070fdb9d8eca963d5b89f4b51ce316378fa9078aab75723ea16f781"
     },
     {
       "id": "components/number-field",
       "title": "Number Field",
       "image": "/og/docs/components/number-field.png",
-      "bytes": 32501,
-      "sha256": "d1bcf06673d8d7112462d2a1f61a98be4a4f9806730cc61124c2a029cd42ddf7"
+      "bytes": 22122,
+      "sha256": "7cffb81ca8530ed33be587732406e1afb915919321230e75d4b1521b78e07f04"
     },
     {
       "id": "components/pagination",
       "title": "Pagination",
       "image": "/og/docs/components/pagination.png",
-      "bytes": 30724,
-      "sha256": "2a3a24558a3c955030baaf7b21b739237fa575a7aa5530d90ad34aae312920a7"
+      "bytes": 20512,
+      "sha256": "e69eccb4aea71272f88fc9452c4452fd7b4a780c864c9d1af6d6cadd189b392a"
     },
     {
       "id": "components/parallax",
       "title": "Parallax",
       "image": "/og/docs/components/parallax.png",
-      "bytes": 36604,
-      "sha256": "69cff125f8d1627d5f41b7d97e52cdd981a1292a79a08080e2551148207b0cf8"
+      "bytes": 27076,
+      "sha256": "9c5fefb21c062b93b660b8109f29dd434eeaa5b2e697ea01abf4d2e22ca1a7e1"
     },
     {
       "id": "components/popover",
       "title": "Popover",
       "image": "/og/docs/components/popover.png",
-      "bytes": 29290,
-      "sha256": "e4ae2d8b8cdd2f0da1eb192e86c9370894fd92dc66f02944a57f745d2743d0b5"
+      "bytes": 20184,
+      "sha256": "9609fc867aa5ac7b682763cf4214872f32709f310a17f9cac646f7b145445b7a"
     },
     {
       "id": "components/progress",
       "title": "Progress",
       "image": "/og/docs/components/progress.png",
-      "bytes": 30737,
-      "sha256": "3db0890e649c075f2c798f76561d661607261a6034bca0959524c45551b791cc"
+      "bytes": 21245,
+      "sha256": "5f1835d9ae379f194ad5cd9bde21af878bd42fa78d1ab9aef926cff0d452fb38"
     },
     {
       "id": "components/radio-group",
       "title": "Radio Group",
       "image": "/og/docs/components/radio-group.png",
-      "bytes": 36218,
-      "sha256": "d5cb263e3a8ec6cc42e4582e968a3a7196af95dffa7879304625857704b967ac"
+      "bytes": 20107,
+      "sha256": "aea7d45b314f56340b1158ca586a0b3856d077199a7f715747627df9cfe5feed"
     },
     {
       "id": "components/rating",
       "title": "Rating",
       "image": "/og/docs/components/rating.png",
-      "bytes": 39963,
-      "sha256": "dc5d81827ba3a57c17f50b9a42cda9a08c622738586cf60f3c9b8de8638c0815"
+      "bytes": 25618,
+      "sha256": "a2b6e6e17b221d6fa0a50b9fe6219a17190e2fd3cb365779e8d2b1a8926635c8"
     },
     {
       "id": "components/resizable",
       "title": "Resizable",
       "image": "/og/docs/components/resizable.png",
-      "bytes": 32675,
-      "sha256": "f8690b7cca6f8b1ea1e6f573ea653a8cb1680deaa603759c315df4a93c526ace"
+      "bytes": 21370,
+      "sha256": "7f281c4184c3b663baa36b382727e1da7cb2c871f613455841d4098b46f1c14c"
     },
     {
       "id": "components/scroll-area",
       "title": "Scroll Area",
       "image": "/og/docs/components/scroll-area.png",
-      "bytes": 31484,
-      "sha256": "251f0db4af47afdc954331f927c114e73b0739f0d44b0a904e59a9a298ff7466"
+      "bytes": 22203,
+      "sha256": "29f2a6bbd3623e331c47088da7121151e5ee0d546a24b4f31b4ae5b72bf74e51"
     },
     {
       "id": "components/scroll-reveal",
       "title": "Scroll Reveal",
       "image": "/og/docs/components/scroll-reveal.png",
-      "bytes": 37168,
-      "sha256": "9f349fdf10bc9b094bf4ce4959d0553bf9538c4e1f5877ef660a75d7fbacf753"
+      "bytes": 25806,
+      "sha256": "c67d2f2e89c30dfebe576ff24df63fe24bea28ac8c975a1f9e5d84dc0f58b98b"
     },
     {
       "id": "components/select",
       "title": "Select",
       "image": "/og/docs/components/select.png",
-      "bytes": 32487,
-      "sha256": "8112dad5c28bb3bb9c560cac03224de6da7ff7b2feffc1a7c6dea773f95c9b54"
+      "bytes": 21111,
+      "sha256": "78d5dd5e807941b7f1980061f28e8c59c789d30aaa50359a95212025fadb620f"
     },
     {
       "id": "components/separator",
       "title": "Separator",
       "image": "/og/docs/components/separator.png",
-      "bytes": 30375,
-      "sha256": "f2bcce10b9fa8e71d62d74e6739f72d2fd88f19cc32215e231bf6cf292c8dece"
+      "bytes": 20062,
+      "sha256": "5d490299820285084487144719f67fd184ca349d986b26f5449d8650062ad7db"
     },
     {
       "id": "components/sheet",
       "title": "Sheet",
       "image": "/og/docs/components/sheet.png",
-      "bytes": 30819,
-      "sha256": "1af432590c5cbb0cf3facdf220e96f8938c9c1a5391c614a3357e9fbf5012f6c"
+      "bytes": 21579,
+      "sha256": "d6c3cce583d57a0ad73ed7da45a6f0a7eb4b465d806c026a05719027edc35d31"
     },
     {
       "id": "components/sidebar",
       "title": "Sidebar",
       "image": "/og/docs/components/sidebar.png",
-      "bytes": 32094,
-      "sha256": "38afb34ffa6bfa7c2bf4b268835c8c4b68eb14456b37aaa00e9e7a4d359f5824"
+      "bytes": 20429,
+      "sha256": "fa9eab817efd8aebe2803745baaeb34a20009e363ab5d29aa55c8b5c8d04b3f6"
     },
     {
       "id": "components/skeleton",
       "title": "Skeleton",
       "image": "/og/docs/components/skeleton.png",
-      "bytes": 31602,
-      "sha256": "d35d95d14bb480afc925a8846141b0e00ab126ba0f341a0db352dd8299212dac"
+      "bytes": 19574,
+      "sha256": "2b1a623d4f25d6a77f2d5e1c41722f3347eaa8c4904794d715cdc2ac674c0790"
     },
     {
       "id": "components/slider",
       "title": "Slider",
       "image": "/og/docs/components/slider.png",
-      "bytes": 30894,
-      "sha256": "524a2c7b2078fcfe5d2d6ac756bfa9006e35029fe830605646735ca07433a7ef"
+      "bytes": 20032,
+      "sha256": "e7fbaca10f31b8b23b7286afc68d4f31ced98333d976467cb18f7853797b3c3a"
     },
     {
       "id": "components/sonner",
       "title": "Sonner",
       "image": "/og/docs/components/sonner.png",
-      "bytes": 30200,
-      "sha256": "2a18dd293337f1ff9dacb0ff91e1c8a5f63d61f688351a29ca3749edf875a295"
+      "bytes": 18655,
+      "sha256": "f9d0d5d52b53e77085b585999cf1d9a3282db578ad09f6ce8e91d2722c0c6caf"
     },
     {
       "id": "components/spinner",
       "title": "Spinner",
       "image": "/og/docs/components/spinner.png",
-      "bytes": 30841,
-      "sha256": "b0ed1fec5de15ea3171e636346fd78c57e71be966845cacf3cc4755c76eff421"
+      "bytes": 18268,
+      "sha256": "62a4f488f511685a5d983f8574c7ecc8faa18f172e9fa945b862b50c9167939f"
     },
     {
       "id": "components/stepper",
       "title": "Stepper",
       "image": "/og/docs/components/stepper.png",
-      "bytes": 34120,
-      "sha256": "96a7490c1f5d1d5d0e5c54caf5827e010e5dacb27d87b5986c8616e42d52327a"
+      "bytes": 24762,
+      "sha256": "85538f6ebc6a28ed846a55c82f5ac305c352068bbe23f1a3c6e172c4e09093d7"
     },
     {
       "id": "components/switch",
       "title": "Switch",
       "image": "/og/docs/components/switch.png",
-      "bytes": 31870,
-      "sha256": "a0f88d123c10784d17b1c73c9920ee12f7d9be78687e83c7388179e85ab01e3a"
+      "bytes": 21402,
+      "sha256": "b9fb450a7974e81db5d006bfb1853729e30a793ea1bb5a833a6019eaadb950ef"
     },
     {
       "id": "components/table",
       "title": "Table",
       "image": "/og/docs/components/table.png",
-      "bytes": 30825,
-      "sha256": "e82c4dd011f8bb9def1ee9961696e267e636520ba7a083e49a7e851d4cae051a"
+      "bytes": 17377,
+      "sha256": "ad86fe3fab1928d4a91f1b5d2a425935dee1213d01bbb6eb12f8156e9fadfeab"
     },
     {
       "id": "components/tabs",
       "title": "Tabs",
       "image": "/og/docs/components/tabs.png",
-      "bytes": 32995,
-      "sha256": "696cbbd4f9d129bfe7b0367db9a543383cc92b6df993f3c2ea299f7eca3cc18a"
+      "bytes": 19879,
+      "sha256": "001d8e30b41f58d6cebbef7b968e582462cccec1e27396bfca428a21181e1daa"
     },
     {
       "id": "components/tags-input",
       "title": "Tags Input",
       "image": "/og/docs/components/tags-input.png",
-      "bytes": 34476,
-      "sha256": "8d6bd57dc8972420b862e295542974bb8cd826e110c12c32b032898d38d0e655"
+      "bytes": 25023,
+      "sha256": "a6c3ef38250656fc663fd319ea05333cc16ce426bc61f15f16969dc9f6674852"
     },
     {
       "id": "components/textarea",
       "title": "Textarea",
       "image": "/og/docs/components/textarea.png",
-      "bytes": 28121,
-      "sha256": "c4563a907c4241beb4332424e16b6d03f765c7498bf14823936ff2181208c758"
+      "bytes": 20035,
+      "sha256": "5b1196058a81a0022c32918606fa2686c2a9fc2a9749b241d62d9daef3eef70d"
     },
     {
       "id": "components/timeline",
       "title": "Timeline",
       "image": "/og/docs/components/timeline.png",
-      "bytes": 30438,
-      "sha256": "5e0130393d3d12a6d083ddc99a8c70677fc849d6900e46705ac1d616b6a2589c"
+      "bytes": 20353,
+      "sha256": "c9faf56cef0f0de91a155092be1b1f9d19500b9aff5c56741cf95403c7d07ebd"
     },
     {
       "id": "components/toggle",
       "title": "Toggle",
       "image": "/og/docs/components/toggle.png",
-      "bytes": 29455,
-      "sha256": "e1f84ae7602323febd335d3c22740aa7b9697255f7e96e73ee9c1a9c18456c16"
+      "bytes": 19361,
+      "sha256": "b0e1b8515ffc46abbaffe5e35dac547ea5efb0baf3556e2aa74213134488db34"
     },
     {
       "id": "components/toggle-group",
       "title": "Toggle Group",
       "image": "/og/docs/components/toggle-group.png",
-      "bytes": 33756,
-      "sha256": "7a58377d3ae0c3e766af947488da8c3bf7fd8f5a76e9628010303a498e5f66ef"
+      "bytes": 22484,
+      "sha256": "5c393e8830bbc57e9b983b22c3fcec7bf14ea7a05034bac7068f5122662558b0"
     },
     {
       "id": "components/tooltip",
       "title": "Tooltip",
       "image": "/og/docs/components/tooltip.png",
-      "bytes": 35480,
-      "sha256": "ac8127dc7665bb6eca10a00123b8621cf6a3fae64dc372a5cc8727b7c7c25d0e"
+      "bytes": 22338,
+      "sha256": "af1fd01470a4d6ea5ea92470c708f4c1922102a37e9b0c006c413b30fc2f282d"
     },
     {
       "id": "components/tree-view",
       "title": "Tree View",
       "image": "/og/docs/components/tree-view.png",
-      "bytes": 36710,
-      "sha256": "98b12d727b78066bdca3bfef2fe4e8ca2115c7bf5560634e4039b395a2eed532"
+      "bytes": 25462,
+      "sha256": "4deeb33ad3012d1514d76de0895b262b58bc27dd9921470f74bc4882e3007eca"
     },
     {
       "id": "components/typography",
       "title": "Typography",
       "image": "/og/docs/components/typography.png",
-      "bytes": 33549,
-      "sha256": "7eb8ee5078cf02dc07a28da8aa73071389f30ba5a0bd65184bd377f5bb59524a"
+      "bytes": 24872,
+      "sha256": "eb070f41b4e189b98bcefbc95ce285457f8ad8b664aa4c9952de9107b2781451"
     },
     {
       "id": "cross-platform-tokens",
       "title": "Cross-platform tokens",
       "image": "/og/docs/cross-platform-tokens.png",
-      "bytes": 35518,
-      "sha256": "2d76760b66d7b4ab28ba6048514c84e5da3fa9597d0fc16c3a63e988b1fbf713"
+      "bytes": 26882,
+      "sha256": "3899c95730cb5b19a1c957ac2128c7d6f9c97ab102e97bf04f312e9d5be016eb"
     },
     {
       "id": "es/3d-extras",
       "title": "Extras 3D",
       "image": "/og/docs/es/3d-extras.png",
-      "bytes": 32853,
-      "sha256": "062b1293fbf752c071b618029945a97a5b02fa43fd5f4361c86444ed41ca12fb"
+      "bytes": 24191,
+      "sha256": "d49f7b7859f63f7ca48902da10d637104ea52c1ef02306abe113d80176484f0a"
     },
     {
       "id": "es/agent-benchmarks",
       "title": "Benchmarks de agentes",
       "image": "/og/docs/es/agent-benchmarks.png",
-      "bytes": 35529,
-      "sha256": "b482ac2bdeb930e270d01869b3c7c2349d5b900da3d20bceac43f8cee6efdf67"
+      "bytes": 23996,
+      "sha256": "a05500103b6b54cd37ea69a47aff8caafd4ba7db806fdf5e2ee2ac2b57a522a3"
     },
     {
       "id": "es/backend",
       "title": "Conecta tu propio backend",
       "image": "/og/docs/es/backend.png",
-      "bytes": 36794,
-      "sha256": "f0b6805f9860bb1784edec38195ac0d5dc1abfc34bcdaf16605b24e4c4fef6fb"
+      "bytes": 27246,
+      "sha256": "d340e101d70fb630e1edd95e5d8578dbe1de3be669b32fb4bbbb2ff180fced37"
     },
     {
       "id": "es/benchmarks",
       "title": "Benchmarks de frameworks",
       "image": "/og/docs/es/benchmarks.png",
-      "bytes": 36391,
-      "sha256": "ce29e3058cc44a2f35e5e129630bb992432e5ff55422750893696836eb76fb0c"
+      "bytes": 26535,
+      "sha256": "275fa90c0019c3afddac69569f613d0bb9ee98f0b0315e99903dbb9188509a4c"
+    },
+    {
+      "id": "es/components/accordion",
+      "title": "Acordeón",
+      "image": "/og/docs/es/components/accordion.png",
+      "bytes": 23411,
+      "sha256": "b140b4f6b3629957f9861537a5b10d57c7daf87085c743de237cfbc0a9fd5317"
+    },
+    {
+      "id": "es/components/alert",
+      "title": "Alerta",
+      "image": "/og/docs/es/components/alert.png",
+      "bytes": 19029,
+      "sha256": "e5987e7193ddd442934f11180517dc29eab7ae157c148893f4ecd79531b34f94"
+    },
+    {
+      "id": "es/components/alert-dialog",
+      "title": "Diálogo de alerta",
+      "image": "/og/docs/es/components/alert-dialog.png",
+      "bytes": 26206,
+      "sha256": "f1e0a4317029a4adc1dcb480d31992ac9b706da1f1ebf0640094f1f50dd568b4"
+    },
+    {
+      "id": "es/components/aspect-ratio",
+      "title": "Relación de aspecto",
+      "image": "/og/docs/es/components/aspect-ratio.png",
+      "bytes": 22846,
+      "sha256": "023ccfad630fabf97a8397aea0670407736effac22357e60da0da4206617e345"
+    },
+    {
+      "id": "es/components/autocomplete",
+      "title": "Autocompletado",
+      "image": "/og/docs/es/components/autocomplete.png",
+      "bytes": 25450,
+      "sha256": "ca1f6cf45880692c4e074a90886e25df9ec9ccd773fd167cbc1256963bc31470"
+    },
+    {
+      "id": "es/components/avatar",
+      "title": "Avatar",
+      "image": "/og/docs/es/components/avatar.png",
+      "bytes": 19843,
+      "sha256": "57ef20fce40a869527799599261af62cda92b94c37bad0d45ba279b4cf09dd16"
+    },
+    {
+      "id": "es/components/badge",
+      "title": "Insignia",
+      "image": "/og/docs/es/components/badge.png",
+      "bytes": 21961,
+      "sha256": "6334eeadfdf72c272f6989f757c06def04b9787637c113f473326f648475dbd3"
+    },
+    {
+      "id": "es/components/breadcrumb",
+      "title": "Migas de pan",
+      "image": "/og/docs/es/components/breadcrumb.png",
+      "bytes": 23329,
+      "sha256": "34b4bb28d529f08164c6c3f34c06ae9e3204cf59f3dc3455186f684cfc8ddd1b"
     },
     {
       "id": "es/components/button",
       "title": "Botón",
       "image": "/og/docs/es/components/button.png",
-      "bytes": 28689,
-      "sha256": "be2d6bc776848d4dcf99930eb346ee5199dae9e996070c262e7035716482947c"
+      "bytes": 20087,
+      "sha256": "5227fa6efada1b894b6bab2c3d919d87e0504f91896e3cec92df70920ef45ff8"
+    },
+    {
+      "id": "es/components/button-group",
+      "title": "Grupo de botones",
+      "image": "/og/docs/es/components/button-group.png",
+      "bytes": 24902,
+      "sha256": "f7853b5f93e5052f1a1b89a26860ffac9b4d652e22051e31e596f4485b7f91db"
+    },
+    {
+      "id": "es/components/calendar",
+      "title": "Calendario",
+      "image": "/og/docs/es/components/calendar.png",
+      "bytes": 22129,
+      "sha256": "c87f15b7a88b07d9113c9ffb46abeedba6eec5254ffc0cad7132b4b874a49cd1"
     },
     {
       "id": "es/components/card",
       "title": "Tarjeta",
       "image": "/og/docs/es/components/card.png",
-      "bytes": 28043,
-      "sha256": "5ba4d63d127196ecc529b00a3817842439bf478c8e62284b2da527be6eb13c86"
+      "bytes": 18852,
+      "sha256": "07fd57c19d01c48c25aef8003012146ba4f7981fa6e399fc3f48ef5682d9077b"
+    },
+    {
+      "id": "es/components/carousel",
+      "title": "Carrusel",
+      "image": "/og/docs/es/components/carousel.png",
+      "bytes": 22546,
+      "sha256": "518a79e76881bf12e250275d13a3b31b519faba2c2ac1fe10a72da222bc8eb1c"
     },
     {
       "id": "es/components/chart",
       "title": "Gráfico",
       "image": "/og/docs/es/components/chart.png",
-      "bytes": 32094,
-      "sha256": "af1225aa95e34b6cf1afa333fee495e92d301405c345546773e5f1f89a8c0fa0"
+      "bytes": 22224,
+      "sha256": "9ea005c0a410b934404b81407b82918866bb21d776241e215eb3da873f3d477a"
     },
     {
       "id": "es/components/checkbox",
       "title": "Casilla de verificación",
       "image": "/og/docs/es/components/checkbox.png",
-      "bytes": 28731,
-      "sha256": "79b0e6a45114e94af21a2701363509c93f653c4cd9e64053b6d911785b2f202d"
+      "bytes": 23562,
+      "sha256": "c6a3deb8a44d54a8bc7d1fbaffb9b6ece464cab87a67b260ca96a5342aa28e7b"
+    },
+    {
+      "id": "es/components/code-block",
+      "title": "Bloque de código",
+      "image": "/og/docs/es/components/code-block.png",
+      "bytes": 23347,
+      "sha256": "ab5c50cf009605723c8870bab71c32b76e71cd320a1c0ad867f8779bf3754982"
+    },
+    {
+      "id": "es/components/collapsible",
+      "title": "Panel plegable",
+      "image": "/og/docs/es/components/collapsible.png",
+      "bytes": 21932,
+      "sha256": "9088a9b81f48ea5009d48434943eb7704097253283a57475897a52fa9d21aa63"
+    },
+    {
+      "id": "es/components/color-picker",
+      "title": "Selector de color",
+      "image": "/og/docs/es/components/color-picker.png",
+      "bytes": 24857,
+      "sha256": "eca48d5f9fb2fa450f08d941c4a827e1201d7e0eb88fffc042410578178916d4"
+    },
+    {
+      "id": "es/components/combobox",
+      "title": "Cuadro combinado",
+      "image": "/og/docs/es/components/combobox.png",
+      "bytes": 23935,
+      "sha256": "cee94e8cfb23e76f66aaddcf86a3a08509ab97b46916098560c048ae54e11cbe"
+    },
+    {
+      "id": "es/components/command",
+      "title": "Paleta de comandos",
+      "image": "/og/docs/es/components/command.png",
+      "bytes": 23024,
+      "sha256": "6600bdb9cb0a3ee502017ed9fac109059e8eb7379585c48b733b528e42d6d6f6"
+    },
+    {
+      "id": "es/components/context-menu",
+      "title": "Menú contextual",
+      "image": "/og/docs/es/components/context-menu.png",
+      "bytes": 21657,
+      "sha256": "34d15b774059cf10d01f32e359af68643aaaf666396ec6c699bd5b487abd0e27"
+    },
+    {
+      "id": "es/components/data-table",
+      "title": "Tabla de datos",
+      "image": "/og/docs/es/components/data-table.png",
+      "bytes": 23675,
+      "sha256": "3cfe2516297be14941bb3704c7c789e959f66ddc42cb97d6218200574114fafc"
+    },
+    {
+      "id": "es/components/date-picker",
+      "title": "Selector de fecha",
+      "image": "/og/docs/es/components/date-picker.png",
+      "bytes": 23603,
+      "sha256": "a00e0bb9d8575b0759b63cc34cc24096dea23b9bded0a3b7dc0b446e0975d283"
     },
     {
       "id": "es/components/dialog",
       "title": "Diálogo",
       "image": "/og/docs/es/components/dialog.png",
-      "bytes": 31946,
-      "sha256": "a4d758051f55d2b81d2342b20b0460b56f3461311be91b359ee54caee842007b"
+      "bytes": 23715,
+      "sha256": "206ce461be072475fa9791e3ecb6e809b0b0be9cccbc70bb86141e9387cd8f05"
+    },
+    {
+      "id": "es/components/drawer",
+      "title": "Cajón deslizante",
+      "image": "/og/docs/es/components/drawer.png",
+      "bytes": 24553,
+      "sha256": "574a732e3f7b029483a3f0bb7c97694bb476ae3c86d32a50180830ea82ef21b8"
+    },
+    {
+      "id": "es/components/dropdown-menu",
+      "title": "Menú desplegable",
+      "image": "/og/docs/es/components/dropdown-menu.png",
+      "bytes": 22988,
+      "sha256": "a61e352f825f86287a9dfa85ad6d9fb86a46398af6081f202c35a89f87b62774"
+    },
+    {
+      "id": "es/components/empty",
+      "title": "Estado vacío",
+      "image": "/og/docs/es/components/empty.png",
+      "bytes": 21988,
+      "sha256": "7bb4b1ded10eb83d7e150a65b66563b80f89e2006acef3fb30999f7014321780"
+    },
+    {
+      "id": "es/components/field",
+      "title": "Campo de formulario",
+      "image": "/og/docs/es/components/field.png",
+      "bytes": 24178,
+      "sha256": "0f7f2e7f00fb434bf287ae7e5894b92d9e18d92c5675bc74a7d0d4a72560b2d3"
+    },
+    {
+      "id": "es/components/file-dropzone",
+      "title": "Zona de archivos",
+      "image": "/og/docs/es/components/file-dropzone.png",
+      "bytes": 27528,
+      "sha256": "c108e5db2cee2e34e44dd3600473d8f76f99bc7bba6cae292f2efcc7605c1a5b"
     },
     {
       "id": "es/components/form",
       "title": "Formulario",
       "image": "/og/docs/es/components/form.png",
-      "bytes": 29891,
-      "sha256": "3ebe2acf6a3d10c82ab19677ddc7c8affb5fbbe332844c8cfbf0f81d6d351133"
+      "bytes": 23157,
+      "sha256": "9c777ed7ed56d0618cf3ce97f710a7330f536aa53e89f91af453f8c84f3a0131"
+    },
+    {
+      "id": "es/components/hover-card",
+      "title": "Tarjeta al pasar",
+      "image": "/og/docs/es/components/hover-card.png",
+      "bytes": 23491,
+      "sha256": "a2eaa7342e62a044dd2021fd7c57d886ba2fc5704c2deac825eb047cc35e71f7"
     },
     {
       "id": "es/components/input",
       "title": "Campo de entrada",
       "image": "/og/docs/es/components/input.png",
-      "bytes": 30980,
-      "sha256": "bba9f08319812f689eed261f861af46ef4372b6c603adbd6aaf97e118f71a7ab"
+      "bytes": 19955,
+      "sha256": "ea41f9cd514f4369e3448842ba2f8cdfb19536ea82da13d27f9bf298fd7f9492"
+    },
+    {
+      "id": "es/components/input-group",
+      "title": "Grupo de entrada",
+      "image": "/og/docs/es/components/input-group.png",
+      "bytes": 24864,
+      "sha256": "c7966fcc4386651d896d37da9da36c1c3622ec999a131e3225ee5976fa4eb66f"
+    },
+    {
+      "id": "es/components/input-otp",
+      "title": "Entrada OTP",
+      "image": "/og/docs/es/components/input-otp.png",
+      "bytes": 23352,
+      "sha256": "c21bca2b59a56b67d73ba3c48e2a55c40e085225ba0244704bbd3c4bc0d95081"
+    },
+    {
+      "id": "es/components/item",
+      "title": "Elemento",
+      "image": "/og/docs/es/components/item.png",
+      "bytes": 24221,
+      "sha256": "95471295034197d483b5f8cf0b2781a02cc7f14db880eebc1671ec1c3a0a5e08"
+    },
+    {
+      "id": "es/components/kbd",
+      "title": "Tecla",
+      "image": "/og/docs/es/components/kbd.png",
+      "bytes": 20388,
+      "sha256": "100ac5ff2fb1832797fc810824e18d2019bcb6ac0fc40a53b8141780c14433c6"
+    },
+    {
+      "id": "es/components/label",
+      "title": "Etiqueta",
+      "image": "/og/docs/es/components/label.png",
+      "bytes": 20640,
+      "sha256": "8744654ebca9439599a31a7ccbbe597819f62d96753cfe5eceecd782c1a637c1"
+    },
+    {
+      "id": "es/components/menubar",
+      "title": "Barra de menús",
+      "image": "/og/docs/es/components/menubar.png",
+      "bytes": 23149,
+      "sha256": "b2944e32e1f00c84522666506c040846bed15c56b2121fc586fad79e785764ce"
+    },
+    {
+      "id": "es/components/motion",
+      "title": "Movimiento",
+      "image": "/og/docs/es/components/motion.png",
+      "bytes": 27565,
+      "sha256": "9a0cc51980dfbf5626814564e6afb0013e0d77612f1d0776dc96ab72b56ca02a"
+    },
+    {
+      "id": "es/components/motion-blur",
+      "title": "Movimiento con desenfoque",
+      "image": "/og/docs/es/components/motion-blur.png",
+      "bytes": 29904,
+      "sha256": "d6b8896aa911aec08609a448059789fdf89c482f700a554543394a474edf6514"
+    },
+    {
+      "id": "es/components/motion-fade",
+      "title": "Fundido en movimiento",
+      "image": "/og/docs/es/components/motion-fade.png",
+      "bytes": 27477,
+      "sha256": "3a7cd712e3d8e140b9bc84e3ba29ef63c1531ce25ed215f790a5541689278d44"
+    },
+    {
+      "id": "es/components/motion-scale",
+      "title": "Escala en movimiento",
+      "image": "/og/docs/es/components/motion-scale.png",
+      "bytes": 27487,
+      "sha256": "e0c1ac92193c61bb26e697291b74f6c813a9e002e589ea7c153b3620833544ae"
+    },
+    {
+      "id": "es/components/motion-slide",
+      "title": "Deslizamiento en movimiento",
+      "image": "/og/docs/es/components/motion-slide.png",
+      "bytes": 29540,
+      "sha256": "1b3517132e0c01cda529eda03fa36e175c0afe859c6dde3da076771c478185bb"
+    },
+    {
+      "id": "es/components/native-select",
+      "title": "Selector nativo",
+      "image": "/og/docs/es/components/native-select.png",
+      "bytes": 26427,
+      "sha256": "24255690bc8a0e91a6629900ca6bb74786d11026992145a4b845d5bb9d3fbefa"
+    },
+    {
+      "id": "es/components/navigation-menu",
+      "title": "Menú de navegación",
+      "image": "/og/docs/es/components/navigation-menu.png",
+      "bytes": 23538,
+      "sha256": "9cb24aae0c4b07a50680edfc3d501983dabf7c6fd9fab73c7fa2f25ac6795ee6"
+    },
+    {
+      "id": "es/components/number-field",
+      "title": "Campo numérico",
+      "image": "/og/docs/es/components/number-field.png",
+      "bytes": 24372,
+      "sha256": "1c615abcfcb8a9a56b16ca47492b04e4d8384780fc46c33728e70bbd0f46cdfa"
+    },
+    {
+      "id": "es/components/pagination",
+      "title": "Paginación",
+      "image": "/og/docs/es/components/pagination.png",
+      "bytes": 23190,
+      "sha256": "e0a4404d98635775f203b9780998fbd47349aafed73850562b998be0d08fd90c"
+    },
+    {
+      "id": "es/components/parallax",
+      "title": "Paralaje",
+      "image": "/og/docs/es/components/parallax.png",
+      "bytes": 26303,
+      "sha256": "6eca6285b41127fd91eb34f02430ebe19747eb71948191f641912791cbef1ac9"
+    },
+    {
+      "id": "es/components/popover",
+      "title": "Panel emergente",
+      "image": "/og/docs/es/components/popover.png",
+      "bytes": 22305,
+      "sha256": "78b30c9bd0d069c04734f2eb5a0c2ec15b74a0170f40440bc080db3c84109a69"
+    },
+    {
+      "id": "es/components/progress",
+      "title": "Progreso",
+      "image": "/og/docs/es/components/progress.png",
+      "bytes": 19625,
+      "sha256": "2d93dcd6af2c7dcdf2420004bc0aa6a93a7d2427c3b157ff70fbbac07494b2f3"
+    },
+    {
+      "id": "es/components/radio-group",
+      "title": "Grupo de opciones",
+      "image": "/og/docs/es/components/radio-group.png",
+      "bytes": 26328,
+      "sha256": "285718c998e18680b2e64686fa362297b22624a6e0e3d3b5aa31ca8909055ba3"
+    },
+    {
+      "id": "es/components/rating",
+      "title": "Valoración",
+      "image": "/og/docs/es/components/rating.png",
+      "bytes": 27423,
+      "sha256": "6115e5e658f0ad2696fb3322edaadb221a5bf200d04e1856d32a03a0bdaa2b70"
+    },
+    {
+      "id": "es/components/resizable",
+      "title": "Paneles redimensionables",
+      "image": "/og/docs/es/components/resizable.png",
+      "bytes": 23806,
+      "sha256": "12bc96a114310ea9afbb7712d3d7a82ea25169a4ef92d57056134630fdfadf46"
+    },
+    {
+      "id": "es/components/scroll-area",
+      "title": "Área de desplazamiento",
+      "image": "/og/docs/es/components/scroll-area.png",
+      "bytes": 25511,
+      "sha256": "e90b89617ec2ea5d09030849691d35ae861d2255b7ce5953f14dbd95c0b719bf"
+    },
+    {
+      "id": "es/components/scroll-reveal",
+      "title": "Revelado al desplazar",
+      "image": "/og/docs/es/components/scroll-reveal.png",
+      "bytes": 27380,
+      "sha256": "3930d8bafb9d3d39629715a471ff03303864355445c9a2c19dee4fb4e17b7013"
     },
     {
       "id": "es/components/select",
       "title": "Selector",
       "image": "/og/docs/es/components/select.png",
-      "bytes": 27151,
-      "sha256": "4bcab05bf57583c31b98f96b54745991f20b1ff6b644d1c989116729f95d4cc4"
+      "bytes": 22189,
+      "sha256": "29e9bd9989eed45e44e5391ff08898913e6531b6ce50d02b2e503ab27ddf224a"
+    },
+    {
+      "id": "es/components/separator",
+      "title": "Separador",
+      "image": "/og/docs/es/components/separator.png",
+      "bytes": 20122,
+      "sha256": "eae4a5125cee7635650b4671af238afa674a3a60f06c4a4d28bbf5e486cf77ff"
+    },
+    {
+      "id": "es/components/sheet",
+      "title": "Panel lateral",
+      "image": "/og/docs/es/components/sheet.png",
+      "bytes": 22910,
+      "sha256": "d479c3e1b40eef871f0340b309d0d6301709f529bd9f6930039e9df713f79b3b"
+    },
+    {
+      "id": "es/components/sidebar",
+      "title": "Barra lateral",
+      "image": "/og/docs/es/components/sidebar.png",
+      "bytes": 22951,
+      "sha256": "faedb6050dc9bdbb3f8733f7bac3e2ddc6c725b9f6f8e3270354fa2766fb7570"
+    },
+    {
+      "id": "es/components/skeleton",
+      "title": "Esqueleto",
+      "image": "/og/docs/es/components/skeleton.png",
+      "bytes": 21565,
+      "sha256": "2c6cc533fd22085c8da33f2925a260e211ac3f3be79e19dfd4832c47591b91dc"
+    },
+    {
+      "id": "es/components/slider",
+      "title": "Control deslizante",
+      "image": "/og/docs/es/components/slider.png",
+      "bytes": 23179,
+      "sha256": "efd6a92f9310f5beaf9a1eb69c8fc6cfa00fa8bac69cf81a003108085f8f3e3d"
+    },
+    {
+      "id": "es/components/sonner",
+      "title": "Notificaciones Sonner",
+      "image": "/og/docs/es/components/sonner.png",
+      "bytes": 23964,
+      "sha256": "291a1d59f30842e34041871795efdef141263902de78a8c6391e8bba65f1fc62"
+    },
+    {
+      "id": "es/components/spinner",
+      "title": "Indicador de carga",
+      "image": "/og/docs/es/components/spinner.png",
+      "bytes": 20719,
+      "sha256": "5b0b9d4ea826bdadf7fac9ad8ffadd711c6b76f2fca66b0851110eda71578b61"
+    },
+    {
+      "id": "es/components/stepper",
+      "title": "Indicador de pasos",
+      "image": "/og/docs/es/components/stepper.png",
+      "bytes": 25920,
+      "sha256": "6dc4828f8dc61db200296324a2d7d8de3fa8b9bc86676852129eab23692b462c"
     },
     {
       "id": "es/components/switch",
       "title": "Interruptor",
       "image": "/og/docs/es/components/switch.png",
-      "bytes": 29418,
-      "sha256": "6a25f40486695860075e3f3a2ba2f737e602be114629c664fca473ae3103e548"
+      "bytes": 19818,
+      "sha256": "450578c5895db70891953aa321c0ee4e382a450038aad0fce915caddc88dae74"
+    },
+    {
+      "id": "es/components/table",
+      "title": "Tabla",
+      "image": "/og/docs/es/components/table.png",
+      "bytes": 17932,
+      "sha256": "74bad06d07a5fe441dc812dfd81d514db89fb515be6007cc4b831a085ea701f9"
+    },
+    {
+      "id": "es/components/tabs",
+      "title": "Pestañas",
+      "image": "/og/docs/es/components/tabs.png",
+      "bytes": 22553,
+      "sha256": "5579d1f84e8a61d714a27e4e9d4085a69fd241c75a8836e1ca1f3922b8d45ed1"
+    },
+    {
+      "id": "es/components/tags-input",
+      "title": "Entrada de etiquetas",
+      "image": "/og/docs/es/components/tags-input.png",
+      "bytes": 27465,
+      "sha256": "b6291d82682197f2894a9a0daf63eef1d7cc20c86379cfd5c1ec61f578c616e5"
     },
     {
       "id": "es/components/textarea",
       "title": "Área de texto",
       "image": "/og/docs/es/components/textarea.png",
-      "bytes": 28824,
-      "sha256": "3a239a38a4634e9b75d82caabb53e7b66f593e5a9468a7562281f1ec252c419a"
+      "bytes": 21760,
+      "sha256": "561718b59162b1e4d0e9e7a3f46d364dcc35ac7f5588b3a8d685a6d9e546cea0"
+    },
+    {
+      "id": "es/components/timeline",
+      "title": "Cronología",
+      "image": "/og/docs/es/components/timeline.png",
+      "bytes": 22948,
+      "sha256": "bf2f54ed7b56b8e30ff21049a8120b23528ebdd7ba5cf34347c8dbf2123e63c6"
+    },
+    {
+      "id": "es/components/toggle",
+      "title": "Botón de alternancia",
+      "image": "/og/docs/es/components/toggle.png",
+      "bytes": 23795,
+      "sha256": "acb7525ecd4ab73b1db4fdd2da7185d82866a60894db7268a1356b3436df034c"
+    },
+    {
+      "id": "es/components/toggle-group",
+      "title": "Grupo de alternancia",
+      "image": "/og/docs/es/components/toggle-group.png",
+      "bytes": 23931,
+      "sha256": "422c78369d92d6dbce055fa2df9a766d5d0acb700266fe7306a94ee5ce687e07"
+    },
+    {
+      "id": "es/components/tooltip",
+      "title": "Descripción emergente",
+      "image": "/og/docs/es/components/tooltip.png",
+      "bytes": 26421,
+      "sha256": "02d35deb3ad600f18d062b66c46b4d31a6064ba70ac05e25c87c8a05401b0534"
+    },
+    {
+      "id": "es/components/tree-view",
+      "title": "Vista de árbol",
+      "image": "/og/docs/es/components/tree-view.png",
+      "bytes": 26715,
+      "sha256": "45285c1edda0bf4a6e4704bd6958e79dc45fe322614af92c8fe5104a2649f9bd"
+    },
+    {
+      "id": "es/components/typography",
+      "title": "Tipografía",
+      "image": "/og/docs/es/components/typography.png",
+      "bytes": 23037,
+      "sha256": "20b3ab60adfbaa623427835fbbafea6dda613c5c12e04cd7d5e2df85e2468130"
     },
     {
       "id": "es/cross-platform-tokens",
       "title": "Tokens multiplataforma",
       "image": "/og/docs/es/cross-platform-tokens.png",
-      "bytes": 36319,
-      "sha256": "4fc5ca282288d8fae0836d929a4cee650b6d5a11ff3336dcf2204b41726f286d"
+      "bytes": 25215,
+      "sha256": "19a83c95ad86fabab17642c624eddf4d95368decdb5ba04651f8ac89c6f89b0f"
     },
     {
       "id": "es/index",
       "title": "Introducción",
       "image": "/og/docs/es/index.png",
-      "bytes": 29204,
-      "sha256": "efb39f3cc02deffe7a781e22d4205bc2b5ab534c74270d36eb0a0354b947bf47"
+      "bytes": 22360,
+      "sha256": "d2b9eb8556ccf897cd47f6d78f3ac1e10f6a1f0fe7e2b53fe2afa3458c6828c5"
     },
     {
       "id": "es/installation",
       "title": "Instalación",
       "image": "/og/docs/es/installation.png",
-      "bytes": 30608,
-      "sha256": "9ef2557214a15534a9203854bac34c7e9c759c5d1475b39e4762fe0f0595cc9c"
+      "bytes": 22107,
+      "sha256": "c0a2d4ca1d25e8ff983eb0ff25f6a7280772b8413fcf9a75192421ef982bf2b4"
     },
     {
       "id": "es/integration-paths",
       "title": "Comparar vías de integración",
       "image": "/og/docs/es/integration-paths.png",
-      "bytes": 38604,
-      "sha256": "e351727fc62322818e4a5e5432367f425706b3dcb2a54cbbfd142dc109fe7558"
+      "bytes": 29038,
+      "sha256": "c34e44146be7058fec07903e8957041079a9a2ccabf2d09cc0afd3f25ef2e746"
     },
     {
       "id": "es/llms",
       "title": "Para LLM y agentes",
       "image": "/og/docs/es/llms.png",
-      "bytes": 31584,
-      "sha256": "52e67847b2c63c3fde2f0c0f2503a762f1c1fa98c7b2e244d658d551638358cf"
+      "bytes": 24031,
+      "sha256": "638706eb1a443427f4d962ce88b91db8e130e459ee85ea018ffd55b4e1e9450d"
     },
     {
       "id": "es/theming",
       "title": "Temas",
       "image": "/og/docs/es/theming.png",
-      "bytes": 31846,
-      "sha256": "d4d1cc0d317a92b226ec6f1195a7ced7492209a0aa699532d95037083582ab9b"
+      "bytes": 21353,
+      "sha256": "adaf7c289dd0a3912df8367f783b364e320c8fcc27161a83b02fbb42f2c04d59"
+    },
+    {
+      "id": "es/vscode",
+      "title": "Extensión de VS Code",
+      "image": "/og/docs/es/vscode.png",
+      "bytes": 28371,
+      "sha256": "2edd566f7a17de73296cd27956f039dd5b01bd297ee85a37aec6a7f8b25fe350"
     },
     {
       "id": "index",
       "title": "Introduction",
       "image": "/og/docs/index.png",
-      "bytes": 30480,
-      "sha256": "19d6124f771a7e4c8b5a825316a3e57f60d7319afecae0b69b9452c25d4093c3"
+      "bytes": 19565,
+      "sha256": "5fcd5ae9369d75c4dab2c090c372c0e02398d7da9d4447893478a2a942326f5f"
     },
     {
       "id": "installation",
       "title": "Installation",
       "image": "/og/docs/installation.png",
-      "bytes": 28419,
-      "sha256": "f395f446d0ade35f86b506c2c1f284e90ae7ab44cb9ca47358ce6a4efc6000b7"
+      "bytes": 20649,
+      "sha256": "d8fb5361030917f6f07413bf9b0b378e08f1470b987b512b0915b8df79d42559"
     },
     {
       "id": "integration-paths",
       "title": "Compare Integration Paths",
       "image": "/og/docs/integration-paths.png",
-      "bytes": 34496,
-      "sha256": "b7e6985bf1b2ac8513f6d1ec1aca6e2b6db4fb84dc540b77252da9a492ef5f5d"
+      "bytes": 24094,
+      "sha256": "24fd56bd7ced35f96ff279fd7be3e157d827602f85d4a1940dc2e5d2346a7ee3"
     },
     {
       "id": "llms",
       "title": "For LLMs & Agents",
       "image": "/og/docs/llms.png",
-      "bytes": 28583,
-      "sha256": "df5f37c08ecd6a6ae83865bf548641937e9286c5531a73909624d6d3b91b7934"
+      "bytes": 22398,
+      "sha256": "2534adcb3fb5c5069227965baa3ae780322c1d18e430d1d8dc7c3c2ad9a0e2de"
     },
     {
       "id": "theming",
       "title": "Theming",
       "image": "/og/docs/theming.png",
-      "bytes": 28235,
-      "sha256": "70671c490b129ba6fd0ef4d85bf670150f93d29b513af2758bb043af4518509b"
+      "bytes": 21181,
+      "sha256": "742b2ea93c417af519ed30dc3b7a780134e8d3cf77fc14afbcfb29e4ab9de3f7"
+    },
+    {
+      "id": "vscode",
+      "title": "VS Code extension",
+      "image": "/og/docs/vscode.png",
+      "bytes": 26532,
+      "sha256": "e63e799855646c23e8433d4df53392bb8b4dd70851c3ebc86f8599c8cac09d5c"
     }
   ]
 }

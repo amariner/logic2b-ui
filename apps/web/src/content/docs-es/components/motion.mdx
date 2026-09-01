@@ -1,0 +1,181 @@
+---
+title: Movimiento
+description: Recetas de animación de entrada, salida y hover basadas en tokens, construidas con tw-animate-css sin dependencias de runtime y con una variante opcional para Framer Motion.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-demo" locale="es" />
+
+## Instalación
+
+<Install name="motion" locale="es" />
+
+El motor `motion` incluye la primitiva `<Motion>` junto con los mapas de recetas
+y sus utilidades. Cada preset con nombre también puede instalarse por separado:
+[`motion-fade`](/es/docs/components/motion-fade),
+[`motion-slide`](/es/docs/components/motion-slide),
+[`motion-scale`](/es/docs/components/motion-scale) y
+[`motion-blur`](/es/docs/components/motion-blur). Todos añaden `motion` de forma
+automática.
+
+## Uso
+
+```tsx
+import { Motion } from "@/components/ui/motion"
+
+<Motion preset="fade-up">
+  <Card>…</Card>
+</Motion>
+```
+
+`<Motion>` reproduce su receta de entrada una vez al montarse y después deja de
+interferir. Genera un `div` por defecto; usa `asChild` para animar directamente
+el elemento hijo sin añadir un nodo envoltorio:
+
+```tsx
+<Motion preset="scale" asChild>
+  <Card>…</Card>
+</Motion>
+```
+
+## Presets
+
+| Preset | Efecto |
+| --- | --- |
+| `fade` | Opacidad de 0 a 1. |
+| `fade-up` | Aparece mientras asciende desde abajo. |
+| `fade-down` | Aparece mientras desciende desde arriba. |
+| `fade-left` | Aparece mientras entra desde la derecha. |
+| `fade-right` | Aparece mientras entra desde la izquierda. |
+| `scale` | Aparece mientras amplía desde el 95 %. |
+| `blur` | Aparece mientras elimina un desenfoque de 8 px. |
+
+## Temporización
+
+La duración y el retraso son propiedades. No se genera ninguna clase arbitraria
+de Tailwind durante el runtime, por lo que funciona cualquier valor. `delay`
+permite escalonar una lista:
+
+```tsx
+{items.map((item, i) => (
+  <Motion key={item.id} preset="fade-up" duration={500} delay={i * 80}>
+    <Item {...item} />
+  </Motion>
+))}
+```
+
+El valor predeterminado es una entrada `ease-out` de 500 ms. Sustituye la curva
+mediante `className`, como `ease-in-out` o `ease-linear`; se combina por encima
+del valor predeterminado.
+
+## Hover
+
+Pasa una receta `hover` para añadir una interacción sobre la animación de
+entrada:
+
+```tsx
+<Motion preset="fade" hover="lift">
+  <Card>…</Card>
+</Motion>
+```
+
+| Hover | Efecto |
+| --- | --- |
+| `lift` | Asciende 4 px. |
+| `sink` | Desciende 2 px al presionar. |
+| `scale` | Crece hasta el 103 %. |
+| `glow` | Aumenta la sombra. |
+
+## Animaciones de salida
+
+`<Motion>` cubre el montaje. Cuando un elemento también deba animarse al
+**salir** —un diálogo, un panel emergente o cualquier nodo con `data-[state]` de
+Radix— usa los mapas de recetas y controla ambos estados mediante `data-state`:
+
+```tsx
+import {
+  motionEnterPresets,
+  motionExitPresets,
+} from "@/components/ui/motion"
+
+// Aplicado a un nodo de contenido de Radix:
+<DialogContent
+  className={cn(
+    "data-[state=open]:animate-in data-[state=closed]:animate-out",
+    "data-[state=open]:fade-in data-[state=open]:zoom-in-95",
+    "data-[state=closed]:fade-out data-[state=closed]:zoom-out-95",
+  )}
+/>
+```
+
+`motionEnterPresets` y `motionExitPresets` contienen las cadenas de clases
+exactas de cada preset si prefieres consultarlas a escribir cada pareja. Las
+utilidades `motionEnter`, `motionExit` y `motionHover` construyen la cadena
+completa —animación, temporización y protección ante movimiento reducido—.
+
+## Movimiento reducido
+
+Todas las recetas se degradan con `prefers-reduced-motion`: la animación de
+entrada desaparece para mostrar el contenido al instante
+(`motion-reduce:animate-none`) y se desactivan las transiciones de hover
+(`motion-reduce:transition-none`). No requiere configuración adicional.
+
+## Variante para Framer Motion
+
+Los presets anteriores usan solo CSS: no añaden coste durante el runtime y
+cubren los casos de entrada y hover habituales. Para física de muelle,
+transiciones de layout compartido o salidas en elementos que no sean de Radix,
+añade la variante opcional de **Framer Motion**. Instala `framer-motion` y copia
+este componente junto al motor CSS:
+
+```tsx
+"use client"
+
+import * as React from "react"
+import { AnimatePresence, motion, type Transition } from "framer-motion"
+
+const spring: Transition = { type: "spring", stiffness: 300, damping: 30 }
+
+const variants = {
+  fade: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+  "fade-up": {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0 },
+  },
+  scale: {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 },
+  },
+} as const
+
+export function MotionSpring({
+  preset = "fade-up",
+  show = true,
+  children,
+}: {
+  preset?: keyof typeof variants
+  show?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={variants[preset]}
+          transition={spring}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+```
+
+Los mismos nombres de preset y tokens aportan sensación de muelle y animaciones
+de salida reales cuando las necesitas, sin añadir nada al bundle cuando no.

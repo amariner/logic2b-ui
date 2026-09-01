@@ -1,0 +1,29 @@
+---
+title: Movimiento con desenfoque
+description: Enfoca al montarse un elemento desde 8 px de desenfoque mientras aparece, preset construido con tw-animate-css sin dependencias de runtime.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+import Install from "@/components/Install.astro";
+
+<ComponentPreview name="motion-blur-demo" locale="es" />
+
+## Instalación
+
+<Install name="motion-blur" locale="es" />
+
+## Uso
+
+```tsx
+import { MotionBlur } from "@/components/ui/motion-blur"
+
+<MotionBlur duration={700}>
+  <h2>Entra en foco</h2>
+</MotionBlur>
+```
+
+`MotionBlur` equivale a `<Motion preset="blur">`. Consulta
+[Movimiento](/es/docs/components/motion) para las propiedades compartidas
+`duration`, `delay`, `hover` y `asChild`, las recetas de salida y el
+comportamiento con movimiento reducido. Combina especialmente bien con una
+`duration` más larga en encabezados y textos hero.

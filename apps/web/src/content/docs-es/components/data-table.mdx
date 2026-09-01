@@ -1,0 +1,65 @@
+---
+title: Tabla de datos
+description: Filtrado, ordenación y paginación compuestos sobre el componente Table.
+---
+
+import ComponentPreview from "@/components/ComponentPreview.astro";
+
+<ComponentPreview name="data-table-demo" locale="es" wide />
+
+Una tabla de datos no es un único componente: es un patrón que se compone con
+[tabla](/es/docs/components/table), [campo de entrada](/es/docs/components/input)
+y [botón](/es/docs/components/button), controlado por el estado de tu aplicación.
+El ejemplo es autocontenido y no usa una librería de tablas: incluye filtro de
+texto, una columna de importe ordenable y paginación en el cliente en unas 40
+líneas de React.
+
+Para conjuntos grandes o modelos de columnas complejos, conecta el mismo markup
+a [TanStack Table](https://tanstack.com/table). Las primitivas Table de logic2b
+son suficientemente neutras para integrarse directamente.
+
+## Instalación
+
+```bash
+npx logic2b@latest add table input button badge
+```
+
+## Estructura
+
+```tsx
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+
+export function DataTable() {
+  const [filter, setFilter] = React.useState("")
+  const [asc, setAsc] = React.useState(false)
+  const [page, setPage] = React.useState(0)
+
+  const rows = React.useMemo(() => {
+    const filtered = data.filter((d) => d.email.includes(filter))
+    return [...filtered].sort((a, b) => (asc ? a.amount - b.amount : b.amount - a.amount))
+  }, [filter, asc])
+
+  // Divide `rows` por página y renderiza <Table>…
+}
+```
+
+## Piezas
+
+| Pieza | Componente | Responsabilidad |
+| --- | --- | --- |
+| Filtro de la barra | `Input` | Texto controlado que reduce el conjunto de filas. |
+| Cabecera ordenable | `Button variant="ghost"` dentro de `TableHead` | Alterna la dirección de ordenación. |
+| Filas | `Table` / `TableRow` / `TableCell` | Renderizan la página actual. |
+| Celda de estado | `Badge` | Asocia un valor a una variante (`secondary`/`destructive`/`outline`). |
+| Paginador | `Button variant="outline"` | Anterior y siguiente con los extremos desactivados. |
+
+## Notas
+
+- Mantén la ordenación y el filtrado dentro de `useMemo` para recalcularlos
+  únicamente cuando cambien sus entradas.
+- Restablece el índice de página a `0` cuando cambie el filtro y limita la
+  página actual al intervalo disponible para evitar una tabla vacía.
+- Con datos de servidor, lleva `filter`, `sort` y `page` a parámetros de la URL
+  y solicita cada página en vez de dividir todos los datos en el cliente.
