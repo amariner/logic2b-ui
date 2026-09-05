@@ -6,6 +6,7 @@ import {
 import { lintThemeCss } from "@logic2b/tokens/lint"
 import { buildInstallPlan } from "./plan.ts"
 import { PACKAGE_VERSION } from "./version.ts"
+import { OUTPUT_SCHEMAS } from "./output-schemas.ts"
 import {
   buildScaffoldPlan,
   SCAFFOLD_FRAMEWORKS,
@@ -54,7 +55,7 @@ const VERSION_INPUT = {
   },
 } as const
 
-export const TOOLS = [
+const TOOL_DEFINITIONS = [
   {
     name: "list_components",
     description:
@@ -344,10 +345,25 @@ export const TOOLS = [
   },
 ] as const
 
+const PURE_TOOLS = new Set(["export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+
+export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
+  ...tool,
+  outputSchema: OUTPUT_SCHEMAS[tool.name],
+  annotations: {
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    // apply_preset may fetch the registry theme when no stylesheet is supplied.
+    openWorldHint: !PURE_TOOLS.has(tool.name),
+  },
+}))
+
 // Type alias (not interface) on purpose: aliases get an implicit index
 // signature, which the SDK's CallToolResult requires for assignability.
 export type ToolResult = {
   content: { type: "text"; text: string }[]
+  structuredContent?: Record<string, unknown>
   isError?: boolean
 }
 
@@ -381,8 +397,11 @@ function versionArg(args: Record<string, unknown>): string | undefined {
 }
 
 function textResult(value: unknown): ToolResult {
+  const text = JSON.stringify(value, null, 2)
   return {
-    content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }],
+    content: [{ type: "text" as const, text }],
+    // Normalize once to the actual wire value (omits undefined optional fields).
+    structuredContent: JSON.parse(text) as Record<string, unknown>,
   }
 }
 

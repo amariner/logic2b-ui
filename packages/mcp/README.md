@@ -60,6 +60,21 @@ known limitations. `list_components` links to that contract and
 
 ## Usage
 
+### Tool result contract (source / next release)
+
+Every tool declares an `outputSchema` and read-only, non-destructive annotations.
+Successful calls return a JSON object in `structuredContent` and the same value
+serialized in the first text content block for older hosts. Errors return
+`isError: true` and a readable message, without a success-shaped structured value.
+Consumers should validate results against the advertised schema. Registry
+metadata may gain additional fields; known nested files and findings are typed.
+
+These tools return data and plans. The host owns filesystem writes, dependency
+installation and verification; annotations are not permission to execute a plan.
+Registry-reading tools declare open-world access. Pure token decoding/export and
+theme auditing do not contact a registry. These additions are implemented in
+the source checkout and are not included in the previously published rc.2 tarball.
+
 ### Remote endpoint (zero install)
 
 The same tools are served over streamable HTTP at
