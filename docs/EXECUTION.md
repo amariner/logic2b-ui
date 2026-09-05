@@ -115,8 +115,9 @@ client, actual registry/demo fixtures and schema validation). The smoke gate
 now requires built Astro demo endpoints and reads files before sending headers.
 The first sandboxed smoke attempt failed on DNS; the authorized retry passed.
 Workspace dependencies were synchronized with `pnpm install --frozen-lockfile`;
-the lockfile did not change. Broader workspace checks are recorded separately
-when complete. No browser visual suite was rerun for this protocol-only change.
+the lockfile did not change. `pnpm lint` and `pnpm test` subsequently passed
+across all eight workspace packages. No browser visual suite was rerun locally
+for this protocol-only change; the GitHub workflow runs the full release gates.
 
 This is source implementation, not a new npm publication. M0-01 is next;
 M0-03 verified-default resolution and M0-04 limits remain open and must not be
