@@ -3,6 +3,7 @@ const Module = require("node:module")
 
 const registeredCommands = []
 const registeredViews = []
+const executedTasks = []
 
 class Disposable {
   dispose() {}
@@ -28,6 +29,10 @@ class ThemeIcon {
 }
 
 const vscode = {
+  ShellExecution: class { constructor(command, args, options) { Object.assign(this, { command, args, options }) } },
+  Task: class { constructor(definition, folder, name, source, execution) { Object.assign(this, { definition, folder, name, source, execution }) } },
+  TaskRevealKind: { Always: 1 },
+  TaskPanelKind: { Dedicated: 1 },
   EventEmitter,
   TreeItem,
   ThemeIcon,
@@ -65,6 +70,7 @@ const vscode = {
     },
   },
   tasks: {
+    async executeTask(task) { executedTasks.push(task) },
     onDidEndTaskProcess() { return new Disposable() },
   },
 }
@@ -97,6 +103,12 @@ try {
     ],
   )
   assert.equal(context.subscriptions.length, 13)
+  // Execute the registered command through the real bundle, without a shell.
+  registeredCommands.find(({ id }) => id === "logic2b.initializeWorkspace").handler({ uri: { fsPath: "/tmp/beta workspace" } })
+  const { CLI_PACKAGE_SELECTOR } = require("@logic2b/scaffold/package-selectors")
+  assert.equal(executedTasks[0].execution.command, "npx")
+  assert.deepEqual(executedTasks[0].execution.args, [CLI_PACKAGE_SELECTOR, "init"])
+  assert.equal(executedTasks[0].execution.options.cwd, "/tmp/beta workspace")
   console.log("✓ bundled extension activates and registers its native surfaces")
 } finally {
   Module._load = originalLoad

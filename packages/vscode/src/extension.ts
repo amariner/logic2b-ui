@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors"
 import * as vscode from "vscode"
 
 import {
@@ -46,7 +47,7 @@ async function executeCliTask(
 ): Promise<void> {
   const execution = new vscode.ShellExecution(
     "npx",
-    ["logic2b@latest", command, ...args],
+    [CLI_PACKAGE_SELECTOR, command, ...args],
     { cwd: folder.uri.fsPath },
   )
   const task = new vscode.Task(

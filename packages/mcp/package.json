@@ -41,7 +41,8 @@
     "test": "node --import tsx --test test/*.test.ts",
     "test:release-artifacts": "node --import tsx scripts/verify-release-artifacts.mts",
     "test:scaffolds": "node --import tsx scripts/verify-scaffolds.mts",
-    "prepack": "tsup"
+    "prepack": "tsup",
+    "test:beta-onboarding": "node --import tsx scripts/verify-beta-onboarding.mts"
   },
   "license": "MIT",
   "dependencies": {

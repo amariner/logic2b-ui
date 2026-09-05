@@ -19,14 +19,14 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
 - **`apps/web`** — the site: landing, docs, charts, the `/create` theme builder
   and `/demos` gallery for the complete generated starters. Astro 7 with React
   islands, fully static, deployed to Cloudflare Workers.
-- **`packages/cli`** — `npx logic2b add button`: fetches components from the
+- **`packages/cli`** — `npx logic2b@next add button`: fetches components from the
   registry and writes them into your project (resolving registry dependencies).
   `init --template vite --starter marketing` creates a complete app;
   `--monorepo` wraps it in a Turbo workspace and `--preset <id>` applies any
   theme and its Lucide, Tabler, Phosphor or Hugeicons choice exactly.
 - **`packages/mcp`** — an MCP server that exposes the registry to coding
   agents (search, scaffold, install and maintain components and themes).
-  Also served remotely at `https://ui.logic2b.com/mcp` — no install, no shell.
+  Also served remotely at `https://ui.logic2b.com/mcp` — no local server installation.
 - **`packages/vscode`** — a native VS Code extension preview: browse and search
   the registry, install items through the public CLI, and apply `/create`
   presets to local or remote workspaces. CI produces a validated VSIX.
@@ -69,17 +69,29 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   copy/reset without shipping a browser compiler in the initial docs bundle.
 - **MCP server** — point an agent at the remote endpoint
   (`https://ui.logic2b.com/mcp`, streamable HTTP, zero install) or run
-  `npx -y @logic2b/mcp` locally. Beyond search and read, `install_plan`
+  `npx -y @logic2b/mcp@next` locally. Beyond search and read, `install_plan`
   returns the exact file writes + npm deps for any set of items;
   `scaffold_plan` returns a complete Next, Vite or Astro starter; and
   `apply_preset` rebuilds theme.css for any `/create` preset. `lint_theme`
   then detects token drift and contrast regressions as that theme evolves —
-  an agent with no shell can create, install, theme and maintain the whole
-  application itself. Registry tools accept an exact version, semver range or
-  channel and return the exact verified release they resolved; component reads
+  the host needs file-writing tools to apply plans and a runtime to install
+  dependencies, build and verify the application. Registry tools accept an
+  explicit exact version, semver range or channel and verify that release;
+  the omitted-version MCP path still reads mutable mirrors until M0-03; component reads
   expose the same accessibility contract used by the docs.
   Presets also carry the icon implementation: CLI/MCP installs rewrite
   verified imports, package dependencies and update snapshots together.
+
+## Beta onboarding
+
+Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
+selectors and `--registry-version` / MCP `version` select different artifacts.
+`next` can move; record `npx logic2b@next --version` and the MCP handshake version
+when reporting a problem. Source changes may await publication: structured MCP
+results are currently source-only, with JSON text available in the published RC.
+
+Start with the [installation guide](https://ui.logic2b.com/docs/installation) or
+[human MCP setup guide](https://ui.logic2b.com/docs/llms#mcp-server).
 
 ## Development
 

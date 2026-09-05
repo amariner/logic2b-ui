@@ -181,9 +181,9 @@ describe("Spanish documentation", () => {
       translatedComponents,
     );
     const compositionInstalls: Record<string, string> = {
-      combobox: "npx logic2b@latest add popover command",
-      "data-table": "npx logic2b@latest add table input button badge",
-      "date-picker": "npx logic2b@latest add popover calendar",
+      combobox: "npx logic2b@next add popover command",
+      "data-table": "npx logic2b@next add table input button badge",
+      "date-picker": "npx logic2b@next add popover calendar",
     };
     const documentationGuides = new Set(["typography"]);
     for (const name of translatedComponents) {

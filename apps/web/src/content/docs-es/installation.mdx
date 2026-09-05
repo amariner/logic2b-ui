@@ -3,6 +3,10 @@ title: Instalación
 description: Configura tu proyecto y empieza a usar los componentes de logic2b ui.
 ---
 
+Esta guía usa `logic2b@next`, el canal beta de npm. `next` puede cambiar:
+registra `npx logic2b@next --version` al comunicar un problema. El selector
+`--registry-version` controla el registro, no la versión del paquete CLI.
+
 ## Requisitos
 
 - React 18 o posterior (React 19 recomendado)
@@ -30,7 +34,7 @@ export function cn(...inputs: ClassValue[]) {
 También puedes instalarlo desde el registro:
 
 ```bash
-npx logic2b@latest add utils
+npx logic2b@next add utils
 ```
 
 ## 3. Añade los tokens del tema
@@ -42,7 +46,7 @@ estilos global. Los componentes usan tokens como `bg-primary` y
 ## 4. Añade componentes
 
 ```bash
-npx logic2b@latest add button
+npx logic2b@next add button
 ```
 
 También puedes copiar el código desde cualquier página de componente.
@@ -50,7 +54,7 @@ También puedes copiar el código desde cualquier página de componente.
 Para instalar una superficie de marketing completa como una sola composición:
 
 ```bash
-npx logic2b@latest add landing-page-01
+npx logic2b@next add landing-page-01
 ```
 
 El registro resuelve de forma transitiva su navbar, hero animado, cuadrícula de
@@ -62,9 +66,9 @@ por separado.
 Inicializa el proyecto para fijar la versión exacta del registro:
 
 ```bash
-npx logic2b@latest init
-npx logic2b@latest add button card
-npx logic2b@latest status
+npx logic2b@next init
+npx logic2b@next add button card
+npx logic2b@next status
 ```
 
 `init` escribe `logic2b.version` en `components.json`. Cada instalación también
@@ -80,9 +84,9 @@ snapshots de mezcla.
 Puedes seleccionar una versión exacta, un rango semver o un canal publicado:
 
 ```bash
-npx logic2b@latest add button --registry-version 1.0.0-rc.16
-npx logic2b@latest status --registry-version next
-npx logic2b@latest update --registry-version "^1.0.0"
+npx logic2b@next add button --registry-version 1.0.0-rc.16
+npx logic2b@next status --registry-version next
+npx logic2b@next update --registry-version "^1.0.0"
 ```
 
 `logic2b update` solo considera los elementos registrados en el manifiesto, a

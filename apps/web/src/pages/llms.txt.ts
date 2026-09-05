@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import registryIndex from "../../public/r/index.json";
@@ -60,14 +61,14 @@ export const GET: APIRoute = async ({ site }) => {
     "",
     "## Blocks",
     "",
-    "Full sections and layouts, installable with `npx logic2b add <name>`.",
+    `Full sections and layouts, installable with \`npx ${CLI_PACKAGE_SELECTOR} add <name>\`.`,
     "Each link is the item's JSON payload (metadata + source).",
     "",
     ...blocks.map(registryLine),
     "",
     "## Charts",
     "",
-    "Recharts-based charts, installable with `npx logic2b add <name>`.",
+    `Recharts-based charts, installable with \`npx ${CLI_PACKAGE_SELECTOR} add <name>\`.`,
     "",
     ...charts.map(registryLine),
     "",

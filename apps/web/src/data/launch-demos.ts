@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import {
   SCAFFOLD_STARTERS,
   SCAFFOLD_STARTER_DEFINITIONS,
@@ -30,7 +31,7 @@ export const LAUNCH_DEMOS: readonly LaunchDemo[] = SCAFFOLD_STARTERS.map(
       title: definition.title,
       description: definition.description,
       items: definition.items,
-      command: `pnpm dlx logic2b init --cwd ${projectName} --template vite --starter ${name} --name ${projectName}`,
+      command: `pnpm dlx ${CLI_PACKAGE_SELECTOR} init --cwd ${projectName} --template vite --starter ${name} --name ${projectName}`,
       previewHref: `/demos/launch/${name}`,
       accent: ACCENTS[name],
     }

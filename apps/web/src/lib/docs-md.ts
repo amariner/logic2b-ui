@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import type { CollectionEntry } from "astro:content";
 import type { RegistryApiContract } from "@logic2b/registry/types";
 import { integrationPathsMarkdown } from "@/data/integration-paths";
@@ -121,8 +122,8 @@ export function entryToMarkdown(
     (_match, name: string) => [
       "```bash",
       name === "theme"
-        ? "npx logic2b@latest init"
-        : `npx logic2b@latest add ${name}`,
+        ? `npx ${CLI_PACKAGE_SELECTOR} init`
+        : `npx ${CLI_PACKAGE_SELECTOR} add ${name}`,
       "```",
     ].join("\n"),
   );

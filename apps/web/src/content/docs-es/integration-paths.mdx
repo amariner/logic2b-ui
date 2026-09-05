@@ -22,8 +22,8 @@ archivos y si hay un terminal disponible.
   aplicar presets exactos en workspaces locales o remotos.
 - **Tu agente no tiene shell ni Node local:** conecta el MCP remoto en
   `https://ui.logic2b.com/mcp`. `install_plan` y `scaffold_plan` devuelven todas
-  las escrituras como resultados estructurados.
-- **Tu agente con terminal ya habla MCP:** ejecuta `npx -y @logic2b/mcp`. El
+  el contenido de los archivos como planes JSON (texto en la RC publicada).
+- **Tu agente con terminal ya habla MCP:** ejecuta `npx -y @logic2b/mcp@next`. El
   servidor local expone los mismos contratos que el endpoint remoto.
 - **Construyes una integración propia:** consume `/r/index.json` y
   `/r/<name>.json`. Tu cliente resuelve recursivamente y escribe los archivos.
@@ -37,7 +37,8 @@ duplicados o inválidos, deriva, fidelidad exacta y regresiones de contraste. La
 hoja se analiza como texto y nunca se ejecuta.
 
 Las herramientas MCP no mutan un repositorio silenciosamente. Devuelven planes
-explícitos y el host decide dónde escribirlos. Así el mismo servidor sirve a
+explícitos. El host necesita escribir archivos y disponer de un entorno para
+instalar dependencias, compilar y verificar. Así el mismo servidor sirve a
 IDE locales, asistentes web y clientes empresariales controlados.
 
 ## Verifica las afirmaciones

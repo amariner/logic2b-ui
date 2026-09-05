@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 /**
  * AI-assistant prompts — the "Copy Prompt" feature.
  *
@@ -186,13 +187,13 @@ export function buildInitPrompt({
 2. Inside the project, initialize logic2b ui with my theme preset:
 
    \`\`\`bash
-   npx logic2b@latest init --preset ${presetId}
+   npx ${CLI_PACKAGE_SELECTOR} init --preset ${presetId}
    \`\`\``
 
   const existingProjectSteps = `1. In the project root, initialize logic2b ui with my theme preset:
 
    \`\`\`bash
-   npx logic2b@latest init --preset ${presetId}
+   npx ${CLI_PACKAGE_SELECTOR} init --preset ${presetId}
    \`\`\``
 
   return `Set up the logic2b ui design system (${SITE}) in ${
@@ -211,7 +212,7 @@ ${mode === "new" ? "4" : "3"}. Make \`theme.css\` the app's stylesheet entry (it
    or merge its \`:root\` / \`.dark\` blocks into the existing global stylesheet.
 
 ${mode === "new" ? "5" : "4"}. Add the components the UI needs with
-   \`npx logic2b@latest add <name>\` (e.g. \`button card input dialog\`).
+   \`npx ${CLI_PACKAGE_SELECTOR} add <name>\` (e.g. \`button card input dialog\`).
    Browse ${SITE}/r/index.json to see everything available.
 
 ## If the CLI is not available
@@ -298,13 +299,13 @@ export function buildAddPrompt(name: string, stack: Stack = "auto"): string {
 1. If the project has no \`components.json\` yet, set up logic2b ui first:
 
    \`\`\`bash
-   npx logic2b@latest init
+   npx ${CLI_PACKAGE_SELECTOR} init
    \`\`\`
 
 2. Install the item (the CLI resolves registry dependencies automatically):
 
    \`\`\`bash
-   npx logic2b@latest add ${name}
+   npx ${CLI_PACKAGE_SELECTOR} add ${name}
    \`\`\`
 
 3. Install any npm dependencies the command prints.

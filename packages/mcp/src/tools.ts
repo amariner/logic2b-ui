@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import { auditTokens } from "@logic2b/tokens/contrast"
 import {
   portableTokenBundle,
@@ -100,7 +101,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "get_component",
     description:
-      "Fetch a registry item's full payload by name: its dependencies, registry dependencies and the complete source of every file. Use this to read or install a component, block or chart. The npm CLI equivalent is `npx logic2b add <name>`.",
+      `Fetch a registry item's full payload by name: its dependencies, registry dependencies and the complete source of every file. Use this to read or install a component, block or chart. The npm CLI equivalent is \`npx ${CLI_PACKAGE_SELECTOR} add <name>\`.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -563,13 +564,13 @@ export async function runTool(
         ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
         items,
         commands: {
-          npm: `npx logic2b@latest add ${names}${versionFlag}`,
-          pnpm: `pnpm dlx logic2b@latest add ${names}${versionFlag}`,
-          yarn: `yarn dlx logic2b@latest add ${names}${versionFlag}`,
-          bun: `bunx logic2b@latest add ${names}${versionFlag}`,
+          npm: `npx ${CLI_PACKAGE_SELECTOR} add ${names}${versionFlag}`,
+          pnpm: `pnpm dlx ${CLI_PACKAGE_SELECTOR} add ${names}${versionFlag}`,
+          yarn: `yarn dlx ${CLI_PACKAGE_SELECTOR} add ${names}${versionFlag}`,
+          bun: `bunx ${CLI_PACKAGE_SELECTOR} add ${names}${versionFlag}`,
         },
         notes: [
-          "If the project has no components.json yet, run `npx logic2b@latest init` first (add --preset <id> to apply a /create theme).",
+          `If the project has no components.json yet, run \`npx ${CLI_PACKAGE_SELECTOR} init\` first (add --preset <id> to apply a /create theme).`,
           "The command resolves registry dependencies and prints the npm packages to install.",
           "No shell available? Use the install_plan tool instead — it returns the file writes directly.",
         ],
@@ -727,7 +728,7 @@ export async function runTool(
         ...(npmDependencies ? { npmDependencies } : {}),
         notes: [
           "Write the file into the project (or overwrite the existing theme.css) — only the token values inside :root and .dark change.",
-          "Reproduce this exact theme anywhere with `npx logic2b@latest init --preset <preset>` or the /create studio.",
+          `Reproduce this exact theme anywhere with \`npx ${CLI_PACKAGE_SELECTOR} init --preset <preset>\` or the /create studio.`,
         ],
       })
     }

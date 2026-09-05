@@ -8,13 +8,13 @@ designed, copy-paste components to your project. You own the code.
 Initialize your project (creates `components.json` and the `cn()` helper):
 
 ```bash
-npx logic2b@latest init
+npx logic2b@next init
 ```
 
 Or create a complete runnable project from the registry:
 
 ```bash
-npx logic2b@latest init --template vite --starter marketing --cwd my-app
+npx logic2b@next init --template vite --starter marketing --cwd my-app
 ```
 
 Templates are available for `next`, `vite` and `astro`; starters are
@@ -30,13 +30,13 @@ rewrite icon imports, npm dependencies and merge snapshots consistently.
 Add components (registry dependencies are resolved automatically):
 
 ```bash
-npx logic2b@latest add button card dialog
+npx logic2b@next add button card dialog
 ```
 
 List everything available in the registry:
 
 ```bash
-npx logic2b@latest list
+npx logic2b@next list
 ```
 
 ## Commands
@@ -59,7 +59,7 @@ whichever package manager the project already uses (`packageManager` field or
 lockfile — pnpm, npm, yarn or bun). Pass `--no-install` to just print the
 install command instead.
 
-Run `npx logic2b@latest <command> --help` for options.
+Run `npx logic2b@next <command> --help` for options.
 
 ## Documentation
 

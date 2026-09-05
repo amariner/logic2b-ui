@@ -140,11 +140,12 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "lint": "tsc --noEmit -p tsconfig.json",
-    "test": "pnpm build && node --import tsx --test test/*.test.ts && node test/load-bundle.cjs",
+    "test": "pnpm build && node --import tsx --test test/*.test.ts && node --import tsx test/load-bundle.cjs",
     "package:vsix": "pnpm build && vsce package --no-dependencies --out dist/logic2b-ui.vsix"
   },
   "dependencies": {
-    "@logic2b/tokens": "workspace:*"
+    "@logic2b/tokens": "workspace:*",
+    "@logic2b/scaffold": "workspace:*"
   },
   "devDependencies": {
     "@types/vscode": "1.95.0",

@@ -1,4 +1,5 @@
 ---
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import { Code } from "astro:components";
 import { DemoRenderer } from "@/components/DemoRenderer";
 import { buildAddPrompt } from "@/lib/prompts";
@@ -7,7 +8,7 @@ interface Props {
   name: string;
   /** Let the demo fill the preview box (charts, tables) instead of the default narrow cap. */
   wide?: boolean;
-  /** Show a copyable `npx logic2b add <name>` chip — for previews of installable registry items. */
+  /** Show a copyable beta CLI command for an installable registry item. */
   install?: boolean;
   locale?: "en" | "es";
 }
@@ -16,7 +17,7 @@ const { name, wide = false, install = false, locale = "en" } = Astro.props;
 const copy = locale === "es"
   ? { preview: "Vista previa", code: "Código", installTitle: "Copiar el comando de instalación", promptTitle: "Copiar un prompt para tu asistente de IA", prompt: "Copiar prompt", copied: "¡Copiado!" }
   : { preview: "Preview", code: "Code", installTitle: "Copy install command", promptTitle: "Copy a prompt for your AI assistant", prompt: "Copy Prompt", copied: "Copied!" };
-const installCmd = `npx logic2b@latest add ${name}`;
+const installCmd = `npx ${CLI_PACKAGE_SELECTOR} add ${name}`;
 
 const sources = import.meta.glob<string>("../demos/*.tsx", {
   query: "?raw",
