@@ -1,8 +1,14 @@
 # logic2b ui
 
-Build interfaces fast, assisted by AI. A shadcn/ui-compatible component registry
-and documentation site, optimized for Cloudflare Workers and for consumption by
-LLMs and coding agents.
+Your design system, ready for agents. A shadcn/ui-compatible React component
+registry with reproducible themes, install plans and tools for maintaining
+customized interfaces. Built for developers creating SaaS products, dashboards
+and internal tools with coding agents; hosted on Cloudflare Workers.
+
+Our direction is a complete workflow: understand the project, compose real
+components, verify behavior and preserve local work through subsequent changes.
+Project inspection, composition/review tools and proposal previews are planned;
+see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
 
 ## What's inside
 
@@ -116,12 +122,14 @@ or environment variables required.
 
 ## Roadmap
 
-See [ROADMAP.md](./ROADMAP.md) — what's shipped, what's next (the **user
-lane**: states contracts, `review_ui`, proposal links, `compose_plan`, the AI
-product kit, user preferences) and what we're exploring. Each initiative has
-an executable implementation guide under [docs/guides](./docs/guides/README.md)
-written for coding agents and humans alike. The reproducible framework lab and
-latest measurements live in [benchmarks/frameworks](./benchmarks/frameworks).
+See [ROADMAP.md](./ROADMAP.md) for the current product direction and milestone
+exit criteria. Agents building this repository start with [AGENTS.md](./AGENTS.md)
+and pick scoped work from [docs/EXECUTION.md](./docs/EXECUTION.md), supported by
+[implementation guides](./docs/guides/README.md). Earlier deliveries and launch
+assumptions are retained in [ROADMAP-HISTORY.md](./ROADMAP-HISTORY.md).
+The [framework lab](./benchmarks/frameworks) and [agent benchmark](./benchmarks/agents)
+publish their original scope; comparative outcome evaluation is a separate
+planned workstream, not a claim inferred from the existing leaderboard.
 
 ## Contributing
 

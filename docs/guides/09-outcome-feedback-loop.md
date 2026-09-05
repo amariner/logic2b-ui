@@ -6,6 +6,11 @@ from every other guide.
 
 ## Why (the user)
 
+Current decision: collect pilot observations before adding telemetry. A local
+edit is often intended customization, not a defect. Do not classify edit rate
+as dissatisfaction without its reason. Comparative evidence follows guide 14;
+aggregate counters alone cannot establish product advantage.
+
 We measure agents in a benchmark, but we do not know what happens after a
 real install: which blocks get hand-edited within the hour (a sign the block
 missed a state or a slot), which `review_ui` rules fire most (a sign our docs

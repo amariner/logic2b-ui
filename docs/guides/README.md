@@ -1,5 +1,26 @@
 # Implementation guides
 
+Start with [ROADMAP.md](../../ROADMAP.md), [the execution queue](../EXECUTION.md)
+and [AGENTS.md](../../AGENTS.md). The queue is authoritative for milestone order,
+ownership and completion. Earlier v1.0/v1.1 labels below are historical targets,
+not a reason to skip current dependencies. All new guides are proposed until
+the queue records implementation and evidence.
+
+## Current delivery contracts
+
+| Guide | Scope | Queue |
+| --- | --- | --- |
+| [00 — Public beta](./00-public-beta.md) | Honest onboarding, distribution and launch evidence | M0-01, M0-05 |
+| [10 — Project context](./10-project-context.md) | Local collection and bounded host-supplied context | M1-02 |
+| [11 — Incremental change plans](./11-incremental-change-plan.md) | Diffs, preconditions, apply/recovery | M2-01 |
+| [12 — Consumer verification](./12-consumer-verification.md) | Independent browser checks in generated apps | M2-02 |
+| [13 — MCP contracts](./13-mcp-contracts.md) | Output schemas, version resolution, bounds | M0-02..04 |
+| [14 — Outcome evaluation](./14-outcome-evaluation.md) | Baselines, repeated attempts and human corrections | EVAL-01 |
+
+The earlier nine guides remain below and have been amended where the direction
+changed: structured composition, evidence-based review, exact-version previews,
+available-tool rules and an agent-run-first AI kit.
+
 Each file in this directory is a self-contained brief for one roadmap
 initiative: why it matters to the **person who ends up using the interface**,
 what ships, the contract, where the code goes, the steps in order and the
@@ -7,8 +28,8 @@ gates that must pass before it merges. They are written so that a coding agent
 (Claude Code, Cursor, Copilot) or a human can pick one up cold and execute it
 without re-deriving the design.
 
-The lane they belong to is described in [ROADMAP.md](../../ROADMAP.md) under
-**Now — the user lane**. The thesis in one line: agents already build fast
+Their milestones are described in [ROADMAP.md](../../ROADMAP.md).
+The thesis in one line: agents already build fast
 with logic2b ui; the next gap is whether what they build is *good for the
 person using it*. Every guide here moves one of four levers:
 
@@ -50,7 +71,8 @@ person using it*. Every guide here moves one of four levers:
   server-side code this lane adds is project infrastructure (the aggregate
   endpoint in guide 09), which lives in the site worker like `/mcp` does.
 - **Gates before merge.** Every guide lists its tests. A guide is done when
-  its gates run in `.github/workflows/ci.yml`, not when the feature demos.
+  its required gates pass and relevant regressions run in CI, not when the
+  feature demos. Record partial slices without marking the full feature done.
 - **Backward-compatible codecs.** Preset and composition ids minted before a
   change must keep decoding. Add fields at the end, default the old ones.
 - **Budgets are part of the contract.** Browser JS, registry payload and

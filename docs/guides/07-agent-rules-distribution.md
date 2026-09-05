@@ -33,6 +33,12 @@ native format, and cost as little context as possible.
 
 ## Design
 
+Generate instructions only for available tools. Until review/proposals ship,
+state that limitation and use existing checks. Respect intentional native HTML
+and project policies. Do not request redundant approval for an already authorized
+change. Preserve instructions outside managed markers. The future tool references
+below are conditional on their implementation, never commands to invent.
+
 ### Managed block with markers
 
 ```md
@@ -48,9 +54,9 @@ CLI appends a block once and says so.
 ### Content, in priority order (context is a budget)
 
 1. Stack contract (React 19, Tailwind v4, tokens, icon package). ~10 lines.
-2. Non-negotiables: never hand-roll primitives that exist; tokens only; every
-   list has an empty state; every dialog has a title; run `review_ui`
-   (guide 03) before finishing; propose before scaffolding (guide 04).
+2. Project policies: prefer installed primitives/tokens, applicable empty/error
+   states and accessible naming. Run `review_ui` when available (03), and show
+   proposals for new screens when supported (04).
 3. Inventory: components, blocks, charts — one flowing line each, names only.
 4. How to install without a shell (remote MCP) and with one (CLI).
 5. Pointers: `/llms.txt`, `/docs/llms`, this project's preset link.

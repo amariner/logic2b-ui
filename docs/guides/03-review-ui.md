@@ -12,7 +12,8 @@ because it forgot `Button` exists, the `Dialog` without a `DialogTitle` a
 screen reader user cannot name, the list that never renders an empty state,
 the `animate-*` class that ignores `prefers-reduced-motion`, the `text-red-500`
 that breaks the dark theme. These are the defects real people meet, and they
-are all statically detectable. `review_ui` makes the design review something an
+are candidates for static inspection; cross-file context may prevent a conclusive
+finding. `review_ui` makes review something an
 agent runs on itself before it says "done".
 
 ## What ships
@@ -40,6 +41,9 @@ interface ReviewRequest {
 interface ReviewFinding {
   rule: string              // "L2B-PRIM-001"
   severity: "error" | "warning" | "info"
+  category: "defect" | "design-policy" | "heuristic"
+  confidence: "high" | "medium" | "low"
+  evidence: string[]
   file: string
   line?: number
   column?: number
@@ -50,8 +54,9 @@ interface ReviewFinding {
 
 interface ReviewResult {
   registryVersion: string
-  summary: { errors: number; warnings: number; info: number; score: number } // 0–100
+  summary: { errors: number; warnings: number; info: number }
   findings: ReviewFinding[]
+  unknowns: Array<{ file: string; rule: string; reason: string }>
 }
 ```
 
@@ -59,8 +64,8 @@ interface ReviewResult {
 
 | Id | Severity | Detects | Fix it suggests |
 | --- | --- | --- | --- |
-| `PRIM-001` | error | Raw `<button>`, `<input>`, `<select>`, `<textarea>` with styling classes where the registry primitive is installed or installable | `Button`, `Input`, `Select`/`NativeSelect`, `Textarea` |
-| `PRIM-002` | error | Hand-rolled overlay: element with `role="dialog"`/`"menu"` not from registry | `Dialog`, `Sheet`, `DropdownMenu` |
+| `PRIM-001` | info | Native styled controls that differ from an explicitly enabled project policy | Suggest the registry primitive; native HTML is valid |
+| `PRIM-002` | info | Custom overlay requiring focus/keyboard verification | Suggest a runtime check; role alone is not a defect |
 | `TOK-001` | error | Hardcoded colors: `bg-[#…]`, `text-red-500`, `oklch(`, `rgb(` in className/style | semantic tokens (`bg-destructive`, `text-muted-foreground`) |
 | `TOK-002` | warning | Arbitrary radius/shadow (`rounded-[…]`, `shadow-[…]`) | `rounded-md`/`--radius`, no shadows per DESIGN.md |
 | `A11Y-001` | error | `Dialog`/`AlertDialog`/`Sheet` content without a `*Title` | add `DialogTitle` (visually hidden if needed) |
@@ -75,6 +80,14 @@ interface ReviewResult {
 | `ICON-001` | error | Icon imports from a package other than the one in `components.json` | rewrite the import |
 | `TOUCH-001` | warning | Clickable element sized below 24 px (`h-4 w-4` + `onClick`) | `size="icon"` / hit-area padding |
 
+Accessible-name rules are errors only when proven from resolved source. Valid
+nested/external labels and wrappers must pass; dynamic children/spreads and
+unresolved cross-file context are unknown. Token/icon/radius rules enforce an
+explicit design policy, not universal accessibility requirements. Missing local
+loading branches, validation libraries or motion classes are heuristics because
+providers, native validation or global CSS may supply the behavior. Support
+reasoned suppressions and report which rules were actually evaluated.
+
 Rule ids are stable and namespaced `L2B-<GROUP>-<NNN>`; the docs page is the
 canonical description. Severity is user-impact ordered: errors are things a
 real user will hit (cannot name a dialog, cannot see text in dark mode),
@@ -84,8 +97,9 @@ warnings are likely defects, infos are hygiene.
 
 - Parse with the TypeScript compiler API already used for
   `packages/registry/api.generated.ts` extraction (`typescript` is a workspace
-  dependency; keep it out of the Worker bundle by shipping the engine as a
-  separate entry that the remote MCP imports lazily — measure the bundle).
+  dependency). Prototype and measure first: lazy imports do not remove a parser
+  from Worker deployment size. Use a bounded parser or document a local-only
+  subset if needed; do not claim local/remote parity without evidence.
 - Registry knowledge comes from `/r/index.json` + each item's `accessibility`
   and `states` — the engine never hardcodes component names.
 - No execution of the reviewed code, ever. Same posture as `lint_theme`.
@@ -104,8 +118,8 @@ warnings are likely defects, infos are hygiene.
 
 1. Scaffold `packages/review` (private workspace package, `node:test`, strict
    TS) with the parser wrapper and the finding types.
-2. Implement rules in this order: `TOK-001`, `A11Y-001..003`, `PRIM-001`,
-   `ICON-001` (all high-confidence), then `MOTION-001`, `FORM-*`,
+2. Implement explicit `TOK-001` policy and provable `A11Y-001..003` cases first,
+   then `ICON-001`, then advisory `MOTION-001`, `FORM-*`,
    `TOUCH-001`, then `STATE-*` (need guide 02 metadata; ship as `info` until
    it lands).
 3. Fixture corpus: for every rule, one file that must trigger it and one that
@@ -118,7 +132,8 @@ warnings are likely defects, infos are hygiene.
 6. Docs page generated from the rule table (one source of truth in
    `packages/review/src/rules/index.ts` exporting `RULES` with `docs`
    strings).
-7. Wire the benchmark scorer: composition task deducts per error id found.
+7. Report rules in the benchmark alongside independent browser/human outcomes
+   (guide 14). The intervention must not be the sole judge of its own success.
 8. Optional: a `logic2b review` GitHub Action example in `/docs/review`.
 
 ## Gates
@@ -133,12 +148,13 @@ warnings are likely defects, infos are hygiene.
 
 ## Out of scope
 
-- Runtime checks (axe in a browser) — that is the site's CI job, not a tool.
+- Runtime checks in this static engine — guide 12 supplies consumer verification.
 - Auto-fixing — `fix` is a suggestion; the host applies it.
 - Non-React sources.
 
 ## Open questions
 
-- Should `score` be published in `AGENTS.md` as a required threshold
-  ("do not finish below 90")? Yes for errors; keep warnings advisory until
-  guide 09 shows the false-positive rate.
+- No mandatory numeric quality score. Block on demonstrated defects and selected
+  policies, report uncertainty, and test native controls, external labels,
+  wrappers, spreads, global motion rules and intentional token overrides as
+  false-positive fixtures. A static pass does not certify accessibility.

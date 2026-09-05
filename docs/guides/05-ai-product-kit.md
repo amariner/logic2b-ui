@@ -19,6 +19,17 @@ AI products *humane* by default.
 
 ## What ships
 
+**M4-01 first delivery:** one complete `ai-agent-run-01`, typed events, tool
+activity, approval scope, artifact diff and failure/cancel/retry behavior. The
+catalog below is a later option set, not the first batch. Reuse compatible
+primitives/adapters before expanding a chat kit.
+
+Model pending/running/waiting-for-input/failed/canceled/completed and reject
+impossible transitions. Deny/cancel must not fire execution callbacks. Retry
+retains attempts and does not imply exactly-once backend execution. Display
+supplied progress summaries, not fabricated internal reasoning. Verify event
+replay, keyboard, focus, announcements and long outputs independently.
+
 ### Components (`registry:ui`)
 
 | Item | What it is |
@@ -78,6 +89,9 @@ cost transparency, error and retry, accessibility for live content, when
 | Categories | new `ai` category in `registry:ui` and `registry:block` `categories` |
 
 ## Implementation steps
+
+Start M4-01 with the event contract and run block above, using guide 12 runtime
+checks. The sequence below applies only to a later justified catalog expansion.
 
 1. `message`, `streaming-markdown`, `prompt-composer` first (they unblock
    `ai-chat-02`), with accessibility + states contracts and API extraction.
