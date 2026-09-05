@@ -8,7 +8,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
-| M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | ready | — |
+| M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | current agent |
 | M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | ready | — |
 | M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | ready | — |
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | ready | — |
@@ -99,3 +99,25 @@ whitespace. Documentation-only delivery; no application tests required for it.
 Next: M0-02, the shared protocol foundation, then M0-01 onboarding. These two
 tasks are independent; their order favors a verifiable core delivery first.
 External pilot recruitment and npm publication are not part of this delivery.
+
+### 5 September 2026 — M0-02
+
+All 15 MCP tools now declare nested output schemas and read-only annotations.
+Successful responses include structured data equal to the existing text JSON;
+errors retain `isError` without a success payload. No tool was renamed and no
+new runtime dependency was added. HTTP and stdio share the same definitions.
+The serialized tool catalog is 34,480 bytes with current descriptions/schemas.
+
+Passed: `pnpm --filter @logic2b/mcp test` (80 tests, including HTTP and both
+contrast result shapes), `pnpm --filter @logic2b/mcp lint`, and
+`pnpm test:release-artifacts` (all 15 packed tools called with the official
+client, actual registry/demo fixtures and schema validation). The smoke gate
+now requires built Astro demo endpoints and reads files before sending headers.
+The first sandboxed smoke attempt failed on DNS; the authorized retry passed.
+Workspace dependencies were synchronized with `pnpm install --frozen-lockfile`;
+the lockfile did not change. Broader workspace checks are recorded separately
+when complete. No browser visual suite was rerun for this protocol-only change.
+
+This is source implementation, not a new npm publication. M0-01 is next;
+M0-03 verified-default resolution and M0-04 limits remain open and must not be
+inferred from the new output schemas. The M0 milestone is not complete.

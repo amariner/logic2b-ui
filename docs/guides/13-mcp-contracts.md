@@ -1,6 +1,7 @@
 # 13 — Reliable, bounded MCP contracts
 
-Status: proposed. Tasks: M0-02, M0-03, M0-04.
+Status: M0-02 implemented in source; M0-03 and M0-04 proposed. See
+[the execution log](../EXECUTION.md) for verification and publication boundaries.
 
 ## Outcome
 

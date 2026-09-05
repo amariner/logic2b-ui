@@ -2,6 +2,14 @@
 
 All notable changes to `@logic2b/mcp` are documented here.
 
+## Unreleased
+
+- Publish typed output schemas and read-only annotations for all 15 tools on
+  both transports. Successful calls include `structuredContent` alongside the
+  unchanged JSON text fallback; tool failures remain explicit `isError` results.
+- Verify output contracts against unit fixtures, the HTTP route and actual
+  registry payloads through every packed tool using the official MCP client.
+
 ## 1.0.0-rc.2
 
 - Make the marketing scaffold request the canonical `landing-page-01` bundle

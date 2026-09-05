@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
-import { describe, test } from "node:test"
+import { after, describe, test } from "node:test"
+import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv"
 
 import {
   demosIndexUrl,
@@ -12,7 +13,32 @@ import {
   type FetchLike,
   type IndexItem,
 } from "../src/registry.ts"
-import { runTool, TOOLS } from "../src/tools.ts"
+import { runTool as dispatchTool, TOOLS } from "../src/tools.ts"
+
+const validator = new AjvJsonSchemaValidator()
+const contracts = new Map(TOOLS.map((tool) => [tool.name, validator.getValidator(tool.outputSchema)]))
+const covered = new Set<string>()
+
+// Every existing successful tool fixture also verifies its public wire schema.
+async function runTool(...args: Parameters<typeof dispatchTool>) {
+  const result = await dispatchTool(...args)
+  if (result.isError) {
+    assert.equal(result.structuredContent, undefined, "errors must not masquerade as successful output")
+  } else {
+    assert.deepEqual(result.structuredContent, JSON.parse(result.content[0].text))
+    const check = contracts.get(args[0] as (typeof TOOLS)[number]["name"])
+    assert.ok(check, `missing output contract for ${args[0]}`)
+    const validation = check(result.structuredContent)
+    assert.ok(validation.valid, `${args[0]}: ${validation.errorMessage}`)
+    covered.add(args[0])
+  }
+  return result
+}
+
+after(() => {
+  assert.deepEqual([...covered].sort(), TOOLS.map((tool) => tool.name).sort(),
+    "every tool needs a successful output-contract fixture")
+})
 
 const index: IndexItem[] = [
   {
@@ -55,6 +81,33 @@ function parseText(result: { content: { text: string }[] }) {
 }
 
 describe("TOOLS", () => {
+  test("schemas reject empty outputs and annotations describe data-only tools", () => {
+    for (const tool of TOOLS) {
+      assert.equal(contracts.get(tool.name)!({}).valid, false, tool.name)
+      assert.equal(contracts.get(tool.name)!([]).valid, false, tool.name)
+      assert.equal(tool.annotations.readOnlyHint, true)
+      assert.equal(tool.annotations.destructiveHint, false)
+      assert.equal(tool.annotations.idempotentHint, true)
+    }
+    assert.equal(TOOLS.find((tool) => tool.name === "decode_preset")!.annotations.openWorldHint, false)
+    assert.equal(TOOLS.find((tool) => tool.name === "apply_preset")!.annotations.openWorldHint, true)
+  })
+
+  test("install schemas reject invalid nested file writes", () => {
+    const invalid = {
+      registry: base, items: [], npmDependencies: [], notes: [], iconLibrary: "lucide",
+      files: [{ path: "src/button.tsx", content: 123 }],
+    }
+    assert.equal(contracts.get("install_plan")!(invalid).valid, false)
+  })
+
+  test("raw token audits use the single-mode structured contract", async () => {
+    const result = await runTool("contrast_audit", {
+      tokens: { foreground: "oklch(0 0 0)", background: "oklch(1 0 0)" },
+    })
+    assert.ok(!result.isError)
+    assert.ok(Array.isArray(result.structuredContent?.results))
+  })
   test("exposes the registry and theme tools", () => {
     assert.deepEqual(
       TOOLS.map((t) => t.name),

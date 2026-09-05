@@ -28,6 +28,10 @@ the package versions match their changelogs and each other, then packs both
 packages, installs the tarballs in an isolated consumer, asserts the exact
 publication allowlist, runs the installed CLI binary's version/help surface
 and negotiates the installed MCP binary over stdio with the official SDK.
+It then calls every MCP tool against a local registry, validates advertised
+output schemas and structured/text parity, and checks an explicit tool failure.
+The local fixture serves Astro-generated demos from `apps/web/dist/client/r`,
+so the preceding `pnpm build` is required even for this isolated smoke gate.
 
 Before publishing, also confirm:
 
