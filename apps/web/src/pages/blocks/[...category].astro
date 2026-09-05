@@ -1,4 +1,5 @@
 ---
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildAddPrompt } from "@/lib/prompts";
 import registryIndex from "../../../public/r/index.json";
@@ -174,10 +175,10 @@ const blocks = current
                     </div>
                     <button
                       class="copy-btn btn btn-sm btn-outline font-mono"
-                      data-command={`npx logic2b@latest add ${block.name}`}
+                      data-command={`npx ${CLI_PACKAGE_SELECTOR} add ${block.name}`}
                       title="Copy install command"
                     >
-                      npx logic2b add {block.name}
+                      npx {CLI_PACKAGE_SELECTOR} add {block.name}
                     </button>
                     <button
                       class="copy-btn btn btn-sm btn-outline"

@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR, PACKAGE_RUNNERS } from "@logic2b/scaffold/package-selectors";
 import * as React from "react"
 
 import { Button } from "@/registry/ui/button"
@@ -229,12 +230,7 @@ const TEMPLATES = [
   { key: "astro", label: "Astro", icon: siAstro.path },
   { key: "laravel", label: "Laravel", icon: siLaravel.path },
 ]
-const PMS: Record<string, string> = {
-  pnpm: "pnpm dlx",
-  npm: "npx",
-  yarn: "yarn dlx",
-  bun: "bunx",
-}
+const PMS: Record<string, string> = PACKAGE_RUNNERS
 
 export function CreateStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULT_CONFIG)
@@ -986,10 +982,10 @@ function GetCodeDialog({
     "css" | "json" | "design" | "agents"
   >("css")
 
-  const newCmd = `${PMS[pm]} logic2b@latest init --template ${tpl}${
+  const newCmd = `${PMS[pm]} ${CLI_PACKAGE_SELECTOR} init --template ${tpl}${
     monorepo ? " --monorepo" : ""
   } --preset ${presetId}`
-  const existingCmd = `${PMS[pm]} logic2b@latest init --preset ${presetId}`
+  const existingCmd = `${PMS[pm]} ${CLI_PACKAGE_SELECTOR} init --preset ${presetId}`
   const newPrompt = buildInitPrompt({
     cfg,
     presetId,

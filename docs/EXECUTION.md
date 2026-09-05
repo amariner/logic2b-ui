@@ -9,7 +9,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | --- | --- | --- | --- | --- |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
 | M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | current agent |
-| M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | ready | — |
+| M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | done | Codex (M0-01) |
 | M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | ready | — |
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | ready | — |
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | ready | — |
@@ -122,3 +122,65 @@ for this protocol-only change; the GitHub workflow runs the full release gates.
 This is source implementation, not a new npm publication. M0-01 is next;
 M0-03 verified-default resolution and M0-04 limits remain open and must not be
 inferred from the new output schemas. The M0 milestone is not complete.
+
+### 5 September 2026 — M0-01
+
+Completed beta onboarding on `codex/m0-01-beta-onboarding`. The landing MCP
+announcement now opens human setup documentation. A shared private
+`@logic2b/scaffold/package-selectors` export owns `logic2b@next` and
+`@logic2b/mcp@next`; current site commands, prompts, Markdown widgets, MCP
+command results and the VS Code task consume it. Literal English/Spanish docs
+and copyable examples are checked against that policy. No MCP output shape
+changed. The extension adds only an existing workspace dependency; no external
+runtime package was added.
+
+Onboarding states that hosts need filesystem writes and an installation/build
+runtime to apply plans, separates npm and registry selectors, and distinguishes
+source-only structured results from the published JSON text fallback. Mobile
+verification exposed long endpoint identifiers widening the docs table; inline
+code now wraps without changing table semantics or hiding content. Archived
+benchmarks and registry payloads/manifests remain byte-for-byte unchanged.
+
+Passed checks:
+
+- `pnpm lint` and `pnpm test`: all eight workspace packages passed (232 tests).
+- `pnpm build`: all six build tasks passed, including registry integrity build.
+- `pnpm --filter @logic2b/web build` and `pnpm --filter @logic2b/web lint`:
+  passed again after the mobile docs fix.
+- `pnpm --filter @logic2b/mcp test`: 80 tests passed, including per-package-manager
+  command parity. `pnpm --filter logic2b-ui test`: eight tests plus actual
+  bundled extension command dispatch passed after the final test changes.
+- `pnpm test:release-artifacts`: isolated source tarballs installed; CLI
+  help/version/scaffold and all 15 MCP tools passed, including beta command
+  parity from the installed MCP binary.
+- `pnpm --filter @logic2b/mcp test:beta-onboarding`: actual published npm/pnpm
+  commands resolved CLI `1.0.0-rc.2`; marketing scaffold and button addition
+  passed. Published stdio MCP also resolved `1.0.0-rc.2` and returned a verified
+  install plan. Public `/mcp` returned GET 405 and completed the separate
+  streamable HTTP handshake (server `1.0.0-rc.2`).
+- `pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/visual.spec.ts --grep 'beta onboarding|demos/code-block-demo|demos/stepper-vertical-demo|gallery'`:
+  eight checks passed. Landing CTAs return successful GETs; 390/1280 px flows
+  verify HTML/Markdown parity in both languages and open the agent prompt.
+  Axe found no serious/critical violations in the MCP docs under the existing
+  rule policy (color contrast excluded). Six existing visual baselines passed;
+  none was changed. The two onboarding checks were repeated with settled-font
+  screenshots for visual inspection of requirements and endpoint tables.
+- `git diff --check`: passed.
+
+Environment: Node 24.7.0 / pnpm 11.10.0. The explicit workspace install used
+`CI=true pnpm install --frozen-lockfile --ignore-scripts`; the lockfile changes
+only the new workspace link. Sandboxed install/build attempts hit DNS or tsx
+IPC restrictions; authorized retries passed. The first browser run found the
+mobile overflow and a mistaken Spanish test route; both were corrected.
+
+Limitations: the published onboarding smoke intentionally uses `--no-install`
+for generated starter dependencies; it proves source generation, not a new
+three-framework build run. Full scaffold, full-site axe/visual, Lighthouse and
+other browser suites were not rerun for this scope. Yarn/bun commands have
+parity checks but were not executed. External first-use pilots remain pending;
+no outreach, npm publication, merge or push was performed. Source and published
+packages still share the existing rc.2 version number, so the release must bump
+versions before publishing these source changes.
+
+Next ready task: M0-03, immutable default registry resolution. M0-04 input
+limits and M0-05 public landing/contributor work remain open; M0 is not complete.

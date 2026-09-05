@@ -2,8 +2,9 @@
 
 An [MCP](https://modelcontextprotocol.io) server that exposes the
 [logic2b ui](https://ui.logic2b.com) registry to coding agents. Point your
-agent at it and it can discover, read, theme and **install** every component,
-block and chart — without leaving the conversation and without a shell.
+agent at it to discover components, read source and request install, scaffold
+and theme plans. The host needs file-writing tools to apply those plans and a
+runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
@@ -32,10 +33,10 @@ block and chart — without leaving the conversation and without a shell.
 | `contrast_audit` | WCAG 2.2 + APCA contrast of every text token pair (light + dark) for a preset, explicit options or raw token values — verify a generated theme before shipping it. |
 | `lint_theme` | Statically inspect a theme.css for missing, duplicate or invalid tokens, derived-sidebar drift and contrast regressions. Pass a preset id to verify exact preset fidelity. |
 
-`get_component` returns exactly what `npx logic2b add <name>` installs;
+`get_component` returns exactly what `npx logic2b@next add <name>` installs;
 `install_plan` turns that into file writes an agent can execute directly.
-`scaffold_plan` goes one level higher and returns an entire application an
-agent can create without invoking a scaffolder or having a shell. The generated
+`scaffold_plan` goes one level higher and returns an entire application a
+host can write using its own filesystem tools. MCP does not run the app. The generated
 Next.js, Vite and Astro projects are installed and production-built as a
 contract test before changes merge.
 Icon substitution is fail-closed: every canonical Lucide name is mapped to a
@@ -45,13 +46,17 @@ real export from the chosen package, and generated source, dependencies and
 for theme.css after a project has been installed and edited over time.
 
 Registry read, install, scaffold and theme tools accept an optional `version`
-argument: an exact semver, a semver range or a published channel. It resolves
-once to an immutable manifest, verifies every fetched payload against its
+argument: an exact semver, a semver range or a published channel. An explicit
+selector resolves once to an immutable manifest, verifies every fetched payload against its
 SHA-256 integrity and returns the exact resolved registry/item versions.
 `scaffold_plan` records that resolved version in the generated
 `components.json` and writes an update-ready `.logic2b/manifest.json` with each
 item's integrity and installed files; `add_command` emits only the resolved
 exact version, never the caller's unvalidated selector.
+
+When `version` is omitted, the current MCP reads mutable registry mirrors;
+verified default resolution is planned in M0-03. Use `version: "next"` or an
+exact registry version when verification is required.
 
 Every UI payload carries structured accessibility metadata: semantic support,
 keyboard interactions, built-in ARIA behavior, consumer responsibilities and
@@ -97,7 +102,9 @@ Or in any client that takes a JSON config:
 
 ### Local (stdio)
 
-The server speaks stdio and needs no configuration. Add it to any MCP client.
+The beta server uses `@logic2b/mcp@next`. It requires Node.js 18+ and npm on
+the client machine. The npm channel can move; record the version returned by
+the MCP handshake. Add it to a client that can launch a stdio process.
 
 **Claude Desktop / Claude Code** (`claude_desktop_config.json` or `.mcp.json`):
 
@@ -106,7 +113,7 @@ The server speaks stdio and needs no configuration. Add it to any MCP client.
   "mcpServers": {
     "logic2b": {
       "command": "npx",
-      "args": ["-y", "@logic2b/mcp"]
+      "args": ["-y", "@logic2b/mcp@next"]
     }
   }
 }
@@ -124,7 +131,7 @@ By default the server reads from `https://ui.logic2b.com`. Override it with the
   "mcpServers": {
     "logic2b": {
       "command": "npx",
-      "args": ["-y", "@logic2b/mcp"],
+      "args": ["-y", "@logic2b/mcp@next"],
       "env": { "LOGIC2B_REGISTRY": "https://ui.example.com" }
     }
   }

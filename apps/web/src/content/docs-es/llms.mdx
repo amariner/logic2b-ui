@@ -40,7 +40,7 @@ debe preservar esos requisitos al componer o modificar un componente.
 Para instalar en el proyecto del usuario, ejecuta la CLI:
 
 ```bash
-npx logic2b@latest add button
+npx logic2b@next add button
 ```
 
 O resuelve una versión mediante `/r/versions.json`, descarga el payload
@@ -58,13 +58,33 @@ contexto completo sin extraer páginas ni adivinar convenciones.
 
 ## Servidor MCP
 
+### Requisitos del host y versiones beta
+
+Las herramientas MCP devuelven datos y planes. Aplicar un plan requiere un host
+capaz de escribir archivos; instalar dependencias, compilar y verificar en el
+navegador requiere un entorno con el gestor de paquetes adecuado. Un chat que
+solo tiene MCP remoto puede consultar código y solicitar planes, pero no puede
+completar esos pasos por sí solo. El servidor remoto no accede a tus archivos.
+
+El transporte stdio local requiere Node.js 18+ y npm. Usa `@logic2b/mcp@next`
+para la beta y `logic2b@next` para la CLI. Estos selectores npm son independientes
+de `version` del registro. Registra la versión del handshake MCP y `--version`
+de la CLI: `next` puede cambiar. Los resultados estructurados están implementados
+en el código fuente y pendientes de publicación; la RC publicada devuelve JSON
+como texto.
+
+Si omites `version`, el MCP actual lee copias mutables del registro. Usa una
+versión explícita o `"next"` para verificar integridad. `/mcp` es un endpoint de
+protocolo: un GET con HTTP 405 es esperado; comprueba la conexión con un cliente
+MCP, no navegando al endpoint.
+
 El registro expone el Model Context Protocol de dos formas con las mismas
 herramientas. Para leer: `list_components`, `search_components`,
 `get_component`, `get_demo`, `list_registry_versions` y `get_changelog`. Las
 lecturas, instalaciones y operaciones de tema aceptan `version` como semver
 exacto, rango o canal, y verifican SHA-256 antes de responder.
 
-Para actuar sobre un proyecto sin shell: `install_plan` devuelve los archivos y
+Para planificar cambios en un proyecto: `install_plan` devuelve los archivos y
 dependencias exactos; `scaffold_plan` devuelve una app Next.js, Vite o Astro
 completa desde un starter de marketing, dashboard o auth. `get_theme`,
 `decode_preset` y `apply_preset` reconstruyen o parchean `theme.css`;
@@ -79,7 +99,7 @@ escribir los archivos e instalar dependencias. La respuesta conserva la versión
 exacta en `components.json`. CI compila ese mismo contrato para Next, Vite y
 Astro.
 
-**Remoto (sin instalación ni shell)** — conecta un cliente MCP HTTP streamable:
+**Remoto (sin instalar un servidor MCP local)** — conecta un cliente MCP HTTP streamable:
 
 ```
 https://ui.logic2b.com/mcp
@@ -101,7 +121,7 @@ O en un cliente con configuración JSON:
 }
 ```
 
-**Local (stdio)** — `npx -y @logic2b/mcp` ejecuta las mismas herramientas como
+**Local (stdio)** — `npx -y @logic2b/mcp@next` ejecuta las mismas herramientas como
 proceso local.
 
 ## Convenciones fiables para un agente

@@ -7,8 +7,8 @@ theme preset without leaving VS Code.
 
 - Activity Bar registry grouped into Components, Blocks and Charts.
 - Search, refresh, documentation links and installed-item status.
-- Single-item and multi-item install through `npx logic2b@latest add`.
-- Workspace initialization through `npx logic2b@latest init`.
+- Single-item and multi-item install through `npx logic2b@next add`.
+- Workspace initialization through `npx logic2b@next init`.
 - Preset application to `theme.css` and `components.json` using the shared
   `@logic2b/tokens` codec.
 

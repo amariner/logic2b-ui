@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR, MCP_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 /**
  * AGENTS.md generator — the design system as executable context.
  *
@@ -66,7 +67,7 @@ through CSS tokens. Follow these rules for any work that touches the UI.
 
 Before writing any UI element from scratch, install it:
 
-- CLI: \`npx logic2b@latest add <name>\` (resolves registry dependencies).
+- CLI: \`npx ${CLI_PACKAGE_SELECTOR} add <name>\` (resolves registry dependencies).
 - No shell? Use the MCP endpoint \`${SITE}/mcp\` — the \`install_plan\` tool
   returns the exact files to write and npm deps to add${cfg.iconLibrary === "lucide" ? " — or fetch the raw registry payload directly" : `; pass \`iconLibrary: "${cfg.iconLibrary}"\` so its canonical Lucide sources are rewritten`}.
 
@@ -97,7 +98,7 @@ DaisyUI…) are off-limits — they fight the token system.
   box-shadows.
 - Every change must hold in **both modes** — check light and dark.
 - Re-theming happens by regenerating tokens from a preset
-  (\`npx logic2b@latest init --preset ${preset}\` or the MCP \`apply_preset\`
+  (\`npx ${CLI_PACKAGE_SELECTOR} init --preset ${preset}\` or the MCP \`apply_preset\`
   tool), not by hand-editing individual token values.
 
 ## Component conventions
@@ -122,6 +123,6 @@ DaisyUI…) are off-limits — they fight the token system.
 
 - Index: ${SITE}/r/index.json · item payloads: ${SITE}/r/<name>.json
 - Docs for agents: ${SITE}/llms.txt (full: ${SITE}/llms-full.txt)
-- MCP: \`${SITE}/mcp\` (remote, streamable HTTP) or \`npx -y @logic2b/mcp\` (stdio).
+- MCP: \`${SITE}/mcp\` (remote, streamable HTTP) or \`npx -y ${MCP_PACKAGE_SELECTOR}\` (stdio).
 `
 }

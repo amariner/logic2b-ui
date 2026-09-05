@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR, PACKAGE_RUNNERS } from "@logic2b/scaffold/package-selectors"
 import assert from "node:assert/strict"
 import { execFile } from "node:child_process"
 import { access, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
@@ -259,6 +260,12 @@ try {
         const content = result.content as Array<{ type: string; text?: string }>
         assert.equal(content[0]?.type, "text")
         assert.deepEqual(result.structuredContent, JSON.parse(content[0]!.text!))
+        if (name === "add_command") {
+          const payload = result.structuredContent as { commands: Record<string, string> }
+          for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
+            assert.equal(payload.commands[manager], `${runner} ${CLI_PACKAGE_SELECTOR} add button`)
+          }
+        }
       }
       const failure = await client.callTool({ name: "decode_preset", arguments: { preset: "invalid" } })
       assert.equal(failure.isError, true)

@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 /**
  * Theme data + serialization for the /create configurator.
  *
@@ -130,7 +131,7 @@ ${chartRows}
 ## Install
 
 \`\`\`bash
-npx logic2b@latest init --preset ${preset}
+npx ${CLI_PACKAGE_SELECTOR} init --preset ${preset}
 \`\`\`
 
 Running \`init\` writes \`components.json\` and the CSS for these exact tokens

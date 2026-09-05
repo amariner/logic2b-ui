@@ -22,8 +22,8 @@ whether a terminal is available.
   or remote workspaces.
 - **Your agent has no shell or local Node runtime:** connect the remote MCP at
   `https://ui.logic2b.com/mcp`. `install_plan` and `scaffold_plan` return the
-  complete writes as structured tool results.
-- **Your terminal-backed agent already speaks MCP:** run `npx -y @logic2b/mcp`.
+  complete file contents as JSON plans (text fallback in the published RC).
+- **Your terminal-backed agent already speaks MCP:** run `npx -y @logic2b/mcp@next`.
   The local server exposes the same contracts as the remote endpoint.
 - **You are building your own integration:** consume `/r/index.json` and
   `/r/<name>.json`. Your client owns recursive dependency resolution and writes.
@@ -37,7 +37,8 @@ or invalid tokens, derived-token drift, exact-preset drift and measured
 contrast regressions. The stylesheet is parsed as text and never executed.
 
 MCP tools do not silently mutate a repository. They return explicit plans; the
-connected host decides whether and where to write them. This keeps the same
+connected host needs file-writing tools to apply them, plus a runtime to
+install dependencies, build and verify the application. This keeps the same
 server usable by local IDEs, web assistants and controlled enterprise clients.
 
 ## Verify the claims

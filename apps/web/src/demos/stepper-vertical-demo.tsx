@@ -22,7 +22,7 @@ const STEPS = [
   {
     step: 3,
     title: "Install the CLI",
-    description: "npx logic2b init in your project.",
+    description: `npx logic2b@next init in your project.`,
     disabled: true,
   },
 ]

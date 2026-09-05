@@ -327,6 +327,9 @@ importers:
 
   packages/vscode:
     dependencies:
+      '@logic2b/scaffold':
+        specifier: workspace:*
+        version: link:../scaffold
       '@logic2b/tokens':
         specifier: workspace:*
         version: link:../tokens

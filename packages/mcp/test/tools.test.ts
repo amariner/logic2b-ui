@@ -1,3 +1,4 @@
+import { CLI_PACKAGE_SELECTOR, PACKAGE_RUNNERS } from "@logic2b/scaffold/package-selectors"
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { after, describe, test } from "node:test"
@@ -346,8 +347,9 @@ describe("runTool — demos and add_command", () => {
     const r = await runTool("add_command", { items: ["button", "login-01"] }, { base, fetchImpl })
     assert.ok(!r.isError)
     const payload = parseText(r)
-    assert.equal(payload.commands.npm, "npx logic2b@latest add button login-01")
-    assert.equal(payload.commands.pnpm, "pnpm dlx logic2b@latest add button login-01")
+    for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
+      assert.equal(payload.commands[manager], `${runner} ${CLI_PACKAGE_SELECTOR} add button login-01`)
+    }
     assert.ok(payload.notes.some((n: string) => n.includes("install_plan")))
   })
 

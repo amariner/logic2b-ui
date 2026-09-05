@@ -3,6 +3,10 @@ title: Installation
 description: How to set up your project and start using logic2b ui components.
 ---
 
+This guide uses `logic2b@next`, the npm beta channel. `next` can move: record
+`npx logic2b@next --version` when reporting a problem. `--registry-version`
+selects registry content, independently of the CLI package version.
+
 ## Requirements
 
 - React 18+ (React 19 recommended)
@@ -30,7 +34,7 @@ export function cn(...inputs: ClassValue[]) {
 Or install it from the registry:
 
 ```bash
-npx logic2b@latest add utils
+npx logic2b@next add utils
 ```
 
 ## 3. Add the theme tokens
@@ -42,7 +46,7 @@ CSS file. Components reference tokens like `bg-primary` and
 ## 4. Add components
 
 ```bash
-npx logic2b@latest add button
+npx logic2b@next add button
 ```
 
 Or copy the source from any component page — every page has a Code tab with the
@@ -51,7 +55,7 @@ full source.
 For a complete marketing surface, install the composed landing block once:
 
 ```bash
-npx logic2b@latest add landing-page-01
+npx logic2b@next add landing-page-01
 ```
 
 The registry resolves its canonical navbar, animated hero, animated feature
@@ -64,9 +68,9 @@ Initialize a project with the CLI to pin the registry release used by the
 project:
 
 ```bash
-npx logic2b@latest init
-npx logic2b@latest add button card
-npx logic2b@latest status
+npx logic2b@next init
+npx logic2b@next add button card
+npx logic2b@next status
 ```
 
 `init` writes an exact `logic2b.version` to `components.json`. Every install is
@@ -83,9 +87,9 @@ unit. Existing preset links created before this option default to Lucide.
 Use an exact version, a semver range or a published channel explicitly:
 
 ```bash
-npx logic2b@latest add button --registry-version 1.0.0-rc.7
-npx logic2b@latest status --registry-version next
-npx logic2b@latest update --registry-version "^1.0.0"
+npx logic2b@next add button --registry-version 1.0.0-rc.7
+npx logic2b@next status --registry-version next
+npx logic2b@next update --registry-version "^1.0.0"
 ```
 
 `logic2b update` only considers items tracked in the install manifest unless

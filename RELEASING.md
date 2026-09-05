@@ -41,6 +41,29 @@ Before publishing, also confirm:
   `dist`, `README.md`, `LICENSE`, `CHANGELOG.md` and `package.json`.
 - The remote registry and MCP endpoint are healthy at `ui.logic2b.com`.
 
+## Advertised beta onboarding
+
+The shared `packages/scaffold/src/package-selectors.ts` policy owns the CLI and
+MCP `@next` selectors. Generated site commands, agent prompts, MCP command
+responses and the VS Code extension consume it. Literal documentation commands
+are checked for parity; do not rewrite archived benchmarks or immutable payloads.
+The npm selector is independent of the registry version selector.
+
+Before promoting site onboarding, verify the actual published channel:
+
+```bash
+pnpm --filter @logic2b/mcp test:beta-onboarding
+```
+
+This network gate runs the advertised `npx logic2b@next` and
+`pnpm dlx logic2b@next` commands from an isolated directory, records the resolved
+version, checks CLI help, generates a Vite marketing starter and adds a button.
+It then launches `npx -y @logic2b/mcp@next` and verifies the handshake and a real
+install plan, then checks the public HTTP endpoint with GET and an MCP
+handshake. It does not publish anything. This gate checks published behavior;
+`test:release-artifacts` separately checks the current source candidate, including
+structured results. If publication is pending, document the difference explicitly.
+
 ## npm dist tags
 
 Release candidates use `next`; they must not replace `latest`:

@@ -25,7 +25,7 @@ export const INTEGRATION_PATHS = [
     name: "Remote MCP",
     href: "/docs/llms",
     access: "Streamable HTTP",
-    bestFor: "Agents without a shell, local Node runtime or registry client.",
+    bestFor: "Agents requesting source and plans over HTTP; applying them requires host file tools and a build runtime.",
   },
   {
     id: "local-mcp",
@@ -159,7 +159,7 @@ const PATHS_ES: Record<IntegrationPathId, { name: string; access: string; bestFo
   "remote-mcp": {
     name: "MCP remoto",
     access: "HTTP streamable",
-    bestFor: "Agentes sin shell, Node local ni cliente propio del registro.",
+    bestFor: "Agentes que consultan código y planes por HTTP; aplicarlos requiere un host con escritura de archivos y un entorno de compilación.",
   },
   "local-mcp": {
     name: "MCP local",
