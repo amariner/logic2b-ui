@@ -113,7 +113,8 @@ include the row identity.
    type-check gates.
 4. MCP tools, CLI commands, docs, benchmark tasks with rubrics that award
    labels, error linkage, `autoComplete`, empty state and mobile strategy.
-5. Run `review_ui` on the generated output as a test: zero findings.
+5. Run `review_ui`: zero demonstrated defects or enabled blocking-policy errors;
+   retain advisory findings and unknowns. Validate behavior independently.
 
 ## Gates
 

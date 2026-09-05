@@ -35,6 +35,7 @@ like `/create` today.
 ```ts
 interface Composition {
   v: 1
+  registryVersion: string             // exact immutable version, never a channel
   stack: "next" | "vite" | "astro"
   preset?: string                     // theme+typeset+icons id, unchanged
   pages: Array<{
@@ -50,6 +51,13 @@ names are validated against the registry index on decode; unknown names are
 reported, not dropped silently. Budget: ids for the three starters must stay
 under 400 characters; a composition with 6 pages × 8 sections under 1.5 KB so
 the full URL stays below 2 KB.
+
+Reject oversized compressed/decompressed payloads, unsafe routes and unknown
+schema versions. Preview only supported assets for the selected version; show
+an explicit unsupported state rather than today's components for an older id.
+Never execute arbitrary source from a URL. Preview and generation use the same
+canonical composition and manifest. Copying an approval id does not itself
+authorize the host to write files or execute a tool.
 
 The preset id stays a separate, untouched field so every existing preset link
 keeps working and the theme tools keep accepting it.
@@ -116,7 +124,8 @@ for the studio canvas). Interactions:
 
 ## Watching
 
-- **MCP Apps / UI in MCP hosts.** When hosts render tool-provided UI, the
-  proposal can appear inline in the conversation instead of as a link. The
-  page is already an iframe-friendly, no-state surface, so adoption is a thin
-  wrapper. Track the spec; do not build ahead of it.
+- **M3-04 MCP Apps pilot.** Deliver one proposal resource in one verified host
+  using the official extension, capability negotiation, bounded messages and
+  CSP. Keep the web fallback. Measure packaging differences instead of assuming
+  an iframe is sufficient. Record the supported host/version explicitly.
+  [Official overview](https://modelcontextprotocol.io/extensions/apps/overview).

@@ -33,7 +33,15 @@ a link the human can look at before a single file is written.
 
 ```ts
 interface ComposeRequest {
-  brief: string                              // ≤ 2 000 chars, free text
+  requirements: Array<{
+    id: string
+    route: string
+    task: string
+    roles: string[]
+    requiredStates: StateName[]
+    actions: string[]
+  }>
+  brief?: string                             // optional discovery hint, ≤ 2 000 chars
   stack?: "next" | "vite" | "astro"          // default: "vite"
   preset?: string                            // any /create preset id
   locale?: string                            // BCP 47, default "en"
@@ -47,6 +55,7 @@ interface ComposeRequest {
 
 interface ComposePlan {
   registryVersion: string
+  coverage: Array<{ requirementId: string; status: "covered" | "partial" | "gap"; evidence: string[] }>
   pages: Array<{
     route: string                            // "/", "/billing", "/settings"
     purpose: string                          // one sentence, from the brief
@@ -81,14 +90,18 @@ is **grounding** (only real items), **coverage** (states, a11y consumer duties
 and content slots come along) and **honesty** (gaps are listed, never faked).
 The algorithm:
 
-1. **Normalize the brief** — lowercase, split into phrases, expand a small
+1. **Validate structured requirements** — require bounded roles/actions/states,
+   stable ids and safe routes. The host interprets prose; unsupported requirements
+   produce named gaps. Optionally normalize a discovery brief: lowercase, split
+   into phrases, expand a small
    synonym table (`sign in` → `login`, `plans` → `pricing`, `orders` →
    `admin-orders`). The table lives with the registry data so it is versioned.
 2. **Match intents** — every block (guide 02) declares `intents: string[]`
    (e.g. `"authenticate"`, `"compare-plans"`, `"manage-team"`). Score each
    block by phrase overlap with its intents, title, description and
    categories. Ties break by `journey` adjacency (a `signup` next to `login`).
-3. **Assemble pages** — from a fixed page-template table keyed by dominant
+3. **Assemble pages** — honor requested routes and roles first, using defaults
+   from a fixed page-template table keyed by dominant
    intents: `marketing`, `auth`, `dashboard`, `settings`, `commerce`, `admin`,
    `ai-workspace`. A brief may produce several. Each template lists required
    roles (`navbar`, `hero`, `footer`…) and optional roles; blocks fill roles by
@@ -98,8 +111,11 @@ The algorithm:
    score ≥ threshold and there are no gaps; `low` when a required role is
    unfilled or the brief matched nothing above threshold.
 
-Because it is deterministic, the same brief always yields the same plan for a
-given registry version — which is what makes the benchmark task scorable.
+The same structured requirements, context and registry version yield the same
+plan. Keyword confidence is a retrieval signal, not proof of understanding.
+The CLI accepts JSON requirements for automation; its prose entry may suggest
+candidate requirements but must not silently apply a guessed composition.
+M3-01 ships the core before M3-02 adds proposal UI; omit proposalUrl until then.
 
 ### Where it lives
 

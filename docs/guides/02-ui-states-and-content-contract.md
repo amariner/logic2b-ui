@@ -19,6 +19,13 @@ it, MCP exposes it, the registry test fails if a block ships without it.
 
 ## What ships
 
+M1-01 first covers the customer list and edit form; expand after the reference
+journey passes. Add controlled data/content and action callbacks without a data
+fetching dependency. Distinguish no customers from no matching search results.
+Extend applicable states for submitting, validation failure, permission denied
+and unsaved changes. Specify triggers, transitions and preserved input/retry
+behavior. Mark inapplicable states explicitly. Metadata alone is not completion.
+
 - `states`, `content`, `intents`, `journey` and `responsive` metadata on every
   `registry:block` (charts included where it applies).
 - A **States** tab on every block page (`/blocks/<category>/<name>`) showing
