@@ -1,6 +1,6 @@
 # 00 — A public beta people can understand and reproduce
 
-Status: M0-01 implemented; M0-05 pending. Tasks: M0-01, M0-05. Direction: [ROADMAP](../../ROADMAP.md).
+Status: M0-01 implemented; M0-05 implemented except the recorded video and the external pilot. Tasks: M0-01, M0-05. Direction: [ROADMAP](../../ROADMAP.md).
 
 ## Outcome
 
@@ -65,6 +65,20 @@ reported `1.0.0-rc.2`. No package was published by this implementation.
 See [the execution handoff](../EXECUTION.md) for exact checks and limitations.
 M0-05 still owns the landing redesign, contributor/security material,
 compatibility table and recorded demonstration described above.
+
+## M0-05 implementation (6 September 2026)
+
+The landing states "Your design system, ready for agents." with two primary
+paths (use with an agent → `/docs/llms#mcp-server`, browse components →
+`/blocks`), three executable steps built from the shared selectors and the
+registry version constant, the three launch starters as the complete-interface
+evidence, and an explicit shipped/planned split. Planned tools are listed as
+not installed. `CONTRIBUTING.md`, `SECURITY.md`, issue templates and a pull
+request template exist; the compatibility table lives in the installation docs
+in both languages. `pnpm --filter @logic2b/mcp demo:walkthrough` is the
+executable demonstration (preset → scaffold → local customization → drift
+detection → correction with local edits preserved); a recorded video of it and
+the external pilot remain pending and are not evidence yet.
 
 ## Pilot
 

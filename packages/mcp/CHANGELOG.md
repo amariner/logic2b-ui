@@ -4,6 +4,9 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## Unreleased
 
+- Add `demo:walkthrough`, a reproducible script that generates a preset-themed
+  starter from the committed registry, customizes it, detects theme drift with
+  `lint_theme` and corrects it with `apply_preset` while preserving local edits.
 - Bound every tool input before registry or network work: documented limits
   for body bytes, batch length, item counts, name/query/preset lengths, CSS
   bytes, token maps, fetched documents and returned source. Unknown tools and

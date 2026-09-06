@@ -11,19 +11,20 @@ import { DEFAULT_CONFIG, ICON_LIBRARIES, encodePreset, type IconLibrary } from "
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..")
 const registryDir = join(repoRoot, "apps/web/public/r")
 
+// Serve the committed registry (versions, manifests, content-addressed
+// payloads) so plans resolve the default channel exactly like production.
 const fetchImpl: FetchLike = async (input) => {
   const url = new URL(input)
-  if (url.pathname === "/r/index.json") {
-    return {
-      ok: true,
-      status: 200,
-      text: async () => readFile(join(registryDir, "index.json"), "utf8"),
-    }
+  if (!url.pathname.startsWith("/r/")) return { ok: false, status: 404, text: async () => "Not found" }
+  const registryPath = decodeURIComponent(url.pathname.slice(3))
+  if (
+    !registryPath.endsWith(".json") ||
+    registryPath.split("/").some((segment) => segment === "" || segment === "." || segment === "..")
+  ) {
+    return { ok: false, status: 404, text: async () => "Not found" }
   }
-  const match = url.pathname.match(/^\/r\/([a-z0-9-]+)\.json$/)
-  if (!match) return { ok: false, status: 404, text: async () => "Not found" }
   try {
-    const content = await readFile(join(registryDir, `${match[1]}.json`), "utf8")
+    const content = await readFile(join(registryDir, registryPath), "utf8")
     return { ok: true, status: 200, text: async () => content }
   } catch {
     return { ok: false, status: 404, text: async () => "Not found" }

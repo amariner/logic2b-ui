@@ -42,7 +42,8 @@
     "test:release-artifacts": "node --import tsx scripts/verify-release-artifacts.mts",
     "test:scaffolds": "node --import tsx scripts/verify-scaffolds.mts",
     "prepack": "tsup",
-    "test:beta-onboarding": "node --import tsx scripts/verify-beta-onboarding.mts"
+    "test:beta-onboarding": "node --import tsx scripts/verify-beta-onboarding.mts",
+    "demo:walkthrough": "node --import tsx scripts/demo-walkthrough.mts"
   },
   "license": "MIT",
   "dependencies": {

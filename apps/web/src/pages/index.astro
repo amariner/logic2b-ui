@@ -1,5 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { CLI_PACKAGE_SELECTOR, MCP_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
+import { REGISTRY_VERSION } from "@logic2b/registry/version";
+import { LAUNCH_DEMOS } from "@/data/launch-demos";
 import {
   ComponentShowcase,
   ContributionHistory,
@@ -41,9 +44,58 @@ const monoCharts = [
   "--chart-4: color-mix(in oklch, var(--foreground) 42%, var(--background))",
   "--chart-5: color-mix(in oklch, var(--foreground) 30%, var(--background))",
 ].join(";");
+
+const REPO = "https://github.com/amariner/logic2b-ui";
+
+// Executable examples: every command below is the one the docs verify.
+const steps = [
+  {
+    title: "Install from a versioned registry",
+    body:
+      "Every item resolves to one immutable release and is SHA-256 verified before it is written. The exact version and integrity are recorded in the project so the inputs can be reproduced later.",
+    code: `npx ${CLI_PACKAGE_SELECTOR} init --template vite --starter marketing\nnpx ${CLI_PACKAGE_SELECTOR} add button card --registry-version ${REGISTRY_VERSION}`,
+    href: "/docs/installation",
+    link: "Installation guide",
+  },
+  {
+    title: "Connect your coding agent",
+    body:
+      "The same tools run locally over stdio or remotely at /mcp. They return plans and verified sources; the host writes files, installs dependencies and runs the build.",
+    code: `{ "mcpServers": { "logic2b": { "url": "https://ui.logic2b.com/mcp" } } }\n# or locally: npx -y ${MCP_PACKAGE_SELECTOR}`,
+    href: "/docs/llms#mcp-server",
+    link: "MCP setup for humans",
+  },
+  {
+    title: "Change it without losing your work",
+    body:
+      "Updates merge three ways against the snapshot taken at install time, so local edits survive. Theme drift against an exact preset is detected statically and corrected in place.",
+    code: `npx ${CLI_PACKAGE_SELECTOR} update --registry-version "^1.0.0"\npnpm --filter @logic2b/mcp demo:walkthrough  # preset → scaffold → edit → lint_theme → fix`,
+    href: "/docs/theming",
+    link: "Theming and presets",
+  },
+];
+
+const shipped = [
+  "Registry of React 19 + Tailwind v4 components, blocks and charts with immutable version manifests",
+  "CLI and MCP install/scaffold plans with exact versions and SHA-256 integrity",
+  "Theme and typeset studio, portable token exports (DTCG, Tokens Studio, CSS, iOS, Android)",
+  "Three-way updates, theme drift linting and per-item accessibility contracts",
+  "Complete marketing, dashboard and authentication starters for Next.js, Vite and Astro",
+];
+
+const planned = [
+  "Project inspection and context collection for existing apps",
+  "Incremental change plans with preconditions and conflict handling",
+  "Evidence-based UI review and consumer runtime verification",
+  "Structured composition and versioned proposal previews",
+  "An accessible agent-run kit with approvals, artifacts and recovery",
+];
 ---
 
-<BaseLayout title="logic2b/ui — Build interfaces fast, AI-assisted">
+<BaseLayout
+  title="logic2b/ui — Your design system, ready for agents"
+  description="A shadcn-compatible React registry with reproducible themes, verified install plans and tools that keep customized interfaces maintainable — for developers and their coding agents."
+>
   <main class="w-full overflow-x-clip px-4 sm:px-6">
     <section class="flex flex-col items-center gap-6 py-16 text-center md:py-24">
       <a
@@ -55,26 +107,98 @@ const monoCharts = [
       <h1
         class="max-w-3xl text-balance text-4xl font-bold leading-[1.08] tracking-tighter sm:text-5xl md:text-6xl"
       >
-        The Foundation for your Design System
+        Your design system, ready for agents.
       </h1>
       <p class="max-w-2xl text-balance text-lg text-muted-foreground md:text-xl">
-        A set of beautifully designed components you can customize, extend and
-        build on. Start here, then make it your own — for humans and coding
-        agents alike. Open Source. Open Code.
+        A shadcn-compatible React registry with reproducible themes, verified
+        install plans and tools that keep customized interfaces maintainable —
+        for you and the coding agents you work with. Open source; the code
+        belongs to your project.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3">
-        <a href="/create" class="btn btn-primary h-10 px-5">
-          Build Your Own
+        <a href="/docs/llms#mcp-server" class="btn btn-primary h-10 px-5">
+          Use with an agent
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7" /></svg>
         </a>
-        <a href="/docs" class="btn btn-outline h-10 px-5">Get Started</a>
-        <a href="/demos" class="btn btn-ghost h-10 px-5">Live Demos</a>
+        <a href="/blocks" class="btn btn-outline h-10 px-5">Browse components</a>
+        <a href="/create" class="btn btn-ghost h-10 px-5">Build a theme</a>
+      </div>
+      <p class="text-xs text-muted-foreground">
+        Public beta: <code>{CLI_PACKAGE_SELECTOR}</code> and <code>{MCP_PACKAGE_SELECTOR}</code>, registry {REGISTRY_VERSION}.
+        {" "}<a href="/docs/installation#compatibility" class="underline underline-offset-4 hover:text-foreground">Compatibility table</a>
+      </p>
+    </section>
+
+    <section class="mx-auto max-w-6xl pb-20" aria-labelledby="how-it-works">
+      <h2 id="how-it-works" class="text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+        Reproducible today, maintainable tomorrow
+      </h2>
+      <p class="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">
+        Three steps, each backed by a command the release gate actually runs.
+      </p>
+      <ol class="mt-10 grid gap-4 md:grid-cols-3">
+        {steps.map((step, index) => (
+          <li class="flex min-w-0 flex-col rounded-2xl border bg-card p-5 shadow-sm">
+            <span class="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Step {index + 1}</span>
+            <h3 class="mt-2 text-lg font-semibold">{step.title}</h3>
+            <p class="mt-2 flex-1 text-sm leading-6 text-muted-foreground">{step.body}</p>
+            <pre class="mt-4 max-w-full overflow-x-auto rounded-lg border bg-muted/40 p-3 text-left text-xs leading-5"><code>{step.code}</code></pre>
+            <a href={step.href} class="mt-4 text-sm font-medium underline underline-offset-4 hover:text-foreground">{step.link} →</a>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="mx-auto max-w-6xl pb-20" aria-labelledby="complete-interface">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 id="complete-interface" class="text-2xl font-semibold tracking-tight sm:text-3xl">
+            A complete interface, not a widget wall
+          </h2>
+          <p class="mt-3 max-w-2xl text-muted-foreground">
+            The starters below are the exact block compositions the CLI and MCP
+            emit. Open one, then generate its editable source with the command
+            shown. Mobile, loading, empty and failure states for the reference
+            customer-management journey are the next milestone, not a promise on
+            this page.
+          </p>
+        </div>
+        <a href="/demos" class="btn btn-outline h-9 shrink-0 px-4">All live demos</a>
+      </div>
+      <ul class="mt-8 grid gap-4 md:grid-cols-3">
+        {LAUNCH_DEMOS.map((demo) => (
+          <li class="flex min-w-0 flex-col rounded-2xl border bg-card p-5 shadow-sm">
+            <h3 class="text-lg font-semibold">{demo.title}</h3>
+            <p class="mt-2 flex-1 text-sm leading-6 text-muted-foreground">{demo.description}</p>
+            <pre class="mt-4 max-w-full overflow-x-auto rounded-lg border bg-muted/40 p-3 text-left text-xs leading-5"><code>{demo.command}</code></pre>
+            <a href={demo.previewHref} class="mt-4 text-sm font-medium underline underline-offset-4 hover:text-foreground">Open the live {demo.name} starter →</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="mx-auto max-w-6xl pb-24" aria-labelledby="status">
+      <h2 id="status" class="text-2xl font-semibold tracking-tight sm:text-3xl">What ships today, what is planned</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div class="rounded-2xl border bg-card p-5 shadow-sm">
+          <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Shipped in the beta</h3>
+          <ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-6">
+            {shipped.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="rounded-2xl border border-dashed bg-muted/20 p-5">
+          <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Planned, not installed yet</h3>
+          <ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
+            {planned.map((item) => <li>{item}</li>)}
+          </ul>
+          <a href={`${REPO}/blob/main/ROADMAP.md`} class="mt-4 inline-block text-sm font-medium underline underline-offset-4 hover:text-foreground">Read the roadmap and evidence rules →</a>
+        </div>
       </div>
     </section>
 
     <!-- Bento mosaic: masonry via CSS columns. Charts are monochrome and near the
          top. Two columns on phones (compact card padding), never overflows. -->
-    <section class="pb-24">
+    <section class="pb-24" aria-label="Component gallery">
       <div
         style={monoCharts}
         class="mosaic-compact gap-3 [column-fill:balance] columns-2 sm:gap-4 lg:columns-3 xl:columns-4"
@@ -108,15 +232,11 @@ const monoCharts = [
   </main>
 
   <footer class="border-t">
-    <div
-      class="w-full px-6 py-8 text-center text-sm text-muted-foreground"
-    >
-      Built by logic2b. The source code is available on
-      <a
-        href="https://github.com/amariner/logic2b-ui"
-        class="font-medium underline underline-offset-4 hover:text-foreground"
-        >GitHub</a
-      >.
+    <div class="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-8 text-center text-sm text-muted-foreground">
+      <span>Built by logic2b. Source on <a href={REPO} class="font-medium underline underline-offset-4 hover:text-foreground">GitHub</a>.</span>
+      <a href={`${REPO}/blob/main/CONTRIBUTING.md`} class="underline underline-offset-4 hover:text-foreground">Contributing</a>
+      <a href={`${REPO}/blob/main/SECURITY.md`} class="underline underline-offset-4 hover:text-foreground">Security</a>
+      <a href={`${REPO}/blob/main/ROADMAP.md`} class="underline underline-offset-4 hover:text-foreground">Roadmap</a>
     </div>
   </footer>
 </BaseLayout>

@@ -1,0 +1,48 @@
+name: Bug report
+description: Something in the registry, CLI, MCP server, extension or site behaves incorrectly.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The `next` channel moves, so exact versions matter. Security problems go through SECURITY.md, not this form.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - CLI (logic2b)
+        - Local MCP (@logic2b/mcp, stdio)
+        - Remote MCP (https://ui.logic2b.com/mcp)
+        - Registry content or a component
+        - Theme studio / tokens
+        - VS Code extension
+        - Website or documentation
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: "`npx logic2b@next --version`, the MCP handshake version, `logic2b.version` from components.json, Node.js and package manager."
+      placeholder: "CLI 1.0.0-rc.2, MCP 1.0.0-rc.2, registry 1.0.0-rc.16, Node 22.12, pnpm 11.10"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands, tool calls with arguments, or the page and action. Include the preset id if a theme is involved.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Host and environment
+      description: Framework (Next.js/Vite/Astro), React and Tailwind versions, agent host (Claude Code, Cursor, …) and whether it can write files and run installs.
