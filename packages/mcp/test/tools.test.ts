@@ -1,20 +1,11 @@
 import { CLI_PACKAGE_SELECTOR, PACKAGE_RUNNERS } from "@logic2b/scaffold/package-selectors"
 import assert from "node:assert/strict"
-import { createHash } from "node:crypto"
 import { after, describe, test } from "node:test"
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv"
 
-import {
-  demosIndexUrl,
-  demoUrl,
-  changelogUrl,
-  indexUrl,
-  itemUrl,
-  versionsUrl,
-  type FetchLike,
-  type IndexItem,
-} from "../src/registry.ts"
+import { DEFAULT_REGISTRY_CHANNEL, type FetchLike } from "../src/registry.ts"
 import { runTool as dispatchTool, TOOLS } from "../src/tools.ts"
+import { ImmutableRegistry, mirrorUrls, type FixtureItem } from "./helpers/immutable-registry.ts"
 
 const validator = new AjvJsonSchemaValidator()
 const contracts = new Map(TOOLS.map((tool) => [tool.name, validator.getValidator(tool.outputSchema)]))
@@ -41,40 +32,11 @@ after(() => {
     "every tool needs a successful output-contract fixture")
 })
 
-const index: IndexItem[] = [
-  {
-    name: "button",
-    type: "registry:ui",
-    title: "Button",
-    description: "A clickable button.",
-    accessibility: "/r/button.json#accessibility",
-    api: "/r/button.json#api",
-  },
-  {
-    name: "login-01",
-    type: "registry:block",
-    title: "Login",
-    description: "A centered login form.",
-    categories: ["authentication"],
-  },
-  {
-    name: "chart-area-01",
-    type: "registry:block",
-    title: "Area Chart",
-    description: "A single-series area chart.",
-    categories: ["charts", "charts-area"],
-  },
-]
-
 const base = "https://reg.test"
 
-function fakeFetch(routes: Record<string, unknown>): FetchLike {
-  return async (url: string) => {
-    if (url in routes) {
-      return { ok: true, status: 200, text: async () => JSON.stringify(routes[url]) }
-    }
-    return { ok: false, status: 404, text: async () => "Not found" }
-  }
+/** Version-independent tools must never touch the registry. */
+const noFetch: FetchLike = async (url) => {
+  throw new Error(`unexpected registry fetch: ${url}`)
 }
 
 function parseText(result: { content: { text: string }[] }) {
@@ -135,66 +97,25 @@ describe("TOOLS", () => {
 })
 
 describe("runTool — versioned registry", () => {
-  const item = {
-    name: "button",
-    type: "registry:ui",
-    description: "Immutable button.",
-    files: [{ path: "ui/button.tsx", type: "registry:ui", content: "// immutable" }],
-  }
-  const itemText = JSON.stringify(item)
-  const integrity = `sha256-${createHash("sha256").update(itemText).digest("base64")}`
-  const routes: Record<string, string> = {
-    [versionsUrl(base)]: JSON.stringify({
-      schemaVersion: 1,
-      latest: "1.0.0",
-      channels: { latest: "1.0.0" },
-      versions: [
-        {
-          version: "1.0.0",
-          channel: "latest",
-          releasedAt: "2026-08-29",
-          manifest: "/r/versions/1.0.0.json",
-        },
-      ],
-    }),
-    [`${base}/r/versions/1.0.0.json`]: JSON.stringify({
-      schemaVersion: 1,
-      version: "1.0.0",
-      channel: "latest",
-      releasedAt: "2026-08-29",
-      items: [
-        {
-          name: "button",
-          type: "registry:ui",
-          description: "Immutable button.",
-          version: "1.0.0",
-          registryVersion: "1.0.0",
-          integrity,
-          content: "/r/content/button-v1.json",
-          changelog: "/r/changelog/button.json",
-        },
-      ],
-    }),
-    [`${base}/r/content/button-v1.json`]: itemText,
-    [changelogUrl(base, "button")]: JSON.stringify({
-      schemaVersion: 1,
+  const registry = new ImmutableRegistry({
+    channel: "latest",
+    items: [{
       name: "button",
-      currentVersion: "1.0.0",
-      changes: [
-        { version: "1.0.0", releasedAt: "2026-08-29", kind: "baseline", summary: "Initial." },
-      ],
-    }),
-  }
-  const fetchImpl: FetchLike = async (url: string) =>
-    url in routes
-      ? { ok: true, status: 200, text: async () => routes[url] }
-      : { ok: false, status: 404, text: async () => "Not found" }
+      type: "registry:ui",
+      description: "Immutable button.",
+      files: [{ path: "ui/button.tsx", type: "registry:ui", content: "// immutable" }],
+    }],
+  })
+  const { fetchImpl } = registry
+  const integrity = registry.integrity("button")
 
-  test("lists release metadata and per-item changelogs", async () => {
+  test("lists release metadata, the default channel and per-item changelogs", async () => {
     const versions = parseText(
       await runTool("list_registry_versions", {}, { base, fetchImpl })
     )
     assert.equal(versions.latest, "1.0.0")
+    assert.equal(versions.defaultChannel, DEFAULT_REGISTRY_CHANNEL)
+    assert.deepEqual(versions.channels, { latest: "1.0.0" })
     const changes = parseText(
       await runTool("get_changelog", { name: "button" }, { base, fetchImpl })
     )
@@ -223,44 +144,72 @@ describe("runTool — versioned registry", () => {
     )
     assert.match(command.commands.npm, /--registry-version 1\.0\.0$/)
   })
+
+  test("an omitted version fails when the default channel is not published", async () => {
+    const r = await runTool("get_component", { name: "button" }, { base, fetchImpl })
+    assert.ok(r.isError)
+    assert.match(r.content[0].text, /Invalid registry version "next".*\(latest\)/)
+    assert.deepEqual(registry.calls.filter((url) => mirrorUrls(base, ["button"]).includes(url)), [])
+  })
 })
 
 describe("runTool", () => {
-  const fetchImpl = fakeFetch({
-    [indexUrl(base)]: index,
-    [itemUrl(base, "button")]: {
-      name: "button",
-      type: "registry:ui",
-      description: "x",
-      files: [],
-      accessibility: {
-        support: "native",
-        pattern: "button",
-        keyboard: [{ keys: ["Enter", "Space"], action: "Activate." }],
-        aria: ["Uses native button semantics."],
-        consumer: ["Provide an accessible name."],
+  const registry = new ImmutableRegistry({
+    items: [
+      {
+        name: "button",
+        type: "registry:ui",
+        title: "Button",
+        description: "A clickable button.",
+        files: [],
+        accessibility: {
+          support: "native",
+          pattern: "button",
+          keyboard: [{ keys: ["Enter", "Space"], action: "Activate." }],
+          aria: ["Uses native button semantics."],
+          consumer: ["Provide an accessible name."],
+        },
+        api: {
+          source: "src/ui/button.tsx",
+          exports: [
+            {
+              name: "Button",
+              kind: "component",
+              propsType: 'React.ComponentProps<"button">',
+              props: [
+                { name: "asChild", type: "boolean", required: false, default: "false" },
+              ],
+            },
+          ],
+        },
       },
-      api: {
-        source: "src/ui/button.tsx",
-        exports: [
-          {
-            name: "Button",
-            kind: "component",
-            propsType: 'React.ComponentProps<"button">',
-            props: [
-              { name: "asChild", type: "boolean", required: false, default: "false" },
-            ],
-          },
-        ],
+      {
+        name: "login-01",
+        type: "registry:block",
+        title: "Login",
+        description: "A centered login form.",
+        categories: ["authentication"],
       },
-    },
+      {
+        name: "chart-area-01",
+        type: "registry:block",
+        title: "Area Chart",
+        description: "A single-series area chart.",
+        categories: ["charts", "charts-area"],
+      },
+    ],
   })
+  const { fetchImpl } = registry
 
   test("list_components returns every item with kind summaries", async () => {
     const r = await runTool("list_components", {}, { base, fetchImpl })
     assert.ok(!r.isError)
     const payload = parseText(r)
+    assert.equal(payload.requestedVersion, DEFAULT_REGISTRY_CHANNEL)
+    assert.equal(payload.registryVersion, "1.0.0")
     assert.equal(payload.count, 3)
+    assert.equal(payload.items[0].registryVersion, "1.0.0")
+    assert.equal(payload.items[0].integrity, registry.integrity("button"))
     assert.deepEqual(
       payload.items.map((i: { kind: string }) => i.kind),
       ["component", "block", "chart"]
@@ -290,14 +239,27 @@ describe("runTool", () => {
     const r = await runTool("get_component", { name: "button" }, { base, fetchImpl })
     assert.ok(!r.isError)
     assert.equal(parseText(r).name, "button")
+    assert.equal(parseText(r).registryVersion, "1.0.0")
+    assert.equal(parseText(r).integrity, registry.integrity("button"))
     assert.equal(parseText(r).accessibility.pattern, "button")
     assert.equal(parseText(r).api.exports[0].name, "Button")
   })
 
-  test("get_component surfaces a fetch error as isError text", async () => {
+  test("get_component reports an unpublished name against the resolved release", async () => {
     const r = await runTool("get_component", { name: "ghost" }, { base, fetchImpl })
     assert.ok(r.isError)
-    assert.match(r.content[0].text, /HTTP 404/)
+    assert.match(r.content[0].text, /"ghost" is not present in registry 1\.0\.0/)
+  })
+
+  test("a verified read never falls back to the mutable mirrors", async () => {
+    registry.tamper("button", (item) => ({ ...item, description: "tampered" }))
+    const r = await runTool("get_component", { name: "button" }, { base, fetchImpl })
+    assert.ok(r.isError)
+    assert.match(r.content[0].text, /Integrity check failed for "button" in registry 1\.0\.0/)
+    assert.deepEqual(
+      registry.calls.filter((url) => mirrorUrls(base, ["button", "login-01", "chart-area-01"]).includes(url)),
+      []
+    )
   })
 
   test("unknown tool is an isError result, not a throw", async () => {
@@ -308,17 +270,22 @@ describe("runTool", () => {
 })
 
 describe("runTool — demos and add_command", () => {
-  const fetchImpl = fakeFetch({
-    [indexUrl(base)]: index,
-    [demosIndexUrl(base)]: [
-      { item: "button", demos: ["button-demo", "button-outline-demo"] },
-      { item: "login-01", demos: ["login-01-demo"] },
+  const { fetchImpl } = new ImmutableRegistry({
+    items: [
+      { name: "button", type: "registry:ui", description: "A clickable button." },
+      { name: "login-01", type: "registry:block", description: "A centered login form." },
     ],
-    [demoUrl(base, "button-demo")]: {
-      name: "button-demo", item: "button", content: 'import { Button } from "@/components/ui/button"',
-    },
-    [demoUrl(base, "button-outline-demo")]: {
-      name: "button-outline-demo", item: "button", content: "// outline",
+    demos: {
+      index: [
+        { item: "button", demos: ["button-demo", "button-outline-demo"] },
+        { item: "login-01", demos: ["login-01-demo"] },
+      ],
+      entries: [
+        {
+          name: "button-demo", item: "button", content: 'import { Button } from "@/components/ui/button"',
+        },
+        { name: "button-outline-demo", item: "button", content: "// outline" },
+      ],
     },
   })
 
@@ -347,8 +314,13 @@ describe("runTool — demos and add_command", () => {
     const r = await runTool("add_command", { items: ["button", "login-01"] }, { base, fetchImpl })
     assert.ok(!r.isError)
     const payload = parseText(r)
+    assert.equal(payload.requestedVersion, DEFAULT_REGISTRY_CHANNEL)
+    assert.equal(payload.registryVersion, "1.0.0")
     for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
-      assert.equal(payload.commands[manager], `${runner} ${CLI_PACKAGE_SELECTOR} add button login-01`)
+      assert.equal(
+        payload.commands[manager],
+        `${runner} ${CLI_PACKAGE_SELECTOR} add button login-01 --registry-version 1.0.0`
+      )
     }
     assert.ok(payload.notes.some((n: string) => n.includes("install_plan")))
   })
@@ -370,40 +342,39 @@ const THEME_CSS = `:root {
 }`
 
 describe("runTool — acting tools", () => {
-  const fetchImpl = fakeFetch({
-    [indexUrl(base)]: [
-      { name: "button", type: "registry:ui", description: "x" },
-      { name: "theme", type: "registry:style", description: "the theme" },
-      { name: "login-01", type: "registry:block", description: "login" },
-    ],
-    [itemUrl(base, "button")]: {
-      name: "button", type: "registry:ui", description: "x",
-      dependencies: ["radix-ui"],
-      files: [{ path: "ui/button.tsx", type: "registry:ui", content: "// button" }],
-    },
-    [itemUrl(base, "theme")]: {
-      name: "theme", type: "registry:style", description: "the theme",
-      dependencies: ["tw-animate-css"],
-      files: [{ path: "theme.css", type: "registry:style", content: THEME_CSS }],
-      docs: "Import it.",
-    },
-    [itemUrl(base, "login-01")]: {
-      name: "login-01", type: "registry:block", description: "login",
-      dependencies: ["lucide-react"],
-      files: [
-        {
-          path: "blocks/login-01/login-form.tsx",
-          type: "registry:block",
-          content: "export function LoginForm() { return null }",
-        },
-      ],
-    },
+  const { fetchImpl } = new ImmutableRegistry({
+    items: [
+      {
+        name: "button", type: "registry:ui", description: "x",
+        dependencies: ["radix-ui"],
+        files: [{ path: "ui/button.tsx", type: "registry:ui", content: "// button" }],
+      },
+      {
+        name: "theme", type: "registry:style", description: "the theme",
+        dependencies: ["tw-animate-css"],
+        files: [{ path: "theme.css", type: "registry:style", content: THEME_CSS }],
+        docs: "Import it.",
+      },
+      {
+        name: "login-01", type: "registry:block", description: "login",
+        dependencies: ["lucide-react"],
+        files: [
+          {
+            path: "blocks/login-01/login-form.tsx",
+            type: "registry:block",
+            content: "export function LoginForm() { return null }",
+          },
+        ],
+      },
+    ] satisfies FixtureItem[],
   })
 
   test("install_plan returns files, deps and notes", async () => {
     const r = await runTool("install_plan", { items: ["button"] }, { base, fetchImpl })
     assert.ok(!r.isError)
     const plan = parseText(r)
+    assert.equal(plan.requestedVersion, DEFAULT_REGISTRY_CHANNEL)
+    assert.equal(plan.registryVersion, "1.0.0")
     assert.deepEqual(plan.files, [{ path: "src/components/ui/button.tsx", content: "// button" }])
     assert.deepEqual(plan.npmDependencies, ["radix-ui"])
     assert.ok(plan.notes.some((n: string) => n.includes('"@/*"')))
@@ -445,6 +416,7 @@ describe("runTool — acting tools", () => {
     const r = await runTool("get_theme", {}, { base, fetchImpl })
     assert.ok(!r.isError)
     const theme = parseText(r)
+    assert.equal(theme.registryVersion, "1.0.0")
     assert.equal(theme.file.path, "src/styles/theme.css")
     assert.match(theme.file.content, /--primary/)
     assert.ok(theme.options.base.includes("slate"))
@@ -456,7 +428,7 @@ describe("runTool — acting tools", () => {
     const r = await runTool(
       "export_tokens",
       { accent: "blue", radius: "xl", iconLibrary: "tabler" },
-      { base, fetchImpl: fakeFetch({}) }
+      { base, fetchImpl: noFetch }
     )
     assert.ok(!r.isError)
     const exported = parseText(r)
@@ -480,7 +452,7 @@ describe("runTool — acting tools", () => {
   })
 
   test("decode_preset explains an invalid id", async () => {
-    const r = await runTool("decode_preset", { preset: "???" }, { base, fetchImpl })
+    const r = await runTool("decode_preset", { preset: "???" }, { base, fetchImpl: noFetch })
     assert.ok(r.isError)
     assert.match(r.content[0].text, /not a valid preset id/)
   })
@@ -497,7 +469,7 @@ describe("runTool — acting tools", () => {
     assert.match(out.file.content, /--radius: 1rem;/)
     assert.deepEqual(out.npmDependencies, ["tw-animate-css"])
     // The id round-trips through decode_preset.
-    const decoded = await runTool("decode_preset", { preset: out.preset }, { base, fetchImpl })
+    const decoded = await runTool("decode_preset", { preset: out.preset }, { base, fetchImpl: noFetch })
     assert.equal(parseText(decoded).config.theme, "blue")
     assert.equal(parseText(decoded).config.iconLibrary, "tabler")
   })
@@ -506,7 +478,7 @@ describe("runTool — acting tools", () => {
     const r = await runTool(
       "apply_preset",
       { accent: "green", css: THEME_CSS },
-      { base, fetchImpl: fakeFetch({}) }
+      { base, fetchImpl: noFetch }
     )
     assert.ok(!r.isError)
     const out = parseText(r)
@@ -524,7 +496,7 @@ describe("runTool — acting tools", () => {
     const applied = await runTool(
       "apply_preset",
       { accent: "blue", radius: "xl", css: THEME_CSS },
-      { base, fetchImpl }
+      { base, fetchImpl: noFetch }
     )
     const theme = parseText(applied)
     const r = await runTool("lint_theme", {
@@ -552,7 +524,7 @@ describe("runTool — acting tools", () => {
     )
 
     const applied = parseText(
-      await runTool("apply_preset", { css: THEME_CSS }, { base, fetchImpl })
+      await runTool("apply_preset", { css: THEME_CSS }, { base, fetchImpl: noFetch })
     )
     const drifted = applied.file.content.replace(
       "--sidebar-ring: oklch(0.708 0 0)",
@@ -570,14 +542,14 @@ describe("runTool — acting tools", () => {
   })
 
   test("lint_theme validates its input without fetching", async () => {
-    const missing = await runTool("lint_theme", {}, { fetchImpl: fakeFetch({}) })
+    const missing = await runTool("lint_theme", {}, { fetchImpl: noFetch })
     assert.ok(missing.isError)
     assert.match(missing.content[0].text, /"css" argument is required/)
 
     const badPreset = await runTool(
       "lint_theme",
       { css: THEME_CSS, preset: "not-a-preset" },
-      { fetchImpl: fakeFetch({}) }
+      { fetchImpl: noFetch }
     )
     assert.ok(badPreset.isError)
     assert.match(badPreset.content[0].text, /not a valid preset id/)
@@ -585,14 +557,11 @@ describe("runTool — acting tools", () => {
 })
 
 describe("runTool — custom accents", () => {
-  const fetchImpl = fakeFetch({
-    [indexUrl(base)]: [
-      { name: "theme", type: "registry:style", description: "the theme" },
-    ],
-    [itemUrl(base, "theme")]: {
+  const { fetchImpl } = new ImmutableRegistry({
+    items: [{
       name: "theme", type: "registry:style", description: "the theme",
       files: [{ path: "theme.css", type: "registry:style", content: THEME_CSS }],
-    },
+    }],
   })
 
   test("apply_preset accepts a custom accent key and round-trips it", async () => {
@@ -601,7 +570,7 @@ describe("runTool — custom accents", () => {
     const out = parseText(r)
     assert.equal(out.config.theme, "h250c0.2")
     assert.match(out.file.content, /--primary: oklch\(0\.55 0\.2 250\);/)
-    const decoded = await runTool("decode_preset", { preset: out.preset }, { base, fetchImpl })
+    const decoded = await runTool("decode_preset", { preset: out.preset }, { base, fetchImpl: noFetch })
     assert.equal(parseText(decoded).config.theme, "h250c0.2")
   })
 
@@ -612,7 +581,7 @@ describe("runTool — custom accents", () => {
   })
 
   test("contrast_audit audits a custom accent", async () => {
-    const r = await runTool("contrast_audit", { accent: "h250c0.2" }, { base, fetchImpl })
+    const r = await runTool("contrast_audit", { accent: "h250c0.2" }, { base, fetchImpl: noFetch })
     assert.ok(!r.isError)
     const out = parseText(r)
     const pair = out.light.find(

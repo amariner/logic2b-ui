@@ -4,6 +4,15 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## Unreleased
 
+- Resolve an omitted `version` through the `next` registry channel instead of
+  the mutable `/r/index.json` and `/r/<name>.json` mirrors. Every registry
+  tool now resolves one immutable manifest per call, verifies each payload's
+  SHA-256 (transitive dependencies included) and always reports
+  `requestedVersion` and the exact `registryVersion`; `add_command` always
+  pins `--registry-version`. Missing manifests, deleted payloads and integrity
+  mismatches are errors with no unverified fallback. `list_registry_versions`
+  reports `defaultChannel`. Legacy mirror readers are isolated in
+  `registry-raw.ts` and unused by tools.
 - Publish typed output schemas and read-only annotations for all 15 tools on
   both transports. Successful calls include `structuredContent` alongside the
   unchanged JSON text fallback; tool failures remain explicit `isError` results.

@@ -37,8 +37,8 @@ Project inspection, incremental change plans, behavior/content contracts,
 `review_ui`, consumer runtime verification, structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.
-Versioned integrity exists, but the MCP's omitted-version path still reads
-mutable mirrors until M0-03 is implemented.
+Versioned integrity exists: since M0-03 the MCP resolves an omitted version
+through the `next` registry channel and verifies every payload it returns.
 
 ## Delivery milestones
 

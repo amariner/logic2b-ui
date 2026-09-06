@@ -3,7 +3,7 @@ import { describe, test } from "node:test"
 
 import { encodePreset, DEFAULT_CONFIG } from "@logic2b/tokens"
 
-import { indexUrl, itemUrl, type FetchLike } from "../src/registry.ts"
+import { ImmutableRegistry, type FixtureItem } from "./helpers/immutable-registry.ts"
 import {
   buildScaffoldPlan,
   SCAFFOLD_FRAMEWORKS,
@@ -87,19 +87,7 @@ function item(
   }
 }
 
-const fetchImpl: FetchLike = async (url) => {
-  if (url === indexUrl(base)) {
-    return {
-      ok: true,
-      status: 200,
-      text: async () => JSON.stringify(Object.values(registry)),
-    }
-  }
-  const name = Object.keys(registry).find((candidate) => itemUrl(base, candidate) === url)
-  return name
-    ? { ok: true, status: 200, text: async () => JSON.stringify(registry[name]) }
-    : { ok: false, status: 404, text: async () => "Not found" }
-}
+const { fetchImpl } = new ImmutableRegistry({ base, items: Object.values(registry) as FixtureItem[] })
 
 function fileMap(plan: Awaited<ReturnType<typeof buildScaffoldPlan>>) {
   return new Map(plan.files.map((file) => [file.path, file.content]))

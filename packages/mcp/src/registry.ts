@@ -1,4 +1,5 @@
-import { maxSatisfying, validRange } from "semver"
+import { REGISTRY_DEFAULT_CHANNEL } from "@logic2b/scaffold/package-selectors"
+import { maxSatisfying, valid as validVersion, validRange } from "semver"
 
 export interface AccessibilityContract {
   support: "native" | "primitive" | "authored" | "consumer"
@@ -34,6 +35,9 @@ export const DEFAULT_REGISTRY =
   (typeof process !== "undefined"
     ? process.env?.LOGIC2B_REGISTRY?.replace(/\/$/, "")
     : undefined) ?? "https://ui.logic2b.com"
+
+/** Channel resolved when a caller omits `version`. Shared beta policy. */
+export const DEFAULT_REGISTRY_CHANNEL: string = REGISTRY_DEFAULT_CHANNEL
 
 export const FETCH_TIMEOUT_MS = 15_000
 
@@ -80,12 +84,19 @@ export interface RegistryVersions {
   versions: RegistryVersionEntry[]
 }
 
+/** Manifest entry: every field the verified reader depends on is required. */
+export type ManifestItem = IndexItem & {
+  version: string
+  integrity: string
+  content: string
+}
+
 export interface RegistryVersionManifest {
   schemaVersion: 1
   version: string
   channel: string
   releasedAt: string
-  items: IndexItem[]
+  items: ManifestItem[]
 }
 
 export interface RegistryChangelogEntry {
@@ -102,11 +113,18 @@ export interface RegistryChangelog {
   changes: RegistryChangelogEntry[]
 }
 
+/**
+ * One release-scoped reader. The selector (explicit or the default channel)
+ * is resolved exactly once when the client is created; every later read uses
+ * that manifest's content-addressed payloads and verifies their SHA-256.
+ */
 export interface RegistryClient {
   base: string
-  requestedVersion?: string
-  resolvedVersion?: string
-  index: IndexItem[]
+  /** The selector that was resolved: the caller's, or the default channel. */
+  requestedVersion: string
+  /** The exact published release every read of this client comes from. */
+  resolvedVersion: string
+  index: ManifestItem[]
   getItem(name: string): Promise<RegistryItem>
 }
 
@@ -114,14 +132,6 @@ export type FetchLike = (
   url: string,
   init?: { signal?: AbortSignal }
 ) => Promise<{ ok: boolean; status: number; text: () => Promise<string> }>
-
-export function indexUrl(base: string): string {
-  return `${base.replace(/\/$/, "")}/r/index.json`
-}
-
-export function itemUrl(base: string, name: string): string {
-  return `${base.replace(/\/$/, "")}/r/${encodeURIComponent(name)}.json`
-}
 
 export function versionsUrl(base: string): string {
   return `${base.replace(/\/$/, "")}/r/versions.json`
@@ -163,7 +173,7 @@ export async function fetchDemoIndex(
   base: string,
   fetchImpl: FetchLike = fetch as unknown as FetchLike
 ): Promise<DemoIndexEntry[]> {
-  const data = await fetchJson(demosIndexUrl(base), fetchImpl)
+  const data = await fetchJson(demosIndexUrl(base), fetchImpl, "Demo index")
   if (!Array.isArray(data)) {
     throw new Error("Demo index is malformed (expected an array).")
   }
@@ -175,7 +185,7 @@ export async function fetchDemo(
   name: string,
   fetchImpl: FetchLike = fetch as unknown as FetchLike
 ): Promise<DemoEntry> {
-  const data = await fetchJson(demoUrl(base, name), fetchImpl)
+  const data = await fetchJson(demoUrl(base, name), fetchImpl, `Demo "${name}"`)
   if (typeof data !== "object" || data === null) {
     throw new Error(`Demo "${name}" is malformed.`)
   }
@@ -198,10 +208,10 @@ export interface FilterOptions {
   category?: string
 }
 
-export function filterIndex(
-  items: IndexItem[],
+export function filterIndex<T extends IndexItem>(
+  items: T[],
   { kind, category }: FilterOptions = {}
-): IndexItem[] {
+): T[] {
   return items.filter((item) => {
     if (kind && kindOf(item) !== kind) return false
     if (category && !(item.categories ?? []).includes(category)) return false
@@ -230,11 +240,11 @@ export function scoreItem(item: IndexItem, query: string): number {
   return score
 }
 
-export function searchIndex(
-  items: IndexItem[],
+export function searchIndex<T extends IndexItem>(
+  items: T[],
   query: string,
   limit = 20
-): IndexItem[] {
+): T[] {
   return items
     .map((item) => ({ item, score: scoreItem(item, query) }))
     .filter((entry) => entry.score > 0)
@@ -243,34 +253,55 @@ export function searchIndex(
     .map((entry) => entry.item)
 }
 
-async function fetchJsonText(
+/**
+ * Fetch one JSON document with a timeout. `label` names the document in
+ * errors so a failed verified read says what was missing, never what it
+ * might have substituted.
+ */
+export async function fetchJsonText(
   url: string,
-  fetchImpl: FetchLike
+  fetchImpl: FetchLike,
+  label = "Registry document"
 ): Promise<{ data: unknown; text: string }> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
   try {
-    const res = await fetchImpl(url, { signal: controller.signal })
+    let res: Awaited<ReturnType<FetchLike>>
+    try {
+      res = await fetchImpl(url, { signal: controller.signal })
+    } catch (error) {
+      const reason =
+        controller.signal.aborted
+          ? `timed out after ${FETCH_TIMEOUT_MS} ms`
+          : error instanceof Error
+            ? error.message
+            : String(error)
+      throw new Error(`${label} could not be fetched from ${url}: ${reason}.`)
+    }
     if (!res.ok) {
-      throw new Error(`Request failed: ${url} (HTTP ${res.status})`)
+      throw new Error(`${label} is unavailable: HTTP ${res.status} from ${url}.`)
     }
     const text = await res.text()
     try {
       return { data: JSON.parse(text), text }
     } catch {
-      throw new Error(`Expected JSON from ${url} but got something else.`)
+      throw new Error(`${label} at ${url} is not valid JSON.`)
     }
   } finally {
     clearTimeout(timer)
   }
 }
 
-async function fetchJson(url: string, fetchImpl: FetchLike): Promise<unknown> {
-  return (await fetchJsonText(url, fetchImpl)).data
+async function fetchJson(url: string, fetchImpl: FetchLike, label: string): Promise<unknown> {
+  return (await fetchJsonText(url, fetchImpl, label)).data
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((entry) => typeof entry === "string")
 }
 
 export function assertSafeRegistryPath(path: string): void {
@@ -286,7 +317,7 @@ export function assertSafeRegistryPath(path: string): void {
   }
 }
 
-function validateItem(name: string, data: unknown): RegistryItem {
+export function validateItem(name: string, data: unknown): RegistryItem {
   if (!isObject(data) || typeof data.name !== "string" || typeof data.type !== "string") {
     throw new Error(`Registry item "${name}" is malformed.`)
   }
@@ -309,6 +340,12 @@ function validateItem(name: string, data: unknown): RegistryItem {
     }
     assertSafeRegistryPath(file.path)
   }
+  if (data.registryDependencies !== undefined && !isStringArray(data.registryDependencies)) {
+    throw new Error(`Registry item "${name}" has malformed "registryDependencies".`)
+  }
+  if (data.dependencies !== undefined && !isStringArray(data.dependencies)) {
+    throw new Error(`Registry item "${name}" has malformed "dependencies".`)
+  }
   return data as unknown as RegistryItem
 }
 
@@ -321,42 +358,85 @@ async function sha256Integrity(text: string): Promise<string> {
   return `sha256-${btoa(binary)}`
 }
 
-export async function fetchIndex(
-  base: string,
-  fetchImpl: FetchLike = fetch as unknown as FetchLike
-): Promise<IndexItem[]> {
-  const data = await fetchJson(indexUrl(base), fetchImpl)
-  if (!Array.isArray(data)) {
-    throw new Error("Registry index is malformed (expected an array).")
+function validateVersions(data: unknown): RegistryVersions {
+  if (
+    !isObject(data) ||
+    data.schemaVersion !== 1 ||
+    typeof data.latest !== "string" ||
+    !Array.isArray(data.versions) ||
+    !isObject(data.channels)
+  ) {
+    throw new Error("Registry versions index is malformed.")
   }
-  return data as IndexItem[]
+  for (const [channel, target] of Object.entries(data.channels)) {
+    if (typeof target !== "string") {
+      throw new Error(`Registry versions index has a malformed "${channel}" channel.`)
+    }
+  }
+  for (const entry of data.versions as unknown[]) {
+    if (
+      !isObject(entry) ||
+      typeof entry.version !== "string" ||
+      !validVersion(entry.version, { includePrerelease: true }) ||
+      typeof entry.channel !== "string" ||
+      typeof entry.releasedAt !== "string" ||
+      typeof entry.manifest !== "string"
+    ) {
+      throw new Error("Registry versions index contains a malformed release.")
+    }
+  }
+  return data as unknown as RegistryVersions
 }
 
-export async function fetchItem(
-  base: string,
-  name: string,
-  fetchImpl: FetchLike = fetch as unknown as FetchLike
-): Promise<RegistryItem> {
-  const data = await fetchJson(itemUrl(base, name), fetchImpl)
-  return validateItem(name, data)
+function validateManifest(resolved: string, data: unknown): RegistryVersionManifest {
+  if (
+    !isObject(data) ||
+    data.schemaVersion !== 1 ||
+    data.version !== resolved ||
+    typeof data.channel !== "string" ||
+    typeof data.releasedAt !== "string" ||
+    !Array.isArray(data.items)
+  ) {
+    throw new Error(`Registry manifest ${resolved} is malformed.`)
+  }
+  const names = new Set<string>()
+  for (const entry of data.items as unknown[]) {
+    if (
+      !isObject(entry) ||
+      typeof entry.name !== "string" ||
+      typeof entry.type !== "string" ||
+      typeof entry.description !== "string" ||
+      typeof entry.version !== "string" ||
+      typeof entry.integrity !== "string" ||
+      !entry.integrity.startsWith("sha256-") ||
+      typeof entry.content !== "string"
+    ) {
+      throw new Error(
+        `Registry manifest ${resolved} contains an item without a complete integrity contract.`
+      )
+    }
+    if (names.has(entry.name)) {
+      throw new Error(`Registry manifest ${resolved} lists "${entry.name}" twice.`)
+    }
+    names.add(entry.name)
+  }
+  return data as unknown as RegistryVersionManifest
 }
 
 export async function fetchRegistryVersions(
   base: string,
   fetchImpl: FetchLike = fetch as unknown as FetchLike
 ): Promise<RegistryVersions> {
-  const data = await fetchJson(versionsUrl(base), fetchImpl)
-  if (
-    !isObject(data) ||
-    data.schemaVersion !== 1 ||
-    !Array.isArray(data.versions) ||
-    !isObject(data.channels)
-  ) {
-    throw new Error("Registry versions index is malformed.")
-  }
-  return data as unknown as RegistryVersions
+  return validateVersions(
+    await fetchJson(versionsUrl(base), fetchImpl, "Registry versions index")
+  )
 }
 
+/**
+ * Resolve an exact version, semver range or published channel to one
+ * immutable manifest. The versions index is read once here; the returned
+ * manifest is the only catalog a client built from it will ever consult.
+ */
 export async function resolveRegistryVersion(
   base: string,
   requested: string,
@@ -366,7 +446,7 @@ export async function resolveRegistryVersion(
   const range = versions.channels[requested] ?? requested
   if (!validRange(range, { includePrerelease: true })) {
     throw new Error(
-      `Invalid registry version "${requested}". Use an exact semver, range or published channel.`
+      `Invalid registry version "${requested}". Use an exact semver, range or published channel (${Object.keys(versions.channels).sort().join(", ") || "none published"}).`
     )
   }
   const resolved = maxSatisfying(
@@ -382,61 +462,47 @@ export async function resolveRegistryVersion(
   const release = versions.versions.find((entry) => entry.version === resolved)!
   const data = await fetchJson(
     absoluteRegistryUrl(base, release.manifest),
-    fetchImpl
+    fetchImpl,
+    `Registry manifest ${resolved}`
   )
-  if (
-    !isObject(data) ||
-    data.schemaVersion !== 1 ||
-    data.version !== resolved ||
-    !Array.isArray(data.items)
-  ) {
-    throw new Error(`Registry manifest ${resolved} is malformed.`)
-  }
-  return {
-    requested,
-    resolved,
-    manifest: data as unknown as RegistryVersionManifest,
-  }
+  return { requested, resolved, manifest: validateManifest(resolved, data) }
 }
 
+/**
+ * Create a release-scoped reader. An omitted or blank selector resolves the
+ * default channel. Every read goes through the resolved manifest and its
+ * SHA-256 verified content-addressed payloads; a failed verified read is an
+ * error, never a fallback to the mutable `/r/*.json` mirrors.
+ */
 export async function createRegistryClient(
   base: string,
   requestedVersion?: string,
   fetchImpl: FetchLike = fetch as unknown as FetchLike
 ): Promise<RegistryClient> {
-  if (!requestedVersion) {
-    const index = await fetchIndex(base, fetchImpl)
-    return {
-      base,
-      index,
-      getItem: (name) => fetchItem(base, name, fetchImpl),
-    }
-  }
-  const selection = await resolveRegistryVersion(base, requestedVersion, fetchImpl)
+  const requested = requestedVersion?.trim() || DEFAULT_REGISTRY_CHANNEL
+  const selection = await resolveRegistryVersion(base, requested, fetchImpl)
   const index = selection.manifest.items
   const byName = new Map(index.map((entry) => [entry.name, entry]))
   return {
     base,
-    requestedVersion,
+    requestedVersion: requested,
     resolvedVersion: selection.resolved,
     index,
     async getItem(name) {
       const entry = byName.get(name)
       if (!entry) {
         throw new Error(
-          `Component "${name}" is not present in registry ${selection.resolved}.`
+          `Component "${name}" is not present in registry ${selection.resolved}. Use list_components or search_components with the same version to find published names.`
         )
-      }
-      if (!entry.content || !entry.integrity) {
-        throw new Error(`Registry manifest entry "${name}" has no integrity contract.`)
       }
       const { data, text } = await fetchJsonText(
         absoluteRegistryUrl(base, entry.content),
-        fetchImpl
+        fetchImpl,
+        `Registry item "${name}" content for ${selection.resolved}`
       )
       if ((await sha256Integrity(text)) !== entry.integrity) {
         throw new Error(
-          `Integrity check failed for "${name}" in registry ${selection.resolved}.`
+          `Integrity check failed for "${name}" in registry ${selection.resolved}: the payload at ${entry.content} does not match ${entry.integrity}.`
         )
       }
       const item = validateItem(name, data)
@@ -457,7 +523,7 @@ export async function fetchChangelog(
   name: string,
   fetchImpl: FetchLike = fetch as unknown as FetchLike
 ): Promise<RegistryChangelog> {
-  const data = await fetchJson(changelogUrl(base, name), fetchImpl)
+  const data = await fetchJson(changelogUrl(base, name), fetchImpl, `Registry changelog "${name}"`)
   if (
     !isObject(data) ||
     data.schemaVersion !== 1 ||

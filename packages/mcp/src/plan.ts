@@ -37,8 +37,10 @@ export async function resolvePlanGraph(
 
 export interface InstallPlan {
   registry: string
-  requestedVersion?: string
-  registryVersion?: string
+  /** Selector that was resolved: the caller's, or the default channel. */
+  requestedVersion: string
+  /** Exact release every file in this plan was verified against. */
+  registryVersion: string
   items: {
     name: string
     title: string
@@ -81,6 +83,8 @@ export async function buildInstallPlan(
     throw new Error(`Unknown icon library "${iconLibrary}".`)
   }
   const requested = new Set(names)
+  // One resolution per plan: every item and transitive dependency below is
+  // read from this client's manifest and verified against it.
   const client = await createRegistryClient(base, version, fetchImpl)
   const resolved = transformIconItems(
     await resolvePlanGraph(names, (name) => client.getItem(name)),
@@ -130,12 +134,8 @@ export async function buildInstallPlan(
 
   return {
     registry: base,
-    ...(client.requestedVersion
-      ? { requestedVersion: client.requestedVersion }
-      : {}),
-    ...(client.resolvedVersion
-      ? { registryVersion: client.resolvedVersion }
-      : {}),
+    requestedVersion: client.requestedVersion,
+    registryVersion: client.resolvedVersion,
     items: [...resolved.values()].map((item) => ({
       name: item.name,
       title: item.title ?? item.name,

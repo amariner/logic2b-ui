@@ -1,4 +1,4 @@
-import { CLI_PACKAGE_SELECTOR, PACKAGE_RUNNERS } from "@logic2b/scaffold/package-selectors"
+import { CLI_PACKAGE_SELECTOR, PACKAGE_RUNNERS, REGISTRY_DEFAULT_CHANNEL } from "@logic2b/scaffold/package-selectors"
 import assert from "node:assert/strict"
 import { execFile } from "node:child_process"
 import { access, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
@@ -234,6 +234,12 @@ try {
       }
       const preset = encodePreset(DEFAULT_CONFIG)
       const theme = await json(join(registryRoot, "theme.json"))
+      // An omitted version must resolve the published default channel exactly.
+      const versions = (await json(join(registryRoot, "versions.json"))) as {
+        channels: Record<string, string>
+      }
+      const defaultVersion = versions.channels[REGISTRY_DEFAULT_CHANNEL]
+      assert.ok(defaultVersion, `registry fixture publishes no "${REGISTRY_DEFAULT_CHANNEL}" channel`)
       const css = (theme.files as Array<{ content: string }>)[0]!.content
       const cases: Array<[string, Record<string, unknown>]> = [
         ["list_components", {}],
@@ -260,10 +266,21 @@ try {
         const content = result.content as Array<{ type: string; text?: string }>
         assert.equal(content[0]?.type, "text")
         assert.deepEqual(result.structuredContent, JSON.parse(content[0]!.text!))
+        const versioned = result.structuredContent as {
+          requestedVersion?: string
+          registryVersion?: string
+          commands?: Record<string, string>
+        }
+        if (["list_components", "search_components", "add_command", "get_theme"].includes(name)) {
+          assert.equal(versioned.requestedVersion, REGISTRY_DEFAULT_CHANNEL, `${name} default selector`)
+          assert.equal(versioned.registryVersion, defaultVersion, `${name} resolved default release`)
+        }
         if (name === "add_command") {
-          const payload = result.structuredContent as { commands: Record<string, string> }
           for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
-            assert.equal(payload.commands[manager], `${runner} ${CLI_PACKAGE_SELECTOR} add button`)
+            assert.equal(
+              versioned.commands?.[manager],
+              `${runner} ${CLI_PACKAGE_SELECTOR} add button --registry-version ${defaultVersion}`
+            )
           }
         }
       }
