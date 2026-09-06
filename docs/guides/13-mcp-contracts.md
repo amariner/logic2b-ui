@@ -1,6 +1,6 @@
 # 13 — Reliable, bounded MCP contracts
 
-Status: M0-02 implemented in source; M0-03 and M0-04 proposed. See
+Status: M0-02 and M0-03 implemented in source; M0-04 proposed. See
 [the execution log](../EXECUTION.md) for verification and publication boundaries.
 
 ## Outcome
@@ -26,6 +26,13 @@ Local and remote transports expose the same shared tool definitions and core.
 - Keep tool names stable. Do not combine schema work with a new set of tools.
 
 ## M0-03: reproducible default
+
+Implemented 6 September 2026 in `packages/mcp/src/registry.ts`: the default
+channel is `REGISTRY_DEFAULT_CHANNEL` in `@logic2b/scaffold/package-selectors`
+(`next`), `createRegistryClient` always resolves one manifest, and the legacy
+mirror readers live in `registry-raw.ts` with no production caller. Tests use
+`test/helpers/immutable-registry.ts`, which publishes the same shapes the site
+does. The CLI already pinned the registry version it was built with.
 
 Resolve omitted registry versions through an explicit default channel and
 return the exact selected version. Resolve once per plan, then read only its

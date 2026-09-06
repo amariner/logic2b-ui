@@ -46,7 +46,7 @@ real export from the chosen package, and generated source, dependencies and
 for theme.css after a project has been installed and edited over time.
 
 Registry read, install, scaffold and theme tools accept an optional `version`
-argument: an exact semver, a semver range or a published channel. An explicit
+argument: an exact semver, a semver range or a published channel. Any
 selector resolves once to an immutable manifest, verifies every fetched payload against its
 SHA-256 integrity and returns the exact resolved registry/item versions.
 `scaffold_plan` records that resolved version in the generated
@@ -54,9 +54,18 @@ SHA-256 integrity and returns the exact resolved registry/item versions.
 item's integrity and installed files; `add_command` emits only the resolved
 exact version, never the caller's unvalidated selector.
 
-When `version` is omitted, the current MCP reads mutable registry mirrors;
-verified default resolution is planned in M0-03. Use `version: "next"` or an
-exact registry version when verification is required.
+When `version` is omitted, the tool resolves the `next` registry channel
+(reported by `list_registry_versions` as `defaultChannel`) to one exact
+release, then reads only that manifest and its content-addressed payloads.
+`requestedVersion` echoes the selector that was used and `registryVersion`
+the exact release. The channel can move between calls; a plan never mixes
+releases because it resolves once. A missing manifest, deleted payload or
+SHA-256 mismatch is an error: verified reads never fall back to the
+shadcn-compatible `/r/index.json` and `/r/<name>.json` mirrors, which stay
+available for other clients without version or integrity guarantees.
+Token-only tools (`export_tokens`, `decode_preset`, `contrast_audit`,
+`lint_theme`, and `apply_preset` with caller-supplied `css`) never contact
+the registry.
 
 Every UI payload carries structured accessibility metadata: semantic support,
 keyboard interactions, built-in ARIA behavior, consumer responsibilities and

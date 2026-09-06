@@ -85,9 +85,10 @@ ways — both expose the same tools. Reading the registry: `list_components`,
 served raw at `/r/demos/index.json`). `list_registry_versions` resolves the
 available releases/channels and `get_changelog` exposes per-item history.
 Registry read/install/theme tools accept an optional `version` containing an
-exact semver, a range or a channel; versioned payloads are SHA-256 verified
-before being returned. Omitting `version` currently uses mutable mirrors;
-use an explicit version or `"next"` for verified reads. Planning project changes:
+exact semver, a range or a channel; omitting it resolves the `next` registry
+channel. Every call resolves one immutable release, verifies each payload's
+SHA-256 before returning it and reports the exact `registryVersion`; a failed
+verification is an error, never a fallback. Planning project changes:
 `install_plan` (the exact files to write and npm deps to add for any set of
 items, registry dependencies resolved) and `scaffold_plan` (a complete runnable
 Next.js, Vite or Astro app from a marketing, dashboard or auth starter,

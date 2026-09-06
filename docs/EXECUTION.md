@@ -1,6 +1,6 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 5 September 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 6 September 2026.
 Owners below identify active work, not permanent maintainers. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
@@ -10,7 +10,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
 | M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | current agent |
 | M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | done | Codex (M0-01) |
-| M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | ready | — |
+| M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-03) |
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | ready | — |
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | ready | — |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | ready | — |
@@ -184,3 +184,58 @@ versions before publishing these source changes.
 
 Next ready task: M0-03, immutable default registry resolution. M0-04 input
 limits and M0-05 public landing/contributor work remain open; M0 is not complete.
+
+### 6 September 2026 — M0-03
+
+Delivered on `codex/m0-03-immutable-default` (stacked on the M0-01 branch).
+An omitted MCP `version` now resolves the shared `REGISTRY_DEFAULT_CHANNEL`
+(`next`, exported by `@logic2b/scaffold/package-selectors` next to the npm
+selectors and independent from them). `createRegistryClient` always resolves
+one manifest per call, reads only content-addressed payloads, verifies each
+SHA-256 (transitive dependencies included) and reports `requestedVersion` plus
+the exact `registryVersion`; those fields are now required in the output
+schemas of list/search/get_component/add_command/install_plan/scaffold_plan/
+get_theme, `add_command` always pins `--registry-version`, and
+`list_registry_versions` reports `defaultChannel`. Versions indexes and
+manifests are validated strictly (valid semver entries, complete integrity
+contracts, no duplicate names). Errors name the missing document and release;
+nothing falls back to `/r/index.json` or `/r/<name>.json`. Those legacy readers
+moved to `packages/mcp/src/registry-raw.ts` with no production caller. Tool
+names are unchanged; no dependency was added. The serialized tool catalog is
+35,960 bytes. The CLI was untouched: it already pinned its built registry
+version by default.
+
+Tests moved from mutable-mirror mocks to `test/helpers/immutable-registry.ts`,
+which publishes the same versions/manifest/content shapes as the site and
+records every fetched URL. Covered: omitted/blank selector, exact, range and
+channel, channel movement between reads (an existing client keeps its release
+and never re-reads the versions index), deleted payload, unpublished name,
+tampered item, tampered transitive dependency inside a plan, unavailable
+manifest, unavailable versions index, malformed manifest/version entries,
+cross-origin manifest reference, unsafe file paths, fetch failures, and that
+token-only tools never contact the registry.
+
+Passed: `pnpm --filter @logic2b/mcp lint` and `test` (91 tests);
+`pnpm lint` (8 packages) and `pnpm test` (243 tests across 8 packages);
+`pnpm test:release-artifacts` (packed CLI and MCP installed in an isolated
+consumer, all 15 tools over stdio, default reads resolved `1.0.0-rc.16` from
+the local registry fixture and `add_command` pinned it);
+`pnpm --filter @logic2b/web build`; `pnpm --filter @logic2b/web exec
+playwright test tests/beta-onboarding.spec.ts` (2 checks, English/Spanish
+HTML and Markdown parity after the docs update); `git diff --check`.
+A first `pnpm test` run showed `docs-og` and scaffold `icons` failures while
+the web build regenerated OG images concurrently; both packages passed when
+rerun without concurrent builds. Environment: Node 24.7.0 / pnpm 11.10.0.
+
+Limitations: no npm publication, merge or push. The published rc.2 MCP still
+reads mutable mirrors when `version` is omitted until a release ships this
+source. `get_changelog` and `get_demo` remain unversioned reads by design;
+manifest `accessibility`/`api` fields still point at `/r/<name>.json#...`
+documentation anchors while the verified contract lives in the returned
+payload. No timeout test exists because the timeout is a fixed constant;
+M0-04 owns limits and negative protocol cases. Not rerun: full visual/axe
+suites, Lighthouse, scaffold build matrix.
+
+Next ready task: M0-04 (input/resource limits and negative protocol corpus).
+M0-05 and EVAL-01 are also unblocked; M1-01 now has its dependency satisfied.
+M0 is not complete.

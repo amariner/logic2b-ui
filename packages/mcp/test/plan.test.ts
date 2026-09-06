@@ -2,7 +2,8 @@ import assert from "node:assert/strict"
 import { describe, test } from "node:test"
 
 import { buildInstallPlan, planPath } from "../src/plan.ts"
-import { indexUrl, itemUrl, type FetchLike, type RegistryFile } from "../src/registry.ts"
+import { DEFAULT_REGISTRY_CHANNEL, type RegistryFile } from "../src/registry.ts"
+import { ImmutableRegistry, type FixtureItem } from "./helpers/immutable-registry.ts"
 
 const file = (path: string): RegistryFile => ({ path, type: "x", content: `// ${path}` })
 
@@ -60,22 +61,12 @@ describe("buildInstallPlan", () => {
       }],
     },
   }
-  const fetchImpl: FetchLike = async (url: string) => {
-    if (url === indexUrl(base)) {
-      return {
-        ok: true,
-        status: 200,
-        text: async () => JSON.stringify(Object.values(items)),
-      }
-    }
-    const name = Object.keys(items).find((n) => url === itemUrl(base, n))
-    return name
-      ? { ok: true, status: 200, text: async () => JSON.stringify(items[name]) }
-      : { ok: false, status: 404, text: async () => "Not found" }
-  }
+  const { fetchImpl } = new ImmutableRegistry({ base, items: Object.values(items) as FixtureItem[] })
 
   test("resolves registry dependencies and dedupes npm deps", async () => {
     const plan = await buildInstallPlan(["login-01"], { base, fetchImpl })
+    assert.equal(plan.requestedVersion, DEFAULT_REGISTRY_CHANNEL)
+    assert.equal(plan.registryVersion, "1.0.0")
     assert.deepEqual(
       plan.items.map((i) => [i.name, i.requested]),
       [["login-01", true], ["button", false], ["card", false]]
@@ -108,7 +99,7 @@ describe("buildInstallPlan", () => {
   test("unknown item surfaces the registry error", async () => {
     await assert.rejects(
       () => buildInstallPlan(["ghost"], { base, fetchImpl }),
-      /HTTP 404/
+      /"ghost" is not present in registry 1\.0\.0/
     )
   })
 

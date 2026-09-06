@@ -52,7 +52,8 @@ selectors remain independent of npm package selectors.
 
 The landing announcement opens `/docs/llms#mcp-server`. English and Spanish
 onboarding document host writes/build requirements, the published JSON text
-fallback and the currently mutable omitted-version MCP path. Long inline code
+fallback and the omitted-version MCP path, which was still mutable on that
+date (M0-03 later made it resolve the `next` channel). Long inline code
 can wrap in the docs layout so endpoint tables fit mobile screens.
 
 `pnpm --filter @logic2b/mcp test:beta-onboarding` checks the actual advertised

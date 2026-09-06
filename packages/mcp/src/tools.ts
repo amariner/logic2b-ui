@@ -17,6 +17,7 @@ import {
 } from "./scaffold.ts"
 import {
   DEFAULT_REGISTRY,
+  DEFAULT_REGISTRY_CHANNEL,
   createRegistryClient,
   fetchChangelog,
   fetchDemo,
@@ -52,7 +53,7 @@ const VERSION_INPUT = {
   version: {
     type: "string",
     description:
-      'Optional registry semver, range or channel (for example "1.0.0-rc.7", "^1.0.0" or "next"). Resolves to one immutable SHA-256-verified manifest.',
+      `Optional registry semver, range or channel (for example "1.0.0-rc.7", "^1.0.0" or "next"). Omitted: the "${DEFAULT_REGISTRY_CHANNEL}" channel. Every selector resolves once to one immutable SHA-256-verified manifest; results report the selector as requestedVersion and the exact release as registryVersion.`,
   },
 } as const
 
@@ -117,7 +118,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "list_registry_versions",
     description:
-      "List published immutable registry releases and channels. Use the returned exact semver, a semver range or a channel as the version argument on read/install/scaffold tools.",
+      "List published immutable registry releases and channels, plus the channel resolved when version is omitted. Use the returned exact semver, a semver range or a channel as the version argument on read/install/scaffold tools.",
     inputSchema: { type: "object", properties: {} },
   },
   {
@@ -468,8 +469,8 @@ export async function runTool(
       })
       return textResult({
         registry: base,
-        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
-        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
+        requestedVersion: client.requestedVersion,
+        registryVersion: client.resolvedVersion,
         count: filtered.length,
         items: filtered.map(summarize),
       })
@@ -483,8 +484,8 @@ export async function runTool(
       const results = searchIndex(client.index, query, limit)
       return textResult({
         registry: base,
-        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
-        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
+        requestedVersion: client.requestedVersion,
+        registryVersion: client.resolvedVersion,
         query,
         count: results.length,
         items: results.map(summarize),
@@ -502,6 +503,7 @@ export async function runTool(
     if (name === "list_registry_versions") {
       return textResult({
         registry: base,
+        defaultChannel: DEFAULT_REGISTRY_CHANNEL,
         ...(await fetchRegistryVersions(base, fetchImpl)),
       })
     }
@@ -555,13 +557,11 @@ export async function runTool(
         )
       }
       const names = items.join(" ")
-      const versionFlag = client.resolvedVersion
-        ? ` --registry-version ${client.resolvedVersion}`
-        : ""
+      const versionFlag = ` --registry-version ${client.resolvedVersion}`
       return textResult({
         registry: base,
-        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
-        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
+        requestedVersion: client.requestedVersion,
+        registryVersion: client.resolvedVersion,
         items,
         commands: {
           npm: `npx ${CLI_PACKAGE_SELECTOR} add ${names}${versionFlag}`,
@@ -635,8 +635,8 @@ export async function runTool(
       const css = item.files?.find((f) => f.path.endsWith(".css"))?.content ?? ""
       return textResult({
         registry: base,
-        ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
-        ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
+        requestedVersion: client.requestedVersion,
+        registryVersion: client.resolvedVersion,
         name: item.name,
         description: item.description,
         npmDependencies: item.dependencies ?? [],
@@ -714,8 +714,8 @@ export async function runTool(
         css = item.files?.find((f) => f.path.endsWith(".css"))?.content ?? ""
         npmDependencies = item.dependencies ?? []
         selectedVersion = {
-          ...(client.requestedVersion ? { requestedVersion: client.requestedVersion } : {}),
-          ...(client.resolvedVersion ? { registryVersion: client.resolvedVersion } : {}),
+          requestedVersion: client.requestedVersion,
+          registryVersion: client.resolvedVersion,
         }
       }
       const patched = applyPresetToCss(css, cfg)

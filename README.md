@@ -49,7 +49,8 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   house rules (component inventory, token rules, what not to hand-roll) and
   the style reference for any theme, ready to drop into a repo so agents
   follow the design system.
-- `/r/index.json` + `/r/<name>.json` — machine-readable registry with full source.
+- `/r/index.json` + `/r/<name>.json` — shadcn-compatible mirrors with full
+  source; republished on deploy, unversioned and not integrity-checked.
 - `/r/versions.json` + `/r/changelog/<name>.json` — immutable release discovery,
   SHA-256 integrity contracts and per-item update history.
 - Every `registry:ui` payload includes an accessibility contract: semantic
@@ -76,9 +77,11 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   then detects token drift and contrast regressions as that theme evolves —
   the host needs file-writing tools to apply plans and a runtime to install
   dependencies, build and verify the application. Registry tools accept an
-  explicit exact version, semver range or channel and verify that release;
-  the omitted-version MCP path still reads mutable mirrors until M0-03; component reads
-  expose the same accessibility contract used by the docs.
+  explicit exact version, semver range or channel; an omitted `version`
+  resolves the `next` registry channel. Either way one immutable manifest is
+  resolved per call and every payload is SHA-256 verified; results report the
+  exact `registryVersion`. Component reads expose the same accessibility
+  contract used by the docs.
   Presets also carry the icon implementation: CLI/MCP installs rewrite
   verified imports, package dependencies and update snapshots together.
 

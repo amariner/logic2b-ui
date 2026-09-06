@@ -8,3 +8,12 @@ export const PACKAGE_RUNNERS = {
   yarn: "yarn dlx",
   bun: "bunx",
 } as const
+
+/**
+ * Registry channel resolved when an MCP caller omits `version`. The channel
+ * is looked up in `/r/versions.json` and resolved to one exact release whose
+ * manifest and content-addressed payloads are SHA-256 verified. It is
+ * independent from the npm package channel above: moving one does not move
+ * the other. The CLI keeps pinning the registry version it was built with.
+ */
+export const REGISTRY_DEFAULT_CHANNEL = "next" as const

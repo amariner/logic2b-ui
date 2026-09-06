@@ -73,8 +73,9 @@ de la CLI: `next` puede cambiar. Los resultados estructurados están implementad
 en el código fuente y pendientes de publicación; la RC publicada devuelve JSON
 como texto.
 
-Si omites `version`, el MCP actual lee copias mutables del registro. Usa una
-versión explícita o `"next"` para verificar integridad. `/mcp` es un endpoint de
+Si omites `version`, el MCP resuelve el canal `next` del registro a una
+versión exacta, verifica el SHA-256 de cada payload y devuelve `registryVersion`;
+una verificación fallida es un error, nunca una copia sin verificar. `/mcp` es un endpoint de
 protocolo: un GET con HTTP 405 es esperado; comprueba la conexión con un cliente
 MCP, no navegando al endpoint.
 

@@ -17,7 +17,9 @@ const object = (properties: Record<string, Schema>, required = Object.keys(prope
   required,
 })
 
+// Every registry read resolves one release, so both selectors are always present.
 const version = { registry: string, requestedVersion: string, registryVersion: string }
+const versionRequired = ["registry", "requestedVersion", "registryVersion"]
 const file = object({ path: string, content: string })
 const commands = object({ npm: string, pnpm: string, yarn: string, bun: string })
 const icon = enumeration("lucide", "tabler", "phosphor", "hugeicons")
@@ -59,7 +61,7 @@ const plan = {
   ...version, items: array(installItem), files: array(file),
   npmDependencies: strings, iconLibrary: icon, notes: strings,
 }
-const planRequired = ["registry", "items", "files", "npmDependencies", "iconLibrary", "notes"]
+const planRequired = [...versionRequired, "items", "files", "npmDependencies", "iconLibrary", "notes"]
 
 const pair = object({
   fg: string, bg: string, role: enumeration("body", "secondary"),
@@ -79,17 +81,17 @@ const parsedMode = object({
 })
 
 export const OUTPUT_SCHEMAS = {
-  list_components: object({ ...version, count, items: array(summary) }, ["registry", "count", "items"]),
+  list_components: object({ ...version, count, items: array(summary) }, [...versionRequired, "count", "items"]),
   search_components: object({ ...version, query: string, count, items: array(summary) },
-    ["registry", "query", "count", "items"]),
+    [...versionRequired, "query", "count", "items"]),
   get_component: object({
     ...itemMetadata, type: string, content: string, dependencies: strings,
     registryDependencies: strings,
     files: array(object({ path: string, type: string, content: string })),
     accessibility, api,
-  }, ["name", "type", "description"]),
+  }, ["name", "type", "description", "version", "registryVersion", "integrity", "content"]),
   list_registry_versions: object({
-    registry: string, schemaVersion: { const: 1 }, latest: string,
+    registry: string, defaultChannel: string, schemaVersion: { const: 1 }, latest: string,
     channels: record(string),
     versions: array(object({ version: string, channel: string, releasedAt: string, manifest: string })),
   }),
@@ -102,7 +104,7 @@ export const OUTPUT_SCHEMAS = {
     demos: array(object({ name: string, item: string, content: string })),
   }),
   add_command: object({ ...version, items: strings, commands, notes: strings },
-    ["registry", "items", "commands", "notes"]),
+    [...versionRequired, "items", "commands", "notes"]),
   install_plan: object(plan, planRequired),
   scaffold_plan: object({
     ...plan, framework: enumeration("next", "vite", "astro"),
@@ -117,7 +119,7 @@ export const OUTPUT_SCHEMAS = {
       font: record(string), iconLibrary: record(object({ label: string, package: string })),
     }),
     notes: strings,
-  }, ["registry", "name", "description", "npmDependencies", "file", "defaults", "options", "notes"]),
+  }, [...versionRequired, "name", "description", "npmDependencies", "file", "defaults", "options", "notes"]),
   export_tokens: object({
     preset: string,
     bundle: object({
