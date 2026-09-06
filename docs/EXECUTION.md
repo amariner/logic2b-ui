@@ -11,7 +11,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | current agent |
 | M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | done | Codex (M0-01) |
 | M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-03) |
-| M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | ready | — |
+| M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-04) |
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | ready | — |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | ready | — |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | ready | — |
@@ -239,3 +239,53 @@ suites, Lighthouse, scaffold build matrix.
 Next ready task: M0-04 (input/resource limits and negative protocol corpus).
 M0-05 and EVAL-01 are also unblocked; M1-01 now has its dependency satisfied.
 M0 is not complete.
+
+### 6 September 2026 — M0-04
+
+Delivered on `codex/m0-04-mcp-limits`. Documented limits live in
+`packages/mcp/src/limits.ts` and are mirrored in every tool input schema
+(`maxLength`, `maxItems`, `uniqueItems`, `minimum`/`maximum`,
+`maxProperties`): 2 MiB streamed request bodies, 8 messages per batch, 32
+unique item names, 128-character names/`srcDir`, 256-character queries and
+presets, 1–100 search results, 1,000,000-byte caller CSS, 256-entry token
+maps, 4 MiB fetched registry documents and 4 MiB of returned source per
+call. `validateToolArguments` runs before any registry or network work and
+throws `ToolInputError`; the new stdio factory `createServer` maps it to
+`McpError` invalid params and the shared stateless HTTP handler
+(`packages/mcp/src/http.ts`, now the core behind the Astro `/mcp` route) to
+JSON-RPC `-32602`. The handler distinguishes parse (`-32700`), envelope
+(`-32600`, including empty/oversized batches and unsupported
+`Mcp-Protocol-Version` headers), method (`-32601`), argument (`-32602`) and
+internal (`-32603`) failures; notifications and client responses still get
+202; body protocol-version negotiation stays lenient. Tool execution
+failures remain `isError` results. `srcDir` rejects traversal and absolute
+paths. Duplicate item names are rejected rather than silently deduplicated.
+Errors echo at most 80 characters of caller input. No new dependency; tool
+names unchanged; the serialized tool catalog is 36,605 bytes. The `/mcp`
+worker chunk measures 187,296 bytes against a 256 KiB budget test.
+
+Tests: `test/limits.test.ts` (type, bound, duplicate, unsafe-path, echo and
+resource-cap corpus, all proven to run before any fetch), `test/http-envelope.test.ts`
+(parse, envelope, method, argument, execution, notification, batch, protocol
+header and streamed body-cap cases against `Request` objects),
+`test/stdio-server.test.ts` (official client over an in-memory transport),
+and negative stdio calls in the release-artifact gate. Existing tests that
+expected `isError` for missing/invalid arguments now expect the protocol error.
+
+Passed: `pnpm lint` (8 packages); `pnpm --filter @logic2b/web build`;
+`pnpm test` (266 tests across 8 packages, including the MCP suite's 113 and
+the worker budget); `pnpm test:release-artifacts`; `pnpm --filter
+@logic2b/web exec playwright test tests/beta-onboarding.spec.ts` (2 checks,
+docs parity after the limits sentence in English and Spanish);
+`git diff --check`. Environment: Node 24.7.0 / pnpm 11.10.0.
+
+Limitations: no npm publication or merge. Registry fetch timeouts stay a
+fixed 15 s constant without a dedicated test. Edge rate limiting is not
+configured in this repository; the public endpoint remains account-free by
+design. The published rc.2 still returns `isError` text for invalid
+arguments until a release ships this source. Not rerun: full visual/axe
+suites, Lighthouse, the scaffold build matrix, the live remote endpoint.
+
+Next ready task: M0-05 (public landing/demo and contributor/release health).
+EVAL-01, M1-01, M1-02 and M1-03 are unblocked. M0 is not complete until M0-05
+lands.

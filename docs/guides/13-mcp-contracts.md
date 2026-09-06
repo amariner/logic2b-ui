@@ -1,6 +1,6 @@
 # 13 — Reliable, bounded MCP contracts
 
-Status: M0-02 and M0-03 implemented in source; M0-04 proposed. See
+Status: M0-02, M0-03 and M0-04 implemented in source. See
 [the execution log](../EXECUTION.md) for verification and publication boundaries.
 
 ## Outcome
@@ -47,6 +47,14 @@ tampered transitive item and unavailable manifest. Update immutable fixture
 builders instead of loosening production checks to satisfy old mocks.
 
 ## M0-04: limits and protocol failures
+
+Implemented 6 September 2026: constants live in `packages/mcp/src/limits.ts`
+and are mirrored in every input schema; `validateToolArguments` runs before
+any I/O and throws `ToolInputError` (`-32602`), which the stdio server maps to
+`McpError` and the shared stateless HTTP handler in `packages/mcp/src/http.ts`
+to a JSON-RPC error. The Astro `/mcp` route is a thin adapter over that
+handler. Negative corpora: `test/limits.test.ts`, `test/http-envelope.test.ts`
+and `test/stdio-server.test.ts`; the worker chunk has a size budget test.
 
 Set documented constants for maximum body bytes, batch length, array items,
 source/CSS bytes, search results and response source bytes. Read streaming bodies

@@ -1,24 +1,11 @@
 #!/usr/bin/env node
-import { Server } from "@modelcontextprotocol/sdk/server/index.js"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js"
 
 import { DEFAULT_REGISTRY } from "./registry.ts"
-import { runTool, SERVER_INFO, TOOLS } from "./tools.ts"
-
-const server = new Server(SERVER_INFO, { capabilities: { tools: {} } })
-
-server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }))
-
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args = {} } = request.params
-  return runTool(name, args as Record<string, unknown>)
-})
+import { createServer } from "./server.ts"
 
 async function main() {
+  const server = createServer()
   const transport = new StdioServerTransport()
   await server.connect(transport)
   // Logs must go to stderr — stdout is the JSON-RPC channel.

@@ -88,7 +88,9 @@ Registry read/install/theme tools accept an optional `version` containing an
 exact semver, a range or a channel; omitting it resolves the `next` registry
 channel. Every call resolves one immutable release, verifies each payload's
 SHA-256 before returning it and reports the exact `registryVersion`; a failed
-verification is an error, never a fallback. Planning project changes:
+verification is an error, never a fallback. Inputs are bounded (at most 32
+items per call, 1 MB of caller CSS, 2 MB request bodies); invalid arguments are
+JSON-RPC errors while execution failures return `isError`. Planning project changes:
 `install_plan` (the exact files to write and npm deps to add for any set of
 items, registry dependencies resolved) and `scaffold_plan` (a complete runnable
 Next.js, Vite or Astro app from a marketing, dashboard or auth starter,

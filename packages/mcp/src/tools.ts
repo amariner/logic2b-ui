@@ -7,7 +7,19 @@ import {
 import { lintThemeCss } from "@logic2b/tokens/lint"
 import { buildInstallPlan } from "./plan.ts"
 import { PACKAGE_VERSION } from "./version.ts"
+import { LIMITS, ToolInputError, byteLength, echo } from "./limits.ts"
 import { OUTPUT_SCHEMAS } from "./output-schemas.ts"
+import {
+  assertArgumentsObject,
+  cssArg,
+  enumArg,
+  integerArg,
+  namesArg,
+  srcDirArg,
+  stringArg,
+  themeOptionArgs,
+  tokensArg,
+} from "./validate.ts"
 import {
   buildScaffoldPlan,
   SCAFFOLD_FRAMEWORKS,
@@ -52,6 +64,7 @@ export const KINDS = ["component", "block", "chart", "theme"] as const
 const VERSION_INPUT = {
   version: {
     type: "string",
+    maxLength: LIMITS.versionLength,
     description:
       `Optional registry semver, range or channel (for example "1.0.0-rc.7", "^1.0.0" or "next"). Omitted: the "${DEFAULT_REGISTRY_CHANNEL}" channel. Every selector resolves once to one immutable SHA-256-verified manifest; results report the selector as requestedVersion and the exact release as registryVersion.`,
   },
@@ -73,6 +86,7 @@ const TOOL_DEFINITIONS = [
         },
         category: {
           type: "string",
+          maxLength: LIMITS.nameLength,
           description:
             'Only return items tagged with this category (e.g. "charts-area", "authentication", "dashboard").',
         },
@@ -89,11 +103,14 @@ const TOOL_DEFINITIONS = [
         ...VERSION_INPUT,
         query: {
           type: "string",
+          maxLength: LIMITS.queryLength,
           description: 'Free-text query, e.g. "login form", "donut chart", "data table".',
         },
         limit: {
-          type: "number",
-          description: "Maximum number of results (default 20).",
+          type: "integer",
+          minimum: 1,
+          maximum: LIMITS.searchLimit,
+          description: `Maximum number of results (default 20, at most ${LIMITS.searchLimit}).`,
         },
       },
       required: ["query"],
@@ -109,6 +126,7 @@ const TOOL_DEFINITIONS = [
         ...VERSION_INPUT,
         name: {
           type: "string",
+          maxLength: LIMITS.nameLength,
           description: 'The item name, e.g. "button", "login-01", "chart-area-04".',
         },
       },
@@ -130,6 +148,7 @@ const TOOL_DEFINITIONS = [
       properties: {
         name: {
           type: "string",
+          maxLength: LIMITS.nameLength,
           description: 'Registry item name, e.g. "button" or "dashboard-02".',
         },
       },
@@ -145,6 +164,7 @@ const TOOL_DEFINITIONS = [
       properties: {
         name: {
           type: "string",
+          maxLength: LIMITS.nameLength,
           description: 'An item name ("accordion") or demo name ("accordion-controlled-demo").',
         },
       },
@@ -161,8 +181,11 @@ const TOOL_DEFINITIONS = [
         ...VERSION_INPUT,
         items: {
           type: "array",
-          items: { type: "string" },
-          description: 'Registry item names, e.g. ["button", "login-01"].',
+          items: { type: "string", maxLength: LIMITS.nameLength },
+          minItems: 1,
+          maxItems: LIMITS.items,
+          uniqueItems: true,
+          description: `Registry item names, e.g. ["button", "login-01"] (at most ${LIMITS.items} per call).`,
         },
       },
       required: ["items"],
@@ -178,12 +201,16 @@ const TOOL_DEFINITIONS = [
         ...VERSION_INPUT,
         items: {
           type: "array",
-          items: { type: "string" },
+          items: { type: "string", maxLength: LIMITS.nameLength },
+          minItems: 1,
+          maxItems: LIMITS.items,
+          uniqueItems: true,
           description:
-            'Registry item names to install, e.g. ["login-01", "theme"] or ["button", "card"].',
+            `Registry item names to install, e.g. ["login-01", "theme"] or ["button", "card"] (at most ${LIMITS.items} per call).`,
         },
         srcDir: {
           type: "string",
+          maxLength: LIMITS.nameLength,
           description:
             'Project source root the `@/*` alias points at. Default "src"; pass "" for projects whose alias maps to the repo root.',
         },
@@ -217,11 +244,13 @@ const TOOL_DEFINITIONS = [
         },
         name: {
           type: "string",
+          maxLength: LIMITS.projectNameLength,
           description:
             'Optional npm project name. Defaults to "logic2b-<starter>".',
         },
         preset: {
           type: "string",
+          maxLength: LIMITS.presetLength,
           description:
             "Optional theme preset id from ui.logic2b.com/create. The generated theme.css is patched to match it exactly.",
         },
@@ -244,6 +273,7 @@ const TOOL_DEFINITIONS = [
       properties: {
         preset: {
           type: "string",
+          maxLength: LIMITS.presetLength,
           description: "A preset id from /create. Omit it to compose from the options below.",
         },
         base: { type: "string", description: "Base gray scale (see apply_preset)." },
@@ -265,6 +295,7 @@ const TOOL_DEFINITIONS = [
       properties: {
         preset: {
           type: "string",
+          maxLength: LIMITS.presetLength,
           description: "The preset id, e.g. from a /create share link or DESIGN.md.",
         },
       },
@@ -281,6 +312,7 @@ const TOOL_DEFINITIONS = [
         ...VERSION_INPUT,
         preset: {
           type: "string",
+          maxLength: LIMITS.presetLength,
           description:
             "A preset id from /create. Omit it to compose a theme from the explicit options below.",
         },
@@ -298,7 +330,7 @@ const TOOL_DEFINITIONS = [
         css: {
           type: "string",
           description:
-            "Optional: an existing theme.css to patch in place. Defaults to the registry's theme.css.",
+            `Optional: an existing theme.css to patch in place (at most ${LIMITS.cssBytes} bytes). Defaults to the registry's theme.css.`,
         },
       },
     },
@@ -310,7 +342,7 @@ const TOOL_DEFINITIONS = [
     inputSchema: {
       type: "object",
       properties: {
-        preset: { type: "string", description: "A /create preset id to audit." },
+        preset: { type: "string", maxLength: LIMITS.presetLength, description: "A /create preset id to audit." },
         base: { type: "string", description: "Base gray scale (see apply_preset)." },
         accent: { type: "string", description: "Accent color (see apply_preset)." },
         chart: { type: "string", description: "Chart palette (see apply_preset)." },
@@ -319,6 +351,8 @@ const TOOL_DEFINITIONS = [
         heading: { type: "string", description: "Heading font (ignored by the audit)." },
         tokens: {
           type: "object",
+          maxProperties: LIMITS.tokenEntries,
+          additionalProperties: { type: "string", maxLength: LIMITS.tokenLength },
           description:
             'Optional raw token map ({"primary": "oklch(…)", "primary-foreground": "oklch(…)", …}) to audit instead of a preset — audits just these values as one mode.',
         },
@@ -334,10 +368,11 @@ const TOOL_DEFINITIONS = [
       properties: {
         css: {
           type: "string",
-          description: "The complete theme.css contents to inspect (maximum 1 MB).",
+          description: `The complete theme.css contents to inspect (at most ${LIMITS.cssBytes} bytes).`,
         },
         preset: {
           type: "string",
+          maxLength: LIMITS.presetLength,
           description:
             "Optional /create preset id. When supplied, every contract token is also compared with that exact preset.",
         },
@@ -420,7 +455,7 @@ function resolveThemeArgs(args: Record<string, unknown>): ThemeConfig | string {
   const preset = typeof args.preset === "string" ? args.preset.trim() : ""
   if (preset) {
     const cfg = decodePreset(preset)
-    return cfg ?? `"${preset}" is not a valid preset id.`
+    return cfg ?? `"${echo(preset)}" is not a valid preset id.`
   }
   const tables: [keyof ThemeConfig, string, Record<string, unknown>][] = [
     ["base", "base", BASE_COLORS],
@@ -442,7 +477,7 @@ function resolveThemeArgs(args: Record<string, unknown>): ThemeConfig | string {
       typeof value === "string" &&
       parseCustomKey(value) !== null
     if (!customOk && (typeof value !== "string" || !table[value])) {
-      return `Unknown ${arg} "${String(value)}". Valid values: ${Object.keys(table).join(", ")}${
+      return `Unknown ${arg} "${echo(value)}". Valid values: ${Object.keys(table).join(", ")}${
         arg === "accent" || arg === "chart"
           ? ', or a custom "h<hue>c<chroma>" key (hue 0-360, chroma 0-0.4), e.g. "h250c0.2"'
           : ""
@@ -453,13 +488,96 @@ function resolveThemeArgs(args: Record<string, unknown>): ThemeConfig | string {
   return cfg
 }
 
+const TOOL_NAMES = new Set<string>(TOOL_DEFINITIONS.map((tool) => tool.name))
+
+/**
+ * Validate and normalize one tool's arguments before any registry or network
+ * work. Throws ToolInputError (JSON-RPC -32602) for unknown tools and for
+ * type, length, count, enumeration and duplicate violations. Returned values
+ * are trimmed strings, validated arrays and bounded objects.
+ */
+export function validateToolArguments(name: string, rawArgs: unknown): Record<string, unknown> {
+  if (!TOOL_NAMES.has(name)) {
+    throw new ToolInputError(
+      `Unknown tool "${echo(name)}". Available tools: ${[...TOOL_NAMES].join(", ")}.`
+    )
+  }
+  const args = assertArgumentsObject(rawArgs)
+  const out: Record<string, unknown> = {}
+  const version = stringArg(args, "version", { max: LIMITS.versionLength })
+  if (version !== undefined) out.version = version.trim()
+  switch (name) {
+    case "list_components":
+      out.kind = enumArg(args, "kind", KINDS)
+      out.category = stringArg(args, "category")?.trim()
+      break
+    case "search_components":
+      out.query = stringArg(args, "query", { required: true, max: LIMITS.queryLength })!.trim()
+      out.limit = integerArg(args, "limit", { min: 1, max: LIMITS.searchLimit })
+      break
+    case "get_component":
+    case "get_changelog":
+    case "get_demo":
+      out.name = stringArg(args, "name", { required: true })!.trim()
+      break
+    case "add_command":
+      out.items = namesArg(args, "items")
+      break
+    case "install_plan":
+      out.items = namesArg(args, "items")
+      out.srcDir = srcDirArg(args)
+      out.iconLibrary = enumArg(args, "iconLibrary", Object.keys(ICON_LIBRARIES)) ?? "lucide"
+      break
+    case "scaffold_plan":
+      out.framework = enumArg(args, "framework", SCAFFOLD_FRAMEWORKS, { required: true })
+      out.starter = enumArg(args, "starter", SCAFFOLD_STARTERS, { required: true })
+      out.name = stringArg(args, "name", { max: LIMITS.projectNameLength })?.trim()
+      out.preset = stringArg(args, "preset", { max: LIMITS.presetLength })?.trim()
+      break
+    case "export_tokens":
+    case "contrast_audit":
+    case "apply_preset":
+      themeOptionArgs(args)
+      for (const key of ["preset", "base", "accent", "chart", "radius", "font", "heading", "iconLibrary"]) {
+        if (args[key] !== undefined && args[key] !== null) out[key] = args[key]
+      }
+      if (name === "contrast_audit") out.tokens = tokensArg(args)
+      if (name === "apply_preset") out.css = cssArg(args)
+      break
+    case "decode_preset":
+      out.preset = stringArg(args, "preset", { required: true, max: LIMITS.presetLength })!.trim()
+      break
+    case "lint_theme":
+      out.css = cssArg(args, "css", { required: true })
+      out.preset = stringArg(args, "preset", { max: LIMITS.presetLength })?.trim()
+      break
+    case "list_registry_versions":
+    case "get_theme":
+      break
+  }
+  for (const key of Object.keys(out)) if (out[key] === undefined) delete out[key]
+  return out
+}
+
+/** Sum of file contents a result would return; bounded per call. */
+function assertResponseSource(files: { content: string }[], what: string): void {
+  const total = files.reduce((sum, file) => sum + byteLength(file.content), 0)
+  if (total > LIMITS.responseSourceBytes) {
+    throw new Error(
+      `${what} would return ${total} bytes of source, above the ${LIMITS.responseSourceBytes}-byte response limit. Request fewer items per call.`
+    )
+  }
+}
+
 /** Execute one registry tool by name. Transport-agnostic: the stdio server and
- *  the remote /mcp worker both dispatch through here. */
+ *  the remote /mcp worker both dispatch through here. Invalid arguments throw
+ *  ToolInputError before any I/O; execution failures return `isError`. */
 export async function runTool(
   name: string,
-  args: Record<string, unknown>,
+  rawArgs: unknown,
   { base = DEFAULT_REGISTRY, fetchImpl }: RunToolOptions = {}
 ): Promise<ToolResult> {
+  const args = validateToolArguments(name, rawArgs)
   try {
     if (name === "list_components") {
       const client = await createRegistryClient(base, versionArg(args), fetchImpl)
@@ -477,9 +595,8 @@ export async function runTool(
     }
 
     if (name === "search_components") {
-      const query = String(args.query ?? "")
-      if (!query.trim()) return errorResult('The "query" argument is required.')
-      const limit = Number(args.limit) || 20
+      const query = args.query as string
+      const limit = (args.limit as number | undefined) ?? 20
       const client = await createRegistryClient(base, versionArg(args), fetchImpl)
       const results = searchIndex(client.index, query, limit)
       return textResult({
@@ -493,10 +610,10 @@ export async function runTool(
     }
 
     if (name === "get_component") {
-      const itemName = String(args.name ?? "")
-      if (!itemName.trim()) return errorResult('The "name" argument is required.')
+      const itemName = args.name as string
       const client = await createRegistryClient(base, versionArg(args), fetchImpl)
       const item = await client.getItem(itemName)
+      assertResponseSource(item.files ?? [], `Item "${itemName}"`)
       return textResult(item)
     }
 
@@ -509,8 +626,7 @@ export async function runTool(
     }
 
     if (name === "get_changelog") {
-      const itemName = String(args.name ?? "").trim()
-      if (!itemName) return errorResult('The "name" argument is required.')
+      const itemName = args.name as string
       return textResult({
         registry: base,
         ...(await fetchChangelog(base, itemName, fetchImpl)),
@@ -518,8 +634,7 @@ export async function runTool(
     }
 
     if (name === "get_demo") {
-      const query = String(args.name ?? "").trim()
-      if (!query) return errorResult('The "name" argument is required.')
+      const query = args.name as string
       const index = await fetchDemoIndex(base, fetchImpl)
       const byItem = index.find((e) => e.item === query)
       const asDemo = index.find((e) => e.demos.includes(query))
@@ -542,12 +657,7 @@ export async function runTool(
     }
 
     if (name === "add_command") {
-      const items = Array.isArray(args.items)
-        ? args.items.map(String).filter((s) => s.trim())
-        : []
-      if (items.length === 0) {
-        return errorResult('The "items" argument must be a non-empty array of item names.')
-      }
+      const items = args.items as string[]
       const client = await createRegistryClient(base, versionArg(args), fetchImpl)
       const known = new Set(client.index.map((i) => i.name))
       const unknown = items.filter((i) => !known.has(i))
@@ -578,26 +688,15 @@ export async function runTool(
     }
 
     if (name === "install_plan") {
-      const items = Array.isArray(args.items)
-        ? args.items.map(String).filter((s) => s.trim())
-        : []
-      if (items.length === 0) {
-        return errorResult('The "items" argument must be a non-empty array of item names.')
-      }
-      const srcDir = typeof args.srcDir === "string" ? args.srcDir : "src"
-      const iconLibrary = String(args.iconLibrary ?? "lucide")
-      if (!(iconLibrary in ICON_LIBRARIES)) {
-        return errorResult(
-          `The "iconLibrary" argument must be one of: ${Object.keys(ICON_LIBRARIES).join(", ")}.`,
-        )
-      }
+      const items = args.items as string[]
       const plan = await buildInstallPlan(items, {
         base,
         fetchImpl,
-        srcDir,
+        srcDir: args.srcDir as string,
         version: versionArg(args),
-        iconLibrary: iconLibrary as keyof typeof ICON_LIBRARIES,
+        iconLibrary: args.iconLibrary as keyof typeof ICON_LIBRARIES,
       })
+      assertResponseSource(plan.files, `Installing ${items.join(", ")}`)
       // Snapshots are scaffold-internal. Per-item installs write their own
       // bases through the CLI and shell-less agents only need target writes.
       const { snapshots: _snapshots, ...publicPlan } = plan
@@ -605,27 +704,16 @@ export async function runTool(
     }
 
     if (name === "scaffold_plan") {
-      const framework = String(args.framework ?? "") as ScaffoldFramework
-      const starter = String(args.starter ?? "") as ScaffoldStarter
-      if (!SCAFFOLD_FRAMEWORKS.includes(framework)) {
-        return errorResult(
-          `The "framework" argument must be one of: ${SCAFFOLD_FRAMEWORKS.join(", ")}.`
-        )
-      }
-      if (!SCAFFOLD_STARTERS.includes(starter)) {
-        return errorResult(
-          `The "starter" argument must be one of: ${SCAFFOLD_STARTERS.join(", ")}.`
-        )
-      }
       const plan = await buildScaffoldPlan({
         base,
         fetchImpl,
-        framework,
-        starter,
-        name: typeof args.name === "string" ? args.name : undefined,
-        preset: typeof args.preset === "string" ? args.preset : undefined,
+        framework: args.framework as ScaffoldFramework,
+        starter: args.starter as ScaffoldStarter,
+        name: args.name as string | undefined,
+        preset: args.preset as string | undefined,
         version: versionArg(args),
       })
+      assertResponseSource(plan.files, `The ${plan.framework} ${plan.starter.name} scaffold`)
       return textResult(plan)
     }
 
@@ -684,12 +772,11 @@ export async function runTool(
     }
 
     if (name === "decode_preset") {
-      const preset = String(args.preset ?? "").trim()
-      if (!preset) return errorResult('The "preset" argument is required.')
+      const preset = args.preset as string
       const cfg = decodePreset(preset)
       if (!cfg) {
         return errorResult(
-          `"${preset}" is not a valid preset id (expected a known, URL-safe /create configuration).`
+          `"${echo(preset)}" is not a valid preset id (expected a known, URL-safe /create configuration).`
         )
       }
       return textResult({
@@ -705,7 +792,7 @@ export async function runTool(
     if (name === "apply_preset") {
       const cfg = resolveThemeArgs(args)
       if (typeof cfg === "string") return errorResult(cfg)
-      let css = typeof args.css === "string" && args.css.trim() ? args.css : undefined
+      let css = args.css as string | undefined
       let npmDependencies: string[] | undefined
       let selectedVersion: { requestedVersion?: string; registryVersion?: string } = {}
       if (css === undefined) {
@@ -734,7 +821,7 @@ export async function runTool(
     }
 
     if (name === "contrast_audit") {
-      if (args.tokens && typeof args.tokens === "object") {
+      if (args.tokens) {
         const results = auditTokens(args.tokens as Record<string, string>)
         return textResult({
           results,
@@ -761,16 +848,12 @@ export async function runTool(
     }
 
     if (name === "lint_theme") {
-      const css = typeof args.css === "string" ? args.css : ""
-      if (!css.trim()) return errorResult('The "css" argument is required.')
-      if (new TextEncoder().encode(css).byteLength > 1_000_000) {
-        return errorResult('The "css" argument must not exceed 1 MB.')
-      }
-      const preset = typeof args.preset === "string" ? args.preset.trim() : ""
+      const css = args.css as string
+      const preset = (args.preset as string | undefined) ?? ""
       let expected: ThemeConfig | undefined
       if (preset) {
         const decoded = decodePreset(preset)
-        if (!decoded) return errorResult(`"${preset}" is not a valid preset id.`)
+        if (!decoded) return errorResult(`"${echo(preset)}" is not a valid preset id.`)
         expected = decoded
       }
       return textResult({
@@ -779,8 +862,9 @@ export async function runTool(
       })
     }
 
-    return errorResult(`Unknown tool: ${name}`)
+    throw new ToolInputError(`Unknown tool "${echo(name)}".`)
   } catch (err) {
+    if (err instanceof ToolInputError) throw err
     return errorResult(
       `logic2b-mcp error: ${err instanceof Error ? err.message : String(err)}`
     )

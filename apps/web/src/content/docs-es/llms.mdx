@@ -75,7 +75,9 @@ como texto.
 
 Si omites `version`, el MCP resuelve el canal `next` del registro a una
 versión exacta, verifica el SHA-256 de cada payload y devuelve `registryVersion`;
-una verificación fallida es un error, nunca una copia sin verificar. `/mcp` es un endpoint de
+una verificación fallida es un error, nunca una copia sin verificar. Las entradas
+están acotadas (32 items por llamada, 1 MB de CSS, cuerpos de 2 MB); los argumentos
+inválidos son errores JSON-RPC y los fallos de ejecución devuelven `isError`. `/mcp` es un endpoint de
 protocolo: un GET con HTTP 405 es esperado; comprueba la conexión con un cliente
 MCP, no navegando al endpoint.
 
