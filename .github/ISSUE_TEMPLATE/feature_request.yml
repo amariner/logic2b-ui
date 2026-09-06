@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose a change to the product, a tool contract or a component.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check ROADMAP.md first: catalog growth is deliberately behind the reference customer-management journey, and planned tools are listed there.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do, and what gets in the way?
+      description: Describe the user outcome, not only the feature. Mention whether an agent or a person performs it.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Contract changes (tool arguments, payload fields, CLI flags), affected packages and how you would verify it.
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: Closest roadmap milestone
+      options:
+        - M0 — credible public beta
+        - M1 — complete reference interface
+        - M2 — safe iteration
+        - M3 — composition people can inspect
+        - M4 — understandable agent products
+        - M5 — demonstrate advantage
+        - Not sure
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This does not require a backend, model API or telemetry inside the registry, CLI or MCP server.
+        - label: I am willing to open a pull request for it.

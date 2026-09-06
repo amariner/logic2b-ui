@@ -12,6 +12,23 @@ selects registry content, independently of the CLI package version.
 - React 18+ (React 19 recommended)
 - Tailwind CSS v4
 
+## Compatibility
+
+There is no stable (`latest`) release yet; `1.0.0` will be the first. The beta
+is the `next` channel for both npm packages and the registry. Versions below
+are the ones this documentation was verified against.
+
+| Area | Beta today | Notes |
+| --- | --- | --- |
+| Registry content | `1.0.0-rc.16`, the `next` channel | Immutable manifests; SHA-256 verified by the CLI and MCP |
+| CLI and local MCP packages | `logic2b@next`, `@logic2b/mcp@next` (published `1.0.0-rc.2`) | Node.js 18+ with npm, pnpm, yarn or bun |
+| Components | React 19.2, Tailwind CSS 4.3, TypeScript 6 (registry pins) | Most items also run on React 18 |
+| Generated starters | Next.js 16.3, Vite 8.2, Astro 7.2 | Exact pins in every generated `package.json` |
+| Remote MCP (`/mcp`) | Streamable HTTP, stateless, read-only tools | Returns plans and verified sources; cannot write files |
+| Host capabilities to apply a plan | File writes; a package manager and build runtime to install and verify | Chat-only hosts can inspect and plan |
+| VS Code extension | `0.1.0` preview VSIX built by CI | Not published to the Marketplace |
+| Repository development | Node.js 22.12+, pnpm 11.10 | See CONTRIBUTING.md |
+
 ## 1. Install the base dependencies
 
 ```bash

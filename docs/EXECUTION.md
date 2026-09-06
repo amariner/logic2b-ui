@@ -12,7 +12,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | done | Codex (M0-01) |
 | M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-03) |
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-04) |
-| M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | ready | — |
+| M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | ready | — |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | ready | — |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
@@ -289,3 +289,57 @@ suites, Lighthouse, the scaffold build matrix, the live remote endpoint.
 Next ready task: M0-05 (public landing/demo and contributor/release health).
 EVAL-01, M1-01, M1-02 and M1-03 are unblocked. M0 is not complete until M0-05
 lands.
+
+### 6 September 2026 — M0-05 (partial)
+
+Delivered on `codex/m0-05-public-beta`. The landing now states "Your design
+system, ready for agents." with two primary paths (use with an agent →
+`/docs/llms#mcp-server`, browse components → `/blocks`), a beta line built
+from the shared package selectors and `REGISTRY_VERSION`, three executable
+steps (versioned install, agent connection, update/drift correction), the
+three launch starters as the complete-interface evidence with their exact
+commands, and an explicit shipped/planned split that lists planned tools as
+not installed. Footer links point at contributing, security and roadmap.
+`CONTRIBUTING.md`, `SECURITY.md`, two issue templates, a template config and
+a pull request template were added. The compatibility table (registry
+`1.0.0-rc.16`/`next`, published CLI/MCP `1.0.0-rc.2`, React 19.2 / Tailwind
+4.3 / TypeScript 6 pins, Next 16.3 / Vite 8.2 / Astro 7.2 starters, remote
+MCP capabilities, host requirements, VS Code `0.1.0` preview, repository Node
+22.12+/pnpm 11.10) lives in the installation docs in English and Spanish,
+linked from the hero and README. `pnpm --filter @logic2b/mcp demo:walkthrough`
+is the executable demonstration: preset → `scaffold_plan` from the committed
+registry (resolved `1.0.0-rc.16`, 33 files, 11 verified items) → local edits
+(hand-tuned `--primary`, a brand rule outside the token blocks, custom copy)
+→ `lint_theme` reports 14 preset-drift issues including `primary` →
+`apply_preset` on the local CSS restores a clean lint while the brand rule and
+custom copy survive. It exits non-zero if any step regresses.
+
+Also fixed in passing: `scripts/verify-scaffolds.mts` (CI `test:scaffolds`)
+still mocked only the mutable mirrors and would have failed after M0-03; it
+now serves the committed versions/manifests/content payloads.
+
+Passed: `pnpm lint` (8 packages); `pnpm --filter @logic2b/web build` twice
+(before and after a mobile overflow fix); `pnpm test` (8 packages);
+`pnpm --filter @logic2b/mcp test:scaffolds` (six starters installed and
+production-built; Vite dashboard 3 chunks, 188.3 KiB entry, 364.3 KiB max);
+`pnpm test:release-artifacts`; `pnpm --filter @logic2b/mcp demo:walkthrough`;
+`pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts`
+(landing CTAs return 200 at 390/1280 px, axe without serious/critical
+violations, no horizontal overflow, docs parity in both languages);
+`pnpm --filter @logic2b/web test:lighthouse` on the first build: landing,
+docs and studio scored 1.0 in performance, accessibility, best practices and
+SEO across three runs each. Landing screenshots at 1280 and 390 px were
+inspected; the first mobile pass showed step cards overflowing because the
+code blocks set the grid item's minimum width, fixed with `min-w-0`, and the
+hero lacked a space before the compatibility link. `git diff --check` passed.
+Lighthouse was not rerun after that two-class fix.
+
+Not delivered: the recorded 60–90 second video (the walkthrough script is the
+reproducible source for it) and the external five-developer pilot, which
+needs user authorization for outreach. Full visual/axe suites were not rerun;
+the landing is not in the visual baseline set. No merge, push to `main` or
+publication was performed by this task.
+
+Next: finish M0-05 by recording the walkthrough when a screen recording is
+wanted, then EVAL-01 (comparative protocol) or M1-01 (state/content/action
+contract), both `ready`. M1-02 and M1-03 are also unblocked.

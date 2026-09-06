@@ -12,6 +12,23 @@ registra `npx logic2b@next --version` al comunicar un problema. El selector
 - React 18 o posterior (React 19 recomendado)
 - Tailwind CSS v4
 
+## Compatibilidad
+
+Todavía no hay versión estable (`latest`); `1.0.0` será la primera. La beta es
+el canal `next`, tanto para los paquetes npm como para el registro. Las
+versiones siguientes son con las que se verificó esta documentación.
+
+| Área | Beta actual | Notas |
+| --- | --- | --- |
+| Contenido del registro | `1.0.0-rc.16`, canal `next` | Manifiestos inmutables; SHA-256 verificado por CLI y MCP |
+| Paquetes CLI y MCP local | `logic2b@next`, `@logic2b/mcp@next` (publicado `1.0.0-rc.2`) | Node.js 18+ con npm, pnpm, yarn o bun |
+| Componentes | React 19.2, Tailwind CSS 4.3, TypeScript 6 (pins del registro) | La mayoría funciona también con React 18 |
+| Starters generados | Next.js 16.3, Vite 8.2, Astro 7.2 | Pins exactos en cada `package.json` generado |
+| MCP remoto (`/mcp`) | HTTP streamable, sin estado, herramientas de solo lectura | Devuelve planes y fuentes verificadas; no escribe archivos |
+| Capacidades del host para aplicar un plan | Escritura de archivos; gestor de paquetes y runtime de build para instalar y verificar | Un host solo de chat puede inspeccionar y planificar |
+| Extensión de VS Code | VSIX de vista previa `0.1.0` generado por CI | No publicada en el Marketplace |
+| Desarrollo del repositorio | Node.js 22.12+, pnpm 11.10 | Ver CONTRIBUTING.md |
+
 ## 1. Instala las dependencias base
 
 ```bash

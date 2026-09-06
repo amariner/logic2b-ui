@@ -93,8 +93,15 @@ selectors and `--registry-version` / MCP `version` select different artifacts.
 when reporting a problem. Source changes may await publication: structured MCP
 results are currently source-only, with JSON text available in the published RC.
 
-Start with the [installation guide](https://ui.logic2b.com/docs/installation) or
-[human MCP setup guide](https://ui.logic2b.com/docs/llms#mcp-server).
+Start with the [installation guide](https://ui.logic2b.com/docs/installation)
+(including the [compatibility table](https://ui.logic2b.com/docs/installation#compatibility))
+or the [human MCP setup guide](https://ui.logic2b.com/docs/llms#mcp-server).
+`pnpm --filter @logic2b/mcp demo:walkthrough` replays the maintenance loop the
+landing page promises: preset, scaffold, local edits, drift detection and
+correction, against the committed registry.
+
+Contributions follow [CONTRIBUTING.md](./CONTRIBUTING.md); report
+vulnerabilities as described in [SECURITY.md](./SECURITY.md).
 
 ## Development
 
