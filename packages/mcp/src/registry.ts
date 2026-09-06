@@ -1,6 +1,8 @@
 import { REGISTRY_DEFAULT_CHANNEL } from "@logic2b/scaffold/package-selectors"
 import { maxSatisfying, valid as validVersion, validRange } from "semver"
 
+import { byteLength, LIMITS } from "./limits.ts"
+
 export interface AccessibilityContract {
   support: "native" | "primitive" | "authored" | "consumer"
   pattern: string
@@ -282,6 +284,12 @@ export async function fetchJsonText(
       throw new Error(`${label} is unavailable: HTTP ${res.status} from ${url}.`)
     }
     const text = await res.text()
+    const bytes = byteLength(text)
+    if (bytes > LIMITS.registryDocumentBytes) {
+      throw new Error(
+        `${label} at ${url} is ${bytes} bytes, above the ${LIMITS.registryDocumentBytes}-byte document limit.`
+      )
+    }
     try {
       return { data: JSON.parse(text), text }
     } catch {

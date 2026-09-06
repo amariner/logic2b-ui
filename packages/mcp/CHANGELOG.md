@@ -4,6 +4,15 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## Unreleased
 
+- Bound every tool input before registry or network work: documented limits
+  for body bytes, batch length, item counts, name/query/preset lengths, CSS
+  bytes, token maps, fetched documents and returned source. Unknown tools and
+  invalid, oversized, duplicate or unsafe arguments are JSON-RPC `-32602`
+  errors on both transports; tool execution failures stay `isError` results.
+  The HTTP worker reads bodies with a streaming byte cap, rejects unsupported
+  `Mcp-Protocol-Version` headers and distinguishes parse, envelope, method,
+  argument and internal failures. Error messages never echo more than 80
+  characters of caller input.
 - Resolve an omitted `version` through the `next` registry channel instead of
   the mutable `/r/index.json` and `/r/<name>.json` mirrors. Every registry
   tool now resolves one immutable manifest per call, verifies each payload's

@@ -67,6 +67,39 @@ Token-only tools (`export_tokens`, `decode_preset`, `contrast_audit`,
 `lint_theme`, and `apply_preset` with caller-supplied `css`) never contact
 the registry.
 
+### Limits and error semantics
+
+Both transports validate arguments before any registry or network work and
+distinguish protocol failures from tool results:
+
+| Failure | Where it surfaces |
+| --- | --- |
+| Malformed JSON body | HTTP 400, JSON-RPC `-32700` |
+| Invalid envelope (missing `jsonrpc`, bad `id`, empty batch, batch over the limit, unsupported `Mcp-Protocol-Version` header) | HTTP 400 or per-message `-32600` |
+| Unsupported method | `-32601` |
+| Unknown tool, wrong argument type, oversized/empty/duplicate value, unsafe `srcDir` | `-32602` (stdio: `McpError` invalid params) |
+| Unexpected server failure | `-32603` with a bounded message |
+| Tool execution failure (unknown item, invalid preset id, integrity mismatch, oversized response) | Successful response with `isError: true` and no `structuredContent` |
+
+Documented limits (`packages/mcp/src/limits.ts`, mirrored in the input schemas):
+
+| Limit | Value |
+| --- | --- |
+| HTTP request body (streamed, Content-Length is advisory) | 2 MiB |
+| JSON-RPC messages per HTTP batch | 8 |
+| Item names per `install_plan` / `add_command` | 32, unique |
+| Item, demo, category and `srcDir` length | 128 characters |
+| `search_components` query / `limit` | 256 characters / 1–100 results |
+| Version selector / preset id / project name | 64 / 256 / 64 characters |
+| Caller CSS (`apply_preset`, `lint_theme`) | 1,000,000 bytes |
+| Raw `contrast_audit` token map | 256 entries, 256 characters each |
+| One fetched registry document | 4 MiB |
+| Source bytes returned by one item read or plan | 4 MiB |
+
+Errors never echo more than 80 characters of caller input, and registry
+fetches time out after 15 s. The public read-only endpoint needs no account;
+edge rate limiting can be configured separately when required.
+
 Every UI payload carries structured accessibility metadata: semantic support,
 keyboard interactions, built-in ARIA behavior, consumer responsibilities and
 known limitations. `list_components` links to that contract and

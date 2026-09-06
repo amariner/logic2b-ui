@@ -3,6 +3,7 @@ import assert from "node:assert/strict"
 import { after, describe, test } from "node:test"
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv"
 
+import { ToolInputError } from "../src/limits.ts"
 import { DEFAULT_REGISTRY_CHANNEL, type FetchLike } from "../src/registry.ts"
 import { runTool as dispatchTool, TOOLS } from "../src/tools.ts"
 import { ImmutableRegistry, mirrorUrls, type FixtureItem } from "./helpers/immutable-registry.ts"
@@ -224,9 +225,11 @@ describe("runTool", () => {
     assert.deepEqual(payload.items.map((i: { name: string }) => i.name), ["chart-area-01"])
   })
 
-  test("search_components requires a query", async () => {
-    const r = await runTool("search_components", {}, { base, fetchImpl })
-    assert.ok(r.isError)
+  test("search_components requires a query before touching the registry", async () => {
+    await assert.rejects(
+      () => runTool("search_components", {}, { base, fetchImpl: noFetch }),
+      (error: unknown) => error instanceof ToolInputError && /"query" argument is required/.test(error.message)
+    )
   })
 
   test("search_components ranks name matches first", async () => {
@@ -262,10 +265,11 @@ describe("runTool", () => {
     )
   })
 
-  test("unknown tool is an isError result, not a throw", async () => {
-    const r = await runTool("nope", {}, { base, fetchImpl })
-    assert.ok(r.isError)
-    assert.match(r.content[0].text, /Unknown tool/)
+  test("unknown tool is an invalid-params protocol error, not an execution result", async () => {
+    await assert.rejects(
+      () => runTool("nope", {}, { base, fetchImpl: noFetch }),
+      (error: unknown) => error instanceof ToolInputError && error.code === -32602 && /Unknown tool "nope"/.test(error.message)
+    )
   })
 })
 
@@ -381,8 +385,10 @@ describe("runTool — acting tools", () => {
   })
 
   test("install_plan requires a non-empty items array", async () => {
-    const r = await runTool("install_plan", { items: [] }, { base, fetchImpl })
-    assert.ok(r.isError)
+    await assert.rejects(
+      () => runTool("install_plan", { items: [] }, { base, fetchImpl: noFetch }),
+      (error: unknown) => error instanceof ToolInputError && /non-empty array/.test(error.message)
+    )
   })
 
   test("scaffold_plan returns a complete shell through the MCP dispatcher", async () => {
@@ -403,13 +409,10 @@ describe("runTool — acting tools", () => {
   })
 
   test("scaffold_plan validates framework and starter names", async () => {
-    const r = await runTool(
-      "scaffold_plan",
-      { framework: "remix", starter: "auth" },
-      { base, fetchImpl }
+    await assert.rejects(
+      () => runTool("scaffold_plan", { framework: "remix", starter: "auth" }, { base, fetchImpl: noFetch }),
+      (error: unknown) => error instanceof ToolInputError && /"framework" argument must be one of: next, vite, astro/.test(error.message)
     )
-    assert.ok(r.isError)
-    assert.match(r.content[0].text, /framework.*next, vite, astro/)
   })
 
   test("get_theme returns the stylesheet and the option catalog", async () => {
@@ -542,9 +545,10 @@ describe("runTool — acting tools", () => {
   })
 
   test("lint_theme validates its input without fetching", async () => {
-    const missing = await runTool("lint_theme", {}, { fetchImpl: noFetch })
-    assert.ok(missing.isError)
-    assert.match(missing.content[0].text, /"css" argument is required/)
+    await assert.rejects(
+      () => runTool("lint_theme", {}, { fetchImpl: noFetch }),
+      (error: unknown) => error instanceof ToolInputError && /"css" argument is required/.test(error.message)
+    )
 
     const badPreset = await runTool(
       "lint_theme",

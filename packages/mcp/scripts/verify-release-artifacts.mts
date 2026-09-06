@@ -9,6 +9,7 @@ import { promisify } from "node:util"
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js"
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
+import { McpError } from "@modelcontextprotocol/sdk/types.js"
 import { DEFAULT_CONFIG, encodePreset } from "@logic2b/tokens"
 
 const execFileAsync = promisify(execFile)
@@ -287,6 +288,18 @@ try {
       const failure = await client.callTool({ name: "decode_preset", arguments: { preset: "invalid" } })
       assert.equal(failure.isError, true)
       assert.equal(failure.structuredContent, undefined)
+      // Protocol failures stay distinguishable from execution failures over stdio.
+      for (const [name, args] of [
+        ["nope", {}],
+        ["search_components", { query: "x", limit: 0 }],
+        ["install_plan", { items: ["button", "button"] }],
+      ] as const) {
+        await assert.rejects(
+          () => client.callTool({ name, arguments: args as Record<string, unknown> }),
+          (error: unknown) => error instanceof McpError && error.code === -32602,
+          `${name}: expected JSON-RPC invalid params`
+        )
+      }
       await client.ping()
     } finally {
       await client.close()
