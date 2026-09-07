@@ -2,6 +2,13 @@
 
 All notable changes to the `logic2b` CLI are documented here.
 
+## 1.0.0-rc.3
+
+- Ship the paired candidate with `@logic2b/mcp` so the CLI, remote onboarding
+  and local MCP use the same release version and shared beta package policy.
+- Refresh installation guidance to use the `next` npm channel. Existing
+  scaffold, preset and immutable-registry commands remain compatible.
+
 ## 1.0.0-rc.2
 
 - Make the marketing starter install the canonical `landing-page-01` bundle;

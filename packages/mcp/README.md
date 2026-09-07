@@ -8,10 +8,9 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes current source and the remote endpoint. npm `@next`
-still points to `1.0.0-rc.2`, which has 15 tools and lacks `list_presets`,
-structured results, verified default reads and the new input limits.
-See [pending npm publication](https://github.com/amariner/logic2b-ui/blob/main/RELEASING.md#pending-npm-publication).
+This catalog describes `1.0.0-rc.3` and the remote endpoint: 16 tools with
+structured results, verified default reads and bounded inputs. Older
+`1.0.0-rc.2` installations have 15 tools and lack these additions.
 
 ### Read the registry
 
@@ -117,7 +116,7 @@ known limitations. `list_components` links to that contract and
 
 ## Usage
 
-### Tool result contract (remote / source; npm release pending)
+### Tool result contract (1.0.0-rc.3 and remote)
 
 Every tool declares an `outputSchema` and read-only, non-destructive annotations.
 Successful calls return a JSON object in `structuredContent` and the same value
@@ -130,7 +129,7 @@ These tools return data and plans. The host owns filesystem writes, dependency
 installation and verification; annotations are not permission to execute a plan.
 Registry-reading tools declare open-world access. Pure token decoding/export and
 theme auditing do not contact a registry. These additions are available on the
-remote endpoint and in source, but not in the published rc.2 tarball.
+remote endpoint and in rc.3, but not in the older rc.2 tarball.
 
 ### Remote endpoint (zero install)
 
