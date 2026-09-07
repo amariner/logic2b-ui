@@ -92,9 +92,10 @@ is available through `/themes`, `/es/themes`, `/themes/index.json` and remote
 either npm dist-tag. Tokens and scaffold are private workspace packages bundled
 into the distributable binaries; they need no separate npm publication.
 
-The manifests still carry the already published `1.0.0-rc.2` version. Before
-publishing, allocate an unused paired version (`1.0.0-rc.3` was available at this
-check), update both changelogs/manifests, run the release-candidate gate above
-and publish both packages to `next`. Keep `latest` unchanged. After publication,
-run the live beta-onboarding check and update the compatibility tables and MCP
-availability notes in English and Spanish. This integration does not publish npm.
+The user authorized the paired `1.0.0-rc.3` publication on 7 September 2026.
+Both manifests and changelogs now describe that candidate; npm still serves rc.2
+until publication succeeds. Run the release-candidate gate above for the exact
+candidate commit, then publish both packages to `next`. Keep `latest` unchanged.
+After publication, run the live beta-onboarding check and update the compatibility
+tables and MCP availability notes in English and Spanish. Authentication and
+publication results are tracked under REL-03 in `docs/EXECUTION.md`.

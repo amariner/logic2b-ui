@@ -7,6 +7,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
+| REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | Codex |
 | SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | Codex |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
 | M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | current agent |
@@ -392,3 +393,23 @@ No npm publication or dist-tag change is part of this integration.
 Next: publish a separately versioned CLI/MCP candidate when requested, then
 verify live beta onboarding and update the availability notes. Existing product
 priorities remain M0-05's video/pilot, EVAL-01 and M1-01.
+
+### 7 September 2026 — REL-03 (preparation)
+
+User authorized publishing both npm packages and requested help granting access.
+Prepared matching `1.0.0-rc.3` manifests, changelogs and the packaged MCP README.
+The public registry confirms that version is unused for both packages; `next`
+remains rc.2 and `latest` remains CLI 0.4.0 / MCP 0.2.0 until publication.
+
+Passed locally: `pnpm build`, `pnpm lint`, `pnpm test` (275 tests), and
+`pnpm test:release-artifacts` (both rc.3 tarballs consumer-installed; CLI
+help/version/scaffold and all 16 MCP stdio output contracts verified).
+The preceding integration commit passed the complete GitHub CI pipeline;
+the exact release candidate must also pass it before publication.
+
+The existing npm credential returned E401. Started official browser-based
+`npm login --auth-type=web`; the user completes authentication and 2FA directly
+with npm, never by sharing a password or token in this conversation.
+Next: confirm package publishing access, pass candidate CI, publish both packages
+to `next` without touching `latest`, run live beta onboarding, and align public
+English/Spanish availability notes with the observed registry state.
