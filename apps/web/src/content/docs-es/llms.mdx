@@ -69,9 +69,11 @@ completar esos pasos por sí solo. El servidor remoto no accede a tus archivos.
 El transporte stdio local requiere Node.js 18+ y npm. Usa `@logic2b/mcp@next`
 para la beta y `logic2b@next` para la CLI. Estos selectores npm son independientes
 de `version` del registro. Registra la versión del handshake MCP y `--version`
-de la CLI: `next` puede cambiar. Los resultados estructurados están implementados
-en el código fuente y pendientes de publicación; la RC publicada devuelve JSON
-como texto.
+de la CLI: `next` puede cambiar. El MCP remoto y el código actual ofrecen
+resultados estructurados, lecturas verificadas por defecto, límites de entrada
+y `list_presets`. El paquete npm `@next` sigue en `1.0.0-rc.2`: devuelve JSON
+como texto y aún no incluye esas novedades. Usa el endpoint remoto para acceder
+al catálogo completo descrito aquí hasta la próxima publicación npm.
 
 Si omites `version`, el MCP resuelve el canal `next` del registro a una
 versión exacta, verifica el SHA-256 de cada payload y devuelve `registryVersion`;
@@ -81,8 +83,8 @@ inválidos son errores JSON-RPC y los fallos de ejecución devuelven `isError`. 
 protocolo: un GET con HTTP 405 es esperado; comprueba la conexión con un cliente
 MCP, no navegando al endpoint.
 
-El registro expone el Model Context Protocol de dos formas con las mismas
-herramientas. Para leer: `list_components`, `search_components`,
+El registro expone el Model Context Protocol de dos formas, con la diferencia
+de versión npm indicada arriba. Para leer: `list_components`, `search_components`,
 `get_component`, `get_demo`, `list_registry_versions` y `get_changelog`. Las
 lecturas, instalaciones y operaciones de tema aceptan `version` como semver
 exacto, rango o canal, y verifican SHA-256 antes de responder.
@@ -91,6 +93,9 @@ Para planificar cambios en un proyecto: `install_plan` devuelve los archivos y
 dependencias exactos; `scaffold_plan` devuelve una app Next.js, Vite o Astro
 completa desde un starter de marketing, dashboard o auth. `get_theme`,
 `decode_preset` y `apply_preset` reconstruyen o parchean `theme.css`;
+`list_presets` descubre las mismas configuraciones curadas de
+[/es/themes](/es/themes), con ids canónicos, enlaces al estudio y avisos
+medidos;
 `contrast_audit` comprueba WCAG 2.2 y APCA; `lint_theme` detecta tokens ausentes,
 duplicados o inválidos, deriva, contraste y fidelidad exacta a un preset.
 `export_tokens` resuelve cualquier preset al paquete global/claro/oscuro que
@@ -124,8 +129,8 @@ O en un cliente con configuración JSON:
 }
 ```
 
-**Local (stdio)** — `npx -y @logic2b/mcp@next` ejecuta las mismas herramientas como
-proceso local.
+**Local (stdio)** — `npx -y @logic2b/mcp@next` ejecuta el paquete publicado como
+proceso local, con las diferencias de versión indicadas arriba.
 
 ## Convenciones fiables para un agente
 

@@ -4,6 +4,7 @@ import {
   portableTokenBundle,
   tokensStudioBundle,
 } from "@logic2b/tokens/export"
+import { CURATED_PRESETS, type CuratedPreset } from "@logic2b/tokens/gallery"
 import { lintThemeCss } from "@logic2b/tokens/lint"
 import { buildInstallPlan } from "./plan.ts"
 import { PACKAGE_VERSION } from "./version.ts"
@@ -44,6 +45,7 @@ import {
 import {
   ACCENTS,
   applyPresetToCss,
+  auditTypeset,
   BASE_COLORS,
   CHARTS,
   decodePreset,
@@ -259,6 +261,21 @@ const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "list_presets",
+    description:
+      "List the curated logic2b theme presets. Returns each canonical preset id, complete config, /create share URL, exact CLI command and measured contrast/readability warnings. Optionally search names, descriptions and tags.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: {
+          type: "string",
+          maxLength: LIMITS.queryLength,
+          description: 'Optional free-text filter, e.g. "documentation", "commerce" or "blue".',
+        },
+      },
+    },
+  },
+  {
     name: "get_theme",
     description:
       "Fetch the logic2b theme: the theme.css stylesheet (every design token the components consume), its npm dependencies, and the customization catalog — available base scales, accents, chart palettes, radii, fonts and icon libraries plus the defaults. Use it to install the design system or to see what apply_preset can change.",
@@ -382,7 +399,7 @@ const TOOL_DEFINITIONS = [
   },
 ] as const
 
-const PURE_TOOLS = new Set(["export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -446,6 +463,38 @@ function errorResult(message: string): ToolResult {
   return {
     content: [{ type: "text" as const, text: message }],
     isError: true,
+  }
+}
+
+const PUBLIC_SITE = "https://ui.logic2b.com"
+
+function presetCatalogEntry(entry: CuratedPreset) {
+  const contrastWarnings = (["light", "dark"] as const).flatMap((mode) =>
+    auditTokens(presetDeclarations(entry.config, mode))
+      .filter((result) => result.warn)
+      .map((result) => ({
+        mode,
+        foreground: result.fg,
+        background: result.bg,
+        wcag: result.wcag,
+        apca: result.apca,
+      })),
+  )
+  const readabilityWarnings = auditTypeset(entry.config)
+    .filter((check) => !check.ok)
+    .map(({ key, label, message }) => ({ key, label, message }))
+
+  return {
+    ...entry,
+    links: {
+      gallery: `${PUBLIC_SITE}/themes#${entry.slug}`,
+      studio: `${PUBLIC_SITE}/create?preset=${entry.preset}`,
+    },
+    command: `npx ${CLI_PACKAGE_SELECTOR} init --preset ${entry.preset}`,
+    audit: {
+      contrastWarnings,
+      readabilityWarnings,
+    },
   }
 }
 
@@ -533,6 +582,9 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
       out.starter = enumArg(args, "starter", SCAFFOLD_STARTERS, { required: true })
       out.name = stringArg(args, "name", { max: LIMITS.projectNameLength })?.trim()
       out.preset = stringArg(args, "preset", { max: LIMITS.presetLength })?.trim()
+      break
+    case "list_presets":
+      out.query = stringArg(args, "query", { max: LIMITS.queryLength })?.trim()
       break
     case "export_tokens":
     case "contrast_audit":
@@ -715,6 +767,27 @@ export async function runTool(
       })
       assertResponseSource(plan.files, `The ${plan.framework} ${plan.starter.name} scaffold`)
       return textResult(plan)
+    }
+
+    if (name === "list_presets") {
+      const query = typeof args.query === "string" ? args.query.toLowerCase() : ""
+      const presets = CURATED_PRESETS.filter((entry) => {
+        if (!query) return true
+        return [entry.slug, entry.name, entry.description, ...entry.tags]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      })
+      return textResult({
+        schemaVersion: 1,
+        count: presets.length,
+        presets: presets.map(presetCatalogEntry),
+        notes: [
+          "Curated presets are editorial starting points, not community submissions or accessibility certifications.",
+          "Open the studio URL to edit a preset; the canonical id works unchanged in CLI, MCP, VS Code and token exports.",
+          "Review every reported warning in context before shipping.",
+        ],
+      })
     }
 
     if (name === "get_theme") {

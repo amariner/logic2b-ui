@@ -16,9 +16,9 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   components with a shadcn-compatible API, a typed index, and a build script
   that emits shadcn-compatible JSON payloads plus immutable version manifests,
   content-addressed files and per-item changelogs.
-- **`apps/web`** — the site: landing, docs, charts, the `/create` theme builder
-  and `/demos` gallery for the complete generated starters. Astro 7 with React
-  islands, fully static, deployed to Cloudflare Workers.
+- **`apps/web`** — the site: landing, docs, charts, the `/create` theme builder,
+  the `/themes` preset gallery and the `/demos` gallery for the complete
+  generated starters. Astro 7 with React islands, deployed to Cloudflare Workers.
 - **`packages/cli`** — `npx logic2b@next add button`: fetches components from the
   registry and writes them into your project (resolving registry dependencies).
   `init --template vite --starter marketing` creates a complete app;
@@ -60,6 +60,9 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   resources.
 - `/demos` + `/demos/index.json` — live marketing, dashboard and auth starters
   backed by the same canonical catalog used by CLI and MCP scaffolding.
+- `/themes` + `/themes/index.json` — eight curated, localized presets rendered
+  from their real light/dark tokens, with canonical ids, complete configs and
+  measured audit notes. MCP exposes the same catalog through `list_presets`.
 - `landing-page-01` — the canonical marketing starter as one installable block;
   its navbar, animated hero, animated feature grid, CTA and footer resolve
   transitively instead of being duplicated across consumers.
@@ -72,8 +75,9 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   (`https://ui.logic2b.com/mcp`, streamable HTTP, zero install) or run
   `npx -y @logic2b/mcp@next` locally. Beyond search and read, `install_plan`
   returns the exact file writes + npm deps for any set of items;
-  `scaffold_plan` returns a complete Next, Vite or Astro starter; and
-  `apply_preset` rebuilds theme.css for any `/create` preset. `lint_theme`
+  `scaffold_plan` returns a complete Next, Vite or Astro starter;
+  `list_presets` discovers curated starting points; and `apply_preset` rebuilds
+  theme.css for any `/create` preset. `lint_theme`
   then detects token drift and contrast regressions as that theme evolves —
   the host needs file-writing tools to apply plans and a runtime to install
   dependencies, build and verify the application. Registry tools accept an
@@ -90,8 +94,11 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
 selectors and `--registry-version` / MCP `version` select different artifacts.
 `next` can move; record `npx logic2b@next --version` and the MCP handshake version
-when reporting a problem. Source changes may await publication: structured MCP
-results are currently source-only, with JSON text available in the published RC.
+when reporting a problem. The remote MCP and current source include structured
+results, verified default registry reads, input limits and `list_presets`.
+The npm `@next` packages still resolve to `1.0.0-rc.2`; its MCP lacks those
+additions. See [pending npm publication](./RELEASING.md#pending-npm-publication)
+for the release gap.
 
 Start with the [installation guide](https://ui.logic2b.com/docs/installation)
 (including the [compatibility table](https://ui.logic2b.com/docs/installation#compatibility))
@@ -115,7 +122,7 @@ pnpm lint && pnpm test               # registry/type checks + unit tests
 pnpm test:release-artifacts          # pack/install CLI + MCP consumer smoke
 pnpm --filter @logic2b/mcp test:scaffolds # install/build generated starters
 pnpm --filter logic2b test:scaffold     # install/build a generated monorepo
-pnpm --filter @logic2b/web test:e2e  # 706 axe analyses + 650 visual checks (after build)
+pnpm --filter @logic2b/web test:e2e  # 712 axe analyses + 652 visual checks (after build)
 pnpm --filter @logic2b/web test:budgets
 pnpm --filter @logic2b/web test:lighthouse
 pnpm package:vscode                   # build a locally installable VSIX

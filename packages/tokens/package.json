@@ -9,6 +9,7 @@
     ".": "./src/index.ts",
     "./contrast": "./src/contrast.ts",
     "./export": "./src/export.ts",
+    "./gallery": "./src/gallery.ts",
     "./lint": "./src/lint.ts"
   },
   "scripts": {

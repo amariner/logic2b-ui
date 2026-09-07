@@ -21,6 +21,7 @@ const surfaces = [
 const themes = ["dark", "light"] as const
 const launchSurfaces = [
   { name: "gallery", route: "/demos" },
+  { name: "themes", route: "/themes" },
   { name: "marketing", route: "/demos/launch/marketing" },
   { name: "dashboard", route: "/demos/launch/dashboard" },
   { name: "auth", route: "/demos/launch/auth" },

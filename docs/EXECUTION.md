@@ -7,6 +7,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
+| SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | Codex |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
 | M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | current agent |
 | M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | done | Codex (M0-01) |
@@ -343,3 +344,50 @@ publication was performed by this task.
 Next: finish M0-05 by recording the walkthrough when a screen recording is
 wanted, then EVAL-01 (comparative protocol) or M1-01 (state/content/action
 contract), both `ready`. M1-02 and M1-03 are also unblocked.
+
+### 7 September 2026 — SYNC-01
+
+User-requested integration of all pending local work with GitHub `main`
+(`6462189`). All fetched remote branches were already ancestors of `main`.
+Preserved the theme gallery's eight shared presets, English/Spanish pages,
+JSON discovery, search/sitemap/agent links, responsive header, audit notes and
+light/dark visual baselines. `list_presets` is the 16th MCP tool and now has a
+typed output schema, read-only/network-free annotations, bounded query input,
+structured/text parity and packed stdio coverage. Web and MCP commands both
+consume the shared `@next` selector. A cross-surface regression checks exact
+catalog/config/command/audit parity; browser tests exercise clipboard copying,
+audit disclosure and loading a non-default preset in Create at 390/1280 px in
+both languages. CI now executes the gallery and beta-onboarding functional tests.
+
+Passed: `pnpm install --frozen-lockfile` (lockfile unchanged); `pnpm build`;
+`pnpm lint`; `pnpm test` (275 tests across eight packages);
+`pnpm test:release-artifacts` (all 16 packed MCP tools);
+`pnpm --filter @logic2b/web test:budgets`; final
+`pnpm --filter @logic2b/web build`; `git diff --check`.
+Browser command: `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+pnpm --filter @logic2b/web exec playwright test tests/theme-gallery.spec.ts
+tests/beta-onboarding.spec.ts tests/a11y.spec.ts tests/visual.spec.ts
+--grep 'theme gallery|themes|beta onboarding|launch demos' --workers=2`.
+All 30 checks reported success, including 14 axe checks, ten visual comparisons
+and six functional checks; the local Chrome runner hung during teardown.
+Screenshots were inspected and existing baselines retained. The initial new
+test incorrectly assumed Create rendered a `main` element; it now asserts the
+actual Customize controls and exact selected preset instead.
+
+Environment: Node 26.8.1 / pnpm 11.10.0. The initial build needed the new VS Code
+workspace dependency linked by the frozen install. Playwright's bundled-browser
+download failed certificate verification, including with system CAs, so local
+checks used installed Chrome. No TLS verification was disabled. Full-site axe,
+visual, Lighthouse and scaffold build matrix were not rerun locally; GitHub CI
+runs those gates after integration. Registry payloads and the lockfile are unchanged.
+
+npm checked on 7 September: both `next` tags still point to `1.0.0-rc.2`;
+`latest` is CLI `0.4.0` / MCP `0.2.0`. The remote MCP's structured output,
+verified default, limits and gallery tool await npm delivery. `RELEASING.md`
+records the pending paired candidate (unused `1.0.0-rc.3` at this check), and
+English/Spanish onboarding distinguishes remote features from the npm package.
+No npm publication or dist-tag change is part of this integration.
+
+Next: publish a separately versioned CLI/MCP candidate when requested, then
+verify live beta onboarding and update the availability notes. Existing product
+priorities remain M0-05's video/pilot, EVAL-01 and M1-01.

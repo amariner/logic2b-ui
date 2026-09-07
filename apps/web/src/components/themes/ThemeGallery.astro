@@ -1,0 +1,258 @@
+---
+import { ICON_LIBRARIES } from "@logic2b/tokens"
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { presetGallery, type PresetGalleryLocale } from "@/data/preset-gallery"
+
+interface Props {
+  locale?: PresetGalleryLocale
+}
+
+const { locale = "en" } = Astro.props
+const es = locale === "es"
+const presets = presetGallery(locale)
+const copyLabel = es ? "Copiar preset" : "Copy preset"
+const copiedLabel = es ? "Copiado" : "Copied"
+const copyFailedLabel = es ? "No se pudo copiar" : "Copy failed"
+const page = es
+  ? {
+      title: "Galería de temas — logic2b ui",
+      description: "Explora presets curados de logic2b, compara sus superficies claras y oscuras y abre cualquier configuración exacta en el estudio.",
+      eyebrow: "Presets curados",
+      heading: "Empieza con una dirección, no con un lienzo vacío",
+      intro: "Cada tema es una configuración completa y editable: color, gráficos, radio, tipografía, ritmo e iconos. El mismo id viaja por la web, CLI, MCP y VS Code.",
+      openStudio: "Abrir en el estudio",
+      json: "Catálogo JSON",
+      light: "Claro",
+      dark: "Oscuro",
+      signal: "Señal",
+      weeklyActivity: "Actividad semanal",
+      tags: "etiquetas",
+      ready: "Legibilidad clara",
+      warning: "nota de contraste",
+      warnings: "notas de contraste",
+      auditIntro: "Los presets son puntos de partida editoriales, no certificaciones. Mostramos cada aviso medido para que puedas revisarlo en contexto.",
+      auditTitle: "Auditoría honesta por defecto",
+      modes: { light: "claro", dark: "oscuro" },
+      fields: { base: "Base", accent: "Acento", radius: "Radio", icons: "Iconos" },
+      flowTitle: "Un id, todas las superficies",
+      flowText: "Personaliza el preset en Create, aplícalo con CLI, entrégalo a un agente por MCP o expórtalo a Figma, CSS, iOS y Android sin traducir valores a mano.",
+      createOwn: "Crear el mío",
+      learn: "Ver tokens multiplataforma",
+    }
+  : {
+      title: "Theme gallery — logic2b ui",
+      description: "Explore curated logic2b presets, compare their light and dark surfaces, and open any exact configuration in the studio.",
+      eyebrow: "Curated presets",
+      heading: "Start with a direction, not a blank canvas",
+      intro: "Every theme is a complete, editable configuration: color, charts, radius, typography, rhythm and icons. The same id travels through the web, CLI, MCP and VS Code.",
+      openStudio: "Open in studio",
+      json: "JSON catalog",
+      light: "Light",
+      dark: "Dark",
+      signal: "Signal",
+      weeklyActivity: "Weekly activity",
+      tags: "tags",
+      ready: "Readability clear",
+      warning: "contrast note",
+      warnings: "contrast notes",
+      auditIntro: "Presets are editorial starting points, not certifications. Every measured warning stays visible so you can review it in product context.",
+      auditTitle: "Honest audit by default",
+      modes: { light: "light", dark: "dark" },
+      fields: { base: "Base", accent: "Accent", radius: "Radius", icons: "Icons" },
+      flowTitle: "One id, every surface",
+      flowText: "Tune the preset in Create, apply it with the CLI, hand it to an agent through MCP, or export it to Figma, CSS, iOS and Android without translating values by hand.",
+      createOwn: "Create my own",
+      learn: "Explore cross-platform tokens",
+    }
+---
+
+<BaseLayout
+  title={page.title}
+  description={page.description}
+  lang={locale}
+  alternateHref={es ? "/themes" : "/es/themes"}
+>
+  <main class="mx-auto w-full max-w-[1600px] px-4 py-12 sm:px-6 lg:py-16">
+    <header class="mx-auto max-w-4xl text-center">
+      <p class="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        {page.eyebrow}
+      </p>
+      <h1 class="mt-4 text-balance text-4xl font-bold tracking-tight sm:text-5xl">
+        {page.heading}
+      </h1>
+      <p class="mx-auto mt-5 max-w-3xl text-balance text-lg leading-8 text-muted-foreground">
+        {page.intro}
+      </p>
+      <div class="mt-7 flex flex-wrap justify-center gap-3">
+        <a href="/create" class="btn btn-primary">{page.createOwn}</a>
+        <a href="/themes/index.json" class="btn btn-outline">{page.json}</a>
+      </div>
+    </header>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      {presets.map((preset) => (
+        <article id={preset.slug} class="scroll-mt-20 overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-sm">
+          <div class="grid grid-cols-2 border-b" aria-label={`${preset.name}: ${page.light} / ${page.dark}`}>
+            {(["light", "dark"] as const).map((mode) => (
+              <div
+                class:list={[
+                  "min-w-0 bg-background p-4 text-foreground sm:p-5",
+                  mode === "dark" && "dark",
+                  mode === "light" && "border-r",
+                ]}
+                style={mode === "dark" ? `${preset.styles.light};${preset.styles.dark}` : preset.styles.light}
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                    {mode === "light" ? page.light : page.dark}
+                  </span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-primary" aria-hidden="true"></span>
+                </div>
+                <div class="mt-4 rounded-[var(--radius)] border bg-card p-3 text-card-foreground shadow-sm sm:p-4">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                      <p class="truncate font-heading text-sm font-semibold">{page.signal}</p>
+                      <p class="mt-0.5 truncate text-[10px] text-muted-foreground">{page.weeklyActivity}</p>
+                    </div>
+                    <span class="rounded-[var(--radius)] bg-primary px-2 py-1 text-[9px] font-semibold text-primary-foreground">
+                      +18%
+                    </span>
+                  </div>
+                  <div class="mt-5 flex h-12 items-end gap-1" aria-hidden="true">
+                    {[42, 68, 52, 82, 64, 92, 76].map((height, index) => (
+                      <span
+                        class:list={[
+                          "min-w-0 flex-1 rounded-t-sm",
+                          index % 2 === 0 ? "bg-chart-1" : "bg-chart-2",
+                        ]}
+                        style={`height:${height}%`}
+                      ></span>
+                    ))}
+                  </div>
+                  <div class="mt-4 h-1.5 rounded-full bg-muted">
+                    <div class="h-full w-2/3 rounded-full bg-primary"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div class="p-5 sm:p-6">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h2 class="font-heading text-2xl font-semibold tracking-tight">{preset.name}</h2>
+                <p class="mt-2 max-w-2xl leading-7 text-muted-foreground">{preset.description}</p>
+              </div>
+              <div class="flex flex-wrap gap-1.5" aria-label={`${preset.name}: ${page.tags}`}>
+                {preset.tags.map((tag) => (
+                  <span class="rounded-full border bg-muted/40 px-2.5 py-1 text-xs text-muted-foreground">{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            <dl class="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 rounded-xl border bg-muted/20 p-4 text-sm sm:grid-cols-4">
+              <div><dt class="text-xs text-muted-foreground">{page.fields.base}</dt><dd class="mt-1 font-medium capitalize">{preset.config.base}</dd></div>
+              <div><dt class="text-xs text-muted-foreground">{page.fields.accent}</dt><dd class="mt-1 font-medium capitalize">{preset.config.theme}</dd></div>
+              <div><dt class="text-xs text-muted-foreground">{page.fields.radius}</dt><dd class="mt-1 font-medium capitalize">{preset.config.radius}</dd></div>
+              <div><dt class="text-xs text-muted-foreground">{page.fields.icons}</dt><dd class="mt-1 font-medium">{ICON_LIBRARIES[preset.config.iconLibrary].label}</dd></div>
+            </dl>
+
+            <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+              <span class="inline-flex items-center gap-1.5">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>
+                {page.ready}
+              </span>
+              <details class="group">
+                <summary class="cursor-pointer list-none underline-offset-4 hover:underline">
+                  {preset.audit.contrastWarnings.length} {preset.audit.contrastWarnings.length === 1 ? page.warning : page.warnings}
+                </summary>
+                <ul class="mt-2 space-y-1 rounded-lg border bg-popover p-3 text-popover-foreground shadow-sm">
+                  {preset.audit.contrastWarnings.map((warning) => (
+                    <li>
+                      {page.modes[warning.mode]} · <code>{warning.foreground}</code> / <code>{warning.background}</code>
+                      · WCAG {warning.wcag.toFixed(2)} · APCA {warning.apca.toFixed(1)}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </div>
+
+            <div class="mt-5 flex flex-col gap-2 sm:flex-row">
+              <a href={preset.links.studio} class="btn btn-primary flex-1">
+                {page.openStudio}
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"></path></svg>
+              </a>
+              <button
+                type="button"
+                class="btn btn-outline flex-1"
+                data-copy-preset={preset.preset}
+                data-copy-label={copyLabel}
+                data-copied-label={copiedLabel}
+                data-copy-failed-label={copyFailedLabel}
+              >
+                {copyLabel}
+              </button>
+            </div>
+            <code class="mt-3 block truncate rounded-md bg-muted/50 px-3 py-2 font-mono text-[11px] text-muted-foreground" title={preset.preset}>
+              {preset.preset}
+            </code>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <section class="mt-12 grid gap-6 rounded-2xl border bg-muted/30 p-6 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
+      <div>
+        <h2 class="text-2xl font-semibold tracking-tight">{page.flowTitle}</h2>
+        <p class="mt-3 max-w-3xl leading-7 text-muted-foreground">{page.flowText}</p>
+      </div>
+      <a href={es ? "/es/docs/cross-platform-tokens" : "/docs/cross-platform-tokens"} class="btn btn-outline">
+        {page.learn}
+      </a>
+    </section>
+
+    <section class="mx-auto mt-8 max-w-3xl text-center text-sm leading-6 text-muted-foreground" aria-labelledby="gallery-audit-title">
+      <h2 id="gallery-audit-title" class="font-medium text-foreground">{page.auditTitle}</h2>
+      <p class="mt-2">{page.auditIntro}</p>
+    </section>
+  </main>
+
+  <script>
+    async function copyText(text: string): Promise<boolean> {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text)
+          return true
+        }
+      } catch {
+        // Clipboard permission can be denied in sandboxed previews.
+      }
+
+      const textarea = document.createElement("textarea")
+      textarea.value = text
+      textarea.readOnly = true
+      textarea.style.position = "fixed"
+      textarea.style.left = "-9999px"
+      document.body.append(textarea)
+      textarea.select()
+      const copied = document.execCommand("copy")
+      textarea.remove()
+      return copied
+    }
+
+    document.querySelectorAll<HTMLButtonElement>("[data-copy-preset]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const preset = button.dataset.copyPreset
+        if (!preset) return
+        const original = button.dataset.copyLabel ?? button.textContent ?? "Copy preset"
+        const copied = await copyText(preset)
+        button.textContent = copied
+          ? button.dataset.copiedLabel ?? "Copied"
+          : button.dataset.copyFailedLabel ?? "Copy failed"
+        window.setTimeout(() => {
+          button.textContent = original
+        }, 1_500)
+      })
+    })
+  </script>
+</BaseLayout>

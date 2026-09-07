@@ -223,6 +223,7 @@ try {
           "install_plan",
           "lint_theme",
           "list_components",
+          "list_presets",
           "list_registry_versions",
           "scaffold_plan",
           "search_components",
@@ -244,6 +245,7 @@ try {
       const css = (theme.files as Array<{ content: string }>)[0]!.content
       const cases: Array<[string, Record<string, unknown>]> = [
         ["list_components", {}],
+        ["list_presets", {}],
         ["search_components", { query: "button" }],
         ["get_component", { name: "button", version: "1.0.0-rc.16" }],
         ["list_registry_versions", {}],
@@ -308,7 +310,7 @@ try {
 
   passed = true
   console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/scaffold verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 15 tool output contracts verified over stdio`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 16 tool output contracts verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

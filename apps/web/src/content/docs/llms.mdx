@@ -72,14 +72,17 @@ steps by itself. The remote server cannot access your filesystem.
 Local stdio requires Node.js 18+ and npm. Use `@logic2b/mcp@next` for the beta,
 and `logic2b@next` for CLI commands. These npm selectors are independent of the
 registry `version`. Record the MCP handshake version and CLI `--version` because
-`next` can move. Structured tool results are implemented in source and await
-publication; the published RC exposes the JSON text fallback.
+`next` can move. The remote MCP and current source provide structured results,
+verified default registry reads, input limits and `list_presets`. The npm
+`@next` package still resolves to `1.0.0-rc.2`: it returns JSON text and does
+not yet include those additions. Use the remote endpoint for the full catalog
+described below until the next npm release.
 
 `/mcp` is a protocol endpoint, not a browser page. A GET returning HTTP 405 is
 expected; use an MCP client handshake to check the connection.
 
 Prefer a live connection? The registry speaks the Model Context Protocol two
-ways — both expose the same tools. Reading the registry: `list_components`,
+ways, with the npm release gap noted above. Reading the registry: `list_components`,
 `search_components`, `get_component` (full source of every file) and
 `get_demo` (real usage examples, imports rewritten to project paths — also
 served raw at `/r/demos/index.json`). `list_registry_versions` resolves the
@@ -96,7 +99,9 @@ items, registry dependencies resolved) and `scaffold_plan` (a complete runnable
 Next.js, Vite or Astro app from a marketing, dashboard or auth starter,
 including routing, exact-pinned dependencies and an optional `/create`
 preset). `get_theme`, `decode_preset` and `apply_preset` rebuild or patch
-theme.css; `contrast_audit` verifies WCAG 2.2 and APCA contrast per token pair
+theme.css; `list_presets` discovers the same curated configurations rendered
+at [/themes](/themes), including canonical ids, studio links and measured audit
+notes. `contrast_audit` verifies WCAG 2.2 and APCA contrast per token pair
 before you ship it. `lint_theme` statically checks an existing theme.css for
 missing, duplicate or invalid tokens, derived-token drift and contrast
 regressions; include a preset id to require exact preset fidelity. With a
@@ -133,8 +138,9 @@ Or in any client that takes a JSON config:
 }
 ```
 
-**Local (stdio)** — `npx -y @logic2b/mcp@next` runs the same tools as a local
-process. See the [repo](https://github.com/amariner/logic2b-ui) for details.
+**Local (stdio)** — `npx -y @logic2b/mcp@next` runs the published package as a
+local process, with the release differences described above. See the
+[repo](https://github.com/amariner/logic2b-ui) for details.
 
 ## Conventions an agent can rely on
 

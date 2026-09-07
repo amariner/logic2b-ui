@@ -111,6 +111,31 @@ export const OUTPUT_SCHEMAS = {
     starter: object({ name: enumeration("marketing", "dashboard", "auth"), title: string, description: string }),
     projectName: string, preset: string, commands,
   }, [...planRequired, "framework", "starter", "projectName", "commands"]),
+  list_presets: object({
+    schemaVersion: { const: 1 },
+    count,
+    presets: array(object({
+      slug: string,
+      name: string,
+      description: string,
+      tags: strings,
+      config,
+      preset: string,
+      links: object({ gallery: string, studio: string }),
+      command: string,
+      audit: object({
+        contrastWarnings: array(object({
+          mode: enumeration("light", "dark"),
+          foreground: string,
+          background: string,
+          wcag: number,
+          apca: number,
+        })),
+        readabilityWarnings: array(object({ key: string, label: string, message: string })),
+      }),
+    })),
+    notes: strings,
+  }),
   get_theme: object({
     ...version, name: string, description: string, npmDependencies: strings,
     file, docs: string, defaults: config,
