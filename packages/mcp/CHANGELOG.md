@@ -2,7 +2,7 @@
 
 All notable changes to `@logic2b/mcp` are documented here.
 
-## Unreleased
+## 1.0.0-rc.3
 
 - Add `list_presets`, a network-free view of the shared curated gallery with
   canonical ids, complete configs, studio/CLI handoff and measured audit notes.
@@ -27,7 +27,7 @@ All notable changes to `@logic2b/mcp` are documented here.
   mismatches are errors with no unverified fallback. `list_registry_versions`
   reports `defaultChannel`. Legacy mirror readers are isolated in
   `registry-raw.ts` and unused by tools.
-- Publish typed output schemas and read-only annotations for all 15 tools on
+- Publish typed output schemas and read-only annotations for all 16 tools on
   both transports. Successful calls include `structuredContent` alongside the
   unchanged JSON text fallback; tool failures remain explicit `isError` results.
 - Verify output contracts against unit fixtures, the HTTP route and actual

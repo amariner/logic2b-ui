@@ -2,6 +2,14 @@
 
 All notable changes to the `logic2b` CLI are documented here.
 
+## 1.0.0-rc.3
+
+- Align the published beta selector with the website, generated agent prompts,
+  VS Code integration and MCP command responses through the shared scaffold
+  policy.
+- Ship the paired CLI candidate required for the MCP `1.0.0-rc.3` release while
+  preserving the existing CLI command surface and immutable registry behavior.
+
 ## 1.0.0-rc.2
 
 - Make the marketing starter install the canonical `landing-page-01` bundle;
