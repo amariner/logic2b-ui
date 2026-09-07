@@ -4,6 +4,8 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## Unreleased
 
+- Add `list_presets`, a network-free view of the shared curated gallery with
+  canonical ids, complete configs, studio/CLI handoff and measured audit notes.
 - Add `demo:walkthrough`, a reproducible script that generates a preset-themed
   starter from the committed registry, customizes it, detects theme drift with
   `lint_theme` and corrects it with `apply_preset` while preserving local edits.

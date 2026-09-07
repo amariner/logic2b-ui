@@ -19,6 +19,20 @@ function chartCategory(categories: string[] | undefined): string | undefined {
 
 const EXTRA: SearchIndexItem[] = [
   {
+    title: "Theme Gallery",
+    description:
+      "Compare curated light and dark presets, inspect their audits, and open any exact configuration in the theme studio.",
+    url: "/themes",
+    group: "Guides",
+  },
+  {
+    title: "Galería de temas · ES",
+    description:
+      "Compara presets curados en claro y oscuro, revisa sus auditorías y abre cualquier configuración exacta en el estudio.",
+    url: "/es/themes",
+    group: "Guides",
+  },
+  {
     title: "Create — Theme Builder",
     description:
       "Design a theme live, share a preset, and export ready-to-paste CSS and framework scaffolds.",

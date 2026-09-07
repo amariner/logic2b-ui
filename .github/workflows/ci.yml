@@ -75,13 +75,15 @@ jobs:
       # from source imports.
       - run: pnpm --filter @logic2b/web test:budgets
 
-      # Accessibility gate: 706 hydrated axe analyses over all block previews,
+      # Accessibility gate: 712 hydrated axe analyses over all block previews,
       # component/chart demos, launch docs and 71 prop playgrounds, light + dark,
       # asserting no serious/critical violations. Structural and semantic
       # a11y — accessible names, roles, labels, valid ARIA and keyboard access.
       # Color contrast is owned by the studio's WCAG 2.2 + APCA audit. Runs
       # against the dist/client built above.
       - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
+
+      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts
 
       - run: pnpm --filter @logic2b/web test:a11y
 

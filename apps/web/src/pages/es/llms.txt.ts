@@ -16,6 +16,8 @@ export const GET: APIRoute = async ({ site }) => {
     "Esta edición española crece por oleadas. La documentación inglesa completa",
     `sigue disponible en ${base}/llms.txt. Cada página traducida también se`,
     "publica como Markdown añadiendo `.md` a su URL.",
+    `Los presets curados y sus auditorías se publican en ${base}/themes/index.json`,
+    `y se pueden explorar visualmente en ${base}/es/themes.`,
     "",
     "## Guías traducidas",
     "",
@@ -25,6 +27,7 @@ export const GET: APIRoute = async ({ site }) => {
     ),
     "",
     `- [Toda la documentación española en un archivo](${base}/es/llms-full.txt)`,
+    `- [Galería de temas](${base}/es/themes) y [catálogo JSON](${base}/themes/index.json)`,
     `- [Documentación inglesa completa](${base}/llms.txt)`,
     "",
   ].join("\n");

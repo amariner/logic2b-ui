@@ -29,6 +29,7 @@ describe("input limits", () => {
   test("limits are documented in the public input schemas", () => {
     const byName = new Map(TOOLS.map((tool) => [tool.name, tool.inputSchema as { properties: Record<string, Record<string, unknown>> }]))
     assert.equal(byName.get("search_components")!.properties.query.maxLength, LIMITS.queryLength)
+    assert.equal(byName.get("list_presets")!.properties.query.maxLength, LIMITS.queryLength)
     assert.equal(byName.get("search_components")!.properties.limit.maximum, LIMITS.searchLimit)
     assert.equal(byName.get("install_plan")!.properties.items.maxItems, LIMITS.items)
     assert.equal(byName.get("install_plan")!.properties.items.uniqueItems, true)
@@ -51,6 +52,7 @@ describe("input limits", () => {
     await rejectsInput("list_components", { version: 1 }, /"version" argument must be a string, received number 1/)
     await rejectsInput("list_components", { kind: "widget" }, /"kind" argument must be one of: component, block, chart, theme/)
     await rejectsInput("search_components", { query: ["x"] }, /"query" argument must be a string, received an array/)
+    await rejectsInput("list_presets", { query: 42 }, /"query" argument must be a string/)
     await rejectsInput("search_components", { query: "x", limit: "5" }, /"limit" argument must be an integer between 1 and 100/)
     await rejectsInput("search_components", { query: "x", limit: 1.5 }, /"limit" argument must be an integer/)
     await rejectsInput("get_component", { name: { name: "button" } }, /"name" argument must be a string, received an object/)
@@ -71,6 +73,7 @@ describe("input limits", () => {
     await rejectsInput("get_component", { name: "button\0" }, /must not contain NUL/)
     await rejectsInput("list_components", { version: "1".repeat(LIMITS.versionLength + 1) }, /"version" argument must not exceed 64/)
     await rejectsInput("search_components", { query: "x".repeat(LIMITS.queryLength + 1) }, /"query" argument must not exceed 256/)
+    await rejectsInput("list_presets", { query: "x".repeat(LIMITS.queryLength + 1) }, /"query" argument must not exceed 256/)
     await rejectsInput("search_components", { query: "x", limit: 0 }, /between 1 and 100 \(received 0\)/)
     await rejectsInput("search_components", { query: "x", limit: LIMITS.searchLimit + 1 }, /between 1 and 100 \(received 101\)/)
     await rejectsInput("install_plan", { items: [] }, /non-empty array/)
@@ -101,6 +104,7 @@ describe("input limits", () => {
     assert.deepEqual(validateToolArguments("install_plan", { items: ["button"], srcDir: "app/" }).srcDir, "app")
     assert.deepEqual(validateToolArguments("install_plan", { items: ["button"], srcDir: "." }).srcDir, "")
     assert.deepEqual(validateToolArguments("search_components", { query: " login ", limit: 5 }), { query: "login", limit: 5 })
+    assert.deepEqual(validateToolArguments("list_presets", { query: " commerce " }), { query: "commerce" })
     assert.deepEqual(validateToolArguments("list_components", { kind: "chart", ignored: true }), { kind: "chart" })
   })
 

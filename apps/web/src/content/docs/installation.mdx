@@ -14,14 +14,14 @@ selects registry content, independently of the CLI package version.
 
 ## Compatibility
 
-There is no stable (`latest`) release yet; `1.0.0` will be the first. The beta
-is the `next` channel for both npm packages and the registry. Versions below
-are the ones this documentation was verified against.
+Version `1.0.0` has not been released. npm `latest` still points to the older
+CLI `0.4.0` and MCP `0.2.0`; use `next` for the current beta packages and
+registry. Versions below are the ones this documentation was verified against.
 
 | Area | Beta today | Notes |
 | --- | --- | --- |
 | Registry content | `1.0.0-rc.16`, the `next` channel | Immutable manifests; SHA-256 verified by the CLI and MCP |
-| CLI and local MCP packages | `logic2b@next`, `@logic2b/mcp@next` (published `1.0.0-rc.2`) | Node.js 18+ with npm, pnpm, yarn or bun |
+| CLI and local MCP packages | `logic2b@next`, `@logic2b/mcp@next` (published `1.0.0-rc.2`; remote MCP additions await npm publication) | Node.js 18+ with npm, pnpm, yarn or bun |
 | Components | React 19.2, Tailwind CSS 4.3, TypeScript 6 (registry pins) | Most items also run on React 18 |
 | Generated starters | Next.js 16.3, Vite 8.2, Astro 7.2 | Exact pins in every generated `package.json` |
 | Remote MCP (`/mcp`) | Streamable HTTP, stateless, read-only tools | Returns plans and verified sources; cannot write files |

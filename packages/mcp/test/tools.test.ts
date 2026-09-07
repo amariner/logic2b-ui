@@ -85,6 +85,7 @@ describe("TOOLS", () => {
         "add_command",
         "install_plan",
         "scaffold_plan",
+        "list_presets",
         "get_theme",
         "export_tokens",
         "decode_preset",
@@ -425,6 +426,25 @@ describe("runTool — acting tools", () => {
     assert.ok(theme.options.base.includes("slate"))
     assert.ok(theme.options.accent.includes("violet"))
     assert.equal(theme.defaults.base, "neutral")
+  })
+
+  test("list_presets returns canonical, filterable presets without fetching", async () => {
+    const all = await runTool("list_presets", {}, { fetchImpl: noFetch })
+    assert.ok(!all.isError)
+    const catalog = parseText(all)
+    assert.equal(catalog.schemaVersion, 1)
+    assert.equal(catalog.count, 8)
+    assert.equal(catalog.presets[0].slug, "foundation")
+    assert.match(catalog.presets[0].links.studio, /\/create\?preset=/)
+    assert.match(catalog.presets[0].command, new RegExp(`^npx ${CLI_PACKAGE_SELECTOR.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} init --preset `))
+    assert.ok(Array.isArray(catalog.presets[0].audit.contrastWarnings))
+    assert.deepEqual(catalog.presets[0].audit.readabilityWarnings, [])
+
+    const filtered = parseText(
+      await runTool("list_presets", { query: "commerce" }, { fetchImpl: noFetch }),
+    )
+    assert.equal(filtered.count, 1)
+    assert.equal(filtered.presets[0].slug, "ember-commerce")
   })
 
   test("export_tokens returns a portable light/dark DTCG bundle", async () => {

@@ -8,6 +8,11 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
+This catalog describes current source and the remote endpoint. npm `@next`
+still points to `1.0.0-rc.2`, which has 15 tools and lacks `list_presets`,
+structured results, verified default reads and the new input limits.
+See [pending npm publication](https://github.com/amariner/logic2b-ui/blob/main/RELEASING.md#pending-npm-publication).
+
 ### Read the registry
 
 | Tool | What it does |
@@ -26,6 +31,7 @@ runtime to install dependencies, build and verify the resulting application.
 | `install_plan` | Resolve items into an executable plan: every file to write (project-relative path + full content, registry dependencies resolved) and the npm dependencies to add. Accepts `iconLibrary` (`lucide`, `tabler`, `phosphor` or `hugeicons`). |
 | `scaffold_plan` | Generate a complete runnable Next.js, Vite or Astro project from a marketing, dashboard or auth starter: framework shell, routing entry, exact-pinned package manifest, theme and all registry files. An optional `/create` preset applies its theme and icon library. |
 | `add_command` | The exact `logic2b add` invocation (npm/pnpm/yarn/bun, names validated) for when a shell **is** available. |
+| `list_presets` | List the curated preset gallery with canonical ids, full configs, `/create` links, exact CLI commands and measured contrast/readability warnings. |
 | `get_theme` | The theme.css stylesheet, its npm deps, and the customization catalog (base scales, accents, chart palettes, radii, fonts). |
 | `export_tokens` | Export a preset as a portable DTCG-shaped global/light/dark bundle for Style Dictionary and native pipelines. |
 | `decode_preset` | Decode a `/create` preset id into its config and the exact token values it pins for light and dark. |
@@ -44,6 +50,9 @@ real export from the chosen package, and generated source, dependencies and
 `.logic2b/base` snapshots change as one contract.
 `lint_theme` also gives maintenance agents a safe, non-executing contract check
 for theme.css after a project has been installed and edited over time.
+`list_presets` is network-free: it reads the same typed catalog rendered at
+`/themes` and never treats an editorial preset as an accessibility
+certification.
 
 Registry read, install, scaffold and theme tools accept an optional `version`
 argument: an exact semver, a semver range or a published channel. Any
@@ -90,6 +99,7 @@ Documented limits (`packages/mcp/src/limits.ts`, mirrored in the input schemas):
 | Item names per `install_plan` / `add_command` | 32, unique |
 | Item, demo, category and `srcDir` length | 128 characters |
 | `search_components` query / `limit` | 256 characters / 1–100 results |
+| `list_presets` query | 256 characters |
 | Version selector / preset id / project name | 64 / 256 / 64 characters |
 | Caller CSS (`apply_preset`, `lint_theme`) | 1,000,000 bytes |
 | Raw `contrast_audit` token map | 256 entries, 256 characters each |
@@ -107,7 +117,7 @@ known limitations. `list_components` links to that contract and
 
 ## Usage
 
-### Tool result contract (source / next release)
+### Tool result contract (remote / source; npm release pending)
 
 Every tool declares an `outputSchema` and read-only, non-destructive annotations.
 Successful calls return a JSON object in `structuredContent` and the same value
@@ -119,8 +129,8 @@ metadata may gain additional fields; known nested files and findings are typed.
 These tools return data and plans. The host owns filesystem writes, dependency
 installation and verification; annotations are not permission to execute a plan.
 Registry-reading tools declare open-world access. Pure token decoding/export and
-theme auditing do not contact a registry. These additions are implemented in
-the source checkout and are not included in the previously published rc.2 tarball.
+theme auditing do not contact a registry. These additions are available on the
+remote endpoint and in source, but not in the published rc.2 tarball.
 
 ### Remote endpoint (zero install)
 

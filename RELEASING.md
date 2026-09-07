@@ -76,3 +76,25 @@ pnpm --dir packages/mcp publish --tag next --access public
 Only the final trademark-approved `1.0.0` release moves to `latest`. If one RC
 package publishes and the other fails, fix and publish the same version of the
 missing package—never reuse an already published npm version.
+
+## Pending npm publication
+
+Checked against the public npm registry on 7 September 2026:
+
+| Package | Published `next` | Published `latest` | Pending delivery |
+| --- | --- | --- | --- |
+| `@logic2b/mcp` | `1.0.0-rc.2` | `0.2.0` | Structured outputs, verified default registry reads, bounded inputs/protocol errors, beta command selectors and the 16th tool, `list_presets` |
+| `logic2b` | `1.0.0-rc.2` | `0.4.0` | Paired candidate required by the shared CLI/MCP version policy; no new CLI command from the gallery integration |
+
+The website and remote MCP deploy from GitHub independently of npm. The gallery
+is available through `/themes`, `/es/themes`, `/themes/index.json` and remote
+`list_presets` after the integration deployment. Updating `main` does not update
+either npm dist-tag. Tokens and scaffold are private workspace packages bundled
+into the distributable binaries; they need no separate npm publication.
+
+The manifests still carry the already published `1.0.0-rc.2` version. Before
+publishing, allocate an unused paired version (`1.0.0-rc.3` was available at this
+check), update both changelogs/manifests, run the release-candidate gate above
+and publish both packages to `next`. Keep `latest` unchanged. After publication,
+run the live beta-onboarding check and update the compatibility tables and MCP
+availability notes in English and Spanish. This integration does not publish npm.

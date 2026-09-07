@@ -110,6 +110,7 @@ test.describe("guide and benchmark docs — accessibility", () => {
     ["integration-paths", "/docs/integration-paths"],
     ["benchmarks", "/docs/benchmarks"],
     ["agent-benchmarks", "/docs/agent-benchmarks"],
+    ["themes", "/themes"],
     ["es/index", "/es/docs"],
     ["es/3d-extras", "/es/docs/3d-extras"],
     ["es/agent-benchmarks", "/es/docs/agent-benchmarks"],
@@ -120,6 +121,7 @@ test.describe("guide and benchmark docs — accessibility", () => {
     ["es/integration-paths", "/es/docs/integration-paths"],
     ["es/llms", "/es/docs/llms"],
     ["es/theming", "/es/docs/theming"],
+    ["es/themes", "/es/themes"],
     ["es/components/button", "/es/docs/components/button"],
     ["es/components/card", "/es/docs/components/card"],
     ["es/components/chart", "/es/docs/components/chart"],
@@ -141,6 +143,22 @@ test.describe("guide and benchmark docs — accessibility", () => {
         await expectNoBlockingViolations(page)
       })
     }
+  }
+})
+
+test.describe("theme gallery — responsive accessibility", () => {
+  for (const [label, href] of [["themes", "/themes"], ["es/themes", "/es/themes"]] as const) {
+    test(`${label} [mobile]`, async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 812 })
+      await page.addInitScript(() => localStorage.setItem("theme", "dark"))
+      await page.goto(href, { waitUntil: "domcontentloaded" })
+
+      const overflows = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      )
+      expect(overflows, `${label} must not overflow at 375px`).toBe(false)
+      await expectNoBlockingViolations(page)
+    })
   }
 })
 

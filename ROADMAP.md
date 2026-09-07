@@ -28,10 +28,11 @@ MCP endpoint alone is not evidence that we solve either job better.
 
 ## What exists and what does not
 
-The repository already implements the registry, theme/typeset studio, React
+The repository already implements the registry, theme/typeset studio, a curated
+localized preset gallery with the network-free MCP `list_presets` tool, React
 components and blocks, CLI, local/remote MCP, three starter families, token
-exports, three-way CLI updates, component accessibility metadata, generated
-API docs and consumer/visual/accessibility test infrastructure.
+exports, three-way CLI updates, component accessibility metadata, generated API
+docs and consumer/visual/accessibility test infrastructure.
 
 Project inspection, incremental change plans, behavior/content contracts,
 `review_ui`, consumer runtime verification, structured composition, proposal
@@ -113,9 +114,10 @@ review rule cannot award itself proof of usability. See guide 14.
 
 ## Deferred until evidence supports them
 
-Framework ports, community registry hosting, theme marketplace, a full Figma
-component library, industrial/HMI tooling and a broad AI chat component catalog.
-Maintain existing capabilities, but do not grow these lanes ahead of M1/M2.
+Framework ports, community registry hosting, a community theme marketplace, a
+full Figma component library, industrial/HMI tooling and a broad AI chat
+component catalog. The existing curated static theme gallery is not a community
+marketplace. Maintain existing capabilities, but do not grow these lanes ahead of M1/M2.
 User preferences (guide 08) are not decorative: bring forward the accessibility
 parts when the reference journey exposes a need. Do not interpret normal
 post-install customization as product failure without user feedback.
