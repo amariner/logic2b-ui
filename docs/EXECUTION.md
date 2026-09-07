@@ -368,8 +368,9 @@ Browser command: `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Cont
 pnpm --filter @logic2b/web exec playwright test tests/theme-gallery.spec.ts
 tests/beta-onboarding.spec.ts tests/a11y.spec.ts tests/visual.spec.ts
 --grep 'theme gallery|themes|beta onboarding|launch demos' --workers=2`.
-All 30 checks reported success, including 14 axe checks, ten visual comparisons
-and six functional checks; the local Chrome runner hung during teardown.
+All 30 checks passed (exit 0, 1.1 minutes), including 14 axe checks, ten visual
+comparisons and six functional checks. The first failed run needed its stalled
+Chrome teardown stopped; the corrected two-worker run completed normally.
 Screenshots were inspected and existing baselines retained. The initial new
 test incorrectly assumed Create rendered a `main` element; it now asserts the
 actual Customize controls and exact selected preset instead.
