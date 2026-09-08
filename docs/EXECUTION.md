@@ -14,7 +14,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-03) |
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-04) |
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
-| REL-01 | Publish the paired CLI/MCP npm release candidate — [release guide](../RELEASING.md) | M0-01, M0-02, M0-03, M0-04 | in-progress | Codex |
+| REL-01 | Publish the paired CLI/MCP npm release candidate — [release guide](../RELEASING.md) | M0-01, M0-02, M0-03, M0-04 | in-progress (rc.3 prepared and pushed; npm publication pending) | Codex |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | ready | — |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | ready | — |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
@@ -393,3 +393,32 @@ No npm publication or dist-tag change is part of this integration.
 Next: publish a separately versioned CLI/MCP candidate when requested, then
 verify live beta onboarding and update the availability notes. Existing product
 priorities remain M0-05's video/pilot, EVAL-01 and M1-01.
+
+### 8 September 2026 — REL-01 (release preparation)
+
+Prepared the paired `logic2b@1.0.0-rc.3` and `@logic2b/mcp@1.0.0-rc.3`
+candidate on `codex/npm-rc3-release` (`ab99e2c`) and pushed the branch to
+GitHub. Both changelogs describe the candidate; the MCP changelog records all
+16 tools. Public npm metadata still reports `next` as `1.0.0-rc.2` and confirms
+that rc.3 is unused for both packages. No package or dist-tag was published.
+
+Passed on Node 24.7.0 / pnpm 11.10.0: `CI=true pnpm install
+--frozen-lockfile`; `pnpm build`; `pnpm lint`; `pnpm test`;
+`pnpm benchmark:agents:test` (15 tests); `pnpm test:release-artifacts`
+(both packed rc.3 tarballs installed in an isolated consumer; CLI
+version/help/scaffold and all 16 MCP output contracts verified over stdio);
+`pnpm --filter @logic2b/mcp test:scaffolds` (six generated consumers installed
+and production-built); `pnpm --filter @logic2b/web test:budgets`; both package
+`pack --dry-run` allowlists; and `git diff --check`. The public landing and
+registry returned HTTP 200; `/mcp` returned its expected GET 405.
+
+The first local accessibility pass saturated Chrome with four workers after
+all 76 block previews passed. A two-worker retry passed those previews plus the
+first six component/chart batches in both themes, then stalled when a separate
+Playwright job from another workspace started competing for the same browser;
+only this repository's runner was terminated. The full accessibility, visual
+and Lighthouse gates remain for isolated CI and must not be described as
+passed for this commit. Publication also still requires CI to pass for the
+exact candidate commit and separate user authorization to publish both npm
+packages to `next`, followed by the live beta-onboarding check and compatibility
+documentation update.
