@@ -580,24 +580,33 @@ export const items: RegistryItem[] = [
     type: "registry:block",
     title: "Customers admin dashboard",
     description:
-      "A customers back-office view: a KPI row (total customers, new this month, repeat rate) over a customers table with avatars, order count, lifetime spend, last order, active/new/churned segment badges, per-row actions and live search. Use as the customers tab of a store admin.",
+      "A controlled customer list with counts derived from supplied data, name/email search, segment badges and create/edit callbacks. Includes loading, empty, no-results, retry and permission states; pair with customer-edit-01.",
     categories: ["application"],
     dependencies: ["lucide-react"],
     registryDependencies: [
       "utils",
-      "avatar",
       "badge",
       "button",
       "card",
-      "dropdown-menu",
       "input",
       "table",
     ],
+    docs: "Pass customers and wire onCreate/onEdit/onRetry. Empty by default; never uses fictional customer data. Pair with customer-edit-01; server authorization and persistence belong to the consumer.",
     files: [
       {
         path: "src/blocks/admin-customers-01/admin-customers.tsx",
         type: "registry:block",
       },
     ],
+  },
+  {
+    name: "customer-edit-01",
+    type: "registry:block",
+    title: "Customer edit form",
+    description: "A controlled customer form with validation, submitting, recoverable errors, permission denial and unsaved-change confirmation. Pair with admin-customers-01.",
+    categories: ["application"],
+    registryDependencies: ["utils", "button", "card", "input", "label"],
+    docs: "Supply value, savedValue, onValueChange, onSave and onCancel. Set submitting synchronously; persist on the server, handle rejection, then update savedValue and success. Protect navigation outside this form and remount by record id when switching customers.",
+    files: [{ path: "src/blocks/customer-edit-01/customer-edit.tsx", type: "registry:block" }],
   },
 ]

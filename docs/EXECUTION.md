@@ -16,7 +16,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-04) |
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/reporting landed; real measurements pending) | Codex (EVAL-01) |
-| M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | ready | — |
+| M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
@@ -456,3 +456,78 @@ Next ready implementation: M1-01, state/content/action contract for the customer
 list and edit form. Resume EVAL-01 collection with registered fixtures and the
 applicable model-run authorization; M0-05 video/pilot and REL-03 publication
 remain independently pending.
+
+
+### 9 September 2026 — M1-01
+
+Delivered the first customer list/edit vertical slice on
+`codex/m1-01-customer-states`. `admin-customers-01` now consumes real supplied
+rows, computes truthful counts, filters locally and exposes create/edit/retry
+callbacks. It defaults to empty data; missing callbacks disable their actions.
+Static examples and simulated persistence live in the website demo. The new
+`customer-edit-01` controlled block validates name/email, associates server
+errors, locks submitting/denied inputs, preserves failed drafts and confirms
+Cancel when dirty. Keep editing and closing restore focus through documented
+component/consumer responsibilities. The demo connects create/edit, duplicate
+email rejection, failed-save retry, load retry and denied-save scenarios.
+
+Added shared `RegistryBehavior` version 1 and a fixed-schema runtime validator
+in `@logic2b/scaffold/behavior`. Nested `behavior` avoids the existing top-level
+`content` payload-URL field. Registry metadata covers both blocks' complete
+state matrix, priority source-copy paths, intents, callbacks, journey,
+responsive behavior and consumer duties. Source slots are checked through the
+TypeScript AST; no source is evaluated. MCP discovery, detail and install plans
+return matching typed metadata and reject malformed/unsupported contracts in
+manifests and payloads. Install notes, Copy Prompt and generated AGENTS.md
+carry consumer duties. Both block pages have keyboard-operable Preview/States
+tabs, live declared-state examples and a content-slot table. The implementation
+guide replaces its obsolete all-blocks rollout with this scoped delivery.
+
+Registry `1.0.0-rc.17` adds two current content-addressed payloads and a new
+manifest. Historical manifests and content remain byte-for-byte unchanged;
+no old snapshot was regenerated. The public item schema references the shared
+behavior schema. No dependency or lockfile changes; no npm or site publication.
+
+Passed on Node 26.8.1 / pnpm 11.10.0:
+
+- `pnpm --filter @logic2b/registry build` and registry lint/integrity checks.
+- `pnpm --filter @logic2b/web build` (including generated docs/demo endpoints).
+- `pnpm lint` and `pnpm test`: all eight workspace packages, 291 tests. This
+  includes 116 MCP tests and the existing 25 evaluation-harness regressions.
+- `pnpm test:release-artifacts`: isolated rc.3 CLI/MCP tarballs installed; all
+  16 tools validated over stdio, including actual customer detail and combined
+  install-plan behavior equality against current immutable payloads. Historical
+  rc.16 button/scaffold calls remain covered.
+- `pnpm --filter @logic2b/web test:budgets`: passed; current index 90.3 KiB,
+  current manifest 109.3 KiB, largest browser chunk 193.4 KiB.
+- With `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`:
+  `pnpm --filter @logic2b/web exec playwright test tests/customer-journey.spec.ts --workers=1`
+  passed 31 checks in 47.7 seconds. Functional journeys cover 390/768/1280px,
+  field validation/focus, failed retry with preserved draft/search, create,
+  server denial, unsaved confirmation and state-tab keyboard interaction.
+  All 13 built-in states passed axe under the existing policy and light/dark
+  mobile visual comparisons (26 new baselines).
+- With the same browser override:
+  `pnpm --filter @logic2b/web exec playwright test tests/visual.spec.ts --grep 'blocks/(admin-customers-01|customer-edit-01)' --workers=1`
+  passed four desktop comparisons in 10.6 seconds. Reviewed the two intentional
+  customer-list baseline changes, two new form baselines and all state images.
+- `git diff --check`; no tracked historical manifest/content diffs.
+
+The first combined browser run completed its 35 cases but left a child worker
+stuck in teardown; stopped that specific worker and reran suites separately to
+clean exits. A subsequent run exposed filling the search before hydration;
+`data-preview-ready` now signals the committed client and the functional test
+waits for it. Final checks above use ordinary comparison mode, not snapshot
+updates. Error copy now uses foreground tokens for readable text.
+
+Limitations: demo persistence is in memory. Consumers must implement real data,
+server authorization, external navigation protection, pagination/offline
+behavior and record-switch rules. The existing axe policy excludes color
+contrast; no full-site browser/axe/Lighthouse run, external user pilot, complete
+scaffold build matrix or remote GitHub CI was run for this delivery. No merge,
+push or publication performed. Broader catalog behavior coverage remains
+future work; this completes the scoped two-block M1-01 task only.
+
+Next ready task: M1-02, project context contract and local collector. M1-03 is
+also ready; M1-04 waits for M1-02. EVAL-01 real measurements, REL-03 publication
+and M0-05 video/external pilots remain independently pending.

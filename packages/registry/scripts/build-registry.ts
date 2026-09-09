@@ -10,6 +10,8 @@ import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { z } from "zod"
 
+import { BEHAVIOR_SCHEMA } from "../../scaffold/src/behavior.ts"
+import type { RegistryBehavior } from "../../scaffold/src/behavior.ts"
 import { registry } from "../registry.ts"
 import {
   itemChangelog,
@@ -102,6 +104,7 @@ const registryItemSchema = z.object({
   css: z.record(z.string(), z.unknown()).optional(),
   categories: z.array(z.string()).optional(),
   docs: z.string().optional(),
+  behavior: z.fromJSONSchema(BEHAVIOR_SCHEMA).optional(),
   accessibility: accessibilitySchema,
   api: apiSchema,
 })
@@ -123,6 +126,7 @@ interface IndexEntry {
   integrity: string
   content: string
   changelog: string
+  behavior?: RegistryBehavior
   accessibility?: string
   api?: string
 }
@@ -165,6 +169,7 @@ for (const item of registry) {
     css: item.css,
     categories: item.categories,
     docs: item.docs,
+    behavior: item.behavior,
     accessibility: item.accessibility,
     api: item.api,
   })
@@ -194,6 +199,7 @@ for (const item of registry) {
     integrity,
     content: `/r/content/${digest}.json`,
     changelog: `/r/changelog/${item.name}.json`,
+    ...(item.behavior ? { behavior: item.behavior } : {}),
     ...(item.accessibility
       ? { accessibility: `/r/${item.name}.json#accessibility` }
       : {}),
@@ -281,6 +287,7 @@ await writeFile(
     }
   )
 )
+await writeFile(join(outDir, "../schema/behavior.json"), JSON.stringify({ $schema: "https://json-schema.org/draft/2020-12/schema", $id: "https://ui.logic2b.com/schema/behavior.json", ...BEHAVIOR_SCHEMA }, null, 2))
 console.log(
   `✓ registry ${REGISTRY_VERSION} built: ${registry.length} items, immutable manifest + changelogs → ${outDir}`
 )

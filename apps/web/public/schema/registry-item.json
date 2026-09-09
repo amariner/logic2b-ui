@@ -26,6 +26,7 @@
       }
     },
     "categories": { "type": "array", "items": { "type": "string" } },
+    "behavior": { "$ref": "https://ui.logic2b.com/schema/behavior.json" },
     "docs": { "type": "string" },
     "cssVars": { "type": "object" },
     "css": { "type": "object" },

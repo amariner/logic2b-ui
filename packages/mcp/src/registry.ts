@@ -1,3 +1,5 @@
+import { assertRegistryBehavior } from "@logic2b/scaffold/behavior"
+import type { RegistryBehavior } from "@logic2b/scaffold/behavior"
 import { REGISTRY_DEFAULT_CHANNEL } from "@logic2b/scaffold/package-selectors"
 import { maxSatisfying, valid as validVersion, validRange } from "semver"
 
@@ -54,6 +56,7 @@ export interface IndexItem {
   integrity?: string
   content?: string
   changelog?: string
+  behavior?: RegistryBehavior
   accessibility?: string
   api?: string
 }
@@ -354,6 +357,7 @@ export function validateItem(name: string, data: unknown): RegistryItem {
   if (data.dependencies !== undefined && !isStringArray(data.dependencies)) {
     throw new Error(`Registry item "${name}" has malformed "dependencies".`)
   }
+  if (data.behavior !== undefined) assertRegistryBehavior(data.behavior)
   return data as unknown as RegistryItem
 }
 
@@ -426,6 +430,7 @@ function validateManifest(resolved: string, data: unknown): RegistryVersionManif
     if (names.has(entry.name)) {
       throw new Error(`Registry manifest ${resolved} lists "${entry.name}" twice.`)
     }
+    if (entry.behavior !== undefined) assertRegistryBehavior(entry.behavior)
     names.add(entry.name)
   }
   return data as unknown as RegistryVersionManifest

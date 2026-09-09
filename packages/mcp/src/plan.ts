@@ -1,3 +1,4 @@
+import type { RegistryBehavior } from "@logic2b/scaffold/behavior"
 import {
   createRegistryClient,
   type FetchLike,
@@ -44,6 +45,7 @@ export interface InstallPlan {
   items: {
     name: string
     title: string
+    behavior?: RegistryBehavior
     requested: boolean
     version?: string
     integrity?: string
@@ -113,8 +115,10 @@ export async function buildInstallPlan(
     }
   }
 
+  const consumerNotes = [...resolved.values()].flatMap(item => item.behavior?.consumer.map(note => `${item.name}: ${note}`) ?? [])
   const aliasRoot = srcDir === "" || srcDir === "." ? "./" : `./${srcDir.replace(/\/$/, "")}/`
   const notes = [
+    ...consumerNotes,
     `Write each file at its "path" (relative to the project root), creating directories as needed.`,
     `Imports use the "@/*" alias — ensure tsconfig.json maps "@/*" to "${aliasRoot}*" (compilerOptions.paths).`,
     npmDeps.size > 0
@@ -140,6 +144,7 @@ export async function buildInstallPlan(
       name: item.name,
       title: item.title ?? item.name,
       requested: requested.has(item.name),
+      ...(item.behavior ? { behavior: item.behavior } : {}),
       ...(item.version ? { version: item.version } : {}),
       ...(item.integrity ? { integrity: item.integrity } : {}),
       files: (item.files ?? []).map((file) => file.path).sort(),

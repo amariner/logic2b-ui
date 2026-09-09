@@ -1,4 +1,5 @@
 ---
+import type { RegistryBehavior } from "@logic2b/scaffold/behavior";
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import { Code } from "astro:components";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -11,6 +12,7 @@ type RegistryBlock = {
   title?: string;
   description: string;
   categories?: string[];
+  behavior?: RegistryBehavior;
 };
 
 type RegistryFile = { path: string; type: string; content: string };
@@ -96,6 +98,11 @@ const installCmd = `npx ${CLI_PACKAGE_SELECTOR} add ${name}`;
       </div>
     </div>
 
+    {block.behavior && <div role="tablist" aria-label="Block examples" class="mt-6 flex gap-2">
+      <button id="preview-tab" role="tab" aria-selected="true" aria-controls="preview-panel" data-example-tab="preview-panel" class="btn btn-outline min-h-11">Preview</button>
+      <button id="states-tab" role="tab" aria-selected="false" aria-controls="states-panel" tabindex="-1" data-example-tab="states-panel" class="btn btn-outline min-h-11">States</button>
+    </div>}
+    <div id="preview-panel" role={block.behavior ? "tabpanel" : undefined} aria-labelledby={block.behavior ? "preview-tab" : undefined}>
     <div class="mt-6 flex justify-center overflow-hidden rounded-xl border bg-muted/20 p-4">
       <iframe
         id={`frame-${block.name}`}
@@ -105,6 +112,20 @@ const installCmd = `npx ${CLI_PACKAGE_SELECTOR} add ${name}`;
         loading="lazy"
       />
     </div>
+
+    </div>
+    {block.behavior && <section id="states-panel" role="tabpanel" aria-labelledby="states-tab" class="mt-6 space-y-6" hidden>
+      <h2 class="text-lg font-semibold">States and transitions</h2>
+      {Object.entries(block.behavior.states).map(([state, contract]) => <article class="space-y-3 rounded-lg border p-4">
+        <h3 class="font-semibold">{state} <span class="text-sm font-normal text-muted-foreground">({contract.support})</span></h3>
+        <p>{contract.how}</p><p class="text-sm text-muted-foreground">{contract.transition}</p>
+        {contract.support === "built-in" && <iframe title={`${block.name}: ${state}`} src={`/blocks/preview/${block.name}?state=${state}`} class="h-[640px] w-full rounded border" loading="lazy" />}
+      </article>)}
+      <h2 class="text-lg font-semibold">Content slots</h2>
+      <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr><th class="p-2">Path</th><th class="p-2">Sample</th></tr></thead><tbody>{block.behavior.content.map(slot => <tr><td class="p-2"><code>{slot.path}</code></td><td class="p-2">{slot.sample}</td></tr>)}</tbody></table></div>
+      <h2 class="text-lg font-semibold">Consumer responsibilities</h2>
+      <ul class="list-disc space-y-2 pl-6">{block.behavior.consumer.map(note => <li>{note}</li>)}</ul>
+    </section>}
 
     {
       files.length > 0 && (
@@ -142,6 +163,26 @@ const installCmd = `npx ${CLI_PACKAGE_SELECTOR} add ${name}`;
 </BaseLayout>
 
 <script>
+  const exampleTabs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-example-tab]"));
+  function selectExample(tab: HTMLButtonElement) {
+    exampleTabs.forEach(button => {
+      const selected = button === tab;
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
+      const panel = document.getElementById(button.dataset.exampleTab!);
+      if (panel) panel.hidden = !selected;
+    });
+  }
+  exampleTabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => selectExample(tab));
+    tab.addEventListener("keydown", event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const next = exampleTabs[event.key === "Home" ? 0 : event.key === "End" ? exampleTabs.length - 1 : (i + (event.key === "ArrowRight" ? 1 : -1) + exampleTabs.length) % exampleTabs.length];
+      selectExample(next); next.focus();
+    });
+  });
+
   document.querySelectorAll<HTMLButtonElement>(".copy-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const command = btn.dataset.command;

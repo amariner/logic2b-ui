@@ -1,3 +1,4 @@
+import { BEHAVIOR_SCHEMA } from "@logic2b/scaffold/behavior"
 /** Wire contracts shared by the stdio server and the remote HTTP endpoint.
  * Keep additive registry metadata allowed; known fields and nested payloads
  * are typed. Validation runs in contract/consumer tests, not via runtime code
@@ -46,7 +47,7 @@ const api = object({
   }, ["name", "kind"])),
 })
 const itemMetadata = {
-  name: string, title: string, description: string, categories: strings,
+  name: string, title: string, description: string, categories: strings, behavior: BEHAVIOR_SCHEMA,
   version: string, registryVersion: string, integrity: string, changelog: string,
 }
 const summary = object({
@@ -55,7 +56,7 @@ const summary = object({
 }, ["name", "title", "description", "kind"])
 const installItem = object({
   name: string, title: string, requested: boolean, version: string,
-  integrity: string, files: strings,
+  integrity: string, files: strings, behavior: BEHAVIOR_SCHEMA,
 }, ["name", "title", "requested"])
 const plan = {
   ...version, items: array(installItem), files: array(file),

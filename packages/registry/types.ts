@@ -1,3 +1,4 @@
+import type { RegistryBehavior } from "../scaffold/src/behavior.ts"
 export type RegistryItemType =
   | "registry:ui"
   | "registry:lib"
@@ -93,6 +94,7 @@ export interface RegistryItem {
   categories?: string[]
   /** Extra install notes surfaced by the CLI. */
   docs?: string
+  behavior?: RegistryBehavior
   accessibility?: RegistryAccessibility
   /** Generated from the public TypeScript exports in the item's UI source. */
   api?: RegistryApiContract

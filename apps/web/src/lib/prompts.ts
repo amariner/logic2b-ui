@@ -1,3 +1,5 @@
+import registryIndex from "../../public/r/index.json"
+import type { RegistryBehavior } from "@logic2b/scaffold/behavior"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 /**
  * AI-assistant prompts — the "Copy Prompt" feature.
@@ -292,7 +294,9 @@ ${css}
  */
 export function buildAddPrompt(name: string, stack: Stack = "auto"): string {
   const notes = stackNotes(stack)
-  return `Add the "${name}" item from the logic2b ui registry (${SITE}) to this project. Follow every step and verify at the end.
+  const behavior = (registryIndex as { name: string; behavior?: RegistryBehavior }[]).find(item => item.name === name)?.behavior
+  const duties = behavior ? `\n\n## Behavior contract\n\n${behavior.consumer.map(note => `- ${note}`).join("\n")}\nInspect behavior.states and behavior.content in the exact installed registry payload. Exercise loading, empty/no-results, error/retry, validation, submitting, permission and unsaved-change cases that apply.` : ""
+  return `Add the "${name}" item from the logic2b ui registry (${SITE}) to this project. Follow every step and verify at the end.${duties}
 
 ## Steps
 

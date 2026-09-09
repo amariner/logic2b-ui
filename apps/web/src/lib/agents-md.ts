@@ -53,6 +53,16 @@ This project's interface is built on the logic2b ui design system
 (${SITE}): a shadcn-compatible component registry restyled entirely
 through CSS tokens. Follow these rules for any work that touches the UI.
 
+## Customer journey behavior
+
+For installed blocks with a \`behavior\` contract, inspect its state matrix,
+content paths, action callbacks and consumer responsibilities. Verify loading,
+empty/no-results, failure/retry, submitting, validation, permission denial and
+unsaved changes where applicable. Wire real data and persistence; preserve
+custom copy, columns and tokens. Disabled controls never replace server
+permissions. Check keyboard operation and mobile layout in the consuming app.
+Only use tools that the current host actually exposes.
+
 ## Stack contract
 
 - React 19 + Tailwind CSS v4 (CSS-first config — there is no

@@ -52,3 +52,14 @@ test("generated prompts, theme exports and demo launch commands share beta polic
   }
   assert.ok(buildAgentsMd(DEFAULT_CONFIG).includes(MCP_PACKAGE_SELECTOR))
 })
+
+
+test("customer install prompts preserve actionable behavior responsibilities", () => {
+  const form = buildAddPrompt("customer-edit-01")
+  assert.match(form, /Set submitting synchronously/)
+  assert.match(form, /Protect external navigation/)
+  assert.match(form, /behavior.states/)
+  assert.match(buildAddPrompt("admin-customers-01"), /Supply real customers/)
+  assert.match(buildAgentsMd(DEFAULT_CONFIG), /Disabled controls never replace server/)
+  assert.doesNotMatch(buildAddPrompt("button"), /## Behavior contract/)
+})

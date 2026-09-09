@@ -1,0 +1,171 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "admin-customers-01",
+  "type": "registry:block",
+  "title": "Customers admin dashboard",
+  "description": "A controlled customer list with counts derived from supplied data, name/email search, segment badges and create/edit callbacks. Includes loading, empty, no-results, retry and permission states; pair with customer-edit-01.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils",
+    "badge",
+    "button",
+    "card",
+    "input",
+    "table"
+  ],
+  "files": [
+    {
+      "path": "blocks/admin-customers-01/admin-customers.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\nimport * as React from \"react\"\nimport { SearchIcon, UserPlusIcon } from \"lucide-react\"\nimport { cn } from \"@/lib/utils\"\nimport { Badge } from \"@/components/ui/badge\"\nimport { Button } from \"@/components/ui/button\"\nimport { Card, CardContent, CardDescription, CardHeader, CardTitle } from \"@/components/ui/card\"\nimport { Input } from \"@/components/ui/input\"\nimport { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from \"@/components/ui/table\"\n\nexport type Segment = \"active\" | \"new\" | \"churned\"\nexport type Customer = {\n  /** Stable across edits; email remains the fallback for existing consumers. */\n  id?: string\n  name: string\n  email: string\n  orders: number\n  spent: string\n  lastOrder: string\n  segment: Segment\n}\nexport const content = {\n  title: \"Customers\", description: \"Your customer base, segments and lifetime value.\",\n  add: \"Add customer\", listTitle: \"All customers\", search: \"Search customers\",\n  total: \"Total customers\", active: \"Active customers\", new: \"New customers\",\n  customer: \"Customer\", orders: \"Orders\", spent: \"Spent\", lastOrder: \"Last order\",\n  segment: \"Segment\", actions: \"Actions\", edit: \"Edit\",\n  loading: \"Loading customers…\", emptyTitle: \"No customers yet\", emptyDescription: \"Add your first customer to get started.\",\n  noResults: \"No matching customers\", clearSearch: \"Clear search\",\n  error: \"Customers could not be loaded. Try again.\", retry: \"Try again\",\n  permissionDenied: \"You do not have permission to manage customers.\",\n  readOnly: \"Customer details are read-only.\", results: \"Showing {shown} of {total}\",\n  activeSegment: \"Active\", newSegment: \"New\", churnedSegment: \"Churned\",\n}\nexport interface AdminCustomersProps extends React.ComponentProps<\"div\"> {\n  customers?: Customer[]\n  defaultQuery?: string\n  status?: \"idle\" | \"loading\" | \"error\" | \"permission-denied\"\n  canEdit?: boolean\n  copy?: Partial<typeof content>\n  onCreate?: () => void\n  onEdit?: (customer: Customer) => void\n  onRetry?: () => void\n}\nexport function AdminCustomers({ customers = [], defaultQuery = \"\", status = \"idle\", canEdit = true, copy, onCreate, onEdit, onRetry, className, ...props }: AdminCustomersProps) {\n  const text = { ...content, ...copy }\n  const [query, setQuery] = React.useState(defaultQuery)\n  const q = query.trim().toLocaleLowerCase()\n  const filtered = customers.filter(c => `${c.name}\\n${c.email}`.toLocaleLowerCase().includes(q))\n  const ready = status === \"idle\"\n  const labels = { active: text.activeSegment, new: text.newSegment, churned: text.churnedSegment }\n  const variants = { active: \"default\", new: \"secondary\", churned: \"outline\" } as const\n  return <div className={cn(\"mx-auto w-full max-w-5xl px-4 py-10 sm:px-6\", className)} {...props}>\n    <div className=\"mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between\">\n      <div className=\"min-w-0 space-y-1\"><h1 className=\"font-heading text-2xl font-bold tracking-tight break-words\">{text.title}</h1><p className=\"text-muted-foreground text-sm\">{text.description}</p></div>\n      <Button className=\"min-h-11 min-w-11\" onClick={onCreate} disabled={!ready || !canEdit || !onCreate}><UserPlusIcon aria-hidden=\"true\" />{text.add}</Button>\n    </div>\n    {ready && <div className=\"mb-6 grid gap-4 sm:grid-cols-3\">\n      {[{ label: text.total, value: customers.length }, { label: text.active, value: customers.filter(c => c.segment === \"active\").length }, { label: text.new, value: customers.filter(c => c.segment === \"new\").length }].map(kpi => <Card key={kpi.label}><CardHeader className=\"pb-2\"><CardDescription>{kpi.label}</CardDescription><CardTitle className=\"text-2xl tabular-nums\">{kpi.value}</CardTitle></CardHeader></Card>)}\n    </div>}\n    {ready && !canEdit && <p className=\"mb-4 text-sm text-muted-foreground\">{text.readOnly}</p>}\n    <Card aria-busy={status === \"loading\"}>\n      <CardHeader className=\"flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between\">\n        <div className=\"min-w-0 space-y-1.5\"><CardTitle>{text.listTitle}</CardTitle>{ready && <CardDescription role=\"status\">{text.results.replace(\"{shown}\", String(filtered.length)).replace(\"{total}\", String(customers.length))}</CardDescription>}</div>\n        <div className=\"relative\"><SearchIcon aria-hidden=\"true\" className=\"text-muted-foreground absolute top-3.5 left-2.5 size-4\" /><Input value={query} onChange={e => setQuery(e.target.value)} placeholder={text.search} className=\"min-h-11 min-w-11 w-full pl-8 sm:w-60\" aria-label={text.search} disabled={!ready} /></div>\n      </CardHeader>\n      <CardContent>\n        {status === \"loading\" && <p role=\"status\" className=\"py-12 text-center text-muted-foreground\">{text.loading}</p>}\n        {status === \"error\" && <div className=\"space-y-4 py-8 text-center\"><p role=\"alert\">{text.error}</p><Button className=\"min-h-11 min-w-11\" onClick={onRetry} disabled={!onRetry}>{text.retry}</Button></div>}\n        {status === \"permission-denied\" && <p role=\"alert\" className=\"py-8 text-center\">{text.permissionDenied}</p>}\n        {ready && customers.length === 0 && <div role=\"status\" className=\"space-y-2 py-12 text-center\"><h2 className=\"font-semibold\">{text.emptyTitle}</h2><p className=\"text-muted-foreground text-sm\">{text.emptyDescription}</p></div>}\n        {ready && customers.length > 0 && filtered.length === 0 && <div className=\"space-y-4 py-12 text-center\"><p role=\"status\">{text.noResults}</p><Button className=\"min-h-11 min-w-11\" variant=\"outline\" onClick={() => setQuery(\"\")}>{text.clearSearch}</Button></div>}\n        {ready && filtered.length > 0 && <Table className=\"table-fixed\">\n          <TableHeader><TableRow><TableHead>{text.customer}</TableHead><TableHead className=\"hidden w-20 sm:table-cell\">{text.orders}</TableHead><TableHead className=\"hidden w-24 text-right sm:table-cell\">{text.spent}</TableHead><TableHead className=\"hidden w-28 md:table-cell\">{text.lastOrder}</TableHead><TableHead className=\"w-20 sm:w-24\">{text.segment}</TableHead><TableHead className=\"w-16\"><span className=\"sr-only\">{text.actions}</span></TableHead></TableRow></TableHeader>\n          <TableBody>{filtered.map(c => <TableRow key={c.id ?? c.email}>\n            <TableCell className=\"whitespace-normal\"><p className=\"text-sm font-medium break-words\">{c.name}</p><p className=\"text-muted-foreground text-xs break-all\">{c.email}</p><p className=\"text-muted-foreground text-xs sm:hidden\">{text.orders}: {c.orders} · {text.spent}: {c.spent}</p></TableCell>\n            <TableCell className=\"hidden tabular-nums sm:table-cell\">{c.orders}</TableCell><TableCell className=\"hidden text-right tabular-nums sm:table-cell\">{c.spent}</TableCell><TableCell className=\"hidden tabular-nums md:table-cell\">{c.lastOrder}</TableCell>\n            <TableCell><Badge variant={variants[c.segment]} className=\"max-w-full whitespace-normal break-words\">{labels[c.segment]}</Badge></TableCell><TableCell><Button className=\"min-h-11 min-w-11 px-2\" variant=\"ghost\" disabled={!canEdit || !onEdit} onClick={() => onEdit?.(c)} aria-label={`${text.edit} ${c.name}`}>{text.edit}</Button></TableCell>\n          </TableRow>)}</TableBody>\n        </Table>}\n      </CardContent>\n    </Card>\n  </div>\n}\n"
+    }
+  ],
+  "categories": [
+    "application"
+  ],
+  "docs": "Pass customers and wire onCreate/onEdit/onRetry. Empty by default; never uses fictional customer data. Pair with customer-edit-01; server authorization and persistence belong to the consumer.",
+  "behavior": {
+    "schemaVersion": 1,
+    "states": {
+      "loading": {
+        "support": "built-in",
+        "how": "status=\"loading\" disables actions and announces loading.",
+        "transition": "Supply customers and status=\"idle\", or status=\"error\"."
+      },
+      "empty": {
+        "support": "built-in",
+        "how": "status=\"idle\" and customers=[] show first-customer guidance.",
+        "transition": "onCreate opens the consumer create form."
+      },
+      "no-results": {
+        "support": "built-in",
+        "how": "Search has no matching name/email in a nonempty list.",
+        "transition": "Clear search resets the local filter without changing customer data."
+      },
+      "error": {
+        "support": "built-in",
+        "how": "status=\"error\" renders an alert and onRetry action.",
+        "transition": "Consumer retries loading; local search is retained."
+      },
+      "success": {
+        "support": "built-in",
+        "how": "status=\"idle\" renders supplied rows and truthful counts.",
+        "transition": "onEdit receives the chosen customer; consumer opens the form."
+      },
+      "submitting": {
+        "support": "not-applicable",
+        "how": "Not applicable to this block.",
+        "transition": "No transition owned by this block."
+      },
+      "validation-error": {
+        "support": "not-applicable",
+        "how": "Not applicable to this block.",
+        "transition": "No transition owned by this block."
+      },
+      "permission-denied": {
+        "support": "built-in",
+        "how": "status=\"permission-denied\" hides data; canEdit=false leaves read-only rows.",
+        "transition": "Consumer rechecks authorization before enabling writes."
+      },
+      "unsaved-changes": {
+        "support": "not-applicable",
+        "how": "Not applicable to this block.",
+        "transition": "No transition owned by this block."
+      },
+      "offline": {
+        "support": "consumer",
+        "how": "Map offline reads to error with custom copy; no connectivity detection.",
+        "transition": "Consumer owns reconnection and retry."
+      },
+      "partial": {
+        "support": "consumer",
+        "how": "Counts cover supplied rows only; no server pagination.",
+        "transition": "Consumer owns partial-data indicators and loading more."
+      }
+    },
+    "content": [
+      {
+        "key": "title",
+        "path": "content.title",
+        "type": "text",
+        "sample": "Customers"
+      },
+      {
+        "key": "search",
+        "path": "content.search",
+        "type": "text",
+        "sample": "Search customers"
+      },
+      {
+        "key": "emptyTitle",
+        "path": "content.emptyTitle",
+        "type": "text",
+        "sample": "No customers yet"
+      },
+      {
+        "key": "noResults",
+        "path": "content.noResults",
+        "type": "text",
+        "sample": "No matching customers"
+      },
+      {
+        "key": "error",
+        "path": "content.error",
+        "type": "text",
+        "sample": "Customers could not be loaded. Try again."
+      },
+      {
+        "key": "retry",
+        "path": "content.retry",
+        "type": "text",
+        "sample": "Try again"
+      }
+    ],
+    "intents": [
+      "browse-customers",
+      "filter-customers",
+      "create-customer",
+      "edit-customer"
+    ],
+    "actions": [
+      {
+        "name": "create",
+        "callback": "onCreate",
+        "responsibility": "Open a form and persist a new customer."
+      },
+      {
+        "name": "edit",
+        "callback": "onEdit",
+        "responsibility": "Use stable customer ids and protect unsaved edits when switching."
+      },
+      {
+        "name": "retry",
+        "callback": "onRetry",
+        "responsibility": "Fetch data and report loading/error/idle."
+      }
+    ],
+    "journey": {
+      "before": [],
+      "after": [
+        "customer-edit-01"
+      ]
+    },
+    "responsive": {
+      "viewports": [
+        "mobile",
+        "tablet",
+        "desktop"
+      ],
+      "strategy": "Stack header and KPIs on mobile; wrap names/emails, show orders/spend beneath the name, hide last-order column below md.",
+      "touchTargets": "44px"
+    },
+    "consumer": [
+      "Supply real customers; the default is empty. Bind callbacks or their buttons stay disabled.",
+      "Authorize reads and writes on the server; disabled controls are not a security boundary.",
+      "Maintain stable ids and preserve custom copy, columns and theme tokens across updates.",
+      "Offline detection, pagination, remote search and data fetching belong to the consumer."
+    ]
+  }
+}

@@ -32,7 +32,10 @@ The repository already implements the registry, theme/typeset studio, a curated
 localized preset gallery with the network-free MCP `list_presets` tool, React
 components and blocks, CLI, local/remote MCP, three starter families, token
 exports, three-way CLI updates, component accessibility metadata, generated API
-docs and consumer/visual/accessibility test infrastructure.
+docs and consumer/visual/accessibility test infrastructure. The first customer
+list/edit pair also exposes controlled data/actions and versioned behavior
+metadata with loading, empty, recovery, validation, submitting, permission and
+unsaved-change states; this does not imply coverage of the full catalog.
 
 Project inspection, incremental change plans, behavior/content contracts,
 `review_ui`, consumer runtime verification, structured composition, proposal

@@ -440,6 +440,7 @@ function summarize(item: IndexItem) {
     ...(item.registryVersion ? { registryVersion: item.registryVersion } : {}),
     ...(item.integrity ? { integrity: item.integrity } : {}),
     ...(item.changelog ? { changelog: item.changelog } : {}),
+    ...(item.behavior ? { behavior: item.behavior } : {}),
     ...(item.accessibility ? { accessibility: item.accessibility } : {}),
     ...(item.api ? { api: item.api } : {}),
   }

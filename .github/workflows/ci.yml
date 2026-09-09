@@ -84,7 +84,7 @@ jobs:
       # against the dist/client built above.
       - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
 
-      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts
+      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts
 
       - run: pnpm --filter @logic2b/web test:a11y
 
