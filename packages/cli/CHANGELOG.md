@@ -4,6 +4,8 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Add bounded, read-only project inspection with explicit uncertainty: `inspect --json` collects configuration and file hashes locally.
+
 - Ship the paired candidate with `@logic2b/mcp` so the CLI, remote onboarding
   and local MCP use the same release version and shared beta package policy.
 - Refresh installation guidance to use the `next` npm channel. Existing

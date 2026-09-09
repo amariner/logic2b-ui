@@ -8,9 +8,29 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes `1.0.0-rc.3` and the remote endpoint: 16 tools with
+This catalog describes the current source candidate: 17 tools with
 structured results, verified default reads and bounded inputs. Older
-`1.0.0-rc.2` installations have 15 tools and lack these additions.
+`1.0.0-rc.2` installations have 15 tools and lack these additions. Confirm
+`inspect_project` appears in `tools/list` before using it; source changes need
+a package release or endpoint deployment to become available to other hosts.
+
+### Inspect an existing project
+
+`inspect_project` accepts a version-1 host-supplied `snapshot` with bounded
+configuration JSON strings and selected file SHA-256 hashes. It has no remote
+filesystem or network access and never executes source. Default `detail:
+"summary"` returns compact counts and uncertainty; `detail: "full"` adds the
+context, confirmed aliases, installed modification evidence and capabilities.
+Use the full context before planning writes; existing install plans do not
+consume it automatically. Unsupported versions, malformed JSON, escapes and
+oversized inputs are invalid-params errors. Do not send environment files,
+credentials or source bodies merely to count files.
+
+Limits: 128 KiB configuration bytes, 32 configuration targets, 1 MiB serialized
+snapshot, 1,000 file hashes and 256-character relative paths. Omitted host
+capabilities remain disabled and unknown. Full inventory is opt-in above the
+16 KiB summary budget. See the repository's project-context guide for the
+snapshot schema, inheritance limits and CLI collector workflow.
 
 ### Read the registry
 

@@ -37,7 +37,10 @@ list/edit pair also exposes controlled data/actions and versioned behavior
 metadata with loading, empty, recovery, validation, submitting, permission and
 unsaved-change states; this does not imply coverage of the full catalog.
 
-Project inspection, incremental change plans, behavior/content contracts,
+A bounded CLI project collector and network-free MCP host-snapshot inspector
+also exist, with explicit uncertainty and opt-in full inventory.
+
+Incremental change plans, broader behavior/content contracts,
 `review_ui`, consumer runtime verification, structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.

@@ -118,6 +118,7 @@ export async function buildInstallPlan(
   const consumerNotes = [...resolved.values()].flatMap(item => item.behavior?.consumer.map(note => `${item.name}: ${note}`) ?? [])
   const aliasRoot = srcDir === "" || srcDir === "." ? "./" : `./${srcDir.replace(/\/$/, "")}/`
   const notes = [
+    "Inspect existing apps before applying files: use logic2b inspect --json --details full, or inspect_project when exposed. Reconcile confirmed aliases and installed hashes; this plan does not automatically adapt to context or overwrite customizations safely.",
     ...consumerNotes,
     `Write each file at its "path" (relative to the project root), creating directories as needed.`,
     `Imports use the "@/*" alias — ensure tsconfig.json maps "@/*" to "${aliasRoot}*" (compilerOptions.paths).`,

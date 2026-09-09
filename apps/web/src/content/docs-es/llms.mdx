@@ -138,3 +138,16 @@ proceso local, con las diferencias de versión indicadas arriba.
 - Los colores siempre son tokens (`bg-primary`), nunca clases de paleta crudas.
 - Las variantes se definen y exportan con `class-variance-authority`.
 - Cada raíz incluye `data-slot` para una selección estable.
+
+
+### Inspección de proyectos en el candidato fuente
+
+El candidato fuente añade `logic2b inspect --json --details full` y la
+herramienta MCP `inspect_project`, sin acceso a la red. Comprueba su presencia
+en `--help` o `tools/list` antes de utilizarlas. Inspeccionan configuración y
+huellas de archivos, identifican alias confirmados y modificaciones locales,
+y mantienen explícito lo desconocido. El MCP necesita una instantánea aportada
+por el anfitrión; no puede leer tu disco. Límites: 128 KiB de configuración,
+1.000 huellas y rutas relativas de 256 caracteres. Solicita el detalle completo
+antes de conciliar destinos: los planes de instalación todavía no consumen
+este contexto automáticamente. Disponible en fuente no significa publicado.

@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { inspectLocalProject } from "./inspect.ts"
+import type { HostCapabilities } from "@logic2b/scaffold/project-context"
 import { Command } from "commander"
 import { existsSync } from "node:fs"
 import { readFile, writeFile } from "node:fs/promises"
@@ -38,6 +40,28 @@ program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
   .version(PACKAGE_VERSION)
+
+program
+  .command("inspect")
+  .description("Inspect existing project configuration and installed file hashes without writes or network access.")
+  .option("-c, --cwd <path>", "workspace directory")
+  .option("--app-root <path>", "application directory relative to the workspace")
+  .option("--file <path...>", "explicit source files to hash, relative to the selected app")
+  .option("--capabilities <list>", "host-supplied scope: none or comma-separated file-writes,dependency-install,browser")
+  .option("--details <mode>", "summary or full (inventory and evidence)", "summary")
+  .option("--json", "emit the versioned inspection result as JSON", false)
+  .action(async opts => {
+    if (!["summary", "full"].includes(opts.details)) throw new Error("--details must be summary or full.")
+    let capabilities: HostCapabilities | undefined
+    if (opts.capabilities !== undefined) {
+      const names = opts.capabilities === "none" ? [] : String(opts.capabilities).split(",")
+      if (names.some(name => !["file-writes", "dependency-install", "browser"].includes(name)) || new Set(names).size !== names.length) throw new Error("Invalid --capabilities; use none or file-writes,dependency-install,browser.")
+      capabilities = { fileWrites: names.includes("file-writes"), dependencyInstall: names.includes("dependency-install"), browser: names.includes("browser") }
+    }
+    const result = await inspectLocalProject({ cwd: resolve(opts.cwd ?? process.cwd()), appRoot: opts.appRoot, files: opts.file, capabilities }, opts.details)
+    if (opts.json) console.log(JSON.stringify(result, null, 2))
+    else console.log([`Framework: ${result.summary.framework.name}`, `Source root: ${result.summary.sourceRoot ?? "unknown"}`, `Installed items: ${result.summary.installedItems}; modified files: ${result.summary.modifiedFiles}; unresolved files: ${result.summary.unresolvedFiles}`, ...result.unknowns.map(note => `Unknown: ${note}`), ...result.guidance, ...(result.context ? [JSON.stringify(result.context, null, 2)] : ["Use --json --details full for confirmed aliases, inventory hashes and evidence."])].join("\n"))
+  })
 
 program
   .command("init")

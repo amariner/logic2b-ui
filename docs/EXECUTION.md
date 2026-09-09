@@ -17,7 +17,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/reporting landed; real measurements pending) | Codex (EVAL-01) |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
-| M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
+| M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | ready | — |
@@ -531,3 +531,86 @@ future work; this completes the scoped two-block M1-01 task only.
 Next ready task: M1-02, project context contract and local collector. M1-03 is
 also ready; M1-04 waits for M1-02. EVAL-01 real measurements, REL-03 publication
 and M0-05 video/external pilots remain independently pending.
+
+
+### 9 September 2026 — M1-02
+
+Delivered on `codex/m1-02-project-context`. Shared `ProjectSnapshotV1`,
+`ProjectContextV1`, strict snapshot validation, JSON schemas and pure detection
+live in `@logic2b/scaffold/project-context` and `project-context-schema`.
+`logic2b inspect --json` collects bounded local configuration and hashes;
+`--app-root`, `--file`, `--details full` and explicit `--capabilities` define
+selection, detail and host scope. The new network-free `inspect_project` is
+the 17th MCP tool and returns the identical shared result with typed
+text/structured parity. It never claims remote filesystem access.
+
+Detection covers Next/Vite/Astro dependency declarations, JSON/JSONC,
+local TypeScript inheritance/references, root/src aliases, custom component
+folders, stylesheet entry, preset/icon settings and registry selector versus
+resolved install version. Inventory distinguishes present/missing/unresolved
+files and known/unknown baseline modification status. Existing shadcn/native
+files are not falsely labeled registered installs. A child's baseUrl override
+rebases inherited paths; an independent test checks the result against the
+installed TypeScript parser. Package inheritance, cross-root aliases and
+conflicts remain explicit unknowns. Normal monorepo cross-root alias definitions
+are withheld without losing in-root evidence; escaped snapshot/file paths still
+reject. Workspace candidates require explicit app selection.
+
+Limits: 128 KiB configuration bytes, 32 configuration targets, 1 MiB snapshot,
+1,000 inventory entries, 256-character relative paths, 2 MiB per local source
+file and 32 MiB total source/base reads. Internal symlinks work; escaping links,
+links into excluded dependency/environment/Git paths, duplicate normalized
+or physical inventory targets, malformed JSON and unsupported snapshot/manifest
+versions reject. No scripts/configuration code, dependency directories or env
+files are executed/read. No writes or network calls occur during inspection.
+Missing capabilities default to disabled with an explicit unknown, never an
+inferred permission. Input errors do not echo configuration source.
+
+CLI/MCP documentation and English/Spanish agent docs describe the source
+candidate and availability checks, not an assumed release. Install-plan notes
+instruct hosts to reconcile confirmed aliases and preserve observed files;
+existing add/install destination behavior is unchanged. M2-01 will consume
+full context and fresh hashes for bounded incremental writes; a compact summary
+or unresolved field is insufficient write evidence.
+
+Passed on Node 26.8.1 / pnpm 11.10.0:
+
+- `pnpm --filter @logic2b/web build`; `pnpm lint`; `pnpm test` (315 tests across
+  all eight packages). Also ran `pnpm lint && pnpm test` directly in each
+  affected CLI/MCP/scaffold/web package after the final shared-core change to
+  avoid relying on Turbo cache for cross-package source imports: 67 CLI,
+  119 MCP, 16 scaffold and 25 web tests, all passed.
+- `pnpm test:release-artifacts`: rc.3 CLI/MCP tarballs installed in an isolated
+  consumer. Packed CLI inspection identified a modified file in an actual
+  generated Vite scaffold and left it unchanged. All 17 packed MCP contracts,
+  including full project inspection, passed the official stdio client schema
+  validation. Existing registry/customer contracts remain covered.
+- `pnpm --filter @logic2b/web test:budgets`: passed. The current MCP worker
+  measured 228,392 bytes, below its 256 KiB gate.
+- `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts --workers=1`:
+  both 390/1280px checks passed in 7.2 seconds, including English/Spanish
+  HTML/Markdown parity and the existing axe policy.
+- `git diff --check` passed. Registry snapshots, payloads and lockfile unchanged.
+
+Observed output sizes: a minified summary of 1,000 supplied file hashes is
+1,544 bytes; full inventory is opt-in above the 16 KiB compact budget. The
+serialized 17-tool catalog is 67,955 bytes. Ran the built CLI against this real
+repository: the root summary is 1,884 pretty-printed bytes and identifies
+`apps/web`; selecting that app and one demo source emits a 3,815-byte full
+context with Astro ^7.0.6, a real SHA-256 digest and explicit unknowns for
+package inheritance/cross-root aliases. It did not read outside the selected
+app or pretend its aliases were resolved.
+
+Limitations: declarations are not installed dependency versions; no lockfiles,
+package-based tsconfig resolution, recursive workspace globs, arbitrary source
+scan or atomic multi-file snapshot. Host-supplied hashes are evidence claims,
+not remotely verified files. Full-site visuals/axe, Lighthouse, full scaffold
+build matrix and remote GitHub CI were not run for this non-visual feature.
+No new dependency, merge, push, package publication or endpoint deployment.
+Source package versions remain rc.3; release work must verify version/tag
+availability before publication. EVAL-01 real model runs and M0 external pilots
+remain pending independently.
+
+Next ready task: M1-03, deliver agent rules with installs. M1-04 static review
+and M2-01 incremental plans are now unblocked by the shared project context.
