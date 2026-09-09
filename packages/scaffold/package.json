@@ -8,7 +8,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./package-selectors": "./src/package-selectors.ts",
-    "./behavior": "./src/behavior.ts"
+    "./behavior": "./src/behavior.ts",
+    "./project-context": "./src/project-context.ts",
+    "./project-context-schema": "./src/project-context-schema.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",

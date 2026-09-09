@@ -85,6 +85,7 @@ describe("TOOLS", () => {
         "add_command",
         "install_plan",
         "scaffold_plan",
+        "inspect_project",
         "list_presets",
         "get_theme",
         "export_tokens",
@@ -613,4 +614,11 @@ describe("runTool — custom accents", () => {
     )
     assert.ok(pair, "primary pair audited")
   })
+})
+
+
+test("inspect_project uses the shared typed network-free snapshot contract", async () => {
+  const result = await runTool("inspect_project", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, detail: "full" }, { fetchImpl: noFetch })
+  assert.equal(parseText(result).context.framework.name, "unknown")
+  assert.equal(TOOLS.find(tool => tool.name === "inspect_project")!.annotations.openWorldHint, false)
 })

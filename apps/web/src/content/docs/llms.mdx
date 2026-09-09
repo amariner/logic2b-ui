@@ -149,3 +149,16 @@ local process, with the release differences described above. See the
 - Variants are defined with `class-variance-authority` and exported
   (e.g. `buttonVariants`).
 - Every root element has a `data-slot` attribute for reliable selection.
+
+
+### Project inspection in the source candidate
+
+The source candidate adds `logic2b inspect --json --details full` and the
+network-free MCP `inspect_project` tool. Confirm availability in CLI `--help`
+or MCP `tools/list` before using them. They inspect existing configuration and
+file hashes, report confirmed aliases and installed modifications, and retain
+unknowns. The remote tool needs a host-supplied snapshot; it cannot read your
+disk. Limits include 128 KiB configuration input, 1,000 file hashes and
+256-character relative paths. Summary output is compact; request full detail
+before reconciling install destinations. Existing install plans do not consume
+this context automatically. Source availability does not imply publication.

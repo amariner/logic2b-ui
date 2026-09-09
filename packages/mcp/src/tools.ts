@@ -1,3 +1,5 @@
+import { inspectProject } from "@logic2b/scaffold/project-context"
+import { PROJECT_SNAPSHOT_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import { auditTokens } from "@logic2b/tokens/contrast"
 import {
@@ -261,6 +263,15 @@ const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "inspect_project",
+    description: "Inspect a bounded host-supplied project snapshot without filesystem or network access. Reports framework, aliases, installed hashes and explicit uncertainty. Summary is compact; request full detail before planning writes.",
+    inputSchema: {
+      type: "object",
+      properties: { snapshot: PROJECT_SNAPSHOT_SCHEMA, detail: { type: "string", enum: ["summary", "full"], description: "Default summary; full includes context, inventory and evidence." } },
+      required: ["snapshot"],
+    },
+  },
+  {
     name: "list_presets",
     description:
       "List the curated logic2b theme presets. Returns each canonical preset id, complete config, /create share URL, exact CLI command and measured contrast/readability warnings. Optionally search names, descriptions and tags.",
@@ -399,7 +410,7 @@ const TOOL_DEFINITIONS = [
   },
 ] as const
 
-const PURE_TOOLS = new Set(["list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -583,6 +594,10 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
       out.starter = enumArg(args, "starter", SCAFFOLD_STARTERS, { required: true })
       out.name = stringArg(args, "name", { max: LIMITS.projectNameLength })?.trim()
       out.preset = stringArg(args, "preset", { max: LIMITS.presetLength })?.trim()
+      break
+    case "inspect_project":
+      try { out.inspection = inspectProject(args.snapshot, enumArg(args, "detail", ["summary", "full"] as const) ?? "summary") }
+      catch (error) { throw new ToolInputError(error instanceof Error ? error.message : "Invalid project snapshot.") }
       break
     case "list_presets":
       out.query = stringArg(args, "query", { max: LIMITS.queryLength })?.trim()
@@ -769,6 +784,8 @@ export async function runTool(
       assertResponseSource(plan.files, `The ${plan.framework} ${plan.starter.name} scaffold`)
       return textResult(plan)
     }
+
+    if (name === "inspect_project") return textResult(args.inspection)
 
     if (name === "list_presets") {
       const query = typeof args.query === "string" ? args.query.toLowerCase() : ""

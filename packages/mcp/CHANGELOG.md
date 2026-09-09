@@ -4,6 +4,8 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+- Add bounded, read-only project inspection with explicit uncertainty: `inspect_project` validates host-supplied snapshots without filesystem or network access.
+
 - Add `list_presets`, a network-free view of the shared curated gallery with
   canonical ids, complete configs, studio/CLI handoff and measured audit notes.
 - Add `demo:walkthrough`, a reproducible script that generates a preset-themed

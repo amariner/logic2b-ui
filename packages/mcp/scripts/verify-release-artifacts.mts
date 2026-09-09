@@ -156,7 +156,7 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
   await withLocalRegistry(async (registry) => {
@@ -191,6 +191,15 @@ try {
       ),
       access(join(target, ".logic2b/base/theme.css")),
     ])
+    const installedFile = join(target, "src/components/login-01/login-form.tsx")
+    const before = await readFile(installedFile, "utf8")
+    await writeFile(installedFile, `${before}\n// Consumer customization preserved by inspection.\n`)
+    const inspection = await execFileAsync(cliBin, ["inspect", "--cwd", target, "--json", "--details", "full", "--capabilities", "none"])
+    const context = JSON.parse(inspection.stdout).context
+    assert.equal(context.framework.name, "vite")
+    assert.equal(context.sourceRoot, "src")
+    assert.equal(context.installed.find((item: { name: string }) => item.name === "login-01").files[0].modified, true)
+    assert.equal(await readFile(installedFile, "utf8"), `${before}\n// Consumer customization preserved by inspection.\n`)
   })
 
   await withLocalRegistry(async (registry) => {
@@ -220,6 +229,7 @@ try {
           "get_component",
           "get_demo",
           "get_theme",
+          "inspect_project",
           "install_plan",
           "lint_theme",
           "list_components",
@@ -246,6 +256,7 @@ try {
       const cases: Array<[string, Record<string, unknown>]> = [
         ["list_components", {}],
         ["list_presets", {}],
+        ["inspect_project", { snapshot: { schemaVersion: 1, configurations: [{ path: "package.json", content: JSON.stringify({ dependencies: { vite: "^8", react: "^19" } }) }, { path: "tsconfig.json", content: JSON.stringify({ compilerOptions: { paths: { "@/*": ["src/*"] } } }) }], files: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } }, detail: "full" }],
         ["search_components", { query: "button" }],
         ["get_component", { name: "button", version: "1.0.0-rc.16" }],
         ["get_component", { name: "customer-edit-01" }],
@@ -290,6 +301,10 @@ try {
             assert.deepEqual(plan.items.find(item => item.name === block)?.behavior, (await json(join(registryRoot, `${block}.json`))).behavior)
           }
         }
+        if (name === "inspect_project") {
+          const inspection = result.structuredContent as { context: { sourceRoot: string } }
+          assert.equal(inspection.context.sourceRoot, "src")
+        }
         if (name === "add_command") {
           for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
             assert.equal(
@@ -322,7 +337,7 @@ try {
 
   passed = true
   console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/scaffold verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 16 tool output contracts verified over stdio`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 17 tool output contracts verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })
