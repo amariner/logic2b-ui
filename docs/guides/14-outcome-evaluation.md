@@ -1,6 +1,11 @@
 # 14 — Measure whether Logic2b improves the outcome
 
-Status: proposed. Task: EVAL-01; starts alongside M0 and continues per milestone.
+Status: protocol/reporting implemented 9 September 2026; real measurements
+pending. Task: EVAL-01 remains in progress and continues per milestone.
+See [protocol v2](../../benchmarks/agents/protocol-v2.json) and its
+[recording guide](../../benchmarks/agents/OUTCOMES.md) for the executable
+contract, randomized schedule and evidence-report commands. The v1 runner
+does not yet execute v2 tasks; no comparative outcomes are claimed.
 
 ## Question
 

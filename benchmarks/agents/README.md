@@ -104,3 +104,22 @@ evaluator-observed production build passed. Raw artifacts, transcripts,
 metadata and detailed rule evidence live under `runs/` and `results/`.
 Synthetic fixtures remain mechanically excluded; future runs can broaden the
 table to other agent hosts without changing the v1 protocol.
+
+
+## Outcome evaluation (protocol v2)
+
+The v1 leaderboard above measures implementation smoke tasks; it is not evidence
+of comparative product advantage. [Protocol v2](./protocol-v2.json) evaluates the
+customer journey and subsequent maintenance under three resource conditions.
+Its [recording guide](./OUTCOMES.md) defines evidence collection and reporting.
+Real comparative measurements are **pending**. The new-workflow condition also
+waits for the context, behavior, review and change-plan implementations.
+
+```bash
+pnpm --dir benchmarks/agents outcomes schedule 20260909
+pnpm --dir benchmarks/agents outcomes report /path/to/attempts.json /path/to/artifacts
+```
+
+These commands only create a schedule or validate and aggregate supplied evidence.
+They do not invoke models, execute submitted source, contact participants, change
+v1 results or publish transcripts. Synthetic test cases never enter v2 samples.

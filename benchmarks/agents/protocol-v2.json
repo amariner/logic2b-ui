@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "id": "logic2b-outcomes-v2",
+  "status": "pending-real-attempts",
+  "minimumAttemptsPerConditionPerTask": 5,
+  "conditions": [
+    {
+      "id": "baseline",
+      "resources": "Frozen public documentation and standard registry integration; no Logic2b CLI/MCP tools."
+    },
+    {
+      "id": "cli-mcp",
+      "resources": "Same documentation and fixture plus released Logic2b CLI/MCP."
+    },
+    {
+      "id": "context-contract-review-plan",
+      "resources": "Same fixture and CLI/MCP plus implemented project context, behavior contracts, review and change plans. Unavailable until these implementations exist."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "customer-journey",
+      "acceptance": "List, filter and edit customer data; independently assert persisted changes."
+    },
+    {
+      "id": "failure-recovery",
+      "acceptance": "Exercise slow data, failed load, retry and denied operation without losing input."
+    },
+    {
+      "id": "preserve-customizations",
+      "acceptance": "Add a filter while preserving custom copy, a custom column and token override."
+    },
+    {
+      "id": "upstream-update",
+      "acceptance": "Apply an upstream component update with local modifications; surface conflicts without silent overwrites."
+    },
+    {
+      "id": "held-out-transfer",
+      "acceptance": "Evaluate similar interactions in a different domain with long content; keep fixture outside authoring examples."
+    }
+  ],
+  "requiredChecks": [
+    "task-completion",
+    "required-states",
+    "keyboard",
+    "mobile-overflow",
+    "preserved-edits",
+    "human-design-review"
+  ],
+  "controls": [
+    "Pin host, model/version or explicit alias, capability profile, fixture hash, registry/tool/schema versions and time/token budgets within a cohort.",
+    "Pre-register seed and randomized schedule; use a fresh opaque workspace id for every attempt.",
+    "Retain incomplete, failed and timed-out attempts in the denominator. Report assisted rescues separately.",
+    "Independent evaluator captures actual build and browser evidence. Blind human design review where practical.",
+    "No paid model runs or participant outreach without applicable authorization.",
+    "Hash sanitized artifacts after removing credentials, personal data and private paths; retain provenance privately.",
+    "Synthetic cases are excluded from comparative reports; protocol v1 and its leaderboard are immutable.",
+    "Record interventions for each condition; hashes alone do not establish truth or evaluator independence.",
+    "Within-Logic2b ablations require a separately registered condition/protocol extension. Do not pool cross-registry runs."
+  ]
+}

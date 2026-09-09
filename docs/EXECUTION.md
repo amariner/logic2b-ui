@@ -15,7 +15,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-03) |
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-04) |
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
-| EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | ready | — |
+| EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/reporting landed; real measurements pending) | Codex (EVAL-01) |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | ready | — |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
@@ -413,3 +413,46 @@ with npm, never by sharing a password or token in this conversation.
 Next: confirm package publishing access, pass candidate CI, publish both packages
 to `next` without touching `latest`, run live beta onboarding, and align public
 English/Spanish availability notes with the observed registry state.
+
+
+### 9 September 2026 — EVAL-01 (protocol/reporting slice)
+
+Implemented on `codex/eval-01-protocol-v2`. Added a separate versioned outcome
+protocol with three resource conditions and five customer/maintenance tasks.
+`pnpm --dir benchmarks/agents outcomes schedule <seed>` produces a reproducible
+randomized 75-attempt pilot schedule. `outcomes report <attempts.json>
+<artifact-root>` validates strict version-2 records, verifies bounded SHA-256
+artifact evidence and emits deterministic descriptive JSON. It never executes
+submitted source. Duplicate attempts/reused workspace ids, unknown fields,
+unsafe paths, symlinks, oversized artifacts and tampering reject the report.
+
+Aggregation separates matching fixture/host/model/capability/version/budget
+cohorts and autonomous/assisted attempts. Failures, timeouts and incomplete
+attempts remain in the denominator; unknown checks are not passes. Missing
+metrics retain unavailable counts and null summaries. Synthetic fixtures are
+excluded from samples. Sample status stays pending until each task has a
+cohort with five autonomous attempts per condition; reaching that threshold
+claims neither advantage nor evaluator independence. The recording guide
+states collection, sanitization, independent browser/build/human evidence and
+interpretation responsibilities. Protocol v1, its runner and historical
+results are unchanged. CI now also type-checks the benchmark package; its
+existing benchmark test command discovers the new suite.
+
+Passed: `pnpm --dir benchmarks/agents lint`; `pnpm --dir benchmarks/agents test`
+(25 tests, including ten v2 tests and all existing v1 regressions);
+`git diff --check`. CLI subprocess tests verify seeded scheduling, pending
+empty reports and nonzero invalid-input exits without partial stdout.
+Environment: Node 26.8.1 / pnpm 11.10.0. No dependency additions.
+
+Not run: whole-workspace build/tests, browser/axe/visual suites, release artifact
+or scaffold builds (no product/runtime/registry changes), or remote GitHub CI.
+No paid models, participant outreach, publication, merge or push performed.
+This slice does not collect real baseline attempts or provide a v2 execution
+adapter/registered browser fixtures. EVAL-01 remains in progress until those
+measurements exist; synthetic tests are not comparative evidence. The new
+workflow condition depends on the planned M1/M2 implementations.
+
+Next ready implementation: M1-01, state/content/action contract for the customer
+list and edit form. Resume EVAL-01 collection with registered fixtures and the
+applicable model-run authorization; M0-05 video/pilot and REL-03 publication
+remain independently pending.
