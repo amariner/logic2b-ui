@@ -76,6 +76,7 @@ try {
       preset: entry.preset,
       fetchImpl,
     })
+    for (const path of ["AGENTS.md", "DESIGN.md"]) if (!plan.files.some(file => file.path === path)) throw new Error(`${entry.directory} is missing ${path}.`)
     if (entry.iconLibrary !== "lucide") {
       const generatedManifest = JSON.parse(
         plan.files.find((file) => file.path === "package.json")!.content,

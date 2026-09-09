@@ -139,3 +139,13 @@ scaffolds read the same choice from the optional `/create` preset.
 
 Components import from `@/lib/utils` and `@/components/ui/*`. Configure the `@`
 alias in your `tsconfig.json` and bundler to point at `src/`.
+
+## Agent rules in the source candidate
+
+The current checkout adds managed AGENTS.md and DESIGN.md during `init`
+(including templates), `add` and `update`. Pass `--no-agent-rules` to skip them.
+Existing project instructions outside markers are preserved. Run
+`logic2b rules --format agents,claude,cursor,copilot` from the application
+directory to generate editor formats explicitly. Check `--help` in an installed
+CLI first; source availability is not npm publication. See [agent integration](/docs/llms)
+for merge semantics, host limits and the packaged skill.

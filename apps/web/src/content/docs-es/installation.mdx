@@ -126,3 +126,14 @@ integridad de la versión resuelta.
 
 Los componentes importan desde `@/lib/utils` y `@/components/ui/*`. Configura
 el alias `@` en `tsconfig.json` y en tu bundler para que apunte a `src/`.
+
+## Reglas para agentes en el candidato de código fuente
+
+El código actual añade AGENTS.md y DESIGN.md gestionados durante `init`
+(incluidas las plantillas), `add` y `update`. Puedes omitirlos con
+`--no-agent-rules`. Se conservan las instrucciones propias fuera de los
+marcadores. Ejecuta `logic2b rules --format agents,claude,cursor,copilot` en
+el directorio de la aplicación para generar formatos de editor. Comprueba
+primero `--help` en un CLI instalado: disponer del código no implica publicación
+npm. Consulta la [integración con agentes](/es/docs/llms) para conocer cómo
+combinar documentos, los límites del host y la skill incluida.

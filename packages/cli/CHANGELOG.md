@@ -4,6 +4,8 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Deliver managed agent/design instructions with init/add/update, editor formats via `rules`, and `--no-agent-rules`; preserve project text outside markers.
+
 - Add bounded, read-only project inspection with explicit uncertainty: `inspect --json` collects configuration and file hashes locally.
 
 - Ship the paired candidate with `@logic2b/mcp` so the CLI, remote onboarding

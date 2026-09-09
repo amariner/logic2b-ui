@@ -285,3 +285,12 @@ describe("CLI project scaffolding", () => {
     assert.equal(packageManagerDevCommand("bun"), "bun run dev")
   })
 })
+
+test("scaffolds include managed instructions by default and offer a complete opt-out", async () => {
+  const options = { registry: base, framework: "vite" as const, starter: "marketing" as const, fetchImpl }
+  const normal = await buildCliScaffoldPlan(options)
+  assert.ok(normal.files.some(file => file.path === "AGENTS.md" && file.content.includes("landing-page-01")))
+  assert.ok(normal.files.some(file => file.path === "DESIGN.md"))
+  const optedOut = await buildCliScaffoldPlan({ ...options, agentRules: false })
+  assert.ok(!optedOut.files.some(file => file.path === "AGENTS.md" || file.path === "DESIGN.md"))
+})

@@ -48,6 +48,7 @@ npx logic2b@next list
 | `update [components...]` | Pull registry changes into installed components with a 3-way merge — local edits survive; overlapping edits get git-style conflict markers. |
 | `diff [components...]` | Show which installed components differ from the registry. |
 | `list` | List all components available in the registry. |
+| `rules` | Regenerate managed AGENTS.md/DESIGN.md; `--format agents,claude,cursor,copilot` adds editor formats. |
 | `inspect` | Read bounded project configuration and installed hashes; `--json --details full` includes aliases, inventory and uncertainty. |
 
 `add` snapshots what it installs under `.logic2b/base/` — that snapshot is the
@@ -97,3 +98,37 @@ bounded to 16 KiB. Limits: 128 KiB config input, 1,000 inventory entries,
 Use the full context to reconcile proposed destinations and preserve local
 changes. `add` does not automatically consume inspection results or change its
 alias behavior. An inspect result does not authorize an overwrite.
+
+
+## Agent instructions (source candidate)
+
+`init` (existing app or scaffold), `add` and `update` now generate or refresh
+managed `AGENTS.md` and `DESIGN.md`. Use `--no-agent-rules` to opt out for an
+operation. Existing text outside the `logic2b:rules` / `logic2b:design` markers
+is preserved; documents without markers get a block appended once. Malformed
+or duplicate markers require repair. Automatic refresh reports a rules failure
+separately if component installation has already succeeded.
+
+Regenerate on demand from an application directory:
+
+```bash
+node packages/cli/dist/index.js rules --cwd /path/to/app --format agents,claude,cursor,copilot
+```
+
+Build this checkout first (`pnpm --filter logic2b build`), or confirm `rules`
+appears in your installed CLI's help. This source change does not establish
+npm availability. Claude imports `@AGENTS.md`; Cursor gets an `.mdc` rule;
+Copilot gets a managed section. Optional formats already managed by logic2b
+are refreshed on later installs. Existing Cursor frontmatter stays intact.
+
+The inventory comes from the install manifest, not the full registry catalog;
+legacy installs without a manifest are unknown. Rules take no network access,
+execute no project configuration and preserve external file bytes/permissions.
+They reject symlink/hard-linked destinations, invalid UTF-8 and documents over
+128 KiB. Rules are capped at 6 KiB; large inventories report how many names
+were omitted. In a monorepo, run the command with `--cwd apps/web`.
+
+`rules --preset <id>` changes the documentation reference only. `init --preset`
+also applies CSS and records that preset in components.json while preserving
+other configuration fields. Actual CSS overrides remain authoritative. An
+icon-library conflict between preset and project must be resolved explicitly.

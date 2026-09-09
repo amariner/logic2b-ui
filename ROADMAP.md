@@ -38,7 +38,9 @@ metadata with loading, empty, recovery, validation, submitting, permission and
 unsaved-change states; this does not imply coverage of the full catalog.
 
 A bounded CLI project collector and network-free MCP host-snapshot inspector
-also exist, with explicit uncertainty and opt-in full inventory.
+also exist, with explicit uncertainty and opt-in full inventory. Managed agent
+and design instructions now ship through CLI installs, MCP scaffold/rules plans
+and the VS Code workspace adapter, preserving project text outside markers.
 
 Incremental change plans, broader behavior/content contracts,
 `review_ui`, consumer runtime verification, structured composition, proposal

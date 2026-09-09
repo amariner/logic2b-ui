@@ -25,7 +25,8 @@
     "onView:logic2b.registry",
     "onCommand:logic2b.installItems",
     "onCommand:logic2b.initializeWorkspace",
-    "onCommand:logic2b.applyPreset"
+    "onCommand:logic2b.applyPreset",
+    "onCommand:logic2b.generateAgentRules"
   ],
   "extensionKind": [
     "workspace"
@@ -81,7 +82,7 @@
       },
       {
         "command": "logic2b.installItems",
-        "title": "logic2b: Install Components…"
+        "title": "logic2b: Install Components\u2026"
       },
       {
         "command": "logic2b.initializeWorkspace",
@@ -89,7 +90,7 @@
       },
       {
         "command": "logic2b.applyPreset",
-        "title": "logic2b: Apply Preset…"
+        "title": "logic2b: Apply Preset\u2026"
       },
       {
         "command": "logic2b.openCreate",
@@ -98,6 +99,10 @@
       {
         "command": "logic2b.openDocumentation",
         "title": "logic2b: Open Documentation"
+      },
+      {
+        "command": "logic2b.generateAgentRules",
+        "title": "logic2b: Generate Agent Rules"
       }
     ],
     "menus": {
@@ -133,6 +138,11 @@
           "type": "string",
           "default": "https://ui.logic2b.com",
           "description": "Registry origin used by the explorer and by workspace initialization. HTTPS is required except for localhost development."
+        },
+        "logic2b.agentRules": {
+          "type": "boolean",
+          "default": true,
+          "description": "Refresh managed agent instructions after successful logic2b install tasks."
         }
       }
     }

@@ -1,3 +1,4 @@
+import { buildAgentRules, rulesItemFromFiles } from "./rules.ts"
 import {
   applyPresetToCss,
   decodePreset,
@@ -98,6 +99,7 @@ export interface ScaffoldPlanOptions {
   name?: string
   preset?: string
   version?: string
+  agentRules?: boolean
   resolveInstallPlan: ScaffoldInstallPlanResolver
 }
 
@@ -578,6 +580,7 @@ export async function buildScaffoldPlan({
   preset,
   version,
   resolveInstallPlan,
+  agentRules = true,
 }: ScaffoldPlanOptions): Promise<ScaffoldPlan> {
   if (!SCAFFOLD_FRAMEWORKS.includes(framework)) {
     throw new Error(`Unknown framework "${framework}".`)
@@ -651,6 +654,8 @@ export async function buildScaffoldPlan({
       content: snapshot.content,
     })
   }
+
+  if (agentRules) files.push(...buildAgentRules({ preset: canonicalPreset, stack: framework, iconLibrary, registryVersion: install.registryVersion, items: install.items.map(item => rulesItemFromFiles(item.name, item.files ?? [])) }).files)
 
   const byPath = new Map<string, string>()
   for (const file of [...files, ...registryFiles]) {

@@ -162,3 +162,31 @@ disk. Limits include 128 KiB configuration input, 1,000 file hashes and
 256-character relative paths. Summary output is compact; request full detail
 before reconciling install destinations. Existing install plans do not consume
 this context automatically. Source availability does not imply publication.
+
+## Managed agent instructions (source candidate)
+
+The current source adds `agent_rules` to MCP and `rules` to the CLI. Confirm
+availability in the running tool catalog or CLI help; this does not imply that
+the installed npm package has received the source change.
+
+`init`, `add` and `update` generate or refresh AGENTS.md and DESIGN.md. Use
+`--no-agent-rules` to opt out. `rules --format agents,claude,cursor,copilot`
+adds Claude's `@AGENTS.md` import, a Cursor rule and a Copilot section.
+Text outside managed markers remains the project's own. Malformed markers
+require repair; automatic installs report a rules failure separately.
+
+For a shell-less host, `agent_rules` returns these files from optional `preset`,
+`stack`, `iconLibrary`, `formats`, exact installed `registryVersion` and installed
+`items` (name, optional type/categories). Inventory is unknown when omitted;
+it is not inferred from the available catalog. Merge the returned managed block
+with existing instructions, never replace the whole document. Existing Cursor
+frontmatter must stay intact. Rules are capped at 6 KiB; large inventories state
+how many names are shown. DESIGN.md remains a separate preset reference, and
+actual CSS overrides take precedence.
+
+`scaffold_plan` includes the two documents by default (`agentRules: false`
+omits them). The MCP tarball contains `skills/logic2b-ui/SKILL.md` for optional
+copying to your host's skill location; npx does not install it there automatically.
+The skill uses available tools and project checks. Review, composition and
+proposal tools remain planned. Rules and plans do not grant execution authority
+or require a second approval for work already authorized by the user.

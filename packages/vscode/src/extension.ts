@@ -1,8 +1,10 @@
+import { mergeRuleFile, RULE_LIMITS, type RuleFormat } from "@logic2b/scaffold/rules"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors"
 import * as vscode from "vscode"
 
 import {
   applyPresetToProject,
+  agentRulesForProject,
   COMMAND_IDS,
   DEFAULT_REGISTRY,
   documentationUrl,
@@ -47,7 +49,7 @@ async function executeCliTask(
 ): Promise<void> {
   const execution = new vscode.ShellExecution(
     "npx",
-    [CLI_PACKAGE_SELECTOR, command, ...args],
+    [CLI_PACKAGE_SELECTOR, command, ...args, ...(vscode.workspace.getConfiguration("logic2b", folder.uri).get("agentRules", true) ? [] : ["--no-agent-rules"])],
     { cwd: folder.uri.fsPath },
   )
   const task = new vscode.Task(
@@ -189,6 +191,59 @@ async function applyPreset(): Promise<void> {
   }
 }
 
+async function rulesDocument(folder: vscode.WorkspaceFolder, path: string): Promise<vscode.TextDocument | undefined> {
+  const parts = path.split("/")
+  for (let i = 1; i <= parts.length; i++) {
+    const uri = vscode.Uri.joinPath(folder.uri, ...parts.slice(0, i))
+    try {
+      const stat = await vscode.workspace.fs.stat(uri)
+      if (stat.type & vscode.FileType.SymbolicLink) throw new Error(`Refusing symbolic link in ${path}.`)
+      if (i === parts.length && (stat.type !== vscode.FileType.File || stat.size > RULE_LIMITS.documentBytes)) throw new Error(`${path} is not a bounded regular file.`)
+    } catch (error) {
+      if ((error as { code?: string }).code === "FileNotFound") return undefined
+      throw error
+    }
+  }
+  const document = await vscode.workspace.openTextDocument(vscode.Uri.joinPath(folder.uri, ...parts))
+  if (new TextEncoder().encode(document.getText()).length > RULE_LIMITS.documentBytes) throw new Error(`${path} exceeds the document limit.`)
+  return document
+}
+
+async function generateAgentRules(requestedFolder?: vscode.WorkspaceFolder, quiet = false): Promise<void> {
+  const folder = requestedFolder ?? await pickWorkspaceFolder()
+  if (!folder) return
+  try {
+    const config = await rulesDocument(folder, "components.json")
+    if (!config) throw new Error("Initialize logic2b in this application first.")
+    const manifest = await rulesDocument(folder, ".logic2b/manifest.json")
+    const formats: RuleFormat[] = ["agents"]
+    for (const [format, path] of [["claude", "CLAUDE.md"], ["cursor", ".cursor/rules/logic2b.mdc"], ["copilot", ".github/copilot-instructions.md"]] as const) {
+      const doc = await rulesDocument(folder, path)
+      if (doc && (format === "claude" ? /^@(?:\.\/)?AGENTS\.md\r?$/m.test(doc.getText()) : doc.getText().includes("<!-- logic2b:rules:"))) formats.push(format)
+    }
+    const plan = agentRulesForProject(config.getText(), manifest?.getText(), formats)
+    const edit = new vscode.WorkspaceEdit()
+    const changed: vscode.Uri[] = []
+    for (const file of plan.files) {
+      const document = await rulesDocument(folder, file.path)
+      const result = mergeRuleFile(file, document?.getText())
+      if (result.action === "unchanged") continue
+      const uri = vscode.Uri.joinPath(folder.uri, ...file.path.split("/"))
+      if (document) edit.replace(uri, wholeDocumentRange(document), result.content)
+      else { edit.createFile(uri, { overwrite: false, ignoreIfExists: false }); edit.insert(uri, new vscode.Position(0, 0), result.content) }
+      changed.push(uri)
+    }
+    if (changed.length) {
+      if (!(await vscode.workspace.applyEdit(edit))) throw new Error("VS Code rejected the agent rules edit.")
+      const saved = await Promise.all(changed.map(async uri => (await vscode.workspace.openTextDocument(uri)).save()))
+      if (saved.some(value => !value)) throw new Error("Rules were edited, but one document could not be saved.")
+    }
+    if (!quiet) await vscode.window.showInformationMessage(`Agent rules: ${changed.length} document(s) updated.`)
+  } catch (error) {
+    await vscode.window.showErrorMessage(`Could not generate agent rules: ${error instanceof Error ? error.message : error}`)
+  }
+}
+
 export function activate(context: vscode.ExtensionContext): void {
   const provider = new RegistryTreeProvider(registryUrl)
   context.subscriptions.push(
@@ -215,6 +270,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(COMMAND_IDS[3], () => installItems(provider)),
     vscode.commands.registerCommand(COMMAND_IDS[4], initializeWorkspace),
     vscode.commands.registerCommand(COMMAND_IDS[5], applyPreset),
+    vscode.commands.registerCommand(COMMAND_IDS[8], () => generateAgentRules()),
     vscode.commands.registerCommand(COMMAND_IDS[6], () =>
       vscode.env.openExternal(vscode.Uri.parse(`${registryUrl()}/create`)),
     ),
@@ -246,7 +302,11 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     }),
     vscode.tasks.onDidEndTaskProcess((event) => {
-      if (event.execution.task.definition.type === "logic2b") provider.refresh()
+      if (event.execution.task.definition.type === "logic2b") {
+        provider.refresh()
+        const scope = event.execution.task.scope
+        if (event.exitCode === 0 && scope && typeof scope === "object" && vscode.workspace.getConfiguration("logic2b", scope.uri).get("agentRules", true)) void generateAgentRules(scope, true)
+      }
     }),
   )
 }

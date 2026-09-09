@@ -1,9 +1,11 @@
 #!/usr/bin/env node
+import { generateLocalRules, refreshLocalRules } from "./rules.ts"
+import { RULE_FORMATS, type RuleFormat } from "@logic2b/scaffold/rules"
 import { inspectLocalProject } from "./inspect.ts"
 import type { HostCapabilities } from "@logic2b/scaffold/project-context"
 import { Command } from "commander"
 import { existsSync } from "node:fs"
-import { readFile, writeFile } from "node:fs/promises"
+import { lstat, readFile, writeFile } from "node:fs/promises"
 import { dirname, join, resolve } from "node:path"
 import {
   SCAFFOLD_FRAMEWORKS,
@@ -42,6 +44,19 @@ program
   .version(PACKAGE_VERSION)
 
 program
+  .command("rules")
+  .description("Generate managed agent instructions without overwriting project rules.")
+  .option("-c, --cwd <path>", "application directory")
+  .option("-p, --preset <id>", "preset reference for the generated documentation (does not change CSS)")
+  .option("--format <formats>", "comma-separated agents,claude,cursor,copilot", "agents")
+  .action(async opts => {
+    const formats = String(opts.format).split(",")
+    if (formats.some(format => !RULE_FORMATS.includes(format as RuleFormat)) || new Set(formats).size !== formats.length) throw new Error("--format must contain distinct values from agents,claude,cursor,copilot.")
+    const result = await generateLocalRules({ cwd: resolve(opts.cwd ?? process.cwd()), formats: formats as RuleFormat[], preset: opts.preset })
+    for (const file of result) console.log(`✓ ${file.action} ${file.path}`)
+  })
+
+program
   .command("inspect")
   .description("Inspect existing project configuration and installed file hashes without writes or network access.")
   .option("-c, --cwd <path>", "workspace directory")
@@ -75,6 +90,7 @@ program
   .option("--name <name>", "generated package name (defaults to the target directory)")
   .option("--package-manager <name>", "npm, pnpm, yarn or bun")
   .option("--no-install", "skip installing npm dependencies")
+  .option("--no-agent-rules", "skip generating or refreshing agent instructions")
   .option("--monorepo", "create a Turbo workspace with the app in apps/web", false)
   .action(async (opts) => {
     const cwd = resolve(opts.cwd ?? process.cwd())
@@ -119,6 +135,7 @@ program
         preset: opts.preset,
         monorepo: opts.monorepo,
         install: opts.install,
+        agentRules: opts.agentRules,
         packageManager: opts.packageManager as PackageManager | undefined,
       })
       const appDir = opts.monorepo ? join(cwd, "apps/web") : cwd
@@ -143,6 +160,11 @@ program
       throw new Error(
         "--monorepo, --starter, --name and --package-manager require --template.",
       )
+    }
+
+    if (preset && existsSync(join(cwd, "components.json"))) {
+      const configStat = await lstat(join(cwd, "components.json"))
+      if (!configStat.isFile() || configStat.nlink !== 1 || configStat.size > 128 * 1024) throw new Error("Applying a preset requires a bounded regular components.json file, not a symbolic or hard link.")
     }
 
     // Resolve the immutable registry snapshot before touching the project.
@@ -191,6 +213,7 @@ program
       cwd,
       install: opts.install,
       client: registryClient,
+      agentRules: false,
     })
 
     const themeTarget = join(cwd, dirname(cssPath), "theme.css")
@@ -198,6 +221,10 @@ program
       if (existsSync(themeTarget)) {
         const css = await readFile(themeTarget, "utf8")
         await writeFile(themeTarget, applyPresetToCss(css, preset))
+        // Track the preset actually applied so future rules do not describe stale tokens.
+        const recordedConfig = JSON.parse(await readFile(configPath, "utf8"))
+        recordedConfig.logic2b = { ...recordedConfig.logic2b, preset: opts.preset }
+        await writeFile(configPath, JSON.stringify(recordedConfig, null, 2) + "\n")
         console.log(
           `✓ applied preset — base: ${preset.base}, accent: ${preset.theme}, ` +
             `chart: ${preset.chart}, radius: ${preset.radius}, ` +
@@ -209,6 +236,8 @@ program
         )
       }
     }
+
+    if (opts.agentRules !== false && opts.registry.replace(/\/$/, "") === DEFAULT_REGISTRY) await refreshLocalRules(cwd)
 
     console.log(
       `\nDesign system installed → ${join(dirname(cssPath), "theme.css")}\n` +
@@ -229,6 +258,7 @@ program
   .option("-o, --overwrite", "overwrite existing files", false)
   .option("-a, --all", "add every component in the registry", false)
   .option("--no-install", "skip installing npm dependencies")
+  .option("--no-agent-rules", "skip generating or refreshing agent instructions")
   .action(async (components: string[], opts) => {
     let names = components
     if (opts.all) {
@@ -257,6 +287,7 @@ program
   .option("-r, --registry <url>", "registry base URL")
   .option("--registry-version <range>", "registry semver, range or channel")
   .option("--no-install", "skip installing npm dependencies")
+  .option("--no-agent-rules", "skip generating or refreshing agent instructions")
   .action(async (components: string[], opts) => {
     let names = components
     if (names.length === 0) {
