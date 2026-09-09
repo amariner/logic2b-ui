@@ -1,0 +1,462 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui.logic2b.com/schema/behavior.json",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "states": {
+      "type": "object",
+      "properties": {
+        "loading": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "empty": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "no-results": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "success": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "submitting": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "validation-error": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "permission-denied": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "unsaved-changes": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "offline": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        },
+        "partial": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "enum": [
+                "built-in",
+                "consumer",
+                "not-applicable"
+              ]
+            },
+            "how": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "support",
+            "how",
+            "transition"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "loading",
+        "empty",
+        "no-results",
+        "error",
+        "success",
+        "submitting",
+        "validation-error",
+        "permission-denied",
+        "unsaved-changes",
+        "offline",
+        "partial"
+      ],
+      "additionalProperties": false
+    },
+    "content": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "const": "text"
+          },
+          "sample": {
+            "type": "string",
+            "minLength": 1
+          },
+          "guidance": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "key",
+          "path",
+          "type",
+          "sample"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "intents": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "browse-customers",
+          "filter-customers",
+          "create-customer",
+          "edit-customer"
+        ]
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "callback": {
+            "type": "string",
+            "minLength": 1
+          },
+          "responsibility": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "callback",
+          "responsibility"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "journey": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "after": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "before",
+        "after"
+      ],
+      "additionalProperties": false
+    },
+    "responsive": {
+      "type": "object",
+      "properties": {
+        "viewports": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "mobile",
+              "tablet",
+              "desktop"
+            ]
+          }
+        },
+        "strategy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "touchTargets": {
+          "const": "44px"
+        }
+      },
+      "required": [
+        "viewports",
+        "strategy",
+        "touchTargets"
+      ],
+      "additionalProperties": false
+    },
+    "consumer": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "states",
+    "content",
+    "intents",
+    "actions",
+    "journey",
+    "responsive",
+    "consumer"
+  ],
+  "additionalProperties": false
+}

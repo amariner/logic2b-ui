@@ -248,6 +248,8 @@ try {
         ["list_presets", {}],
         ["search_components", { query: "button" }],
         ["get_component", { name: "button", version: "1.0.0-rc.16" }],
+        ["get_component", { name: "customer-edit-01" }],
+        ["install_plan", { items: ["admin-customers-01", "customer-edit-01"] }],
         ["list_registry_versions", {}],
         ["get_changelog", { name: "button" }],
         ["get_demo", { name: "button" }],
@@ -277,6 +279,16 @@ try {
         if (["list_components", "search_components", "add_command", "get_theme"].includes(name)) {
           assert.equal(versioned.requestedVersion, REGISTRY_DEFAULT_CHANNEL, `${name} default selector`)
           assert.equal(versioned.registryVersion, defaultVersion, `${name} resolved default release`)
+        }
+        if (name === "get_component" && args.name === "customer-edit-01") {
+          const payload = await json(join(registryRoot, "customer-edit-01.json"))
+          assert.deepEqual(result.structuredContent?.behavior, payload.behavior)
+        }
+        if (name === "install_plan" && (args.items as string[]).includes("customer-edit-01")) {
+          const plan = result.structuredContent as { items: { name: string; behavior?: unknown }[] }
+          for (const block of ["admin-customers-01", "customer-edit-01"]) {
+            assert.deepEqual(plan.items.find(item => item.name === block)?.behavior, (await json(join(registryRoot, `${block}.json`))).behavior)
+          }
         }
         if (name === "add_command") {
           for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {

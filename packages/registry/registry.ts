@@ -6,6 +6,7 @@ export type {
   RegistryItemType,
 } from "./types.ts"
 import type { RegistryItem } from "./types.ts"
+import { BEHAVIOR_CONTRACTS } from "./states.ts"
 import { accessibilityFor } from "./accessibility.ts"
 import { API_CONTRACTS } from "./api.generated.ts"
 
@@ -36,6 +37,7 @@ export const registry: RegistryItem[] = items.map((item) => {
   const api = item.type === "registry:ui" ? API_CONTRACTS[item.name] : undefined
   return {
     ...item,
+    ...(BEHAVIOR_CONTRACTS[item.name] ? { behavior: BEHAVIOR_CONTRACTS[item.name] } : {}),
     ...(accessibility ? { accessibility } : {}),
     ...(api ? { api } : {}),
   }

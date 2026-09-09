@@ -377,9 +377,9 @@ export const REGISTRY_RELEASES: readonly RegistryRelease[] = [
     ],
   },
   {
-    version: REGISTRY_VERSION,
-    channel: REGISTRY_CHANNEL,
-    releasedAt: REGISTRY_RELEASED_AT,
+    version: "1.0.0-rc.16",
+    channel: "next",
+    releasedAt: "2026-08-30",
     changes: [
       {
         items: ["chart-realtime-01"],
@@ -388,6 +388,12 @@ export const REGISTRY_RELEASES: readonly RegistryRelease[] = [
           "Use an explicit wrapping flex header so controls align beside the title when space permits and wrap naturally on narrow screens regardless of base card display rules.",
       },
     ],
+  },
+  {
+    version: REGISTRY_VERSION,
+    channel: REGISTRY_CHANNEL,
+    releasedAt: REGISTRY_RELEASED_AT,
+    changes: [{ items: ["admin-customers-01", "customer-edit-01"], kind: "added", summary: "Deliver controlled customer list/edit states, content/action contracts and consumer responsibilities. Customer list now defaults to empty data and explicit callbacks." }],
   },
 ];
 
