@@ -47,6 +47,7 @@ jobs:
       # Benchmark contract: all rubric points are reachable; runner fixture
       # hashes, time/output termination and observed-build metadata are tested;
       # synthetic fixtures never enter the published leaderboard.
+      - run: pnpm --dir benchmarks/agents lint
       - run: pnpm benchmark:agents:test
 
       # The two non-empty agent fixtures are exact-pinned Vite projects. Install
