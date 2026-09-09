@@ -1,3 +1,4 @@
+import assert from "node:assert/strict"
 import { spawnSync } from "node:child_process"
 import { mkdtemp, readFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -48,6 +49,9 @@ try {
     install: false,
     fetchImpl,
   })
+
+  assert.match(await readFile(join(root, "apps/web/AGENTS.md"), "utf8"), /logic2b:rules:start v1/)
+  assert.match(await readFile(join(root, "apps/web/DESIGN.md"), "utf8"), /logic2b:design:start v1/)
 
   const install = spawnSync("pnpm", ["install", "--frozen-lockfile=false"], {
     cwd: root,

@@ -85,6 +85,7 @@ describe("TOOLS", () => {
         "add_command",
         "install_plan",
         "scaffold_plan",
+        "agent_rules",
         "inspect_project",
         "list_presets",
         "get_theme",
@@ -402,6 +403,10 @@ describe("runTool — acting tools", () => {
     assert.ok(!r.isError)
     const plan = parseText(r)
     assert.equal(plan.projectName, "agent-app")
+    assert.ok(plan.files.some((file: { path: string }) => file.path === "AGENTS.md"))
+    assert.ok(plan.files.some((file: { path: string }) => file.path === "DESIGN.md"))
+    const noRules = parseText(await runTool("scaffold_plan", { framework: "vite", starter: "auth", agentRules: false }, { base, fetchImpl }))
+    assert.ok(!noRules.files.some((file: { path: string }) => ["AGENTS.md", "DESIGN.md"].includes(file.path)))
     assert.ok(plan.files.some((file: { path: string }) => file.path === "package.json"))
     assert.ok(
       plan.files.some(
@@ -621,4 +626,11 @@ test("inspect_project uses the shared typed network-free snapshot contract", asy
   const result = await runTool("inspect_project", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, detail: "full" }, { fetchImpl: noFetch })
   assert.equal(parseText(result).context.framework.name, "unknown")
   assert.equal(TOOLS.find(tool => tool.name === "inspect_project")!.annotations.openWorldHint, false)
+})
+
+test("agent_rules supplies bounded editor writes through the shared typed contract", async () => {
+  const result = await runTool("agent_rules", { formats: ["agents", "claude", "cursor", "copilot"], items: [{ name: "button", type: "registry:ui" }] }, { fetchImpl: noFetch })
+  assert.equal(result.structuredContent!.schemaVersion, 1)
+  assert.equal((result.structuredContent!.files as unknown[]).length, 5)
+  assert.equal(TOOLS.find(tool => tool.name === "agent_rules")!.annotations.openWorldHint, false)
 })

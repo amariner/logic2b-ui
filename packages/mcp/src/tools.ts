@@ -1,3 +1,4 @@
+import { buildAgentRules, RULE_FORMATS, type AgentRulesOptions } from "@logic2b/scaffold/rules"
 import { inspectProject } from "@logic2b/scaffold/project-context"
 import { PROJECT_SNAPSHOT_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
@@ -236,6 +237,7 @@ const TOOL_DEFINITIONS = [
       type: "object",
       properties: {
         ...VERSION_INPUT,
+        agentRules: { type: "boolean", description: "Include AGENTS.md and DESIGN.md (default true)." },
         framework: {
           type: "string",
           enum: SCAFFOLD_FRAMEWORKS,
@@ -260,6 +262,25 @@ const TOOL_DEFINITIONS = [
         },
       },
       required: ["framework", "starter"],
+    },
+  },
+  {
+    name: "agent_rules",
+    description: "Generate bounded AGENTS.md, DESIGN.md and optional editor instructions. Returns managed blocks to merge, never overwrites a project. Supply installed inventory if known; omitted inventory is explicitly unknown. No filesystem or network access.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        preset: { type: "string", maxLength: 256 },
+        stack: { type: "string", enum: ["react", "next", "vite", "astro"] },
+        iconLibrary: { type: "string", enum: Object.keys(ICON_LIBRARIES) },
+        registryVersion: { type: "string", maxLength: 100, description: "Exact installed registry release, if known." },
+        formats: { type: "array", minItems: 1, maxItems: 4, uniqueItems: true, items: { type: "string", enum: RULE_FORMATS } },
+        items: { type: "array", maxItems: 1000, items: { type: "object", required: ["name"], properties: {
+          name: { type: "string", pattern: "^[a-z0-9][a-z0-9-]{0,99}$", maxLength: 100 },
+          type: { type: "string", enum: ["registry:ui", "registry:block", "registry:hook", "registry:lib", "registry:style", "registry:theme"] },
+          categories: { type: "array", maxItems: 20, items: { type: "string", pattern: "^[a-z0-9][a-z0-9-]{0,99}$", maxLength: 100 } },
+        } } },
+      },
     },
   },
   {
@@ -410,7 +431,7 @@ const TOOL_DEFINITIONS = [
   },
 ] as const
 
-const PURE_TOOLS = new Set(["inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -590,10 +611,16 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
       out.iconLibrary = enumArg(args, "iconLibrary", Object.keys(ICON_LIBRARIES)) ?? "lucide"
       break
     case "scaffold_plan":
+      if (args.agentRules !== undefined && typeof args.agentRules !== "boolean") throw new ToolInputError("agentRules must be boolean.")
+      out.agentRules = args.agentRules
       out.framework = enumArg(args, "framework", SCAFFOLD_FRAMEWORKS, { required: true })
       out.starter = enumArg(args, "starter", SCAFFOLD_STARTERS, { required: true })
       out.name = stringArg(args, "name", { max: LIMITS.projectNameLength })?.trim()
       out.preset = stringArg(args, "preset", { max: LIMITS.presetLength })?.trim()
+      break
+    case "agent_rules":
+      try { out.rules = buildAgentRules(args as AgentRulesOptions) }
+      catch (error) { throw new ToolInputError(error instanceof Error ? error.message : "Invalid rules input.") }
       break
     case "inspect_project":
       try { out.inspection = inspectProject(args.snapshot, enumArg(args, "detail", ["summary", "full"] as const) ?? "summary") }
@@ -776,6 +803,7 @@ export async function runTool(
         base,
         fetchImpl,
         framework: args.framework as ScaffoldFramework,
+        agentRules: args.agentRules as boolean | undefined,
         starter: args.starter as ScaffoldStarter,
         name: args.name as string | undefined,
         preset: args.preset as string | undefined,
@@ -784,6 +812,8 @@ export async function runTool(
       assertResponseSource(plan.files, `The ${plan.framework} ${plan.starter.name} scaffold`)
       return textResult(plan)
     }
+
+    if (name === "agent_rules") return textResult(args.rules)
 
     if (name === "inspect_project") return textResult(args.inspection)
 

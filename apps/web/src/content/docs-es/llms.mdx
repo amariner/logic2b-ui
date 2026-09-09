@@ -151,3 +151,31 @@ por el anfitrión; no puede leer tu disco. Límites: 128 KiB de configuración,
 1.000 huellas y rutas relativas de 256 caracteres. Solicita el detalle completo
 antes de conciliar destinos: los planes de instalación todavía no consumen
 este contexto automáticamente. Disponible en fuente no significa publicado.
+
+## Instrucciones gestionadas para agentes (candidato de código fuente)
+
+El código actual incorpora `agent_rules` en MCP y `rules` en CLI. Comprueba su
+presencia en el catálogo de herramientas o en la ayuda del CLI; este cambio no
+implica que el paquete npm instalado ya lo incluya.
+
+`init`, `add` y `update` generan o actualizan AGENTS.md y DESIGN.md. La opción
+`--no-agent-rules` lo desactiva. `rules --format agents,claude,cursor,copilot`
+añade la importación `@AGENTS.md` para Claude, una regla Cursor y una sección
+Copilot. El texto externo a los marcadores se conserva. Los marcadores dañados
+requieren reparación; el instalador informa por separado si fallan las reglas.
+
+Sin terminal, `agent_rules` devuelve archivos a partir de `preset`, `stack`,
+`iconLibrary`, `formats`, `registryVersion` exacta e `items` instalados (nombre
+y, opcionalmente, tipo/categorías). Todos son opcionales. Un inventario omitido
+es desconocido: el catálogo disponible no prueba una instalación. Combina el
+bloque gestionado con las instrucciones existentes, sin sustituir el documento
+completo ni el frontmatter propio de Cursor. Las reglas ocupan hasta 6 KiB; los
+inventarios grandes indican cuántos nombres se muestran. DESIGN.md es una
+referencia separada del preset: prevalecen las personalizaciones del CSS real.
+
+`scaffold_plan` incluye ambos documentos salvo con `agentRules: false`. El
+paquete MCP incluye `skills/logic2b-ui/SKILL.md`, que puedes copiar a la ubicación
+de skills de tu host; npx no lo instala allí automáticamente. La skill utiliza
+herramientas disponibles y comprobaciones del proyecto. Revisión, composición
+y propuestas siguen planificadas. Las reglas no autorizan ejecuciones nuevas
+ni exigen repetir una aprobación ya concedida por el usuario.

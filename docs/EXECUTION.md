@@ -18,7 +18,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/reporting landed; real measurements pending) | Codex (EVAL-01) |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
-| M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
+| M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | Codex (M1-03) |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | ready | — |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | ready | — |
@@ -614,3 +614,69 @@ remain pending independently.
 
 Next ready task: M1-03, deliver agent rules with installs. M1-04 static review
 and M2-01 incremental plans are now unblocked by the shared project context.
+
+
+### 9 September 2026 — M1-03
+
+Delivered on `codex/m1-03-agent-rules` (commit subject: `feat: distribute managed agent rules across installs and plans`).
+The shared `@logic2b/scaffold/rules` core now owns compact agent instructions,
+all four editor formats, managed merges and DESIGN.md. The studio keeps
+byte-identical legacy AGENTS.md/DESIGN.md exports through thin adapters.
+
+CLI `rules` regenerates from bounded local project evidence with no network;
+`init` (both modes), `add` and `update` generate/refresh instructions by default.
+`--no-agent-rules` opts out per operation. Existing managed editor formats are
+refreshed automatically. The CLI preserves outside bytes, BOM/CRLF and file
+permissions, rejects ambiguous markers, symbolic/hard links, oversized or
+invalid-UTF-8 documents, preflights all merges and replaces changed files
+atomically. Automatic rules failures are reported separately from already
+successful component operations. An applied init preset is recorded without
+losing other config properties; documentation-only rules overrides do not
+modify CSS. Inventory is manifest/host-reported, not inferred from the catalog.
+
+MCP exposes 18 typed tools, adding network-free `agent_rules` and scaffold
+`agentRules: false` opt-out. Notes specify merge/append/stop behavior for hosts.
+The tarball adds exactly `skills/logic2b-ui/SKILL.md` from the canonical repository
+source; no automatic host skill installation, runtime dependency or lockfile
+change. The skill respects available tools, project policies and existing user
+authorization. VS Code adds Generate Agent Rules through the workspace API,
+refreshes after successful tasks and supports `logic2b.agentRules: false`.
+EN/ES installation and agent docs distinguish source from npm availability.
+
+Verification:
+
+- `pnpm test`: 332 tests passed (CLI 75, MCP 121, scaffold 22, VS Code 9,
+  web 25, tokens 47, registry 8, benchmark 25). `pnpm lint`: all eight packages.
+  Direct affected-package test runs also passed, bypassing Turbo dependency
+  caches; final web test/lint reads the rebuilt Worker.
+- `pnpm --filter @logic2b/web build` and `test:budgets` passed. Final MCP Worker
+  242,929 bytes (256 KiB budget); serialized tool catalog 69,856 bytes; full
+  142-item inventory rules 3,990 bytes (6 KiB budget). A synthetic 1000-item
+  inventory remains bounded with an explicit shown/total count.
+- `pnpm --filter logic2b test:scaffold`: actual generated Vite monorepo installs
+  and builds, with AGENTS.md/DESIGN.md asserted. `pnpm --filter @logic2b/mcp
+  test:scaffolds`: six actual Next/Vite/Astro and alternate-icon projects install
+  and build with rules. Vite dashboard stays at three chunks, 188.3 KiB entry
+  and 364.3 KiB maximum.
+- `pnpm test:release-artifacts`: both rc.3 tarballs installed in a clean consumer;
+  all 18 tool schemas exercised through actual stdio, exact skill allowlist and
+  source bytes checked, packed CLI rules preserves user policy and is idempotent.
+- VS Code's real bundle is exercised through a mocked remote workspace provider:
+  preservation, idempotence, malformed-marker preflight and no shell for rules.
+  Bundle is 50,195 bytes. Budget explicitly raised from 32 to 64 KiB for the
+  shared context parser and generators; still a single file with no new runtime
+  dependency. No live VS Code host session or marketplace publication claimed.
+- Playwright beta-onboarding: two tests at 390/1280px, both locales, passed
+  using installed Google Chrome. Studio output and every editor format have
+  snapshots; no visual UI was changed. The skill passed the skill-creator
+  validator using a temporary Python environment with PyYAML 6.0.2.
+- `git diff --check` passed. No registry payload, historical manifest, package
+  version, npm channel or publication state was changed.
+
+Logs: `/tmp/logic2b-m1-03-{tests,lint,web,release,browser,budgets,cli,scaffold,mcp,vscode,cli-scaffold-build,mcp-scaffold-builds,web-tests,web-lint}.log`.
+Limit: individual CLI file replacements are atomic, not a transaction across
+all files; preconditioned multi-file apply remains M2-01. Preset tables are a
+reference, not a scan of custom CSS. Review/proposal tools remain planned.
+Next ready task: M1-04 (evidence-based static review). REL-03, external pilot
+work and real EVAL-01 measurements remain separate unfinished work. The user's
+overall development goal remains active.

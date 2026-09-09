@@ -8,7 +8,7 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes the current source candidate: 17 tools with
+This catalog describes the current source candidate: 18 tools with
 structured results, verified default reads and bounded inputs. Older
 `1.0.0-rc.2` installations have 15 tools and lack these additions. Confirm
 `inspect_project` appears in `tools/list` before using it; source changes need
@@ -48,6 +48,7 @@ snapshot schema, inheritance limits and CLI collector workflow.
 | Tool | What it does |
 | --- | --- |
 | `install_plan` | Resolve items into an executable plan: every file to write (project-relative path + full content, registry dependencies resolved) and the npm dependencies to add. Accepts `iconLibrary` (`lucide`, `tabler`, `phosphor` or `hugeicons`). |
+| `agent_rules` | Generate bounded AGENTS.md/DESIGN.md and optional Claude, Cursor and Copilot formats without network access; merge managed blocks with existing project instructions. |
 | `scaffold_plan` | Generate a complete runnable Next.js, Vite or Astro project from a marketing, dashboard or auth starter: framework shell, routing entry, exact-pinned package manifest, theme and all registry files. An optional `/create` preset applies its theme and icon library. |
 | `add_command` | The exact `logic2b add` invocation (npm/pnpm/yarn/bun, names validated) for when a shell **is** available. |
 | `list_presets` | List the curated preset gallery with canonical ids, full configs, `/create` links, exact CLI commands and measured contrast/readability warnings. |
@@ -221,3 +222,27 @@ pnpm --dir packages/mcp build   # emit dist/
 ## License
 
 MIT © [logic2b](https://ui.logic2b.com)
+
+
+## Agent rules (source candidate)
+
+`agent_rules` accepts optional `preset`, `stack` (`react`, `next`, `vite`,
+`astro`), `iconLibrary`, exact installed `registryVersion`, `formats`
+(`agents`, `claude`, `cursor`, `copilot`) and installed `items` with name and
+optional registry type/categories. Omitted inventory is explicitly unknown.
+Every format includes AGENTS.md and DESIGN.md. The managed rules block is
+at most 6 KiB; inventory truncation is reported. Conflicting preset/icon
+selections reject. No source or network is read by this tool.
+
+`scaffold_plan` includes these two documents by default; `agentRules: false`
+omits them. For an existing project, merge the returned marker block only,
+append if absent and stop on malformed/duplicate/future-version markers.
+Do not replace the whole existing file. Keep text outside markers and existing
+Cursor frontmatter unchanged. Claude's import is `@AGENTS.md`, appended once.
+A file plan supplies reference material, not additional execution authority.
+
+The tarball includes `skills/logic2b-ui/SKILL.md`, copied from the repository's
+canonical skill. Copy that directory into your host's configured skill location
+if desired; running npx does not install the skill into an editor automatically.
+The skill uses the running tool catalog and does not require planned tools.
+Check `tools/list` before using these source-candidate additions from npm.

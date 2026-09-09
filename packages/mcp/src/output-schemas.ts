@@ -84,6 +84,7 @@ const parsedMode = object({
 
 export const OUTPUT_SCHEMAS = {
   inspect_project: PROJECT_INSPECTION_SCHEMA,
+  agent_rules: object({ schemaVersion: { type: "integer", const: 1 }, files: { type: "array", minItems: 2, maxItems: 5, items: object({ path: enumeration("AGENTS.md", "DESIGN.md", "CLAUDE.md", ".cursor/rules/logic2b.mdc", ".github/copilot-instructions.md"), content: { type: "string", maxLength: 131072 } }) }, notes: strings }),
   list_components: object({ ...version, count, items: array(summary) }, [...versionRequired, "count", "items"]),
   search_components: object({ ...version, query: string, count, items: array(summary) },
     [...versionRequired, "query", "count", "items"]),

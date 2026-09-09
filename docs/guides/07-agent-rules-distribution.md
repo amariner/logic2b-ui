@@ -1,6 +1,6 @@
 # 07 — Agent rules distribution
 
-**Status:** proposed · **Lane:** keep the human in the loop · **Target:** v1.0 ·
+**Status:** implemented in source (M1-03; see execution evidence) · **Lane:** keep the human in the loop · **Target:** v1.0 ·
 **Depends on:** nothing. [03 review_ui](./03-review-ui.md) adds one rule to
 the generated file when it lands.
 
@@ -14,7 +14,49 @@ forgets the empty state, and the person using the product pays. The rules
 must arrive with the install, refresh with `update`, speak the editor's
 native format, and cost as little context as possible.
 
-## What ships
+## Implemented contract
+
+`@logic2b/scaffold/rules` owns the compact managed generator, document merge,
+DESIGN.md renderer and the byte-compatible studio export. The studio keeps its
+legacy export shape; editor/installer output is compact and state-aware.
+
+CLI `rules` is local-only and requires the official logic2b registry in project
+metadata. It reads bounded M1-02 context and manifest inventory; it never fills
+the inventory from the available catalog. No manifest means unknown. It runs in
+the application directory (`--cwd apps/web` for generated monorepos).
+
+All formats include AGENTS.md/DESIGN.md. Cursor globs cover TSX, JSX and Astro
+at any depth, including Next's root app directory; existing frontmatter is
+preserved. Copilot receives the same managed Markdown heading/block. Missing
+markers append once; duplicate, reversed, malformed and future-version markers
+reject. CLI preflights all documents, refuses symlinks/hardlinks and non-UTF-8
+files, preserves outside bytes and file permissions, and replaces each changed
+file atomically. Multi-file CLI writes are not a transactional apply protocol.
+
+`init` (both modes), `add` and `update` default to rules, with
+`--no-agent-rules` per operation. Existing optional managed editor formats are
+refreshed. Automatic refresh failures are reported separately after a successful
+component operation. `init --preset` records the actually applied preset while
+preserving other config fields. `rules --preset` affects documentation only.
+
+MCP `agent_rules` is the 18th network-free typed tool. Inputs additionally accept
+an exact installed `registryVersion` and host-reported `items`; they are bounded
+and validated before dispatch. `scaffold_plan` has `agentRules: false` opt-out.
+Managed rules are at most 6 KiB; large inventories explicitly report truncation.
+Existing documents are limited to 128 KiB. Actual CSS overrides are authoritative.
+
+The VS Code command uses the workspace API and shared context/merge core, with
+a preflight before its workspace edit. Successful install tasks refresh rules.
+`logic2b.agentRules: false` disables that follow-up and passes CLI opt-out.
+Its single-file bundle budget is 64 KiB (previously 32 KiB) to accommodate the
+shared parser and generators; there are no new runtime dependencies.
+
+The canonical skill lives at `skills/logic2b-ui/SKILL.md`; build/prepack copies
+only that file into the MCP package. It is not auto-installed into a host. It
+uses available tools/checks; review/composition/proposals remain unavailable
+until their separate milestones land. No redundant approval is required.
+
+## Original delivery specification
 
 - CLI: `init` (both modes) writes `AGENTS.md` and `DESIGN.md`; `add` and
   `update` refresh the inventory block between markers. `--no-agent-rules`
@@ -26,8 +68,8 @@ native format, and cost as little context as possible.
   `.github/copilot-instructions.md` section.
 - A Claude Code **skill** (`skills/logic2b-ui/SKILL.md`) in this repo and in
   the published MCP package: when a user asks for UI in a project that uses
-  logic2b, use the MCP tools, prefer registry items, run `review_ui` before
-  finishing, share a proposal link for anything larger than one component.
+  logic2b, use available MCP tools and prefer registry items. Run review/proposal tools
+  only when implemented; otherwise use existing checks and a concrete diff or preview.
 - The generator moves from `apps/web/src/lib/agents-md.ts` into
   `packages/scaffold/src/rules.ts`; the site imports it.
 
@@ -75,8 +117,8 @@ else a one-line `CLAUDE.md`.
 
 `skills/logic2b-ui/SKILL.md` is short and procedural: detect
 `components.json` with the logic2b registry, prefer `install_plan` /
-`scaffold_plan` / `compose_plan`, always `review_ui`, always link a proposal
-for new screens, never edit files under `.logic2b/`. It is published in the
+`scaffold_plan` / `compose_plan`, use `review_ui` and proposals only when exposed by the running catalog,
+otherwise use project checks and a diff/preview; never manually edit `.logic2b/`. It is published in the
 `@logic2b/mcp` tarball under `skills/` so `npx -y @logic2b/mcp` users get it,
 and documented in `/docs/llms`.
 

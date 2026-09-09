@@ -29,6 +29,7 @@ export interface CliScaffoldOptions {
   name?: string
   preset?: string
   monorepo?: boolean
+  agentRules?: boolean
   install?: boolean
   packageManager?: PackageManager
   fetchImpl?: FetchLike
@@ -113,6 +114,7 @@ export async function buildCliScaffoldPlan(
     starter: options.starter,
     name: options.name,
     preset: options.preset,
+    agentRules: options.agentRules,
     version: options.registryVersion,
     resolveInstallPlan: (names, installOptions) =>
       resolveCliInstallPlan(names, {

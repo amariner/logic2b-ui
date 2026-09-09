@@ -157,7 +157,19 @@ test("the extension manifest contributes every registered command", () => {
 test("the extension-host bundle stays single-file and within budget", () => {
   const bundlePath = resolve("dist/extension.js")
   const bundle = readFileSync(bundlePath, "utf8")
-  assert.ok(statSync(bundlePath).size <= 32 * 1024)
+  assert.ok(statSync(bundlePath).size <= 64 * 1024)
   assert.match(bundle, /require\(["']vscode["']\)/)
   assert.doesNotMatch(bundle, /require\(["']@logic2b\/tokens/)
+})
+
+test("remote workspace rules preserve installed metadata without requiring local paths", async () => {
+  const { agentRulesForProject } = await import("../src/core")
+  const config = JSON.stringify({ logic2b: { registry: "https://ui.logic2b.com" }, iconLibrary: "tabler" })
+  const manifest = JSON.stringify({ schemaVersion: 1, registry: { url: "https://ui.logic2b.com", resolvedVersion: "1.0.0-rc.17" }, items: { button: { files: ["ui/button.tsx"] } } })
+  const plan = agentRulesForProject(config, manifest)
+  assert.match(agentRulesForProject("{}", manifest).files[0].content, /Components: button/)
+  assert.match(plan.files[0].content, /Components: button/)
+  assert.match(plan.files[0].content, /@tabler\/icons-react/)
+  assert.throws(() => agentRulesForProject('{"logic2b":{"registry":"https://other.invalid"}}'), /logic2b registry/)
+  assert.throws(() => agentRulesForProject(config, manifest.replace('ui/button.tsx', '../escape')), /path/i)
 })

@@ -1,3 +1,4 @@
+import { refreshLocalRules } from "./rules.ts"
 import { spawnSync } from "node:child_process"
 import { createHash } from "node:crypto"
 import { existsSync, readFileSync } from "node:fs"
@@ -697,6 +698,7 @@ export async function addComponents(
     cwd?: string
     overwrite?: boolean
     install?: boolean
+    agentRules?: boolean
     fetchImpl?: FetchLike
     client?: RegistryClient
   }
@@ -739,6 +741,7 @@ export async function addComponents(
   }
 
   await recordResolvedItems(cwd, client, resolved)
+  if (opts.agentRules !== false && config.registry.replace(/\/$/, "") === DEFAULT_REGISTRY) await refreshLocalRules(cwd)
   console.log(`\n✓ ${written} file(s) written, ${skipped} skipped.`)
   if (client.resolvedVersion) {
     console.log(
@@ -779,6 +782,7 @@ export async function updateComponents(
     registryVersion?: string
     cwd?: string
     install?: boolean
+    agentRules?: boolean
     fetchImpl?: FetchLike
   }
 ): Promise<UpdateSummary> {
@@ -855,6 +859,7 @@ export async function updateComponents(
   }
 
   await recordResolvedItems(cwd, client, resolved)
+  if (opts.agentRules !== false && config.registry.replace(/\/$/, "") === DEFAULT_REGISTRY) await refreshLocalRules(cwd)
   const parts = [
     `${summary.updated} updated`,
     `${summary.merged} merged`,

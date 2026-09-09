@@ -1,3 +1,5 @@
+import { buildAgentRules, rulesItemFromFiles, type AgentRulesOptions, type RuleFormat } from "@logic2b/scaffold/rules"
+import { detectProjectContext } from "@logic2b/scaffold/project-context"
 import {
   applyPresetToCss,
   decodePreset,
@@ -17,6 +19,7 @@ export const COMMAND_IDS = [
   "logic2b.applyPreset",
   "logic2b.openCreate",
   "logic2b.openDocumentation",
+  "logic2b.generateAgentRules",
 ] as const
 
 export type RegistryKind = "component" | "block" | "chart"
@@ -247,4 +250,13 @@ export function applyPresetToProject(
     presetId,
     preset,
   }
+}
+
+/** Workspace-provider adapter: no local fs or shell is needed to generate rules. */
+export function agentRulesForProject(config: string, manifest?: string, formats?: RuleFormat[]) {
+  const raw = JSON.parse(config)
+  const registry = raw?.logic2b?.registry ?? (manifest ? JSON.parse(manifest).registry?.url : undefined)
+  if (registry !== DEFAULT_REGISTRY && registry !== `${DEFAULT_REGISTRY}/`) throw new Error("Agent rules require the logic2b registry in project metadata.")
+  const context = detectProjectContext({ schemaVersion: 1, configurations: [{ path: "components.json", content: config }, ...(manifest ? [{ path: ".logic2b/manifest.json", content: manifest }] : [])], files: [] })
+  return buildAgentRules({ preset: context.preset, iconLibrary: context.iconLibrary as AgentRulesOptions["iconLibrary"], registryVersion: context.registryVersion, items: manifest ? context.installed.map(item => rulesItemFromFiles(item.name, item.files.map(file => file.registryPath))) : undefined, formats })
 }

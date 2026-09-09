@@ -26,3 +26,18 @@ code --install-extension packages/vscode/dist/logic2b-ui.vsix
 
 The extension is currently a repository-built preview. Marketplace publication
 will follow only after the publisher identity is approved.
+
+
+## Agent instructions
+
+The source preview adds **logic2b: Generate Agent Rules**, using the workspace
+API for local and remote projects. Successful install tasks refresh managed
+rules; set `logic2b.agentRules` to false to disable that follow-up. The extension
+also passes `--no-agent-rules` to CLI tasks when disabled. It preserves project
+text outside markers, preflights every document before applying the edit and
+reports malformed markers or unsaved results. AGENTS.md and DESIGN.md are
+created by default; existing managed Claude/Cursor/Copilot formats are refreshed.
+
+Bundle budget: 64 KiB, increased from 32 KiB to include the shared bounded
+project-context parser and rules/design generators. There are no new runtime
+dependencies or additional extension-host chunks.

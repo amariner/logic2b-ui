@@ -46,7 +46,7 @@ async function pack(packageRoot: string, destination: string) {
       .split(/\r?\n/)
       .map((path) => path.replace(/^package\//, ""))
       .sort(),
-    ["CHANGELOG.md", "LICENSE", "README.md", "dist/index.js", "package.json"],
+    ["CHANGELOG.md", "LICENSE", "README.md", "dist/index.js", "package.json", ...(packageRoot === mcpRoot ? ["skills/logic2b-ui/SKILL.md"] : [])],
     `unexpected publication contents in ${tarball}`,
   )
   return tarball
@@ -109,7 +109,7 @@ try {
     ["logic2b", cliRoot, cliSource],
     ["@logic2b/mcp", mcpRoot, mcpSource],
   ] as const) {
-    assert.deepEqual(manifest.files, ["dist", "CHANGELOG.md"], `${name} publish allowlist drifted`)
+    assert.deepEqual(manifest.files, name === "@logic2b/mcp" ? ["dist", "CHANGELOG.md", "skills"] : ["dist", "CHANGELOG.md"], `${name} publish allowlist drifted`)
     assert.deepEqual(manifest.publishConfig, { access: "public" })
     assert.match(
       await readFile(join(packageRoot, "CHANGELOG.md"), "utf8"),
@@ -148,6 +148,10 @@ try {
     )
   }
 
+  assert.deepEqual(await readdir(join(installedMcp, "skills")), ["logic2b-ui"])
+  assert.deepEqual(await readdir(join(installedMcp, "skills/logic2b-ui")), ["SKILL.md"])
+  assert.equal(await readFile(join(installedMcp, "skills/logic2b-ui/SKILL.md"), "utf8"), await readFile(join(repoRoot, "skills/logic2b-ui/SKILL.md"), "utf8"))
+
   const cliEntry = join(installedCli, "dist/index.js")
   const binSuffix = process.platform === "win32" ? ".cmd" : ""
   const cliBin = join(consumer, "node_modules/.bin", `logic2b${binSuffix}`)
@@ -156,7 +160,7 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
   await withLocalRegistry(async (registry) => {
@@ -180,6 +184,8 @@ try {
     ])
     await Promise.all([
       access(join(target, "package.json")),
+      access(join(target, "AGENTS.md")),
+      access(join(target, "DESIGN.md")),
       access(join(target, "src/main.tsx")),
       access(join(target, "src/components/login-01/login-form.tsx")),
       access(join(target, ".logic2b/manifest.json")),
@@ -191,6 +197,18 @@ try {
       ),
       access(join(target, ".logic2b/base/theme.css")),
     ])
+    // The fixture registry is local; point local-only rules metadata at the official origin.
+    const rulesConfig = JSON.parse(await readFile(join(target, "components.json"), "utf8"))
+    rulesConfig.logic2b.registry = "https://ui.logic2b.com"
+    await writeFile(join(target, "components.json"), JSON.stringify(rulesConfig))
+    const policy = "# Consumer rules\nKeep this paragraph unchanged.\n"
+    await writeFile(join(target, "AGENTS.md"), policy + await readFile(join(target, "AGENTS.md"), "utf8"))
+    await execFileAsync(cliBin, ["rules", "--cwd", target, "--format", "agents,claude,cursor,copilot"])
+    const ruleText = await readFile(join(target, "AGENTS.md"), "utf8")
+    assert.ok(ruleText.startsWith(policy))
+    await execFileAsync(cliBin, ["rules", "--cwd", target, "--format", "agents,claude,cursor,copilot"])
+    assert.equal(await readFile(join(target, "AGENTS.md"), "utf8"), ruleText)
+    assert.equal(await readFile(join(target, "CLAUDE.md"), "utf8"), "@AGENTS.md\n")
     const installedFile = join(target, "src/components/login-01/login-form.tsx")
     const before = await readFile(installedFile, "utf8")
     await writeFile(installedFile, `${before}\n// Consumer customization preserved by inspection.\n`)
@@ -221,6 +239,7 @@ try {
         tools.map((tool) => tool.name).sort(),
         [
           "add_command",
+          "agent_rules",
           "apply_preset",
           "contrast_audit",
           "decode_preset",
@@ -256,6 +275,7 @@ try {
       const cases: Array<[string, Record<string, unknown>]> = [
         ["list_components", {}],
         ["list_presets", {}],
+        ["agent_rules", { formats: ["agents", "claude", "cursor", "copilot"] }],
         ["inspect_project", { snapshot: { schemaVersion: 1, configurations: [{ path: "package.json", content: JSON.stringify({ dependencies: { vite: "^8", react: "^19" } }) }, { path: "tsconfig.json", content: JSON.stringify({ compilerOptions: { paths: { "@/*": ["src/*"] } } }) }], files: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } }, detail: "full" }],
         ["search_components", { query: "button" }],
         ["get_component", { name: "button", version: "1.0.0-rc.16" }],
@@ -337,7 +357,7 @@ try {
 
   passed = true
   console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/scaffold verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 17 tool output contracts verified over stdio`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 18 tool output contracts verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })
