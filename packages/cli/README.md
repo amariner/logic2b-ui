@@ -62,6 +62,21 @@ base side of `update`'s merge, so keep the directory (committing it is fine).
 Files installed by older CLI versions have no snapshot; `update` leaves them
 untouched and says so.
 
+The source candidate merges edits on independent adjacent lines without a
+conflict. Genuine overlaps receive tagged Git-style markers and a local
+`.logic2b/update-conflicts.json` record. `update` exits 1 while conflicts or
+missing-base differences need resolution. Repeating the same update preserves
+unresolved files and still reports failure; it cannot turn the previous conflict
+into success merely because the upstream base advanced or the next version
+renamed or removed that file. Resolve the actual
+source while preserving both intended changes, then run `update` again. Do not
+delete the conflict record to bypass review. Changes to several files are not
+one atomic transaction; keep the workspace stable during upstream updates.
+Very large divergent files stop before exceeding the 4,000,000-cell line
+comparison budget; preserve both versions and resolve that file manually.
+`--registry-version` overrides the selection for one command; to keep a new
+default, explicitly update the project's `components.json` version pin.
+
 `init` and `add` install the required npm packages automatically, using
 whichever package manager the project already uses (`packageManager` field or
 lockfile — pnpm, npm, yarn or bun). Pass `--no-install` to just print the
@@ -335,3 +350,37 @@ Limits: 1 MiB suite/report JSON; 64 source files, 2 MiB each and 16 MiB total;
 512 evidence records, 16 tools and 32 notes. Paths must be canonical, safe,
 relative and at most 256 characters. Local artifacts are bounded to 4 MiB each
 and 64 MiB total. Keep evidence local unless sharing is authorized.
+
+
+## Customer change/update acceptance (source checkout)
+
+The reference lifecycle exercises the installed customer block with a custom
+Account owner column (and mobile summary), customer copy and primary-color
+CSS override. A second explicit change adds segment filtering; an immutable
+rc.17 → rc.18 update must preserve those customizations and apply the real
+upstream table fix. A separate overlap tests conflict persistence and explicit
+resolution. Stale plans reject and repeated apply must not write again.
+
+```bash
+pnpm --filter logic2b journey:prepare /tmp/logic2b-journey
+pnpm --dir /tmp/logic2b-journey install --frozen-lockfile=false
+pnpm --dir /tmp/logic2b-journey exec playwright install chromium
+pnpm --filter logic2b journey:build /tmp/logic2b-journey
+pnpm --filter logic2b test:journey /tmp/logic2b-journey /tmp/journey-customized
+pnpm --filter logic2b journey:change /tmp/logic2b-journey
+pnpm --filter logic2b journey:build /tmp/logic2b-journey
+pnpm --filter logic2b test:journey /tmp/logic2b-journey /tmp/journey-changed
+pnpm --filter logic2b journey:update /tmp/logic2b-journey
+pnpm --filter logic2b journey:build /tmp/logic2b-journey
+pnpm --filter logic2b test:journey /tmp/logic2b-journey /tmp/journey-updated
+```
+
+Build this checkout's CLI before preparing the fixture. Use new project and
+evidence directories. Each explicit build phase records its outcome and source/
+bundle hashes; checking rejects a missing or stale stage build and invokes
+`verify` on the existing output. The increased-text stage retains the narrowly
+specified unknown contrast results from the consumer fixture; a successful
+fixture gate is not blanket accessibility approval. See
+[guide 15](../../docs/guides/15-customer-journey-acceptance.md) for stage artifacts,
+independent expectations and limits. These are repository acceptance scripts,
+not additional public CLI or MCP commands.

@@ -103,6 +103,35 @@ jobs:
           path: ${{ runner.temp }}/logic2b-consumer-evidence
           if-no-files-found: warn
 
+      # Preserve custom columns, copy and tokens through a second agent request
+      # and a real immutable-registry update. Builds are explicit separate steps;
+      # check runs the already-built app and retains every stage's evidence.
+      - run: pnpm --filter logic2b journey:prepare "$RUNNER_TEMP/logic2b-journey"
+      - run: pnpm --dir "$RUNNER_TEMP/logic2b-journey" install --frozen-lockfile=false
+      - run: pnpm --filter logic2b journey:build "$RUNNER_TEMP/logic2b-journey"
+      - run: pnpm --filter logic2b test:journey "$RUNNER_TEMP/logic2b-journey" "$RUNNER_TEMP/logic2b-journey-customized"
+      - run: pnpm --filter logic2b journey:change "$RUNNER_TEMP/logic2b-journey"
+      - run: pnpm --filter logic2b journey:build "$RUNNER_TEMP/logic2b-journey"
+      - run: pnpm --filter logic2b test:journey "$RUNNER_TEMP/logic2b-journey" "$RUNNER_TEMP/logic2b-journey-changed"
+      - run: pnpm --filter logic2b journey:update "$RUNNER_TEMP/logic2b-journey"
+      - run: pnpm --filter logic2b journey:build "$RUNNER_TEMP/logic2b-journey"
+      - run: pnpm --filter logic2b test:journey "$RUNNER_TEMP/logic2b-journey" "$RUNNER_TEMP/logic2b-journey-updated"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logic2b-customer-change-update
+          # These directories contain only the generated synthetic consumer;
+          # include its conflict-resolution journal for inspectable evidence.
+          include-hidden-files: true
+          path: |
+            ${{ runner.temp }}/logic2b-journey-customized
+            ${{ runner.temp }}/logic2b-journey-changed
+            ${{ runner.temp }}/logic2b-journey-updated
+            ${{ runner.temp }}/logic2b-journey/journey-artifacts
+            ${{ runner.temp }}/logic2b-journey/journey-state.json
+          if-no-files-found: warn
+
       - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts tests/verification-docs.spec.ts
 
       - run: pnpm --filter @logic2b/web test:a11y

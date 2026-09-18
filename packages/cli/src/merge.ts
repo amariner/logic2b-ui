@@ -11,6 +11,7 @@
 function matchIndices(a: string[], b: string[]): Map<number, number> {
   const n = a.length
   const m = b.length
+  if ((n + 1) * (m + 1) > 4_000_000) throw new Error("Component merge exceeds the 4,000,000-cell comparison limit. Preserve both versions and resolve this large file manually.")
   // DP table of LCS lengths (small files — components are a few hundred lines).
   const dp: Uint32Array[] = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1))
   for (let i = n - 1; i >= 0; i--) {
@@ -43,7 +44,31 @@ export interface MergeResult {
   conflicts: number
 }
 
-export function merge3(base: string, local: string, remote: string): MergeResult {
+interface Edit { start: number; end: number; lines: string[]; side: "local" | "remote" }
+
+/** Express each side's edits in base coordinates. Adjacent changed base lines
+ * are independent edits, even when there is no unchanged line between them. */
+function edits(base: string[], side: string[], name: Edit["side"]): Edit[] {
+  const result: Edit[] = []
+  let start = 0, next = 0
+  for (const [baseIndex, sideIndex] of [...matchIndices(base, side), [base.length, side.length]]) {
+    if (baseIndex > start || sideIndex > next) result.push({ start, end: baseIndex, lines: side.slice(next, sideIndex), side: name })
+    start = baseIndex + 1
+    next = sideIndex + 1
+  }
+  return result
+}
+
+function overlaps(a: Edit, b: Edit): boolean {
+  // Insertions conflict at the same point or inside a replaced range. At the
+  // outside boundary they remain independent and precede/follow that edit.
+  if (a.start === a.end && b.start === b.end) return a.start === b.start
+  if (a.start === a.end) return b.start < a.start && a.start < b.end
+  if (b.start === b.end) return a.start < b.start && b.start < a.end
+  return a.start < b.end && b.start < a.end
+}
+
+export function merge3(base: string, local: string, remote: string, labels = { local: "local", remote: "registry" }): MergeResult {
   // Fast paths.
   if (local === remote) return { merged: local, conflicts: 0 }
   if (local === base) return { merged: remote, conflicts: 0 }
@@ -52,32 +77,43 @@ export function merge3(base: string, local: string, remote: string): MergeResult
   const b = base.split("\n")
   const l = local.split("\n")
   const r = remote.split("\n")
-  const ml = matchIndices(b, l)
-  const mr = matchIndices(b, r)
-
+  const changes = [...edits(b, l, "local"), ...edits(b, r, "remote")]
+    .sort((a, z) => a.start - z.start || a.end - z.end)
+  // Connected overlapping edits form one conflict candidate. Taking the
+  // transitive closure handles a wide replacement crossing several hunks on
+  // the other side without dropping the unchanged text between those hunks.
+  const parent = changes.map((_, index) => index)
+  const find = (index: number): number => {
+    while (parent[index] !== index) { parent[index] = parent[parent[index]]; index = parent[index] }
+    return index
+  }
+  for (let i = 0; i < changes.length; i++) for (let j = i + 1; j < changes.length && changes[j].start <= changes[i].end; j++) {
+    if (changes[i].side !== changes[j].side && overlaps(changes[i], changes[j])) parent[find(j)] = find(i)
+  }
+  const groups = new Map<number, Edit[]>()
+  for (let i = 0; i < changes.length; i++) {
+    const key = find(i), group = groups.get(key) ?? []
+    group.push(changes[i]); groups.set(key, group)
+  }
+  const chunks = [...groups.values()].sort((a, z) => a[0].start - z[0].start || a[0].end - z[0].end)
   const out: string[] = []
   let conflicts = 0
   let bi = 0
-  let li = 0
-  let ri = 0
-
-  while (bi <= b.length) {
-    // Stable line: present unchanged in both sides at the current cursor.
-    if (bi < b.length && ml.get(bi) === li && mr.get(bi) === ri) {
-      out.push(b[bi])
-      bi++
-      li++
-      ri++
-      continue
+  for (const chunk of chunks) {
+    const start = chunk[0].start, end = Math.max(...chunk.map(change => change.end))
+    out.push(...b.slice(bi, start))
+    const materialize = (side: Edit["side"]) => {
+      const lines: string[] = []
+      let cursor = start
+      for (const change of chunk.filter(change => change.side === side)) {
+        lines.push(...b.slice(cursor, change.start), ...change.lines)
+        cursor = change.end
+      }
+      lines.push(...b.slice(cursor, end))
+      return lines
     }
-    // Next base line that survives on BOTH sides bounds the unstable chunk.
-    let bj = bi
-    while (bj < b.length && !(ml.has(bj) && mr.has(bj))) bj++
-    const lEnd = bj < b.length ? ml.get(bj)! : l.length
-    const rEnd = bj < b.length ? mr.get(bj)! : r.length
-    const bSlice = b.slice(bi, bj)
-    const lSlice = l.slice(li, lEnd)
-    const rSlice = r.slice(ri, rEnd)
+    const bSlice = b.slice(start, end)
+    const lSlice = materialize("local"), rSlice = materialize("remote")
 
     if (eq(lSlice, rSlice)) {
       out.push(...lSlice) // both made the same change
@@ -87,21 +123,11 @@ export function merge3(base: string, local: string, remote: string): MergeResult
       out.push(...lSlice) // only the project changed
     } else {
       conflicts++
-      out.push("<<<<<<< local", ...lSlice, "=======", ...rSlice, ">>>>>>> registry")
+      out.push(`<<<<<<< ${labels.local}`, ...lSlice, "=======", ...rSlice, `>>>>>>> ${labels.remote}`)
     }
 
-    bi = bj
-    li = lEnd
-    ri = rEnd
-    if (bi < b.length) {
-      out.push(b[bi]) // the stable boundary line itself
-      bi++
-      li++
-      ri++
-    } else {
-      break
-    }
+    bi = end
   }
-
+  out.push(...b.slice(bi))
   return { merged: out.join("\n"), conflicts }
 }

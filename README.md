@@ -127,6 +127,13 @@ See [consumer verification](./apps/web/src/content/docs/verification.mdx) for
 the complete workflow, reference fixture and remaining human review. These
 source-candidate additions require their own release or deployment.
 
+The [customer maintenance fixture](./docs/guides/15-customer-journey-acceptance.md)
+replays customization, a second feature request and a real upstream update in
+a generated app. It checks that the custom column, copy and theme survive,
+that stale plans reject without writes, and that unresolved merge conflicts
+remain failures until explicitly resolved. Each stage retains its own build
+and browser evidence, including remaining contrast review needs.
+
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
 selectors and `--registry-version` / MCP `version` select different artifacts.
 `next` can move; record `npx logic2b@next --version` and the MCP handshake version

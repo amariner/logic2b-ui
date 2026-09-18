@@ -22,7 +22,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | done | Codex (M1-04) |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | done | Codex (M2-01) |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | done | Codex (M2-02) |
-| M2-03 | Customer journey create/change/update acceptance fixture | M2-01, M2-02 | ready | — |
+| M2-03 | Customer journey create/change/update acceptance fixture — [15](guides/15-customer-journey-acceptance.md) | M2-01, M2-02 | done | Codex (M2-03) |
 | M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | ready | — |
 | M3-02 | Versioned proposal preview/install equivalence — [04](guides/04-proposal-links.md) | M3-01 | ready | — |
 | M3-03 | JSON Schema forms and explicit-column tables — [06](guides/06-form-and-table-plan.md) | M1-04, M3-01 | ready | — |
@@ -1000,3 +1000,87 @@ and permission simulation do not verify a real backend. Next: M2-03 combines
 create/change/upstream-update acceptance, preserving a custom column, copy and
 token override, using this verification contract and explicit conflict evidence.
 The M2 milestone remains open.
+
+### 18 September 2026 — M2-03
+
+Completed the generated consumer's customization/change/update lifecycle on
+`codex/m2-03-customer-update-acceptance`. Guide 15 and the fixture README document
+explicit prepare, install, build, change, update and check phases; CI retains
+all three browser reports and the synthetic maintenance evidence. No additional
+public CLI command, MCP tool or dependency was introduced.
+
+The first real change plan adds an Account owner column (with a mobile summary),
+custom workspace copy and primary-color token override. A second plan adds
+segment filtering while preserving those edits and a concurrent consumer note.
+Dry-run, stale rejection and repeated apply preserve file bytes and metadata.
+The actual immutable rc.17 to rc.18 update retains every customization and the
+upstream table-scroll fix. A separate fresh plan explicitly advances only the
+consumer's registry pin; default-version status then agrees with the rc.18 lock.
+A conflicting consumer records both marked alternatives, rejects repeated update
+without writes and accepts an explicit resolution combining both intended edits.
+
+The fixture exposed two updater defects: independent adjacent lines conflicted,
+and repeating a marked update could report success after its base advanced.
+Merge hunks now use base-coordinate overlap, with focused insertion/deletion,
+transitive overlap and final-newline coverage. Tagged markers and a bounded,
+validated `.logic2b/update-conflicts.json` record preserve unresolved status;
+CLI exits 1 for conflicts or missing-base differences. A later upstream rename
+or removal cannot bypass a pending conflict. Record readers and writers share
+the registry path contract, including valid long paths. Ordinary marker examples
+remain usable. Large divergent merges reject before exceeding the 4,000,000-cell
+comparison budget. Multi-file upstream updates still require a stable workspace;
+they do not acquire the incremental apply workflow's transaction guarantees.
+
+Final fresh consumer: `/tmp/logic2b-m2-03-close`. Evidence directories:
+`/tmp/logic2b-close-customized`, `/tmp/logic2b-close-changed` and
+`/tmp/logic2b-close-updated`. Results are 212 pass/0 unknown across 20 runs,
+232 pass/0 unknown across 22 runs, and 252 pass/4 unknown across 24 runs,
+respectively: 700 declared checks, zero failures or skips, 696 passes. The four
+unknowns remain the translated 200% table-scroll contrast observations; original
+CLI exit is 2 and the qualified fixture gate does not turn them into passes.
+Every incomplete finding must be exclusively color-contrast/elmPartiallyObscured.
+A separate browser replay validates each recorded selector's membership in the
+named table and rejects the real page heading as a negative probe. It records
+ancestry separately, not as proof of the original axe instant or contrast.
+
+Agent screenshot review covered ordinary mobile/desktop list, read-only views
+and the translated 200% list/edit views. It caught an overlapping custom heading;
+wrapping that heading fixed the layout and the entire consumer was recreated.
+A browser Range measurement now guards the header bounds. The rendered custom
+primary button has the expected colors and a measured 7.56:1 contrast ratio.
+Human contrast review across table scroll positions remains outstanding.
+Build/source/artifact hashes are local observations, not remote attestation;
+synthetic persistence and permissions do not verify production services.
+
+Checks and outcomes:
+
+- `pnpm --filter logic2b journey:prepare /tmp/logic2b-m2-03-close`, explicit
+  `pnpm --dir /tmp/logic2b-m2-03-close install --frozen-lockfile=false`, then
+  `journey:build` and `test:journey` for each stage, with `journey:change` and
+  `journey:update` between them: passed with the qualified result above.
+  Browser commands used `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`.
+  Maintenance artifacts include actual process exits, plan ids, marked source,
+  original/resolved source hashes and before/after no-write observations.
+- `pnpm build`: six workspace build tasks passed. `pnpm lint` and `pnpm test`:
+  nine tasks passed, 460 tests including 138 CLI tests after final fixes.
+- `pnpm test:release-artifacts`: final CLI/MCP tarballs packed, installed and
+  exercised; all 21 MCP stdio output contracts passed.
+- `PLAYWRIGHT_CHROMIUM_PATH=... pnpm --filter @logic2b/web exec playwright test
+  tests/beta-onboarding.spec.ts tests/customer-journey.spec.ts
+  tests/verification-docs.spec.ts`: 35/35 passed, unchanged state baselines.
+  The separate `tests/review-docs.spec.ts tests/change-docs.spec.ts` run passed
+  4/4. `pnpm benchmark:agents:test` passed 29/29.
+- Focused update/merge/library regression run passed 69/69; strict NodeNext
+  typing of runner and fixture passed. Isolated negative probes rejected wrong
+  stage order, changed source and tampered production assets before checking.
+  The initial diagnostic color assertion rejected minified `#fff`; matching the
+  equivalent white representation fixed that assertion without altering colors.
+- `pnpm --filter @logic2b/web test:budgets` passed with unchanged browser/Worker
+  sizes. All 81 checked local Markdown link targets and `git diff --check`
+  passed. This task does not change any existing registry payload or manifest.
+
+The user requested stopping development here, merging/pushing the completed
+work to GitHub and deploying production. Those delivery actions require actual
+remote confirmation; local checks alone do not establish a deployment or a
+successful GitHub CI run. npm publication is a separate release action. M3-01
+remains the next queued task and has not been started.

@@ -187,7 +187,9 @@ that preserves newer user edits. CLI/MCP protocol and packed-consumer checks
 verify the distributed adapters. See the execution entry for exact commands and
 results actually run.
 
-M2-02 adds consumer runtime verification. M2-03 remains the full customer-journey
-create/change/upstream-update acceptance fixture, including keyboard, mobile,
-empty, retry, submitting and permission-denied states. Static plan validation
-is not evidence that those runtime checks passed.
+M2-02 adds consumer runtime verification. The M2-03
+[customer-journey acceptance fixture](./15-customer-journey-acceptance.md) is in
+progress and combines create/change/upstream-update with keyboard, mobile,
+empty, retry, submitting and permission-denied states. It checks preservation
+of a custom column, copy and token override. Static plan validation is not
+evidence that those runtime checks passed; see the execution queue for results.

@@ -1,8 +1,8 @@
 import { refreshLocalRules } from "./rules.ts"
 import { spawnSync } from "node:child_process"
-import { createHash } from "node:crypto"
-import { existsSync, readFileSync } from "node:fs"
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
+import { createHash, randomUUID } from "node:crypto"
+import { constants, existsSync, readFileSync } from "node:fs"
+import { mkdir, open, readFile, rename, unlink, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { maxSatisfying, validRange } from "semver"
 import { transformIconItems } from "@logic2b/scaffold"
@@ -769,6 +769,55 @@ export interface UpdateSummary {
   resolvedVersion?: string
 }
 
+interface UpdateConflict { path: string; tag: string; conflicts: number }
+const UPDATE_CONFLICT_BYTES = 128 * 1024
+const conflictPath = (cwd: string) => join(cwd, ".logic2b", "update-conflicts.json")
+
+function validateUpdateConflict(entry: unknown): UpdateConflict {
+  if (!isObject(entry) || Object.keys(entry).sort().join() !== "conflicts,path,tag" || typeof entry.path !== "string" || typeof entry.tag !== "string" || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(entry.tag) || !Number.isInteger(entry.conflicts) || (entry.conflicts as number) < 1 || (entry.conflicts as number) > 10000) throw new Error("Malformed update conflict entry; preserve it for inspection.")
+  // Match the registry's path contract in both directions. The serialized
+  // record has a total byte limit; a separate shorter path limit would make
+  // valid installed files produce records that their own reader rejects.
+  assertSafeRegistryPath(entry.path)
+  return entry as unknown as UpdateConflict
+}
+
+/** Track only markers created by this updater. Ordinary source containing
+ * marker examples must not be mistaken for an unresolved Logic2b update. */
+async function readUpdateConflicts(cwd: string): Promise<Map<string, UpdateConflict>> {
+  let handle
+  try { handle = await open(conflictPath(cwd), constants.O_RDONLY | constants.O_NOFOLLOW) }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return new Map(); throw error }
+  try {
+    const stat = await handle.stat()
+    if (!stat.isFile() || stat.nlink !== 1 || stat.size > UPDATE_CONFLICT_BYTES) throw new Error("Update conflict record is not a bounded regular file.")
+    const buffer = Buffer.alloc(UPDATE_CONFLICT_BYTES + 1)
+    let size = 0
+    while (size < buffer.length) { const chunk = await handle.read(buffer, size, buffer.length - size, null); if (!chunk.bytesRead) break; size += chunk.bytesRead }
+    if (size > UPDATE_CONFLICT_BYTES) throw new Error("Update conflict record exceeds 128 KiB.")
+    const raw: unknown = JSON.parse(new TextDecoder("utf8", { fatal: true }).decode(buffer.subarray(0, size)))
+    if (!isObject(raw) || Object.keys(raw).sort().join() !== "files,schemaVersion" || raw.schemaVersion !== 1 || !Array.isArray(raw.files) || raw.files.length > 512) throw new Error("Malformed update conflict record; preserve it for inspection.")
+    const result = new Map<string, UpdateConflict>()
+    for (const rawEntry of raw.files) {
+      const entry = validateUpdateConflict(rawEntry)
+      if (result.has(entry.path)) throw new Error("Duplicate update conflict entry; preserve it for inspection.")
+      result.set(entry.path, entry)
+    }
+    return result
+  } finally { await handle.close() }
+}
+
+async function writeUpdateConflicts(cwd: string, entries: Map<string, UpdateConflict>) {
+  const path = conflictPath(cwd)
+  if (entries.size === 0) { await unlink(path).catch(error => { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error }); return }
+  const content = JSON.stringify({ schemaVersion: 1, files: [...entries.values()].map(validateUpdateConflict).sort((a, b) => a.path.localeCompare(b.path)) }, null, 2)
+  if (entries.size > 512 || Buffer.byteLength(content) > UPDATE_CONFLICT_BYTES) throw new Error("Update conflict record exceeds its limit; resolve existing conflicts first.")
+  await mkdir(dirname(path), { recursive: true })
+  const temporary = `${path}.${randomUUID()}.tmp`
+  try { await writeFile(temporary, content, { flag: "wx", mode: 0o600 }); await rename(temporary, path) }
+  finally { await unlink(temporary).catch(error => { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error }) }
+}
+
 /**
  * Pull upstream changes into installed files without clobbering local edits:
  * a three-way merge of base (install-time snapshot), local file and current
@@ -810,6 +859,43 @@ export async function updateComponents(
     resolvedVersion: client.resolvedVersion,
   }
   const npmDeps = new Set<string>()
+  const unresolved = await readUpdateConflicts(cwd)
+  const checkedPaths = new Set<string>()
+  const previous = unresolved.size ? await readInstallManifest(cwd) : null
+  for (const item of resolved.values()) {
+    for (const file of item.files ?? []) checkedPaths.add(file.path)
+    // A renamed/removed upstream file still belongs to the installed item.
+    // Keep inspecting its conflict until the consumer explicitly resolves it.
+    const installed = previous?.items[item.name]
+    if (installed) {
+      if (!Array.isArray(installed.files)) throw new Error("Installed item paths are malformed; preserve the manifest and conflict record for inspection.")
+      for (const path of installed.files) {
+        if (typeof path !== "string") throw new Error("Installed item paths are malformed; preserve the manifest and conflict record for inspection.")
+        assertSafeRegistryPath(path)
+        checkedPaths.add(path)
+      }
+    }
+  }
+  let cleared = false
+  // Refuse the whole requested update while a previous merge remains open.
+  // This runs before source/base/manifest writes, including when a different
+  // upstream version is requested. The record is written before its markers
+  // are published, so a failed source write can be retried safely as well.
+  for (const path of checkedPaths) {
+    const entry = unresolved.get(path)
+    if (!entry) continue
+    const target = targetPath(config, cwd, { path, type: "registry:file", content: "" })
+    const local = existsSync(target) ? await readFile(target, "utf8") : ""
+    if (local.includes(`logic2b:${entry.tag}`)) {
+      summary.conflicts += entry.conflicts
+      console.log(`  ! ${target} has ${entry.conflicts} unresolved update conflict(s); resolve the tagged markers before updating again.`)
+    } else { unresolved.delete(path); cleared = true }
+  }
+  if (summary.conflicts > 0) {
+    console.log(`\n⚠ ${summary.conflicts} unresolved conflict(s); no files, snapshots or install manifest were changed.`)
+    return summary
+  }
+  if (cleared) await writeUpdateConflicts(cwd, unresolved)
 
   for (const item of resolved.values()) {
     for (const dep of item.dependencies ?? []) npmDeps.add(dep)
@@ -845,7 +931,14 @@ export async function updateComponents(
         summary.keptLocal++ // registry unchanged; local edits stay
         continue
       }
-      const { merged, conflicts } = merge3(base, local, remote)
+      const tag = randomUUID()
+      const { merged, conflicts } = merge3(base, local, remote, { local: `local (logic2b:${tag})`, remote: `registry (logic2b:${tag})` })
+      if (conflicts > 0) {
+        // Prefixes remain standard merge markers; the tag identifies this
+        // updater's own unresolved work even if its contents are hand-edited.
+        unresolved.set(file.path, { path: file.path, tag, conflicts })
+        await writeUpdateConflicts(cwd, unresolved)
+      }
       await writeFile(target, merged)
       await writeBase(cwd, file.path, remote)
       summary.merged++

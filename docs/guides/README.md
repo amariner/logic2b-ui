@@ -16,6 +16,7 @@ the queue records implementation and evidence.
 | [12 — Consumer verification](./12-consumer-verification.md) | Independent browser checks in generated apps | M2-02 |
 | [13 — MCP contracts](./13-mcp-contracts.md) | Output schemas, version resolution, bounds | M0-02..04 |
 | [14 — Outcome evaluation](./14-outcome-evaluation.md) | Baselines, repeated attempts and human corrections | EVAL-01 |
+| [15 — Customer journey acceptance](./15-customer-journey-acceptance.md) | Preserve custom columns, copy and tokens through change/update | M2-03 |
 
 The earlier nine guides remain below and have been amended where the direction
 changed: structured composition, evidence-based review, exact-version previews,

@@ -116,6 +116,14 @@ local-only edits stay intact, compatible changes merge, and overlapping edits
 are marked as conflicts for review. Inspect an item's machine-readable history
 at `/r/changelog/<name>.json` before advancing a range.
 
+The source candidate also preserves unresolved conflicts across repeated
+updates. Tagged markers are tracked in `.logic2b/update-conflicts.json`;
+`update` exits 1 while a conflict or a differing file without its base still
+needs review. Resolve the source, retaining intended local and upstream changes,
+then update again. Removing the record is not conflict resolution. Independent
+edits on adjacent lines can merge without a conflict. These changes describe
+the current checkout; npm publication remains a separate step.
+
 ## Using an AI assistant
 
 Every install block on this site has an **Agent** tab (and the theme studio a
