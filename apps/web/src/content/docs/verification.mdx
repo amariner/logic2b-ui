@@ -1,0 +1,213 @@
+---
+title: Consumer verification
+description: Run bounded browser checks against your local application and retain reports, screenshots and accessibility evidence.
+---
+
+The **source candidate** provides CLI `verify` and MCP `verify_report`.
+Confirm `verify` in installed CLI help and `verify_report` in `tools/list`;
+these source additions do not establish npm publication or endpoint deployment.
+Use verification after [static review](/docs/review) or an
+[incremental change](/docs/changes) to check the application people will use.
+
+## Prepare the local host
+
+Build the CLI from this repository:
+
+```bash
+pnpm --filter logic2b build
+```
+
+Install the browser tools explicitly in the consuming application. These are
+the versions selected by the reference fixture:
+
+```bash
+pnpm --dir /path/to/app add -D playwright@1.61.1 @axe-core/playwright@4.12.1
+pnpm --dir /path/to/app exec playwright install chromium
+```
+
+Build and start the application separately using its own documented commands.
+`verify` never installs dependencies, invokes package scripts, builds or starts
+the app. It loads the browser tools already installed under `--cwd` and can
+execute the application's normal browser interactions. Use an isolated app
+with synthetic data and authorized actions.
+
+The target must be an HTTP(S) loopback origin using `localhost`, `127.0.0.1`
+or `[::1]`, for example `http://127.0.0.1:5173`. Put routes in the suite, not
+`--url`. Credentials, remote hosts, URL paths, queries and fragments reject.
+Each scenario and viewport receives a fresh browser context. External-origin
+HTTP requests, all HTTP redirects (including same-origin redirects), WebSockets,
+popups and service workers are blocked. Target final routes in the suite. Observed
+blocked requests, WebSockets or popups make a completed run `unknown`; this run does not establish
+how an app depending on external services behaves.
+
+## Define and run a suite
+
+Save `verification-suite.json`. Replace the selected files, route and exact
+accessible name with those from your app; selected files must exist. This
+small example verifies the heading, page width, screenshot capture and axe
+results at desktop and mobile sizes:
+
+```json
+{
+  "schemaVersion": 1,
+  "projectFiles": ["package.json", "src/CustomerPage.tsx"],
+  "viewports": [
+    { "id": "desktop", "width": 1280, "height": 800 },
+    { "id": "mobile", "width": 390, "height": 844 }
+  ],
+  "scenarios": [{
+    "id": "customers",
+    "route": "/customers",
+    "steps": [
+      { "type": "check", "id": "heading", "assertion": "visible", "target": { "by": "role", "role": "heading", "name": "Customers" } },
+      { "type": "check", "id": "page-width", "assertion": "overflow" },
+      { "type": "check", "id": "visual-evidence", "assertion": "screenshot" },
+      { "type": "check", "id": "accessibility", "assertion": "axe" }
+    ]
+  }]
+}
+```
+
+```bash
+node packages/cli/dist/index.js verify verification-suite.json --cwd /path/to/app --url http://127.0.0.1:5173 --output /path/to/new-evidence --json
+```
+
+The output directory must be new and its parent must exist. Input/output
+artifact paths resolve from the shell's current directory; `projectFiles`
+resolve under `--cwd`. For a monorepo, point `--cwd` directly at the app.
+The command saves `report.json`, `summary.json` and local `evidence/` files.
+`--json` prints the report and summary; default output shows status, counts,
+the evidence directory and limitations.
+
+`--timeout` sets the per-step limit, default 5,000 ms, range 50–30,000.
+`--budget` sets the scenario execution budget, default 120,000 ms, range
+1,000–300,000. Browser launch has its own timeout. Use
+`--browser-executable /path/to/chromium` or `PLAYWRIGHT_CHROMIUM_PATH` to select
+an existing compatible browser instead of the Playwright-managed executable.
+
+## Describe interactions without executable code
+
+Selectors match exact roles/accessible names, labels, text or test ids:
+`{"by":"role","role":"button","name":"Save"}`,
+`{"by":"label","value":"Customer name"}`,
+`{"by":"text","value":"Saved"}` or
+`{"by":"test-id","value":"customer-row"}`. No CSS selectors, JavaScript,
+shell commands, regexes or arbitrary callbacks are accepted.
+
+| Step | Fields and meaning |
+| --- | --- |
+| Action `click` | `target`; activate the matching control. |
+| Actions `fill`, `select`, `press` | `target` and string `value`; fill text, select an option value or press a key such as `Shift+Tab`. |
+| Action `text-scale` | Numeric `value` from 100 to 300; scale the root font size from its initial value. This does not simulate every browser zoom mode. |
+| Checks `visible`, `hidden`, `enabled`, `disabled`, `focused` | `target`; inspect its rendered state. |
+| Checks `text`, `value`, `accessible-description` | `target` and string `expected`. Text matching uses Playwright's whitespace normalization. |
+| Check `attribute` | `target`, attribute `name` and string `expected`; `null` expects absence. |
+| Check `count` | `target` and integer `expected` between 0 and 10,000. |
+| Check `order` | `target` and an ordered array of expected text strings. |
+| Checks `overflow`, `screenshot` | No target; measure horizontal page overflow or capture the viewport. |
+| Check `axe` | No target; optional explicit `disabledRules` array. |
+
+Every step uses `type: "action"` or `type: "check"`. Actions name `action`;
+checks name `assertion` and a unique `id` within the scenario. For example:
+
+```json
+{ "type": "action", "action": "fill", "target": { "by": "label", "value": "Customer name" }, "value": "Alex Example" }
+```
+
+Checks stop after a failure, and remaining assertions are `skipped`. A failed
+action after the final passing check still fails the run. Add explicit checks
+for filtering, clearing, no-match versus empty data, error/retry, submitting,
+preserved input, permission denial, keyboard navigation and focus restoration.
+Passing the small example above does not establish those interactions.
+
+## Read the evidence and remaining work
+
+| Status | Meaning and exit code |
+| --- | --- |
+| `pass` | Every declared run and browser check passed; exit 0. |
+| `fail` | A route, action or check failed, the execution budget was exhausted, or selected source changed; exit 1. |
+| `unknown` | Evidence is incomplete, an axe result needs review, or isolated behavior cannot establish the requested assertion; exit 2. |
+| `skipped` | A required capability or explicitly reported app prerequisite was unavailable; exit 2. |
+
+Invalid inputs and artifact errors also exit 2; command-line usage errors retain
+exit 1. An unreachable app or unsuccessful route is a failed run. Missing
+browser dependencies or a missing browser produce skipped evidence. If a
+separate build/start step failed, record that explicitly:
+
+```bash
+node packages/cli/dist/index.js verify verification-suite.json --cwd /path/to/app --url http://127.0.0.1:5173 --output /path/to/new-skipped-evidence --app-unavailable "The separately run application build failed" --json
+```
+
+This reason is a host assertion. The command does not run or attest the build;
+it still validates the suite and reads the selected files, then records skipped
+runs without opening a browser.
+
+The report records the origin, suite fingerprint, selected-file hashes,
+optional `planId`, routes/viewports, run/check ids, reasons, evidence hashes and
+tool versions. Selected files are checked again after the run; a change or
+unreadable file fails the runs. The fingerprint covers only those files and
+does **not** prove that the running server loaded their current bytes. A
+`planId` associates evidence with a plan without proving it was applied.
+
+Check kinds distinguish `static`, `browser-measured` and `human-reviewed`.
+Missing checks/runs become `unknown` in the summary; static or human passes
+cannot satisfy browser assertions. A screenshot pass proves capture, leaving
+visual judgment to a person. Inspect the local images and the relevant
+keyboard/screen-reader behavior before concluding the interface is usable.
+
+Axe runs the WCAG 2.0/2.1 A/AA tag set, including color contrast unless explicitly
+disabled. Any returned violation fails the check; incomplete results make it
+`unknown`. Disabled rule ids remain visible in the summary. Invocation or
+screenshot-capture errors fail the run with an unknown check when the expected
+artifact could not be produced. Automated results are not a WCAG certificate.
+
+## Summarize through MCP
+
+Pass the complete parsed `report.json` directly as the arguments to
+`verify_report`, the source candidate's twenty-first tool. Do not wrap it in a
+`report` field or pass the CLI's combined report/summary output. Both transports
+return the same validated summary in `structuredContent` and JSON text.
+Malformed inputs, inconsistent fingerprints and dangling evidence references
+are sanitized JSON-RPC `-32602` errors.
+
+The tool validates and summarizes supplied data. It never launches a browser,
+reads local artifacts, fetches evidence URLs or authenticates measurements.
+References and hashes establish internal consistency, not trust in their
+author. Keep screenshot and source artifacts local unless sharing is authorized;
+the report contains references, not uploaded images. Read its limitations along
+with the counts.
+
+## Bounds and reference fixture
+
+Suites/reports allow 1 MiB serialized JSON, 64 selected files, 16 scenarios,
+four viewports, 64 steps per scenario and 256 expected checks across the whole
+matrix. Local source reads allow 2 MiB per file and 16 MiB total. Canonical
+relative paths are limited to 256 characters; private/dependency paths,
+traversal, ambiguous names, symlinks and hard links reject. Viewport dimensions
+range from 240 to 3,840 pixels. Reports allow 512 evidence references, 16 per
+check, 16 tools and 32 notes. Local artifacts are capped at 4 MiB each and
+64 MiB total, with room reserved for the report and summary.
+
+The repository's generated consumer fixture installs immutable customer-list
+and customer-edit blocks into a Vite app with synthetic data. Preparation,
+dependency installation, build and checking are separate commands:
+
+```bash
+pnpm --filter logic2b consumer:prepare /tmp/logic2b-consumer
+pnpm --dir /tmp/logic2b-consumer install
+pnpm --dir /tmp/logic2b-consumer exec playwright install chromium
+pnpm --dir /tmp/logic2b-consumer run build
+pnpm --filter logic2b build
+pnpm --filter logic2b test:consumer /tmp/logic2b-consumer /tmp/logic2b-consumer-evidence
+```
+
+Choose new directories. The fixture checker serves the already-built output
+on loopback, invokes the actual CLI, checks immutable install provenance and
+evidence hashes, and stops its server afterward. Its acceptance gate requires
+complete declared coverage and rejects failures, skips and unexpected unknowns.
+It permits only explicitly validated axe contrast results whose text nodes are
+partially obscured by the table's scroll viewport at increased text size.
+Those checks remain `unknown` in the report and the CLI retains exit 2; a
+successful fixture gate does not turn them into passes or disable contrast.
+Inspect the recorded nodes and screenshots before human approval. Production
+persistence, server authorization and unlisted routes remain outside this fixture.

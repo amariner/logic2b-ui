@@ -13,7 +13,9 @@
     "./project-context-schema": "./src/project-context-schema.ts",
     "./rules": "./src/rules.ts",
     "./change-plan": "./src/change-plan.ts",
-    "./change-plan-schema": "./src/change-plan-schema.ts"
+    "./change-plan-schema": "./src/change-plan-schema.ts",
+    "./verification": "./src/verification.ts",
+    "./verification-schema": "./src/verification-schema.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",

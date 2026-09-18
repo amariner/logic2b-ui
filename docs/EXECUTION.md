@@ -21,7 +21,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | Codex (M1-03) |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | done | Codex (M1-04) |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | done | Codex (M2-01) |
-| M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | ready | — |
+| M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | done | Codex (M2-02) |
 | M2-03 | Customer journey create/change/update acceptance fixture | M2-01, M2-02 | ready | — |
 | M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | ready | — |
 | M3-02 | Versioned proposal preview/install equivalence — [04](guides/04-proposal-links.md) | M3-01 | ready | — |
@@ -896,3 +896,107 @@ External pilots and real comparative EVAL-01 measurements remain pending.
 Next ready task: M2-02, consumer runtime verification that complements static
 review. M2-03 combines it with this change workflow into the full customer
 journey acceptance fixture. The overall development goal remains active.
+
+### 18 September 2026 — M2-02
+
+Implemented consumer runtime verification on `codex/m2-02-consumer-verification`.
+The bounded, versioned suite/report/summary contract lives in the shared
+scaffold package. CLI `verify` runs declarative semantic-selector checks against
+an explicitly started loopback application; MCP `verify_report` validates and
+summarizes the host's report without browsing URLs or running code. The source
+candidate has 21 MCP tools. Installation, browser setup, build and app start
+remain explicit, separate operations. EN/ES guides, managed agent rules,
+packaged skill, CLI/MCP instructions and CI now describe the executable path.
+
+Reports carry selected-file and suite fingerprints, optional change-plan id,
+routes/viewports, tool versions, run/check statuses and hashed local artifacts.
+Missing coverage/capabilities remain unknown/skipped. Failed actions cannot
+be hidden by earlier passing checks; incomplete axe measurements remain unknown.
+The runner rejects external origins and all HTTP redirects, blocks WebSockets,
+popups and service workers, enforces deadlines/artifact limits and rechecks
+source stability. Browser regression tests reproduced and closed redirect
+isolation and final-action `about:blank` false-pass defects. Evidence writes
+are serialized outside browser timeout races.
+
+The generated Vite reference app installs the actual immutable customer blocks
+through scaffold/add, verifies their copied bytes, then builds and runs the CLI
+against production output. Independent expectations cover filter/clear, stable
+sorting, empty/loading/error/retry, create/edit, linked errors, submitting,
+failure with preserved drafts, success, permission denial, keyboard/focus,
+translations, long names, desktop/mobile and 200% root text size.
+
+That consumer exposed a real rc.17 defect: fixed-width columns collapsed the
+customer name cell at 390px/200% despite zero page overflow. Local registry
+rc.18 adds a minimum table width and a named, focusable scroll container;
+`Table.containerProps` is additive. Earlier immutable manifests/payloads are
+byte-for-byte unchanged. Manual browser measurement confirmed a 288px customer
+column, a 228px scroll region over 576px content, keyboard horizontal scrolling
+and no horizontal page overflow at 390px. Existing visual baselines did not
+need changes.
+
+Reference result: 228 checks across 20 scenario/viewport runs, with 224 pass,
+zero fail/skipped and four unknown contrast checks; 18 runs pass and two need
+review. All 28 axe analyses have zero violations and no rule exclusions. The
+four unknowns are specifically partially obscured table text at 200% in the
+translated list/edit scenario. CLI exit remains 2 and the report stays unknown.
+The fixture gate permits only these exact check identities and evidence whose
+incomplete findings are exclusively `color-contrast`/`elmPartiallyObscured`;
+unrelated unknown checks or runs still fail the gate. It saves the explicit
+review requirement instead of claiming complete accessibility approval.
+Twenty-eight PNGs and all 228 evidence hashes were checked; agent visual
+inspection covered mobile/desktop list/edit and all four new EN/ES guide
+screenshots. Human contrast review across scroll positions remains outstanding.
+
+Local consumer and evidence:
+`/tmp/logic2b-m2-02-consumer-fixture-final` and
+`/tmp/logic2b-m2-02-consumer-evidence-confirmed` (report, summary, provenance,
+28 screenshots, 28 axe results, 172 assertion logs and contrast-review record).
+The earlier defect proof is `/tmp/logic2b-m2-02-rc17-200pct-regression.png`;
+restored-scroll proof is `/tmp/logic2b-m2-02-rc18-200pct-fixed.png`.
+
+Checks and outcomes:
+
+- `pnpm --filter logic2b consumer:prepare /tmp/logic2b-m2-02-consumer-fixture-final`,
+  explicit `pnpm --dir ... install --frozen-lockfile=false`, and
+  `pnpm --dir ... run build`: passed; copied registry bytes preserved.
+- `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  pnpm --filter logic2b test:consumer /tmp/logic2b-m2-02-consumer-fixture-final
+  /tmp/logic2b-m2-02-consumer-evidence-confirmed`: qualified fixture gate
+  passed with the exact review requirement above, not an all-pass CLI verdict.
+- `pnpm build`: all six build tasks passed, including immutable registry,
+  packed-source CLI/MCP builds, web prerender and 179 docs OG images.
+- `PLAYWRIGHT_CHROMIUM_PATH=... pnpm --filter @logic2b/web exec playwright test
+  tests/verification-docs.spec.ts tests/customer-journey.spec.ts`: 33/33 passed,
+  including 26 unchanged state visual baselines. An initial concurrent run had
+  three stalled save-retry tests; isolated replay and the original complete
+  workload subsequently passed unchanged, with no source or baseline weakening.
+- `pnpm lint` and `pnpm test`: all nine workspace tasks passed; 442 tests.
+  The first test attempt overlapped docs-image generation and read its temporarily
+  absent manifest; the ordered rerun after build passed. Final CLI negatives
+  include unavailable tools/build, missing selectors, failed assertions/actions,
+  changed source, unsafe files, malformed evidence and stalled/late browser
+  context creation. Unit checks do not replace the consumer run.
+- `PLAYWRIGHT_CHROMIUM_PATH=... pnpm --filter logic2b test:verify-browser`:
+  11/11 actual-browser tests passed, including redirect-chain isolation,
+  final-action navigation, deadlines, axe failures and CLI status codes.
+- `pnpm test:release-artifacts`: final CLI and MCP tarballs installed into an
+  isolated consumer; public commands, unavailable-verification reports and
+  all 21 stdio output contracts passed. No runtime browser dependency was
+  silently bundled or installed by `verify`.
+- Local Wrangler HTTP `/mcp`: all 21 tools listed; pass/fail/unknown/skipped
+  report parity plus the real 228-check consumer report matched shared core,
+  structured result and JSON text. Missing evidence rejected with `-32602`.
+- `pnpm --filter @logic2b/web test:budgets`: passed; browser JS 1,986.0 KiB,
+  MCP Worker chunk 776.9 KiB, server modules 1,574.2 KiB, docs OG 4,002.3 KiB.
+  Wrangler `deploy --dry-run` packaged successfully without deployment.
+- Packaged skill validator and `git diff --check`: passed. CI was configured;
+  remote GitHub CI and the full unrelated site accessibility/visual/Lighthouse
+  matrices were not run locally for this delivery.
+
+This is local source delivery, not npm publication or remote deployment.
+Selected file hashes do not prove which build a server loaded; screenshot
+capture does not constitute human approval. Synthetic in-memory persistence
+and permission simulation do not verify a real backend. Next: M2-03 combines
+create/change/upstream-update acceptance, preserving a custom column, copy and
+token override, using this verification contract and explicit conflict evidence.
+The M2 milestone remains open.

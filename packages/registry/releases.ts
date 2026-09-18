@@ -390,10 +390,16 @@ export const REGISTRY_RELEASES: readonly RegistryRelease[] = [
     ],
   },
   {
+    version: "1.0.0-rc.17",
+    channel: "next",
+    releasedAt: "2026-09-09",
+    changes: [{ items: ["admin-customers-01", "customer-edit-01"], kind: "added", summary: "Deliver controlled customer list/edit states, content/action contracts and consumer responsibilities. Customer list now defaults to empty data and explicit callbacks." }],
+  },
+  {
     version: REGISTRY_VERSION,
     channel: REGISTRY_CHANNEL,
     releasedAt: REGISTRY_RELEASED_AT,
-    changes: [{ items: ["admin-customers-01", "customer-edit-01"], kind: "added", summary: "Deliver controlled customer list/edit states, content/action contracts and consumer responsibilities. Customer list now defaults to empty data and explicit callbacks." }],
+    changes: [{ items: ["table", "admin-customers-01"], kind: "fixed", summary: "Keep customer names visible at narrow widths and increased text size with an internally scrolling table; expose optional table-container props for named keyboard-focusable scroll regions." }],
   },
 ];
 

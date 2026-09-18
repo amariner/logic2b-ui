@@ -9,7 +9,8 @@ Our direction is a complete workflow: understand the project, compose real
 components, verify behavior and preserve local work through subsequent changes.
 The source candidate includes bounded project inspection, managed agent
 instructions, evidence-based static review and preconditioned incremental
-change plans with local apply/recovery. Structured composition and
+change plans with local apply/recovery, and consumer browser verification with
+explicit evidence and coverage limits. Structured composition and
 proposal previews remain planned; see [ROADMAP.md](./ROADMAP.md) for delivery
 boundaries and priorities. Source availability does not imply npm publication
 or deployment of those additions.
@@ -115,6 +116,16 @@ and project checks never run automatically. See the
 [incremental changes guide](./apps/web/src/content/docs/changes.mdx) for the
 workflow, transaction recovery and concurrent-writer limitations. Confirm the
 commands/tool exist in your installed copy; this does not establish publication.
+
+CLI `verify` checks a running loopback application using explicitly installed
+Playwright/axe tools and a bounded declarative suite. It saves local screenshots,
+assertion evidence, tool versions and selected-file fingerprints; missing
+coverage never passes. App build/start and dependency installation remain
+separate operations. MCP `verify_report` validates and summarizes the supplied
+report without running a browser, fetching artifacts or authenticating evidence.
+See [consumer verification](./apps/web/src/content/docs/verification.mdx) for
+the complete workflow, reference fixture and remaining human review. These
+source-candidate additions require their own release or deployment.
 
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
 selectors and `--registry-version` / MCP `version` select different artifacts.

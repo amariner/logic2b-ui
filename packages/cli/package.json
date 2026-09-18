@@ -1,7 +1,7 @@
 {
   "name": "logic2b",
   "version": "1.0.0-rc.3",
-  "description": "CLI for logic2b ui — add copy-paste components to your project.",
+  "description": "CLI for logic2b ui \u2014 add copy-paste components to your project.",
   "type": "module",
   "bin": {
     "logic2b": "dist/index.js"
@@ -40,7 +40,10 @@
     "lint": "tsc --noEmit -p tsconfig.json",
     "test": "node --import tsx --test test/*.test.ts",
     "test:scaffold": "node --import tsx scripts/verify-scaffold.mts",
-    "prepack": "tsup"
+    "prepack": "tsup",
+    "consumer:prepare": "node --import tsx scripts/verify-consumer.mts prepare",
+    "test:consumer": "node --import tsx scripts/verify-consumer.mts check",
+    "test:verify-browser": "node --import tsx --test test-browser/verify.test.ts"
   },
   "license": "MIT",
   "dependencies": {
@@ -55,6 +58,8 @@
     "@types/node": "^26.1.0",
     "tsup": "^8.5.0",
     "tsx": "^4.23.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "playwright": "1.61.1",
+    "@axe-core/playwright": "4.12.1"
   }
 }

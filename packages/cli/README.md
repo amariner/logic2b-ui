@@ -55,6 +55,7 @@ npx logic2b@next list
 | `change apply <plan.json>` | Validate all preconditions and apply with a recovery journal; `--dry-run` checks without writing. |
 | `change recover <transaction-id>` | Restore one transaction after checking current hashes and permissions; `--dry-run` inspects first. |
 | `change status` | List bounded local journal states and their transaction UUIDs. |
+| `verify <suite.json>` | Source candidate: run declarative checks against an already-started loopback app and save local browser evidence. |
 
 `add` snapshots what it installs under `.logic2b/base/` — that snapshot is the
 base side of `update`'s merge, so keep the directory (committing it is fine).
@@ -275,3 +276,62 @@ exit 1. Verify the application independently after apply. Registry `update`
 retains its separate three-way merge and baseline workflow. See
 [incremental changes](https://ui.logic2b.com/docs/changes) for MCP input,
 result statuses and recovery details.
+
+## Consumer browser verification (source candidate)
+
+Build this checkout with `pnpm --filter logic2b build`, or confirm `verify`
+appears in your installed CLI's help. Source availability does not establish
+npm publication. Install browser tools explicitly in the consuming app, then
+build and start that app separately with its own commands:
+
+```bash
+pnpm --dir /path/to/app add -D playwright@1.61.1 @axe-core/playwright@4.12.1
+pnpm --dir /path/to/app exec playwright install chromium
+node packages/cli/dist/index.js verify verification-suite.json --cwd /path/to/app --url http://127.0.0.1:5173 --output /path/to/new-evidence --json
+```
+
+The [verification guide](https://ui.logic2b.com/docs/verification) contains a
+complete suite example and assertion reference. Suites select explicit project
+files, local routes, viewports and bounded actions/checks using exact role,
+label, text or test-id selectors. Actions can exercise the app, so use synthetic
+data and authorized interactions. No arbitrary JavaScript, CSS selectors,
+shell commands, dependency installation, app build or start scripts run.
+
+`--url` accepts HTTP(S) origins on `localhost`, `127.0.0.1` or `[::1]`, without
+credentials, path, query or fragment. Browser tools load from `--cwd`; point it
+directly at the app in a monorepo. Each scenario/viewport has a fresh context.
+External-origin HTTP, all HTTP redirects (including same-origin redirects),
+WebSockets, popups and service workers are blocked; target final routes in the
+suite. Observed blocked requests, WebSockets or popups prevent a passing run. `--browser-executable` or
+`PLAYWRIGHT_CHROMIUM_PATH` selects an existing compatible Chromium executable.
+
+`--output` creates a new directory with `report.json`, `summary.json` and
+hashed `evidence/` artifacts; the parent must exist. Artifact paths resolve
+from the shell's current directory. `--timeout` defaults to 5,000 ms per step
+(50–30,000); `--budget` defaults to 120,000 ms for scenarios (1,000–300,000).
+Browser launch has a separate timeout. `--json` returns report and summary.
+
+Exit 0 requires every declared browser check and run to pass. Failures exit 1;
+unknown/skipped coverage, invalid inputs and artifact errors exit 2. Usage
+errors retain exit 1. Unreachable routes fail. Missing browser dependencies or
+browser capability skip the checks. `--app-unavailable "Build failed in the
+separate host step"` records skipped runs without opening a browser; this is a
+host assertion, not an independently verified build result. Selected files
+must still exist and the output directory must be new.
+
+Selected source hashes are checked before and after execution; changed or
+unreadable files fail the runs. Their fingerprint covers selected files only,
+with `servedSourceBinding: "unverified"`. An optional suite `planId` associates
+evidence with an incremental plan without proving application. Missing results
+are unknown, and static/human passes cannot substitute for browser assertions.
+A screenshot pass means capture, leaving human visual review outstanding.
+Axe checks use WCAG 2.0/2.1 A/AA tags: any returned violation fails, incomplete
+results are unknown, and explicit `disabledRules` remain visible. This is not
+WCAG certification. MCP `verify_report` summarizes the parsed report without
+reading artifacts, fetching evidence URLs or authenticating measurements.
+
+Limits: 1 MiB suite/report JSON; 64 source files, 2 MiB each and 16 MiB total;
+16 scenarios, four viewports, 64 steps per scenario and 256 expected checks;
+512 evidence records, 16 tools and 32 notes. Paths must be canonical, safe,
+relative and at most 256 characters. Local artifacts are bounded to 4 MiB each
+and 64 MiB total. Keep evidence local unless sharing is authorized.

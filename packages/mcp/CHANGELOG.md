@@ -4,6 +4,12 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+- Add pure `verify_report` for host-produced runtime reports: validate the
+  declared suite, selected-file fingerprints, bounded evidence references and
+  coverage, then summarize pass/fail/skipped/unknown without running a browser
+  or opening evidence. Hashes check consistency, not the authenticity of host
+  claims or a binding between source files and the served application.
+
 - Add network-free `change_plan` for explicit candidate sources and bounded
   project snapshots. Strict shared plans include file/content hashes, exact
   registry evidence, conflicts and unsupported work. Both transports leave

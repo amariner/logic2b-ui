@@ -3,6 +3,8 @@ import { reviewUi, validateReview, ReviewInputError } from "@logic2b/review"
 import { inspectProject } from "@logic2b/scaffold/project-context"
 import { buildChangePlan, ChangePlanError, validateChangeRequest } from "@logic2b/scaffold/change-plan"
 import { CHANGE_INPUT_SCHEMA } from "@logic2b/scaffold/change-plan-schema"
+import { summarizeVerificationReport, VerificationError } from "@logic2b/scaffold/verification"
+import { VERIFICATION_REPORT_SCHEMA } from "@logic2b/scaffold/verification-schema"
 import { PROJECT_SNAPSHOT_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import { auditTokens } from "@logic2b/tokens/contrast"
@@ -293,6 +295,11 @@ const TOOL_DEFINITIONS = [
     inputSchema: CHANGE_INPUT_SCHEMA,
   },
   {
+    name: "verify_report",
+    description: "Validate and summarize a bounded host-produced VerificationReportV1 (1 MiB JSON). Checks suite/project fingerprints, declared coverage, statuses and hashed evidence references; missing or incomplete browser evidence cannot become pass. Reports remain host claims: referenced artifacts, served source and tool execution are not independently verified. Never opens URLs, reads files, executes source or runs a browser. Supply the report directly as arguments.",
+    inputSchema: VERIFICATION_REPORT_SCHEMA,
+  },
+  {
     name: "review_ui",
     description: "Review 1–64 host-supplied TSX/JSX files (256 KiB total UTF-8 source) without filesystem, network access or execution. Reports proof-backed accessible-name findings, opt-in semantic-color policy, reasoned suppressions and explicit unknowns. Partial label context is the default; static results do not certify runtime accessibility.",
     inputSchema: REVIEW_INPUT_SCHEMA,
@@ -445,7 +452,7 @@ const TOOL_DEFINITIONS = [
   },
 ] as const
 
-const PURE_TOOLS = new Set(["change_plan", "review_ui", "agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["verify_report", "change_plan", "review_ui", "agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -610,6 +617,9 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
       throw new ToolInputError(error instanceof ChangePlanError ? error.message : "Invalid change-plan request.")
     }
   }
+  // Full report validation includes asynchronous hash checks and runs before
+  // the pure summarizer returns; no registry or other I/O is performed.
+  if (name === "verify_report") return { report: rawArgs }
   const args = assertArgumentsObject(rawArgs)
   const out: Record<string, unknown> = {}
   const version = stringArg(args, "version", { max: LIMITS.versionLength })
@@ -700,6 +710,7 @@ export async function runTool(
 ): Promise<ToolResult> {
   const args = validateToolArguments(name, rawArgs)
   try {
+    if (name === "verify_report") return textResult(await summarizeVerificationReport(args.report))
     if (name === "change_plan") return textResult(await buildChangePlan(args.change))
     if (name === "list_components") {
       const client = await createRegistryClient(base, versionArg(args), fetchImpl)
@@ -1015,6 +1026,10 @@ export async function runTool(
     throw new ToolInputError(`Unknown tool "${echo(name)}".`)
   } catch (err) {
     if (err instanceof ToolInputError) throw err
+    if (name === "verify_report") {
+      if (err instanceof VerificationError) throw new ToolInputError(err.message)
+      return errorResult("Verification report could not be summarized. Check the bounded report and try again.")
+    }
     if (name === "change_plan") {
       if (err instanceof ChangePlanError) throw new ToolInputError(err.message)
       return errorResult("Change planning could not complete. Reduce the supplied context and try again.")

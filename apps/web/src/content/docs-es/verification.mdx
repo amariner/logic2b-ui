@@ -1,0 +1,221 @@
+---
+title: Verificación en la aplicación
+description: Ejecuta comprobaciones de navegador acotadas sobre tu aplicación local y conserva informes, capturas y evidencia de accesibilidad.
+---
+
+El **candidato disponible en el código fuente** incorpora `verify` en la CLI
+y `verify_report` en MCP. Comprueba su presencia en la ayuda de la CLI y en
+`tools/list`: estas incorporaciones no acreditan publicación en npm ni
+despliegue remoto. Úsalas después de la [revisión estática](/es/docs/review)
+o de un [cambio incremental](/es/docs/changes) para comprobar la aplicación
+que utilizarán las personas.
+
+## Preparar el host local
+
+Compila la CLI desde este repositorio:
+
+```bash
+pnpm --filter logic2b build
+```
+
+Instala explícitamente las herramientas de navegador en la aplicación
+consumidora. Estas son las versiones elegidas por el caso de referencia:
+
+```bash
+pnpm --dir /ruta/a/la/app add -D playwright@1.61.1 @axe-core/playwright@4.12.1
+pnpm --dir /ruta/a/la/app exec playwright install chromium
+```
+
+Compila y arranca la aplicación por separado con sus comandos documentados.
+`verify` no instala dependencias, invoca scripts, compila ni arranca la app.
+Carga las herramientas ya instaladas bajo `--cwd` y puede ejecutar las
+interacciones habituales de la aplicación en el navegador. Utiliza una app
+aislada, con datos ficticios y acciones autorizadas.
+
+El destino debe ser un origen HTTP(S) de bucle local: `localhost`, `127.0.0.1`
+o `[::1]`, por ejemplo `http://127.0.0.1:5173`. Las rutas se indican en la
+suite, no en `--url`. Se rechazan credenciales, hosts remotos, rutas, consultas
+y fragmentos en ese argumento. Cada escenario y viewport recibe un contexto
+nuevo. Se bloquean las peticiones HTTP a otros orígenes, todas las redirecciones
+HTTP (también al mismo origen), los WebSockets, las ventanas emergentes y los
+service workers. Indica rutas finales en la suite. Si se observan peticiones,
+WebSockets o ventanas bloqueados, una ejecución terminada queda `unknown`: no demuestra el comportamiento de
+una app que dependa de servicios externos.
+
+## Definir y ejecutar una suite
+
+Guarda `verification-suite.json`. Sustituye los archivos seleccionados, la
+ruta y el nombre accesible exacto por los de tu aplicación; los archivos deben
+existir. Este ejemplo comprueba el encabezado, la anchura de página, la captura
+y los resultados axe en escritorio y móvil:
+
+```json
+{
+  "schemaVersion": 1,
+  "projectFiles": ["package.json", "src/CustomerPage.tsx"],
+  "viewports": [
+    { "id": "desktop", "width": 1280, "height": 800 },
+    { "id": "mobile", "width": 390, "height": 844 }
+  ],
+  "scenarios": [{
+    "id": "customers",
+    "route": "/customers",
+    "steps": [
+      { "type": "check", "id": "heading", "assertion": "visible", "target": { "by": "role", "role": "heading", "name": "Clientes" } },
+      { "type": "check", "id": "page-width", "assertion": "overflow" },
+      { "type": "check", "id": "visual-evidence", "assertion": "screenshot" },
+      { "type": "check", "id": "accessibility", "assertion": "axe" }
+    ]
+  }]
+}
+```
+
+```bash
+node packages/cli/dist/index.js verify verification-suite.json --cwd /ruta/a/la/app --url http://127.0.0.1:5173 --output /ruta/a/nueva-evidencia --json
+```
+
+El directorio de salida debe ser nuevo y su padre debe existir. Las rutas de
+los artefactos se resuelven desde el directorio actual de la terminal;
+`projectFiles` se resuelve bajo `--cwd`. En un monorepo, apunta `--cwd` a la
+app. Se guardan `report.json`, `summary.json` y archivos locales en `evidence/`.
+`--json` muestra el informe y el resumen; la salida habitual indica estado,
+recuentos, directorio de evidencia y limitaciones.
+
+`--timeout` limita cada paso: 5.000 ms por defecto, entre 50 y 30.000.
+`--budget` limita la ejecución de escenarios: 120.000 ms por defecto, entre
+1.000 y 300.000. El arranque del navegador tiene su propio límite. Usa
+`--browser-executable /ruta/a/chromium` o `PLAYWRIGHT_CHROMIUM_PATH` para elegir
+un navegador compatible existente en lugar del gestionado por Playwright.
+
+## Describir interacciones sin código ejecutable
+
+Los selectores buscan coincidencias exactas de rol/nombre accesible, etiqueta,
+texto o id de prueba: `{"by":"role","role":"button","name":"Guardar"}`,
+`{"by":"label","value":"Nombre del cliente"}`,
+`{"by":"text","value":"Guardado"}` o
+`{"by":"test-id","value":"customer-row"}`. No se admiten selectores CSS,
+JavaScript, comandos de terminal, expresiones regulares ni callbacks arbitrarios.
+
+| Paso | Campos y significado |
+| --- | --- |
+| Acción `click` | `target`; activa el control coincidente. |
+| Acciones `fill`, `select`, `press` | `target` y texto `value`; rellenan texto, seleccionan el valor de una opción o pulsan una tecla como `Shift+Tab`. |
+| Acción `text-scale` | `value` numérico entre 100 y 300; escala la fuente raíz respecto a su valor inicial. No simula todos los modos de zoom. |
+| Comprobaciones `visible`, `hidden`, `enabled`, `disabled`, `focused` | `target`; comprueban el estado renderizado. |
+| Comprobaciones `text`, `value`, `accessible-description` | `target` y texto `expected`. La comprobación de texto usa la normalización de espacios de Playwright. |
+| Comprobación `attribute` | `target`, nombre `name` y texto `expected`; `null` exige ausencia. |
+| Comprobación `count` | `target` y entero `expected` entre 0 y 10.000. |
+| Comprobación `order` | `target` y un array ordenado de textos esperados. |
+| Comprobaciones `overflow`, `screenshot` | Sin destino; miden el desbordamiento horizontal o capturan el viewport. |
+| Comprobación `axe` | Sin destino; array opcional explícito `disabledRules`. |
+
+Cada paso declara `type: "action"` o `type: "check"`. Las acciones indican
+`action`; las comprobaciones indican `assertion` e `id` único en el escenario.
+Por ejemplo:
+
+```json
+{ "type": "action", "action": "fill", "target": { "by": "label", "value": "Nombre del cliente" }, "value": "Alex Ejemplo" }
+```
+
+Un fallo detiene las comprobaciones posteriores, que quedan `skipped`. Una
+acción fallida después de la última comprobación correcta también hace fallar
+la ejecución. Añade comprobaciones explícitas de filtros, limpieza, búsqueda
+sin coincidencias frente a lista vacía, error/reintento, envío, conservación de
+datos, permisos, teclado y restauración del foco. Superar el ejemplo anterior
+no demuestra esas interacciones.
+
+## Interpretar la evidencia y el trabajo pendiente
+
+| Estado | Significado y código de salida |
+| --- | --- |
+| `pass` | Pasaron todas las ejecuciones y comprobaciones de navegador declaradas; código 0. |
+| `fail` | Falló una ruta, acción o comprobación, se agotó el tiempo o cambió el código seleccionado; código 1. |
+| `unknown` | Falta evidencia, un resultado axe necesita revisión o el aislamiento impide demostrar la comprobación; código 2. |
+| `skipped` | No estaba disponible una capacidad o un requisito de la app indicado explícitamente; código 2. |
+
+Las entradas inválidas y los errores de artefactos también terminan con 2;
+los errores de uso de la CLI mantienen el código 1. Una app inaccesible o una
+ruta sin respuesta correcta hacen fallar la ejecución. Si faltan dependencias
+de navegador o el navegador, las comprobaciones quedan omitidas. Para registrar
+el fallo de una compilación o arranque ejecutados por separado:
+
+```bash
+node packages/cli/dist/index.js verify verification-suite.json --cwd /ruta/a/la/app --url http://127.0.0.1:5173 --output /ruta/a/nueva-evidencia-omitida --app-unavailable "Falló la compilación de la aplicación ejecutada por separado" --json
+```
+
+El motivo es una declaración del host. El comando no ejecuta ni acredita la
+compilación: valida la suite, lee los archivos seleccionados y registra las
+ejecuciones omitidas sin abrir el navegador.
+
+El informe registra origen, huella de la suite, hashes de archivos, `planId`
+opcional, rutas/viewports, identificadores, motivos, hashes de evidencia y
+versiones de herramientas. Los archivos seleccionados se comprueban de nuevo
+al terminar; un cambio o fallo de lectura hace fallar las ejecuciones. La huella
+solo cubre esos archivos y **no** prueba que el servidor cargase sus bytes
+actuales. `planId` relaciona la evidencia con un plan sin demostrar su aplicación.
+
+Los tipos de evidencia distinguen `static`, `browser-measured` y
+`human-reviewed`. Las comprobaciones o ejecuciones ausentes quedan `unknown`;
+los resultados estáticos o humanos no sustituyen comprobaciones de navegador.
+Una captura correcta solo demuestra su obtención: inspecciona las imágenes y
+el comportamiento relevante con teclado y lector de pantalla antes de concluir
+que la interfaz es usable.
+
+Axe ejecuta las etiquetas WCAG 2.0/2.1 A/AA, incluido contraste salvo exclusión
+explícita. Cualquier infracción devuelta hace fallar la comprobación; los
+resultados incompletos quedan `unknown`. Los identificadores de reglas
+desactivadas permanecen en el resumen. Los errores al invocar axe o capturar
+hacen fallar la ejecución y dejan la comprobación desconocida si no se pudo
+obtener el artefacto esperado. No es un certificado de conformidad WCAG.
+
+## Resumir mediante MCP
+
+Envía el contenido completo de `report.json`, ya parseado, directamente como
+argumentos de `verify_report`, la vigesimoprimera herramienta del candidato.
+No lo envuelvas en un campo `report` ni envíes la salida combinada de la CLI.
+Ambos transportes devuelven el mismo resumen validado en `structuredContent`
+y texto JSON. Las entradas mal formadas, huellas inconsistentes o referencias
+sin evidencia producen errores JSON-RPC `-32602` con mensajes acotados.
+
+La herramienta valida y resume los datos suministrados. No abre un navegador,
+lee artefactos locales, consulta URL de evidencia ni autentica mediciones.
+Las referencias y los hashes comprueban consistencia interna, no la confianza
+en su autor. Conserva capturas y código localmente salvo autorización para
+compartirlos; el informe contiene referencias, no imágenes subidas. Lee las
+limitaciones junto con los recuentos.
+
+## Límites y caso de referencia
+
+Suites e informes admiten 1 MiB de JSON serializado, 64 archivos, 16 escenarios,
+cuatro viewports, 64 pasos por escenario y 256 comprobaciones previstas en la
+matriz completa. La lectura local admite 2 MiB por archivo y 16 MiB en total.
+Las rutas relativas canónicas tienen un máximo de 256 caracteres; se rechazan
+rutas privadas/dependencias, escapes, nombres ambiguos y archivos seleccionados
+con enlaces simbólicos o duros. Cada dimensión del viewport va de 240 a 3.840
+píxeles. Se admiten 512 referencias de evidencia, 16 por comprobación, 16
+herramientas y 32 notas. Los artefactos locales están limitados a 4 MiB cada
+uno y 64 MiB en total, con espacio reservado para informe y resumen.
+
+El caso generado del repositorio instala versiones inmutables de los bloques
+de lista y edición de clientes en una app Vite con datos ficticios. Preparación,
+instalación, compilación y comprobación son pasos separados:
+
+```bash
+pnpm --filter logic2b consumer:prepare /tmp/logic2b-consumer
+pnpm --dir /tmp/logic2b-consumer install
+pnpm --dir /tmp/logic2b-consumer exec playwright install chromium
+pnpm --dir /tmp/logic2b-consumer run build
+pnpm --filter logic2b build
+pnpm --filter logic2b test:consumer /tmp/logic2b-consumer /tmp/logic2b-consumer-evidence
+```
+
+Elige directorios nuevos. El comprobador sirve el resultado ya compilado en
+bucle local, invoca la CLI real, verifica la procedencia inmutable y los hashes
+de evidencia, y detiene su servidor al terminar. Su criterio de aceptación exige
+cobertura completa y rechaza fallos, omisiones y resultados desconocidos no
+previstos. Solo admite resultados axe de contraste validados explícitamente
+cuyos textos quedan parcialmente ocultos por el área desplazable de la tabla
+al aumentar su tamaño. Esas comprobaciones permanecen `unknown` y la CLI
+mantiene el código 2: superar el caso no las convierte en correctas ni desactiva
+el contraste. Revisa los nodos y capturas registrados antes de aprobarlos.
+Quedan fuera la persistencia real, la autorización del servidor y otras rutas.

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { reviewLocalFiles } from "./review.ts"
+import { verifyLocal, readVerificationArtifact } from "./verify.ts"
 import { planLocalChange, applyLocalChange, recoverLocalChange, listChangeTransactions, readChangeArtifact, writeChangeArtifact, type ChangeResult } from "./change.ts"
 import { REVIEW_SCOPES, type ReviewScope } from "@logic2b/review"
 import { generateLocalRules, refreshLocalRules } from "./rules.ts"
@@ -45,6 +46,24 @@ program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
   .version(PACKAGE_VERSION)
+
+program.command("verify")
+  .description("Check a running local application with a bounded declarative browser suite; save local evidence.")
+  .argument("<suite.json>", "declarative verification suite, never JavaScript")
+  .option("-c, --cwd <path>", "application directory with explicitly installed browser tools")
+  .requiredOption("--url <origin>", "HTTP(S) loopback origin of the already running application")
+  .requiredOption("--output <directory>", "new evidence directory; parent must exist")
+  .option("--timeout <ms>", "per-step timeout (50–30000 ms)", "5000")
+  .option("--budget <ms>", "total scenario budget (1000–300000 ms)", "120000")
+  .option("--browser-executable <path>", "existing Chromium executable; defaults to the Playwright browser")
+  .option("--app-unavailable <reason>", "record skipped checks when an explicit build/start prerequisite failed; no browser runs")
+  .option("--json", "print the report and its evidence summary")
+  .action(async (suitePath: string, opts) => {
+    process.exitCode = 2
+    const value = await verifyLocal({ cwd: resolve(opts.cwd ?? process.cwd()), suite: await readVerificationArtifact(suitePath), url: opts.url, output: opts.output, timeoutMs: Number(opts.timeout), budgetMs: Number(opts.budget), browserExecutable: opts.browserExecutable ?? process.env.PLAYWRIGHT_CHROMIUM_PATH, appUnavailable: opts.appUnavailable })
+    console.log(opts.json ? JSON.stringify(value, null, 2) : [`${value.summary.status}: ${value.summary.expectedChecks} declared browser checks`, `${value.summary.counts.pass} pass, ${value.summary.counts.fail} fail, ${value.summary.counts.skipped} skipped, ${value.summary.counts.unknown} unknown`, `Evidence: ${resolve(opts.output)}`, ...value.summary.limitations].join("\n"))
+    process.exitCode = value.summary.status === "pass" ? 0 : value.summary.status === "fail" ? 1 : 2
+  })
 
 const change = program.command("change").description("Plan, apply and recover bounded changes while preserving local edits.")
 change.command("plan")

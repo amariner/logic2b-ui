@@ -84,7 +84,26 @@ jobs:
       # against the dist/client built above.
       - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
 
-      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts
+      # Exercise the shipped declarative runner, including failures and missing
+      # capabilities, independently from the site's component demonstrations.
+      - run: pnpm --filter logic2b test:verify-browser
+
+      # Generate an immutable-registry consumer, explicitly install and build
+      # it, then verify its production output. The verify command itself never
+      # installs dependencies, builds the app or invokes a project script.
+      - run: pnpm --filter logic2b consumer:prepare "$RUNNER_TEMP/logic2b-consumer"
+      - run: pnpm --dir "$RUNNER_TEMP/logic2b-consumer" install --frozen-lockfile=false
+      - run: pnpm --dir "$RUNNER_TEMP/logic2b-consumer" run build
+      - run: pnpm --filter logic2b test:consumer "$RUNNER_TEMP/logic2b-consumer" "$RUNNER_TEMP/logic2b-consumer-evidence"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logic2b-consumer-verification
+          path: ${{ runner.temp }}/logic2b-consumer-evidence
+          if-no-files-found: warn
+
+      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts tests/verification-docs.spec.ts
 
       - run: pnpm --filter @logic2b/web test:a11y
 

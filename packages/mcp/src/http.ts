@@ -33,7 +33,10 @@ export const SERVER_INSTRUCTIONS =
   "use `inspect_project` and `change_plan` with host-supplied snapshots and explicit " +
   "candidate files. Change plans report hashes, conflicts and unsupported work; " +
   "the host must verify all preconditions before authorized local apply. " +
-  "Planning does not execute sources, write files or install dependencies."
+  "Planning does not execute sources, write files or install dependencies. " +
+  "Use `verify_report` to validate and summarize a host-produced runtime report. " +
+  "Coverage gaps remain unknown; supplied hashes do not authenticate evidence " +
+  "or bind the served application to the selected source files. No tool runs a browser."
 
 export const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",

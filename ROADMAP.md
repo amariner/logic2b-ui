@@ -61,8 +61,18 @@ recovery journal. There is no source synthesis, automatic dependency install or
 implicit execution. See [guide 11](./docs/guides/11-incremental-change-plan.md)
 and the execution queue for verification and release status.
 
+The source candidate also includes CLI `verify` for bounded declarative browser
+checks against a separately started local app, and MCP `verify_report` for
+network-free validation and coverage summaries. Selected-file fingerprints,
+declared routes/viewports, assertion artifacts and tool versions remain
+inspectable. Missing checks never pass; screenshots await human judgment and
+source fingerprints do not attest served bytes. The generated customer fixture
+keeps preparation, install, build and checking separate. See
+[guide 12](./docs/guides/12-consumer-verification.md) and the execution queue
+for the actual verification evidence and outstanding scope.
+
 Broader behavior/content and static-review rules,
-consumer runtime verification, structured composition, proposal
+structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.
 Versioned integrity exists: since M0-03 the MCP resolves an omitted version
