@@ -32,6 +32,13 @@
       "sha256": "475444fade99457d2e2ebe26eb3dbba28c9c07c236e07cd3835ba675d44d7c76"
     },
     {
+      "id": "changes",
+      "title": "Incremental changes",
+      "image": "/og/docs/changes.png",
+      "bytes": 25685,
+      "sha256": "06fe829157173389dfb824b541add1dd5cdfabd3b45c3cda58b31cb70a95b6dc"
+    },
+    {
       "id": "components/accordion",
       "title": "Accordion",
       "image": "/og/docs/components/accordion.png",
@@ -597,6 +604,13 @@
       "image": "/og/docs/es/benchmarks.png",
       "bytes": 26535,
       "sha256": "275fa90c0019c3afddac69569f613d0bb9ee98f0b0315e99903dbb9188509a4c"
+    },
+    {
+      "id": "es/changes",
+      "title": "Cambios incrementales",
+      "image": "/og/docs/es/changes.png",
+      "bytes": 27470,
+      "sha256": "551966cc758f87036c66b3f244dc73a6a28f3f6869e6400f3690ab7104fb19ef"
     },
     {
       "id": "es/components/accordion",

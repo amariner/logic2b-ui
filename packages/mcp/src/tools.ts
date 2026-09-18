@@ -1,6 +1,8 @@
 import { buildAgentRules, RULE_FORMATS, type AgentRulesOptions } from "@logic2b/scaffold/rules"
 import { reviewUi, validateReview, ReviewInputError } from "@logic2b/review"
 import { inspectProject } from "@logic2b/scaffold/project-context"
+import { buildChangePlan, ChangePlanError, validateChangeRequest } from "@logic2b/scaffold/change-plan"
+import { CHANGE_INPUT_SCHEMA } from "@logic2b/scaffold/change-plan-schema"
 import { PROJECT_SNAPSHOT_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import { auditTokens } from "@logic2b/tokens/contrast"
@@ -286,6 +288,11 @@ const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "change_plan",
+    description: "Assemble a reviewable, SHA-256-preconditioned change plan from a bounded host snapshot and 1–32 explicit candidate files (128 KiB each, 256 KiB total UTF-8 content). Supply exact registry evidence and explicit missingFiles for creates. Returns conflicts and unsupported changes; never reads/writes a filesystem, fetches, executes candidate source or installs dependencies. Apply only through a host that verifies the plan and all file preconditions.",
+    inputSchema: CHANGE_INPUT_SCHEMA,
+  },
+  {
     name: "review_ui",
     description: "Review 1–64 host-supplied TSX/JSX files (256 KiB total UTF-8 source) without filesystem, network access or execution. Reports proof-backed accessible-name findings, opt-in semantic-color policy, reasoned suppressions and explicit unknowns. Partial label context is the default; static results do not certify runtime accessibility.",
     inputSchema: REVIEW_INPUT_SCHEMA,
@@ -438,7 +445,7 @@ const TOOL_DEFINITIONS = [
   },
 ] as const
 
-const PURE_TOOLS = new Set(["review_ui", "agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["change_plan", "review_ui", "agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -597,6 +604,12 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
       throw new ToolInputError(error instanceof ReviewInputError ? error.message : "Invalid review request.")
     }
   }
+  if (name === "change_plan") {
+    try { return { change: validateChangeRequest(rawArgs) } }
+    catch (error) {
+      throw new ToolInputError(error instanceof ChangePlanError ? error.message : "Invalid change-plan request.")
+    }
+  }
   const args = assertArgumentsObject(rawArgs)
   const out: Record<string, unknown> = {}
   const version = stringArg(args, "version", { max: LIMITS.versionLength })
@@ -687,6 +700,7 @@ export async function runTool(
 ): Promise<ToolResult> {
   const args = validateToolArguments(name, rawArgs)
   try {
+    if (name === "change_plan") return textResult(await buildChangePlan(args.change))
     if (name === "list_components") {
       const client = await createRegistryClient(base, versionArg(args), fetchImpl)
       const filtered = filterIndex(client.index, {
@@ -1001,6 +1015,10 @@ export async function runTool(
     throw new ToolInputError(`Unknown tool "${echo(name)}".`)
   } catch (err) {
     if (err instanceof ToolInputError) throw err
+    if (name === "change_plan") {
+      if (err instanceof ChangePlanError) throw new ToolInputError(err.message)
+      return errorResult("Change planning could not complete. Reduce the supplied context and try again.")
+    }
     if (name === "review_ui") return errorResult("Static review could not complete. Reduce the supplied source and try again.")
     return errorResult(
       `logic2b-mcp error: ${err instanceof Error ? err.message : String(err)}`

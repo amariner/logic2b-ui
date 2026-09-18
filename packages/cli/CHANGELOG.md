@@ -4,6 +4,11 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Add bounded incremental `change plan`, explicit `change apply` with dry-run,
+  stale-file preconditions and a recovery journal, plus `change status` and
+  `change recover`. Preserve already-applied files and newer edits; never run
+  dependencies, scripts or supplied source. Source candidate pending publication.
+
 - Add bounded TSX/JSX `review` with evidence-backed findings, explicit semantic
   color policy, unresolved contexts and reasoned suppressions; never execute
   reviewed source. This is a source-candidate addition pending publication.

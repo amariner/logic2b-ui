@@ -20,7 +20,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | Codex (M1-03) |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | done | Codex (M1-04) |
-| M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | ready | — |
+| M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | done | Codex (M2-01) |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | ready | — |
 | M2-03 | Customer journey create/change/update acceptance fixture | M2-01, M2-02 | ready | — |
 | M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | ready | — |
@@ -785,3 +785,114 @@ availability. External pilots and real comparative EVAL-01 runs remain pending.
 Next ready task: M2-01, preconditioned incremental change plans/apply/recovery
 that preserve custom columns, copy and tokens. M2-02 consumer runtime checks
 are now unblocked too. The user's overall development goal remains active.
+
+
+### 18 September 2026 — M2-01
+
+Delivered on `codex/m2-01-incremental-changes`, based on M1-04 commit
+`862e072`. The shared scaffold core assembles explicit host-authored candidate
+files into `ChangePlanV1`: canonical SHA-256 id, exact registry evidence,
+selected app root, create/update operations with before/after hashes, derived
+package dependencies, conflicts, verification guidance and unsupported work.
+The plan is bounded to 32 candidates, 128 KiB per file, 256 KiB total content,
+256-character relative paths and 2 MiB serialized JSON. Its id checks integrity,
+not authorization. It does not synthesize source or verify registry existence.
+
+Local `change plan` collects the target bytes/absence and project snapshot.
+`change apply` supports a read-only dry run, checks all preconditions before
+source writes, refuses stale files and unsupported package operations, skips
+already-applied files, and retains bounded original bytes/modes in a journal.
+`change status` lists transaction UUIDs and reports incomplete/invalid entries
+in `issues` without hiding valid transactions. `change recover` can undo an
+interrupted or completed apply, checks all relevant hashes/modes before source
+writes, preserves skipped/pending targets and refuses newer edits, including
+edits made after a partial rollback. No source, scripts, dependencies or
+verification commands execute. Journals are versioned/checksummed and capped
+at 4 MiB; history listing is bounded to 256 entries.
+
+An exclusive active owner plus immutable ownership generations prevent two
+Logic2b recoverers from taking over the same dead writer. Completed attempts
+leave finish markers; live unfinished owners cannot be replaced. Claims are
+bounded to 256 generations and reject before modifying a full ownership chain.
+Per-file replacement is atomic; multiple files are not one atomic filesystem
+transaction. Portable APIs leave a final race against unrelated writers, so
+the documented workflow requires a stable workspace. Recovery handles owned
+temporary files left at create link/unlink and update pre-rename boundaries.
+Newly created empty directories can remain.
+
+MCP `change_plan` is the twentieth tool: strict input/output schemas, pure/read-
+only annotations, sanitized invalid-input errors and shared-core equivalence
+across stdio and HTTP. MCP never reads local source or applies the result.
+English/Spanish guides, package/root documentation, roadmap, managed agent
+instructions and the packaged skill explain the available commands and limits.
+Existing immutable registry bytes and the lockfile remain unchanged; there are
+no added external dependencies and no change to the registry update algorithm.
+
+Verification (Node 26.8.1 / pnpm 11.10.0):
+
+- `pnpm lint`: all nine workspace packages passed; repeated on final source.
+- `pnpm test`: 409 tests passed across nine packages (CLI 109, MCP 134,
+  scaffold 34, review 14, web 25, tokens 47, registry 8, VS Code 9,
+  benchmark 29). Relevant CLI/scaffold tests also ran directly. The CLI adds
+  31 acceptance tests: actual subprocess exit after a write, live/concurrent
+  recovery exclusion, create link and update rename crash boundaries, staged
+  tampering, package races, newer content/modes, symlink/hardlink refusals,
+  malformed/re-signed journals, ownership limits, incomplete history and real CLI exits.
+- The consumer fixture runs existing `add` and three-way `update` against
+  registry fixtures around the incremental request: custom column, copy and
+  token override survive; an overlapping upstream edit produces an explicit
+  merge conflict. Full runtime customer-journey coverage remains M2-03.
+- Core tests cover deterministic hashes (including SHA-256 fallback parity
+  without global WebCrypto), strict schemas and limits, absent/contradictory
+  evidence, path collisions, registry uncertainty and package-change policy.
+  No actual Node 18 binary, Windows or Linux filesystem run was performed.
+- `pnpm test:release-artifacts`: passed twice, including final source; rc.3
+  tarballs installed in an isolated consumer, CLI plan/dry-run/apply/repeat/
+  stale/status exercised, and all 20 MCP tools called over official-client
+  stdio with output-schema validation. Source HTTP tests also use the official
+  client against a live local listener. These are local distribution checks,
+  not evidence of npm publication.
+- `pnpm --filter @logic2b/web build`: passed, including 177 OG images;
+  only the two new guide images and their manifest entries changed.
+  `pnpm --filter @logic2b/web test:budgets`: passed. MCP chunk 766,502 bytes;
+  13 server modules total 1,581,837 bytes; browser JS 1,985.9 KiB with a
+  193.4 KiB maximum chunk; docs OG images total 3,948.4 KiB.
+- With `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`,
+  `pnpm --filter @logic2b/web exec playwright test tests/change-docs.spec.ts
+  tests/beta-onboarding.spec.ts --workers=1`: four tests passed at 390/1280px
+  in both locales. Commands match HTML/Markdown, JSON examples parse, keyboard
+  scrolling works, pages do not overflow, and axe reports no serious/critical
+  issues under the existing color-contrast exclusion. Inspected desktop/mobile
+  screenshots; no visual baseline was changed.
+- Local `wrangler dev --config dist/server/wrangler.json --port 4328
+  --inspector-port 9248 --local` served the built Worker: handshake listed 20
+  tools, seven plan cases exactly matched shared-core structured/text output
+  (including package policy, inert source and full escaped 256 KiB input),
+  and three invalid inputs rejected without private source echo. The local
+  server was stopped after verification.
+- From apps/web, `pnpm exec wrangler deploy --dry-run --config
+  dist/server/wrangler.json --outdir /tmp/logic2b-m2-01-worker-dry-run` passed:
+  1,544.76 KiB raw / 352.27 KiB gzip. No deployment performed.
+- Skill-creator `quick_validate.py skills/logic2b-ui` passed in the existing
+  temporary Python environment. Six documented JSON examples passed actual
+  shared plan generation; docs locale tests passed. `git diff --check` passed.
+
+Logs: `/tmp/logic2b-m2-01-{cli,cli-lint,scaffold,lint,lint-final,tests,release,release-final,web,browser,budgets,worker,worker-smoke,dry-run}.log`.
+Independent review found and corrected recovery concurrency, missing temporary
+peer handling, edits after partial rollback, incomplete history entries and the
+ownership-limit boundary; regression tests cover them. Initial tool invocations
+using the nonexistent `@logic2b/cli` filter ran no checks; they were replaced by
+`logic2b` and the successful workspace commands above.
+
+Limitations: create/update UTF-8 text only; no deletions, dependency install,
+automatic pruning, cross-file semantic merge or automatic application checks.
+Plans must already preserve intended customizations. Journals/checksums are not
+protection against an attacker able to rewrite and rehash local artifacts.
+Not rerun: full-site visual/axe, Lighthouse, scaffold framework build matrix or
+remote CI. No npm publication, endpoint deployment, merge or push. Package
+versions remain rc.3 source candidates; release work must recheck availability.
+External pilots and real comparative EVAL-01 measurements remain pending.
+
+Next ready task: M2-02, consumer runtime verification that complements static
+review. M2-03 combines it with this change workflow into the full customer
+journey acceptance fixture. The overall development goal remains active.

@@ -86,6 +86,7 @@ describe("TOOLS", () => {
         "install_plan",
         "scaffold_plan",
         "agent_rules",
+        "change_plan",
         "review_ui",
         "inspect_project",
         "list_presets",
@@ -634,6 +635,18 @@ test("review_ui supplies findings through the shared typed network-free contract
   assert.equal(result.structuredContent!.schemaVersion, 1)
   assert.equal((result.structuredContent!.findings as unknown[]).length, 1)
   assert.equal(TOOLS.find(tool => tool.name === "review_ui")!.annotations.openWorldHint, false)
+})
+
+test("change_plan supplies source deltas through the shared typed network-free contract", async () => {
+  const result = await runTool("change_plan", {
+    snapshot: { schemaVersion: 1, configurations: [], files: [] },
+    registryVersion: "1.0.0-rc.20",
+    candidates: [{ path: "src/Customers.tsx", content: "export const statuses = ['active'];", reason: "Add explicit customer statuses." }],
+    missingFiles: ["src/Customers.tsx"],
+  }, { fetchImpl: noFetch })
+  assert.equal(result.structuredContent!.schemaVersion, 1)
+  assert.equal((result.structuredContent!.operations as unknown[]).length, 1)
+  assert.equal(TOOLS.find(tool => tool.name === "change_plan")!.annotations.openWorldHint, false)
 })
 
 test("agent_rules supplies bounded editor writes through the shared typed contract", async () => {

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { reviewLocalFiles } from "./review.ts"
+import { planLocalChange, applyLocalChange, recoverLocalChange, listChangeTransactions, readChangeArtifact, writeChangeArtifact, type ChangeResult } from "./change.ts"
 import { REVIEW_SCOPES, type ReviewScope } from "@logic2b/review"
 import { generateLocalRules, refreshLocalRules } from "./rules.ts"
 import { RULE_FORMATS, type RuleFormat } from "@logic2b/scaffold/rules"
@@ -44,6 +45,59 @@ program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
   .version(PACKAGE_VERSION)
+
+const change = program.command("change").description("Plan, apply and recover bounded changes while preserving local edits.")
+change.command("plan")
+  .argument("<request>", "JSON containing candidates and optional exact registryVersion")
+  .option("-c, --cwd <path>", "workspace directory")
+  .option("--app-root <path>", "selected application relative to the workspace")
+  .option("--output <path>", "write full plan to a new file; refuses an existing file")
+  .option("--json", "print the complete versioned plan")
+  .action(async (requestPath: string, opts) => {
+    process.exitCode = 2
+    const raw = await readChangeArtifact(requestPath)
+    if (!raw || typeof raw !== "object" || Array.isArray(raw) || Object.keys(raw).some(key => !["schemaVersion", "registryVersion", "candidates"].includes(key))) throw new Error("Local change request accepts only schemaVersion, registryVersion and candidates. Context is collected locally.")
+    const input = raw as { schemaVersion?: unknown; registryVersion?: string; candidates: { path: string; content: string; reason: string }[] }
+    if (input.schemaVersion !== undefined && input.schemaVersion !== 1) throw new Error("Unsupported local change schemaVersion; expected 1.")
+    const plan = await planLocalChange({ cwd: resolve(opts.cwd ?? process.cwd()), appRoot: opts.appRoot, candidates: input.candidates, registryVersion: input.registryVersion })
+    if (opts.output) await writeChangeArtifact(opts.output, plan)
+    if (opts.json) console.log(JSON.stringify(plan, null, 2))
+    else console.log([`Plan ${plan.id} · registry ${plan.registryVersion} · app ${plan.appRoot}`, ...plan.operations.map(op => `${op.kind} ${op.path}\n  ${op.beforeSha256 ?? "missing"} → ${op.afterSha256}\n  ${op.reason}`), ...plan.conflicts.map(item => `Conflict ${item.path}: ${item.reason}`), ...plan.unsupported.map(reason => `Unsupported: ${reason}`), `${plan.dependencies.length} dependency changes; installation not run.`, opts.output ? `Full plan saved to ${opts.output}.` : "Use --json or --output <new-file> to inspect the full content before applying."].join("\n"))
+    process.exitCode = plan.conflicts.length || plan.unsupported.length ? 1 : 0
+  })
+function printChange(value: ChangeResult, json: boolean) {
+  console.log(json ? JSON.stringify(value, null, 2) : [`${value.status}: plan ${value.id}`, ...(value.transactionId ? [`Transaction: ${value.transactionId}`] : []), ...value.conflicts.map(item => `${item.path}: ${item.reason}`), ...value.notes].join("\n"))
+  process.exitCode = ["conflict", "interrupted"].includes(value.status) ? 1 : 0
+}
+change.command("apply")
+  .argument("<plan>", "reviewed plan JSON file")
+  .option("-c, --cwd <path>", "workspace directory containing plan.appRoot")
+  .option("--dry-run", "validate all preconditions without writing files")
+  .option("--json", "print a versioned application result")
+  .action(async (planPath: string, opts) => {
+    process.exitCode = 2
+    printChange(await applyLocalChange({ cwd: resolve(opts.cwd ?? process.cwd()), plan: await readChangeArtifact(planPath), dryRun: opts.dryRun }), opts.json)
+  })
+change.command("recover")
+  .argument("<transaction-id>", "transaction UUID returned by apply/status")
+  .option("-c, --cwd <path>", "workspace directory")
+  .option("--app-root <path>", "selected application relative to the workspace")
+  .option("--dry-run", "inspect recovery preconditions without writing files")
+  .option("--json", "print a versioned recovery result")
+  .action(async (id: string, opts) => {
+    process.exitCode = 2
+    printChange(await recoverLocalChange({ cwd: resolve(opts.cwd ?? process.cwd()), appRoot: opts.appRoot, id, dryRun: opts.dryRun }), opts.json)
+  })
+change.command("status")
+  .option("-c, --cwd <path>", "workspace directory")
+  .option("--app-root <path>", "selected application relative to the workspace")
+  .option("--json", "print the local transaction inventory")
+  .action(async opts => {
+    process.exitCode = 2
+    const value = await listChangeTransactions(resolve(opts.cwd ?? process.cwd()), opts.appRoot)
+    console.log(opts.json ? JSON.stringify(value, null, 2) : [...value.transactions.map(item => `${item.id} ${item.state}${item.active ? " (active)" : ""}: ${item.fileCount} files, plan ${item.planId}`), ...value.issues.map(issue => `Inspect ${issue.path}${issue.active ? " (active)" : ""}: ${issue.reason}`)].join("\n") || "No change transactions.")
+    process.exitCode = value.issues.length ? 1 : 0
+  })
 
 program
   .command("review")

@@ -50,7 +50,18 @@ unknown. This is not runtime verification or broad catalog coverage; npm
 publication and remote deployment are separate release steps. See
 [guide 03](./docs/guides/03-review-ui.md) and the execution queue for checks.
 
-Incremental change plans, broader behavior/content and static-review rules,
+The source candidate now includes bounded explicit-source change planning
+through MCP `change_plan` and CLI `change plan`, with local preconditioned
+`change apply`, transaction status and recovery. File/content hashes, exact
+registry evidence, conflicts and unsupported work form one shared contract.
+Apply preserves already-applied files and refuses stale inputs; recovery checks
+newer edits and permissions before restoring recorded originals. Individual
+file replacement is atomic; multi-file work needs a stable workspace and a
+recovery journal. There is no source synthesis, automatic dependency install or
+implicit execution. See [guide 11](./docs/guides/11-incremental-change-plan.md)
+and the execution queue for verification and release status.
+
+Broader behavior/content and static-review rules,
 consumer runtime verification, structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.

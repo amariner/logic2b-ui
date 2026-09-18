@@ -12,6 +12,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { McpError } from "@modelcontextprotocol/sdk/types.js"
 import { DEFAULT_CONFIG, encodePreset } from "@logic2b/tokens"
 import { reviewUi, REVIEW_LIMITS } from "@logic2b/review"
+import { buildChangePlan, CHANGE_LIMITS, validateChangePlan } from "@logic2b/scaffold/change-plan"
 
 const execFileAsync = promisify(execFile)
 const repoRoot = resolve(import.meta.dirname, "../../..")
@@ -162,7 +163,7 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review", "change"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
   await withLocalRegistry(async (registry) => {
@@ -225,6 +226,48 @@ try {
     const review = await execFileAsync(cliBin, ["review", reviewFile.path, "--cwd", target, "--json", "--semantic-colors"])
     assert.deepEqual(JSON.parse(review.stdout), reviewUi({ files: [reviewFile], policy: { semanticColors: true } }))
     assert.equal(await readFile(join(target, reviewFile.path), "utf8"), reviewFile.content)
+
+    // Exercise the installed CLI against actual consumer files: preserved
+    // customization, explicit absence, dry run, repeat apply and stale refusal.
+    const original = await readFile(installedFile, "utf8")
+    const incremental = {
+      registryVersion: "1.0.0-rc.16",
+      candidates: [
+        { path: "src/components/login-01/login-form.tsx", content: original + "\nexport const customerFilters = ['Active', 'Archived'];\n", reason: "Add consumer-owned filter choices while preserving local changes." },
+        { path: "src/customer-status.ts", content: "export type CustomerStatus = 'active' | 'archived';\n", reason: "Share filter status options." },
+      ],
+    }
+    const incrementalRequest = join(root, "incremental-request.json")
+    const incrementalPlan = join(root, "incremental-plan.json")
+    await writeFile(incrementalRequest, JSON.stringify(incremental))
+    const planned = await execFileAsync(cliBin, ["change", "plan", incrementalRequest, "--cwd", target, "--json", "--output", incrementalPlan])
+    const plan = await validateChangePlan(JSON.parse(planned.stdout))
+    assert.deepEqual(await json(incrementalPlan), plan)
+    assert.deepEqual(plan.conflicts, [])
+    assert.equal(plan.operations.length, 2)
+    assert.equal(await readFile(installedFile, "utf8"), original)
+    const dryRun = await execFileAsync(cliBin, ["change", "apply", incrementalPlan, "--cwd", target, "--dry-run", "--json"])
+    assert.equal(JSON.parse(dryRun.stdout).status, "ready")
+    assert.equal(await readFile(installedFile, "utf8"), original)
+    await assert.rejects(access(join(target, "src/customer-status.ts")))
+    const applied = await execFileAsync(cliBin, ["change", "apply", incrementalPlan, "--cwd", target, "--json"])
+    assert.equal(JSON.parse(applied.stdout).status, "applied")
+    assert.equal(JSON.parse(applied.stdout).dependencyInstallation, "not-run")
+    assert.equal(await readFile(installedFile, "utf8"), incremental.candidates[0]!.content)
+    assert.equal(await readFile(join(target, "src/customer-status.ts"), "utf8"), incremental.candidates[1]!.content)
+    const repeated = await execFileAsync(cliBin, ["change", "apply", incrementalPlan, "--cwd", target, "--json"])
+    assert.equal(JSON.parse(repeated.stdout).status, "already-applied")
+    const newer = incremental.candidates[0]!.content + "\n// A newer consumer edit must survive.\n"
+    await writeFile(installedFile, newer)
+    await assert.rejects(execFileAsync(cliBin, ["change", "apply", incrementalPlan, "--cwd", target, "--json"]), error => {
+      const failure = error as Error & { code?: number; stdout?: string }
+      assert.equal(failure.code, 1)
+      assert.equal(JSON.parse(failure.stdout!).status, "conflict")
+      return true
+    })
+    assert.equal(await readFile(installedFile, "utf8"), newer)
+    const status = await execFileAsync(cliBin, ["change", "status", "--cwd", target, "--json"])
+    assert.equal(JSON.parse(status.stdout).schemaVersion, 1)
   })
 
   await withLocalRegistry(async (registry) => {
@@ -248,6 +291,7 @@ try {
           "add_command",
           "agent_rules",
           "apply_preset",
+          "change_plan",
           "contrast_audit",
           "decode_preset",
           "export_tokens",
@@ -284,6 +328,7 @@ try {
         ["list_components", {}],
         ["list_presets", {}],
         ["agent_rules", { formats: ["agents", "claude", "cursor", "copilot"] }],
+        ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "1.0.0-rc.16", candidates: [{ path: "src/Customer.tsx", content: "process.exit(88); export const filter = 'active';", reason: "Candidate source is data and must never execute." }], missingFiles: ["src/Customer.tsx"] }],
         ["inspect_project", { snapshot: { schemaVersion: 1, configurations: [{ path: "package.json", content: JSON.stringify({ dependencies: { vite: "^8", react: "^19" } }) }, { path: "tsconfig.json", content: JSON.stringify({ compilerOptions: { paths: { "@/*": ["src/*"] } } }) }], files: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } }, detail: "full" }],
         ["review_ui", { files: [
           { path: "src/Customer.tsx", content: '<button><svg aria-hidden="true"/></button>', labelContext: "complete" },
@@ -346,6 +391,10 @@ try {
           assert.ok((result.structuredContent?.unknowns as unknown[]).length >= 2)
           assert.equal(JSON.stringify(result).includes("PRIVATE_REVIEW_SOURCE"), false)
         }
+        if (name === "change_plan") {
+          assert.deepEqual(result.structuredContent, await buildChangePlan(args))
+          await validateChangePlan(result.structuredContent)
+        }
         if (name === "add_command") {
           for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
             assert.equal(
@@ -365,6 +414,9 @@ try {
         ["install_plan", { items: ["button", "button"] }],
         ["review_ui", { files: [{ path: "../PRIVATE_REVIEW_SOURCE.tsx", content: "PRIVATE_REVIEW_SOURCE" }] }],
         ["review_ui", { files: [{ path: "src/Large.tsx", content: "x".repeat(REVIEW_LIMITS.sourceBytes + 1) }] }],
+        ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "next", candidates: [{ path: "src/Customer.tsx", content: "PRIVATE_REVIEW_SOURCE", reason: "Change" }], missingFiles: ["src/Customer.tsx"] }],
+        ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "1.0.0-rc.16", candidates: [{ path: "../PRIVATE_REVIEW_SOURCE.tsx", content: "PRIVATE_REVIEW_SOURCE", reason: "Change" }] }],
+        ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "1.0.0-rc.16", candidates: [{ path: "src/Large.tsx", content: "x".repeat(CHANGE_LIMITS.fileBytes + 1), reason: "Change" }], missingFiles: ["src/Large.tsx"] }],
       ] as const) {
         await assert.rejects(
           () => client.callTool({ name, arguments: args as Record<string, unknown> }),
@@ -379,8 +431,8 @@ try {
   })
 
   passed = true
-  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/scaffold verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 19 tool output contracts verified over stdio`)
+  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, scaffold/review/incremental plan/apply verified`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 20 tool output contracts verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

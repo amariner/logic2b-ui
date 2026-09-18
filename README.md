@@ -8,7 +8,8 @@ and internal tools with coding agents; hosted on Cloudflare Workers.
 Our direction is a complete workflow: understand the project, compose real
 components, verify behavior and preserve local work through subsequent changes.
 The source candidate includes bounded project inspection, managed agent
-instructions and evidence-based static review. Structured composition and
+instructions, evidence-based static review and preconditioned incremental
+change plans with local apply/recovery. Structured composition and
 proposal previews remain planned; see [ROADMAP.md](./ROADMAP.md) for delivery
 boundaries and priorities. Source availability does not imply npm publication
 or deployment of those additions.
@@ -104,6 +105,16 @@ or `review_ui` in MCP `tools/list` before invoking an installed/deployed copy.
 Review requires explicit source selection; semantic-color policy is opt-in,
 and missing-name defects require a justified complete-label-context assertion.
 Static findings supplement application verification; unknown is not pass.
+
+The source candidate also adds MCP `change_plan` and CLI `change plan`,
+`change apply`, `change recover` and `change status`. The host supplies complete
+candidate files; plans bind those bytes to current file hashes or explicit
+absence. Local apply validates every precondition and retains a recovery
+journal. Repeated apply is a no-op; stale files produce conflicts. Dependencies
+and project checks never run automatically. See the
+[incremental changes guide](./apps/web/src/content/docs/changes.mdx) for the
+workflow, transaction recovery and concurrent-writer limitations. Confirm the
+commands/tool exist in your installed copy; this does not establish publication.
 
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
 selectors and `--registry-version` / MCP `version` select different artifacts.

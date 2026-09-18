@@ -15,6 +15,15 @@ Reconcile returned paths with the project before writing. Preserve custom copy,
 columns, wrappers and token overrides. Respect intentional native HTML.
 Use the installer for .logic2b/ metadata; do not manually edit its snapshots.
 
+For incremental edits, use `change_plan` or `logic2b change plan` when available.
+Supply complete candidate contents preserving existing customizations. Inspect
+the exact registry version, before/after hashes, conflicts and unsupported work.
+Within existing authorization, use `logic2b change apply <plan> --dry-run`, then
+apply; stale files need a new plan. No dependencies or scripts run automatically.
+Use the returned transaction UUID with `logic2b change recover` after an
+interruption; preserve newer edits and report recovery conflicts. A plan hash
+checks integrity, not authorization. MCP only returns the plan.
+
 For stateful blocks, read behavior metadata and wire real data/actions. Verify
 applicable loading, empty, failure/retry, validation, submitting, permissions
 and unsaved-change behavior, plus keyboard and mobile operation. Run the

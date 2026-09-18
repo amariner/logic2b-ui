@@ -51,6 +51,10 @@ npx logic2b@next list
 | `rules` | Regenerate managed AGENTS.md/DESIGN.md; `--format agents,claude,cursor,copilot` adds editor formats. |
 | `inspect` | Read bounded project configuration and installed hashes; `--json --details full` includes aliases, inventory and uncertainty. |
 | `review <paths...>` | Source candidate: review selected TSX/JSX with explicit token policy, supported native accessible-name checks and unresolved context. |
+| `change plan <request.json>` | Source candidate: collect local context and assemble explicit candidate files into a hashed plan. |
+| `change apply <plan.json>` | Validate all preconditions and apply with a recovery journal; `--dry-run` checks without writing. |
+| `change recover <transaction-id>` | Restore one transaction after checking current hashes and permissions; `--dry-run` inspects first. |
+| `change status` | List bounded local journal states and their transaction UUIDs. |
 
 `add` snapshots what it installs under `.logic2b/base/` — that snapshot is the
 base side of `update`'s merge, so keep the directory (committing it is fine).
@@ -171,3 +175,103 @@ exit 0 and zero findings are not a passing accessibility certificate.
 See [the review guide](https://ui.logic2b.com/docs/review) for all four rules,
 reasoned next-line suppression syntax and the MCP equivalent. Keep runtime,
 keyboard and responsive verification in the consuming application.
+
+## Incremental changes (source candidate)
+
+Build this checkout with `pnpm --filter logic2b build`, or confirm `change`
+appears in your installed CLI's help. Source availability does not establish
+npm publication. The host authors complete candidate files from the current
+source, preserving intended customizations; the planner validates explicit
+changes and never synthesizes business logic from a brief.
+
+Save a local `request.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "registryVersion": "1.0.0-rc.17",
+  "candidates": [{
+    "path": "src/customer-filters.ts",
+    "content": "export const customerStatuses = ['active', 'archived'] as const;\n",
+    "reason": "Share status choices for customer filters."
+  }]
+}
+```
+
+Use your application's exact registry version. It can be omitted when the
+install manifest records a resolved release; an explicit mismatch is a
+conflict. Planning has no registry/network access and cannot establish that
+a declared release exists. The CLI collects bounded local context, original
+hashes and missing-file evidence itself. Request JSON does not accept a host
+`snapshot` or `missingFiles`.
+
+```bash
+node packages/cli/dist/index.js change plan request.json --cwd /path/to/app --output /path/to/new-plan.json
+node packages/cli/dist/index.js change apply /path/to/new-plan.json --cwd /path/to/app --dry-run --json
+node packages/cli/dist/index.js change apply /path/to/new-plan.json --cwd /path/to/app --json
+node packages/cli/dist/index.js change status --cwd /path/to/app --json
+node packages/cli/dist/index.js change recover TRANSACTION_UUID --cwd /path/to/app --dry-run --json
+node packages/cli/dist/index.js change recover TRANSACTION_UUID --cwd /path/to/app --json
+```
+
+Review the saved plan before the authorized apply. Default planning output
+summarizes operations, hashes, reasons, conflicts and dependency counts;
+`--json` prints full source. `--output` requires a new file with an existing
+parent directory and refuses overwrites. Request/output/plan artifact paths
+resolve from the shell's current directory, independently of `--cwd`.
+For workspaces, plan with `--cwd /path/to/workspace --app-root apps/web`.
+Apply uses the recorded `plan.appRoot` beneath the same workspace; status and
+recover take `--app-root` explicitly.
+
+Plans contain only create/update operations, content hashes and preconditions.
+The canonical plan `id` is a checksum, not a signature or permission. Apply
+rejects invalid hashes, conflicts, unsupported work and stale files before
+changing targets. Files already at the after hash are skipped; if all match,
+the result is `already-applied`. Dry-run returns `ready` without writing.
+There is no force option. A stale target requires inspection and a fresh plan.
+
+Successful apply returns `applied` and a transaction UUID. Interrupted work
+returns `interrupted`; `change status` lists its state and `planId`. Recovery
+takes that UUID, not the plan's 64-character checksum. It checks bytes and
+permissions before rollback, refuses newer edits or `chmod` changes and
+preserves targets already applied before this transaction. Completed applies
+can also be recovered while those checks hold. If partial recovery already
+restored a target, later changes to it block another recovery attempt even
+when they match the plan's after hash. Recovery is exclusively claimed, and a
+live owner must finish its attempt first.
+
+Journals retain bounded originals and staged files in the selected app's
+`.logic2b/changes/UUID/`. Each replacement is atomic, but the multi-file
+transaction is not universally atomic. Keep the workspace stable: portable
+hash-check/rename operations cannot exclude unrelated concurrent writers.
+New empty directories can remain after recovery. Status reports malformed or
+incomplete journal entries in `issues` while listing valid transactions;
+preserve these entries for inspection. The history listing limit is 256
+directory entries, and each journal permits at most 256 ownership attempts.
+After checking no transaction is active, manually archive only terminal
+`applied`, `recovered` or `aborted` directories outside this history. Archived
+applied journals no longer provide available rollback; never discard active
+locks or interrupted state to bypass a conflict.
+
+Limits: 32 candidates, 128 KiB UTF-8 per file, 256 KiB total candidate and
+original recovery content, 256-character app-relative paths, 2 MiB serialized
+request/plan and 4 MiB per journal. Unsafe, duplicate/case-colliding or
+ancestor/descendant targets, aliases, environment/Git/dependency directories,
+reserved names and `.logic2b`/`.logic2b-change-*` targets reject. Local source
+and artifacts must be regular single-link files; symlink targets reject.
+
+Dependency changes require a preconditioned root `package.json` operation.
+Metadata is derived from its four ordinary dependency sections and rechecked
+against local bytes. Removals, moves between sections, ambiguous declarations,
+local/Git/URL locators, changed lifecycle hooks and changes to bundled
+dependencies, overrides, resolutions, `pnpm`, workspaces or `packageManager`
+are unsupported. Nested manifests require selecting their app root first.
+No dependencies, scripts or verification commands run: results explicitly
+report `dependencyInstallation: "not-run"`.
+
+Exit 1 means a conflict, unsupported work, interruption or status issues;
+exit 2 means invalid input or an execution error. CLI usage errors retain
+exit 1. Verify the application independently after apply. Registry `update`
+retains its separate three-way merge and baseline workflow. See
+[incremental changes](https://ui.logic2b.com/docs/changes) for MCP input,
+result statuses and recovery details.
