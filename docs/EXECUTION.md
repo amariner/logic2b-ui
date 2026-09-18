@@ -1101,3 +1101,21 @@ compression/effort; no image pixels, generator settings or dependencies change.
 Local `pnpm --filter @logic2b/web test:budgets` and `git diff --check` pass.
 A fresh GitHub run and actual Cloudflare production checks must confirm delivery;
 this entry does not label the failed first CI run as successful.
+
+The next run, 35347507948, passed the corrected budget and all generated
+consumer/lifecycle gates with the same explicit four contrast unknowns, then
+failed only two populated-table screenshots. The 390px reference had a 148px
+customer-cell content box; Isabella's mobile summary measured 148.546875px on
+macOS and wrapped to a second 16px line. Linux captured one fewer line, so the
+full-page height differed by 16px. Empty/no-match captures and all functional
+assertions passed. Measurements at 320/390/414px in Chrome 153 and headless
+Chromium 140 confirmed this boundary; the Playwright 149 download failed TLS
+validation and was not bypassed.
+
+Only the two populated-table visual captures now use 414px, leaving 23.45px of
+text-width margin. All other state screenshots retain 390px, as do the narrow
+functional journey and generated consumers. Screenshot tolerances, component
+CSS, demo data and immutable registry files are unchanged. Both new PNGs were
+visually reviewed. CI now preserves functional screenshot diffs on failure.
+The complete customer journey suite passed 31/31 on Chrome 153; the two revised
+snapshots also passed on headless Chromium 140 without updating baselines.

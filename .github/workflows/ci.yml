@@ -134,6 +134,13 @@ jobs:
 
       - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts tests/verification-docs.spec.ts
 
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: site-functional-test-diffs
+          path: apps/web/test-results
+          if-no-files-found: warn
+
       - run: pnpm --filter @logic2b/web test:a11y
 
       # Pixel-diff gate over every isolated component/chart demo and block,
