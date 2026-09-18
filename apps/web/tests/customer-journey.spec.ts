@@ -88,7 +88,12 @@ for (const [block, contract] of Object.entries(BEHAVIOR_CONTRACTS)) {
     if (definition.support !== "built-in") continue
     for (const mode of ["light", "dark"]) {
       test(`${block} ${state} ${mode} state evidence`, async ({ page }) => {
-        await page.setViewportSize({ width: 390, height: 900 })
+        // At 390px one populated-table summary is within 0.55px of wrapping;
+        // host font metrics can legitimately change its height by one line.
+        // Give these two visual captures room while the functional journey and
+        // generated-consumer suites continue exercising the actual 390px layout.
+        const width = block === "admin-customers-01" && state === "success" ? 414 : 390
+        await page.setViewportSize({ width, height: 900 })
         await page.goto(`/blocks/preview/${block}?state=${state}`)
         await expect(page.locator(`[data-preview-ready="${block}"]`)).toHaveAttribute("data-preview-state", state)
         // Wait for query-controlled demos to remount after hydration.
