@@ -43,7 +43,12 @@
     "prepack": "tsup",
     "consumer:prepare": "node --import tsx scripts/verify-consumer.mts prepare",
     "test:consumer": "node --import tsx scripts/verify-consumer.mts check",
-    "test:verify-browser": "node --import tsx --test test-browser/verify.test.ts"
+    "test:verify-browser": "node --import tsx --test test-browser/verify.test.ts",
+    "journey:prepare": "node --import tsx scripts/verify-customer-journey.mts prepare",
+    "journey:build": "node --import tsx scripts/verify-customer-journey.mts build",
+    "journey:change": "node --import tsx scripts/verify-customer-journey.mts change",
+    "journey:update": "node --import tsx scripts/verify-customer-journey.mts update",
+    "test:journey": "node --import tsx scripts/verify-customer-journey.mts check"
   },
   "license": "MIT",
   "dependencies": {

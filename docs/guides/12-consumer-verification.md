@@ -183,5 +183,9 @@ reporting, missing selector, assertion/action failure, timeout, changed source,
 missing browser capability and malformed evidence. Record exact commands,
 routes/viewports, artifact locations and remaining human inspection in the
 execution handoff; do not substitute source/unit checks for a consumer run or
-claim unrun CI. M2-03 combines this runtime evidence with incremental changes
-and upstream updates to preserve custom columns, copy and tokens end to end.
+claim unrun CI. The M2-03
+[customer-journey acceptance fixture](./15-customer-journey-acceptance.md) is in
+progress and combines this runtime evidence with incremental changes and
+upstream updates to preserve custom columns, copy and tokens end to end. Its
+declared checks become acceptance evidence only after the actual generated
+consumer is built and exercised at every stage.

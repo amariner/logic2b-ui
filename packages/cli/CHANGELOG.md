@@ -4,6 +4,12 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Merge independent edits on adjacent lines during upstream updates. Keep
+  genuine unresolved conflicts explicit across repeated updates with tagged
+  markers and local records; exit 1 for conflicts or missing-base differences.
+  Add generated-consumer create/change/update acceptance with preserved custom
+  columns, copy and tokens. Source candidate pending publication.
+
 - Add declarative local `verify` against an explicitly started loopback app,
   with bounded source fingerprints, browser/axe evidence and honest coverage.
   Missing tools and incomplete measurements remain skipped/unknown; no implicit

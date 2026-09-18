@@ -411,7 +411,8 @@ program
         )
       }
     }
-    await updateComponents(names, opts)
+    const summary = await updateComponents(names, opts)
+    if (summary.conflicts > 0 || summary.noBase > 0) process.exitCode = 1
   })
 
 program

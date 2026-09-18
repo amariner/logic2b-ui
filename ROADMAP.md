@@ -71,6 +71,13 @@ keeps preparation, install, build and checking separate. See
 [guide 12](./docs/guides/12-consumer-verification.md) and the execution queue
 for the actual verification evidence and outstanding scope.
 
+The customer maintenance fixture now exercises those contracts together:
+custom column/copy/theme, a second filtering request, and an immutable upstream
+update with explicit conflict resolution. Independent browser checks run at
+each stage; outstanding contrast measurements remain unknown. Upstream updates
+merge independent adjacent edits and keep unresolved conflicts visible on
+repeat. See [guide 15](./docs/guides/15-customer-journey-acceptance.md).
+
 Broader behavior/content and static-review rules,
 structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links

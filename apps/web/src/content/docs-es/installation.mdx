@@ -113,6 +113,15 @@ capturado al instalar: actualiza archivos intactos, conserva cambios locales,
 mezcla cambios compatibles y marca los solapamientos para revisión. Consulta
 `/r/changelog/<name>.json` antes de ampliar un rango.
 
+En el candidato de código fuente, los conflictos siguen pendientes al repetir
+una actualización. Los marcadores identificados se registran en
+`.logic2b/update-conflicts.json`; `update` termina con código 1 mientras haya
+conflictos o diferencias sin un snapshot base que revisar. Resuelve el código
+conservando los cambios locales y de origen que correspondan y vuelve a
+actualizar. Borrar el registro no resuelve el conflicto. Los cambios
+independientes en líneas contiguas pueden combinarse sin conflicto. Este
+comportamiento describe el código actual; la publicación npm es un paso aparte.
+
 ## Uso con un asistente de IA
 
 Cada bloque de instalación incluye una pestaña **Agent** y el estudio de temas
