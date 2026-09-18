@@ -4,6 +4,11 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+- Add network-free `change_plan` for explicit candidate sources and bounded
+  project snapshots. Strict shared plans include file/content hashes, exact
+  registry evidence, conflicts and unsupported work. Both transports leave
+  filesystem apply, verification and dependency installation to the host.
+
 - Add network-free `review_ui` for bounded TSX/JSX source: shared static
   accessible-name checks, opt-in semantic color policy, explicit unknowns and
   reasoned suppressions. Both transports return the same strict typed result

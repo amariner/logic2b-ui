@@ -99,6 +99,7 @@ describe("Spanish documentation", () => {
       "agent-benchmarks",
       "backend",
       "benchmarks",
+      "changes",
       ...translatedComponents.map((name) => `components/${name}`),
       "cross-platform-tokens",
       "index",

@@ -1,0 +1,230 @@
+---
+title: Cambios incrementales
+description: Revisa cambios de código, valida las condiciones de escritura y recupera transacciones locales respetando las ediciones posteriores.
+---
+
+El **candidato disponible en el código fuente** incorpora `change plan`,
+`change apply`, `change recover` y `change status` en la CLI, y la herramienta
+MCP de solo lectura `change_plan`. Comprueba que `change` aparece en la ayuda
+de tu CLI o que `change_plan` figura en `tools/list`. Este repositorio no
+acredita la publicación en npm ni el despliegue del endpoint remoto.
+
+El agente prepara el código propuesto a partir de la aplicación actual,
+conservando las columnas, los textos y las interacciones personalizados. El
+planificador reúne cambios explícitos con condiciones basadas en SHA-256. No
+genera lógica de negocio a partir de una descripción, combina código candidato
+arbitrario ni demuestra que la interfaz funcione. Revisa el contenido completo
+y verifica la aplicación resultante.
+
+## Preparar un plan local
+
+Desde este repositorio, compila la CLI:
+
+```bash
+pnpm --filter logic2b build
+```
+
+Crea `request.json` con entre uno y 32 candidatos. Cada `content` contiene el
+archivo final completo, incluidas las personalizaciones que quieras conservar.
+Este ejemplo añade una utilidad; usa la versión exacta del registro que tenga
+anotada tu aplicación.
+
+```json
+{
+  "schemaVersion": 1,
+  "registryVersion": "1.0.0-rc.17",
+  "candidates": [{
+    "path": "src/customer-filters.ts",
+    "content": "export const customerStatuses = ['active', 'archived'] as const;\n",
+    "reason": "Compartir las opciones de estado del filtro de clientes."
+  }]
+}
+```
+
+```bash
+node packages/cli/dist/index.js change plan request.json --cwd /ruta/a/la/app --output /ruta/al/nuevo-plan.json
+node packages/cli/dist/index.js change apply /ruta/al/nuevo-plan.json --cwd /ruta/a/la/app --dry-run --json
+node packages/cli/dist/index.js change apply /ruta/al/nuevo-plan.json --cwd /ruta/a/la/app --json
+```
+
+Revisa el plan guardado antes de aplicarlo dentro del alcance autorizado. La
+salida habitual resume rutas, operaciones, hashes anteriores y posteriores,
+motivos, conflictos y número de dependencias. `--json` muestra el código
+completo. `--output` crea un archivo y rechaza sustituir uno existente; su
+directorio padre debe existir. Las rutas del archivo de petición y del plan
+se resuelven desde el directorio actual de la terminal, independientemente de
+`--cwd`.
+
+La planificación local lee contexto acotado y los destinos solicitados.
+Recoge sus bytes actuales o comprueba su ausencia; el JSON local no acepta
+`snapshot` ni `missingFiles`. Para una aplicación dentro de un workspace, usa
+`--cwd /ruta/al/workspace --app-root apps/web` al planificar. El plan registra
+`appRoot: "apps/web"`; apply recibe el mismo `--cwd` y selecciona la raíz
+guardada. Status y recover aceptan `--app-root` de forma explícita.
+
+Puedes omitir `registryVersion` si `.logic2b/manifest.json` aporta una versión
+resuelta exacta. Aquí no se admiten canales, rangos ni URL. Una versión
+explícita distinta de la observada en el manifiesto genera un conflicto. La
+planificación no consulta el registro ni demuestra por su cuenta que esa
+versión exista. Descargar o actualizar contenido del registro es otra operación.
+
+## Interpretar condiciones y resultados
+
+Cada operación incluye `path`, `kind`, `beforeSha256`, `afterSha256`, `content`
+y `reason`. Crear exige `beforeSha256: null` y que el destino no exista;
+actualizar exige el hash actual. Los candidatos sin cambios se omiten. `id`
+es el hash del plan canónico de versión 1, incluidos `appRoot`, la versión del
+registro, las operaciones, las dependencias, los conflictos, las indicaciones
+de verificación y lo no soportado. Es una comprobación de integridad, no una
+firma ni una autorización. Si editas un plan, debes regenerarlo y revisarlo.
+
+Apply valida el esquema, los hashes del plan y del contenido, todos los
+destinos y los metadatos de dependencias de `package.json` antes de cambiar
+archivos de destino. Rechaza planes con conflictos o trabajo no soportado. Si
+un archivo difiere tanto del original como del resultado previsto, revisa esa
+edición y genera un plan nuevo. No existe una opción para forzar la sobrescritura.
+
+| Resultado `status` | Significado |
+| --- | --- |
+| `ready` | La simulación cumple las condiciones; no se ha escrito nada. |
+| `applied` | La transacción terminó. |
+| `already-applied` | Todos los destinos ya coinciden con el resultado; no hizo falta una transacción. |
+| `conflict` | Las condiciones o el alcance admitido impiden la operación. |
+| `interrupted` | La aplicación o recuperación se detuvo tras comenzar; revisa el diario antes de continuar. |
+| `recovered` | Se restauraron los originales registrados de esta transacción. |
+| `already-recovered` | La transacción ya estaba recuperada o se abortó antes de escribir destinos. |
+
+Si algunos archivos ya contienen el resultado previsto, apply los conserva y
+registra los demás en una transacción. El código de salida 1 indica conflictos,
+trabajo no soportado, interrupción o incidencias de status; el 2 indica entrada inválida o un error
+de ejecución. Los errores de uso de la CLI mantienen el código 1. Planificar
+correctamente o recibir `ready` no verifica la aplicación. No se instalan
+dependencias ni se ejecutan scripts o comprobaciones automáticamente.
+
+## Recuperar una transacción
+
+```bash
+node packages/cli/dist/index.js change status --cwd /ruta/a/la/app --json
+node packages/cli/dist/index.js change recover TRANSACTION_UUID --cwd /ruta/a/la/app --dry-run --json
+node packages/cli/dist/index.js change recover TRANSACTION_UUID --cwd /ruta/a/la/app --json
+```
+
+Sustituye `TRANSACTION_UUID` por el `transactionId` de apply o el `id` de una
+entrada de status. El UUID identifica un diario local; es distinto del hash
+`id` de 64 caracteres del plan. Status muestra `planId`, `fileCount`, `active`
+y los estados del diario `prepared`, `applying`, `applied`, `interrupted`,
+`recovering`, `recovered` o `aborted`. Una transacción activa impide otro apply.
+Cada intento de recuperación adquiere el control exclusivo; un propietario
+activo debe terminar su intento antes de que otro proceso recupere. Si el
+proceso propietario ha terminado, otro intento puede adquirir ese control.
+
+Status lista transacciones válidas junto a `issues` para entradas incompletas
+o inválidas. Cada incidencia incluye `path`, `reason` y `active`; status termina
+con código 1 si hay incidencias que revisar. Conserva esas entradas: una lista
+incompleta no demuestra que no quede trabajo interrumpido.
+
+La recuperación comprueba los hashes originales y previstos, y los permisos,
+antes de restaurar destinos. Una edición posterior o un cambio con `chmod`
+bloquea la reversión: consérvalo y resuelve el conflicto. Los archivos que ya
+estaban aplicados antes de esta transacción permanecen intactos. También puedes
+revertir una transacción `applied` terminada si sus bytes y permisos siguen
+coincidiendo. Se eliminan los archivos creados por esta transacción, aunque
+pueden quedar directorios nuevos vacíos. Conserva los diarios mientras necesites
+sus datos de recuperación. Si un intento anterior ya restauró un destino,
+cualquier cambio posterior de contenido bloquea otro intento, incluso si
+vuelve a introducir el hash posterior del plan.
+
+El diario reside en `.logic2b/changes/UUID/` dentro de la aplicación elegida,
+con originales y contenido preparado de tamaño acotado. La sustitución de un
+archivo es atómica; la operación completa sobre varios archivos no lo es de
+forma universal. Mantén estable el workspace durante apply y recover: las API
+portables del sistema de archivos no permiten unir la comprobación del hash
+y la sustitución en una operación indivisible frente a otro editor o proceso.
+El diario y las comprobaciones repetidas permiten recuperar; no garantizan
+protección ante modificaciones concurrentes hostiles.
+
+Status rechaza un directorio de historial con más de 256 entradas, incluido
+su bloqueo activo. No hay limpieza automática. Tras comprobar que no hay
+transacciones activas, archiva manualmente fuera de `.logic2b/changes` solo
+directorios de transacciones terminadas en `applied`, `recovered` o `aborted`.
+Archivar un diario aplicado lo retira del historial disponible para recuperar.
+No elimines bloqueos activos, diarios interrumpidos o estados en curso para
+saltarte un conflicto. Cada diario también admite un máximo de 256 intentos
+de adquisición de control; si se supera, conserva el diario para inspeccionarlo.
+
+## Enviar una petición mediante MCP
+
+`change_plan` recibe el código como datos. Ni el MCP local ni el remoto leen
+tu sistema de archivos, consultan el registro, ejecutan código o aplican el
+resultado. El host proporciona una instantánea de versión 1 y evidencia
+explícita de las ausencias:
+
+```json
+{
+  "schemaVersion": 1,
+  "registryVersion": "1.0.0-rc.17",
+  "snapshot": {
+    "schemaVersion": 1,
+    "appRoot": ".",
+    "configurations": [],
+    "files": []
+  },
+  "candidates": [{
+    "path": "src/customer-filters.ts",
+    "content": "export const customerStatuses = ['active', 'archived'] as const;\n",
+    "reason": "Compartir las opciones de estado del filtro de clientes."
+  }],
+  "missingFiles": ["src/customer-filters.ts"]
+}
+```
+
+Para un destino existente, aporta su SHA-256 actual en `snapshot.files`. Los
+bytes de configuración suministrados también establecen el hash de esos
+archivos; si contradicen el hash del inventario, hay un conflicto. Omitir un
+archivo no prueba que falte. La evidencia contradictoria de presencia/ausencia
+o un workspace sin aplicación seleccionada generan conflictos o trabajo no
+soportado. Solicita antes el contexto completo de `inspect_project` y recoge
+la evidencia que falte desde el host. Un resultado de inspección no es una
+instantánea de entrada.
+
+Ambos transportes devuelven el mismo plan estricto en `structuredContent` y
+en el texto JSON. Los esquemas, campos, rutas o límites inválidos producen
+errores JSON-RPC `-32602`. Un resultado válido aún puede contener `conflicts`
+o `unsupported`: el host debe revisarlos y comprobar todas las condiciones
+actuales antes de una aplicación autorizada. Una autorización existente para
+ese cambio concreto no necesita otra confirmación.
+
+## Alcance admitido y límites
+
+Las rutas son relativas a la aplicación seleccionada y los planes las guardan
+canónicas. Las peticiones normalizan `./` y separadores repetidos inocuos,
+pero rechazan escapes, rutas absolutas, alias de imports, destinos duplicados,
+colisiones de mayúsculas o entre ancestro y descendiente, archivos de entorno, rutas de
+dependencias o Git, nombres reservados, `.logic2b` y archivos temporales
+`.logic2b-change-*`. Los destinos locales deben ser archivos ordinarios con un
+único enlace bajo directorios ordinarios; los enlaces simbólicos y duros se rechazan.
+
+Límites: 32 candidatos, 128 KiB UTF-8 por archivo, 256 KiB de contenido
+candidato total y de originales para recuperar, rutas de 256 caracteres y
+peticiones/planes serializados de 2 MiB. La instantánea admite 128 KiB de
+configuración, 32 archivos de configuración, 1.000 hashes y 1 MiB serializado.
+HTTP conserva el límite de 2 MiB para el mensaje completo. Cada diario local
+tiene un máximo de 4 MiB. Divide trabajos mayores en planes revisados por separado.
+
+Incluye cambios de dependencias mediante una operación sobre `package.json`
+en la raíz con su condición previa; actualizarlo exige sus bytes originales
+de configuración. Los metadatos derivan de `dependencies`, `devDependencies`,
+`peerDependencies` y `optionalDependencies`, y se vuelven a comprobar con los
+bytes locales al aplicar. No se admiten eliminaciones, traslados entre secciones,
+versiones ambiguas, referencias locales/Git/URL ni cambios en hooks de ciclo
+de vida. Cambiar dependencias empaquetadas, overrides, resolutions, `pnpm`,
+workspaces o `packageManager` también exige otra operación. Selecciona la
+aplicación anidada como `appRoot` antes de cambiar su manifiesto.
+
+Los planes solo contienen operaciones de creación y actualización, sin
+instalaciones de dependencias ni comandos ejecutables. Las actualizaciones del registro mantienen el flujo
+existente de combinación a tres bandas de `update` y su gestión de conflictos;
+`change_plan` no descarga actualizaciones ni modifica las bases de instalación.
+Después de aplicar, ejecuta las comprobaciones del proyecto, la
+[revisión estática](/es/docs/review) y verificaciones independientes de
+interacciones, teclado y comportamiento adaptable.

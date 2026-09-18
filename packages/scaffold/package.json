@@ -11,7 +11,9 @@
     "./behavior": "./src/behavior.ts",
     "./project-context": "./src/project-context.ts",
     "./project-context-schema": "./src/project-context-schema.ts",
-    "./rules": "./src/rules.ts"
+    "./rules": "./src/rules.ts",
+    "./change-plan": "./src/change-plan.ts",
+    "./change-plan-schema": "./src/change-plan-schema.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",

@@ -1,0 +1,220 @@
+---
+title: Incremental changes
+description: Inspect source changes, validate file preconditions and recover local transactions while preserving newer edits.
+---
+
+The **source candidate** provides CLI `change plan`, `change apply`,
+`change recover`, `change status` and the read-only MCP `change_plan` tool.
+Confirm `change` in your installed CLI's help or `change_plan` in
+`tools/list`. This checkout does not establish npm publication or remote
+endpoint deployment.
+
+The host writes the proposed source, starting from the current application
+and preserving its custom columns, copy and interactions. The planner assembles
+explicit file changes with SHA-256 preconditions. It does not generate business
+logic from a brief, merge arbitrary candidate code or establish that the
+interface works. Review the complete candidate and verify the resulting app.
+
+## Prepare a local plan
+
+From this repository, build the CLI:
+
+```bash
+pnpm --filter logic2b build
+```
+
+Create `request.json` with one to 32 candidates. Each `content` is the complete
+intended file, including customizations you want to keep. This example adds a
+small helper; use the exact registry release recorded by your application.
+
+```json
+{
+  "schemaVersion": 1,
+  "registryVersion": "1.0.0-rc.17",
+  "candidates": [{
+    "path": "src/customer-filters.ts",
+    "content": "export const customerStatuses = ['active', 'archived'] as const;\n",
+    "reason": "Share status choices for the customer filter."
+  }]
+}
+```
+
+```bash
+node packages/cli/dist/index.js change plan request.json --cwd /path/to/app --output /path/to/new-plan.json
+node packages/cli/dist/index.js change apply /path/to/new-plan.json --cwd /path/to/app --dry-run --json
+node packages/cli/dist/index.js change apply /path/to/new-plan.json --cwd /path/to/app --json
+```
+
+Review the saved plan before the authorized apply. The default plan output
+summarizes paths, operation types, before/after hashes, reasons, conflicts and
+dependency counts. `--json` prints full source. `--output` creates a new file
+and refuses to replace an existing one; its parent directory must exist.
+Request and plan artifact paths resolve from the shell's current directory,
+independently of `--cwd`.
+
+Local planning reads bounded project context and the requested targets. It
+records their current bytes or confirmed absence itself; local request JSON
+does not accept `snapshot` or `missingFiles`. For a workspace, use
+`--cwd /path/to/workspace --app-root apps/web` when planning. The plan records
+`appRoot: "apps/web"`; apply takes the same workspace `--cwd` and selects the
+root from the plan. Status and recovery accept `--app-root` explicitly.
+
+`registryVersion` can be omitted when `.logic2b/manifest.json` supplies an exact
+resolved release. Channels, ranges and URLs are invalid here. A supplied
+release that differs from the observed manifest produces a conflict. Planning
+does not contact the registry or independently prove that a declared release
+exists. Fetching or updating registry content remains a separate operation.
+
+## Understand preconditions and results
+
+Each operation contains `path`, `kind`, `beforeSha256`, `afterSha256`, `content`
+and `reason`. A create requires `beforeSha256: null` and a missing target; an
+update requires the current file's digest. Unchanged requested files are
+omitted. `id` hashes the canonical version-1 plan, including `appRoot`, exact
+registry version, operations, dependencies, conflicts, verification guidance
+and unsupported work. It is an integrity checksum, not a signature or
+authorization. Editing a plan requires rebuilding it and reviewing it again.
+
+Apply validates the schema, plan and content hashes, every target and any
+`package.json` dependency metadata before changing target files. It refuses
+plans with conflicts or unsupported work. A file that differs from both the
+original and planned content is a conflict: inspect that edit and generate a
+fresh plan. There is no force-overwrite flag.
+
+| Result `status` | Meaning |
+| --- | --- |
+| `ready` | Dry-run preconditions passed; nothing was written. |
+| `applied` | The transaction completed. |
+| `already-applied` | Every target already matches its planned content; no transaction was needed. |
+| `conflict` | Preconditions or supported-scope checks prevent the operation. |
+| `interrupted` | Application or recovery stopped after starting; inspect its journal before continuing. |
+| `recovered` | This transaction's changes were restored to their recorded originals. |
+| `already-recovered` | The transaction is already recovered or was aborted before target writes. |
+
+If only some files already match the planned content, apply skips those and
+records the others in one transaction. Exit 1 reports a plan conflict,
+unsupported work, an interrupted operation or status issues; exit 2 reports
+invalid input or an execution error. CLI usage errors retain exit 1. Successful planning and
+`ready` are not application-verification results. No dependency installation,
+project script or verification command runs automatically.
+
+## Recover a transaction
+
+```bash
+node packages/cli/dist/index.js change status --cwd /path/to/app --json
+node packages/cli/dist/index.js change recover TRANSACTION_UUID --cwd /path/to/app --dry-run --json
+node packages/cli/dist/index.js change recover TRANSACTION_UUID --cwd /path/to/app --json
+```
+
+Replace `TRANSACTION_UUID` with `transactionId` from apply or `id` from a
+status entry. The UUID identifies a local journal; it is different from the
+plan's 64-character `id` checksum. Status reports `planId`, `fileCount`,
+`active` and journal states `prepared`, `applying`, `applied`, `interrupted`,
+`recovering`, `recovered` or `aborted`. An active transaction prevents another
+apply. Recovery claims exclusive ownership for each attempt; a live owner
+must finish its attempt before another process can recover it. A stopped
+owner can be replaced by a new recovery claim.
+
+Status lists valid transactions alongside `issues` for incomplete or invalid
+entries. Each issue includes `path`, `reason` and `active`; status exits with
+code 1 when issues need inspection. Preserve those entries instead of treating
+an incomplete listing as evidence that there is no interrupted work.
+
+Recovery checks original/planned hashes and permissions before restoring
+targets. A newer edit or `chmod` change blocks rollback; preserve it and
+resolve the conflict. Files already applied before this transaction remain
+untouched. Recovery can also undo a completed `applied` transaction when its
+bytes and permissions still match. It removes files that this transaction
+created, but newly created empty directories may remain. Keep journals until
+you no longer need their recovery data. If an earlier recovery attempt already
+restored a target, any subsequent content change blocks another attempt, even
+when it reintroduces the plan's after hash.
+
+The journal lives in the selected app's `.logic2b/changes/UUID/`, retaining
+bounded original source and staged content. Individual file replacement is
+atomic; a multi-file operation is not universally atomic. Keep the workspace
+stable during apply and recovery: portable filesystem APIs cannot make the
+hash check and subsequent replacement one compare-and-swap against an
+unrelated editor or process. The journal and repeated checks support recovery;
+they are not a guarantee against hostile concurrent mutation.
+
+Status refuses a history directory with more than 256 entries, including its
+active lock. There is no automatic pruning command. After confirming that no
+transaction is active, manually archive only terminal `applied`, `recovered`
+or `aborted` transaction directories outside `.logic2b/changes`. Archiving an
+applied journal removes it from the available recovery history. Do not remove
+active locks, interrupted journals or in-progress state to bypass a conflict.
+Each journal is also limited to 256 ownership attempts; exceeding that limit
+requires preserving the journal for inspection.
+
+## Supply a plan request through MCP
+
+`change_plan` receives source as data. Neither the local nor remote MCP reads
+your filesystem, fetches a registry, executes source or applies the result.
+The host supplies a version-1 project snapshot and explicit absence evidence:
+
+```json
+{
+  "schemaVersion": 1,
+  "registryVersion": "1.0.0-rc.17",
+  "snapshot": {
+    "schemaVersion": 1,
+    "appRoot": ".",
+    "configurations": [],
+    "files": []
+  },
+  "candidates": [{
+    "path": "src/customer-filters.ts",
+    "content": "export const customerStatuses = ['active', 'archived'] as const;\n",
+    "reason": "Share status choices for the customer filter."
+  }],
+  "missingFiles": ["src/customer-filters.ts"]
+}
+```
+
+For an existing target, supply its current SHA-256 in `snapshot.files`. For
+configuration targets, supplied configuration bytes also establish the digest;
+a disagreeing inventory digest is a conflict. Omission from an inventory does
+not prove a file is missing. Contradictory present/missing evidence or an
+unselected workspace produces conflicts or unsupported work. Request full
+`inspect_project` context first, then have the host collect any missing
+evidence. The tool does not treat an inspection result as a raw snapshot.
+
+Both transports return the same strict plan in `structuredContent` and its
+JSON text fallback. Invalid schemas, fields, paths and bounds are JSON-RPC
+`-32602` errors. A valid result may still contain `conflicts` or `unsupported`;
+the host must check them and verify all current file preconditions before an
+authorized apply. Existing authorization for that exact change does not need
+a second confirmation.
+
+## Supported scope and limits
+
+Paths are relative to the selected app. Plans contain canonical paths;
+requests normalize harmless `./` and duplicate separators but reject traversal,
+absolute paths, import aliases, duplicate/case-colliding or ancestor/descendant
+targets, environment/dependency/Git paths, reserved filesystem names, `.logic2b`
+and `.logic2b-change-*` transaction files. Local targets must be ordinary
+single-link files beneath ordinary directories; symlinks and hard links reject.
+
+Limits are 32 candidates, 128 KiB UTF-8 content per file, 256 KiB total candidate
+content and total original recovery content, 256-character paths and 2 MiB
+serialized requests/plans. Snapshot limits also apply: 128 KiB configuration
+content, 32 configuration files, 1,000 file hashes and 1 MiB serialized data.
+HTTP retains its 2 MiB envelope limit. A local journal is bounded to 4 MiB.
+Split larger work into separately reviewed plans.
+
+Include dependency changes in a preconditioned root `package.json` operation;
+updates require its original configuration bytes. Dependency metadata is
+derived from `dependencies`, `devDependencies`, `peerDependencies` and
+`optionalDependencies`, then rechecked against local bytes on apply. Removals,
+moves between sections, ambiguous versions, local/Git/URL locators and changed
+lifecycle hooks are unsupported. Changes to bundled dependencies, overrides,
+resolutions, `pnpm`, workspaces or `packageManager` also require a separate
+operation. Select a nested app as `appRoot` before changing its package manifest.
+
+Change plans contain only create/update operations, with no dependency
+installations or executable commands. Upstream registry updates retain the existing CLI `update` three-way
+merge workflow and its conflict handling; `change_plan` does not fetch updates
+or rewrite installation baselines. After applying, run the project's checks,
+[static review](/docs/review), and independent interaction, keyboard and
+responsive verification.
