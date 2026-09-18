@@ -105,6 +105,7 @@ describe("Spanish documentation", () => {
       "installation",
       "integration-paths",
       "llms",
+      "review",
       "theming",
       "vscode",
     ]);

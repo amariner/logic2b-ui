@@ -1,12 +1,13 @@
 import { defineConfig } from "tsup"
+import { readFileSync } from "node:fs"
 
-// @logic2b/tokens is a private workspace package (the theme source of truth);
-// it ships inlined in the published dist, so `logic2b` stays a single-dep
-// install. `commander` (in dependencies) remains external.
+// Private workspace packages and the review parser ship inlined; only the
+// declared public runtime dependencies remain external. Retain Babel's notice.
 export default defineConfig({
   entry: ["src/index.ts"],
   format: "esm",
   target: "node18",
   clean: true,
-  noExternal: ["@logic2b/scaffold", "@logic2b/tokens"],
+  banner: { js: `/*! @babel/parser (MIT)\n${readFileSync(new URL("../review/node_modules/@babel/parser/LICENSE", import.meta.url), "utf8")}*/` },
+  noExternal: ["@logic2b/review", "@babel/parser", "@logic2b/scaffold", "@logic2b/tokens"],
 })

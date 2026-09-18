@@ -7,8 +7,11 @@ and internal tools with coding agents; hosted on Cloudflare Workers.
 
 Our direction is a complete workflow: understand the project, compose real
 components, verify behavior and preserve local work through subsequent changes.
-Project inspection, composition/review tools and proposal previews are planned;
-see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
+The source candidate includes bounded project inspection, managed agent
+instructions and evidence-based static review. Structured composition and
+proposal previews remain planned; see [ROADMAP.md](./ROADMAP.md) for delivery
+boundaries and priorities. Source availability does not imply npm publication
+or deployment of those additions.
 
 ## What's inside
 
@@ -27,6 +30,10 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
 - **`packages/mcp`** — an MCP server that exposes the registry to coding
   agents (search, scaffold, install and maintain components and themes).
   Also served remotely at `https://ui.logic2b.com/mcp` — no local server installation.
+- **`packages/review`** — a shared, non-executing TSX/JSX review engine in the
+  source candidate, used by CLI `review` and MCP `review_ui`. Four rules cover
+  explicit semantic-color policy and supported native accessible names;
+  unresolved components and label context stay unknown.
 - **`packages/vscode`** — a native VS Code extension preview: browse and search
   the registry, install items through the public CLI, and apply `/create`
   presets to local or remote workspaces. CI produces a validated VSIX.
@@ -90,6 +97,13 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   verified imports, package dependencies and update snapshots together.
 
 ## Beta onboarding
+
+For source-candidate review usage and its evidence limits, see
+[the review guide](./docs/guides/03-review-ui.md). Confirm `review` in CLI help
+or `review_ui` in MCP `tools/list` before invoking an installed/deployed copy.
+Review requires explicit source selection; semantic-color policy is opt-in,
+and missing-name defects require a justified complete-label-context assertion.
+Static findings supplement application verification; unknown is not pass.
 
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
 selectors and `--registry-version` / MCP `version` select different artifacts.

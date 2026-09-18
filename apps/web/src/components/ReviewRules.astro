@@ -1,0 +1,23 @@
+---
+import { reviewRules } from "@/data/review-rules";
+import { Code } from "astro:components";
+
+interface Props {
+  locale?: "en" | "es";
+}
+
+const { locale = "en" } = Astro.props;
+---
+
+{
+  reviewRules(locale).map(rule => (
+    <section aria-labelledby={rule.anchor}>
+      <h2 id={rule.anchor}><code>{rule.id}</code></h2>
+      <p>{rule.title}</p>
+      <p>{locale === "es" ? "Antes:" : "Before:"}</p>
+      <Code code={rule.bad} lang="tsx" tabindex={0} />
+      <p>{locale === "es" ? "Después:" : "After:"}</p>
+      <Code code={rule.good} lang="tsx" tabindex={0} />
+    </section>
+  ))
+}

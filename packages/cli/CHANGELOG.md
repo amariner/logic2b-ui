@@ -4,6 +4,10 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Add bounded TSX/JSX `review` with evidence-backed findings, explicit semantic
+  color policy, unresolved contexts and reasoned suppressions; never execute
+  reviewed source. This is a source-candidate addition pending publication.
+
 - Deliver managed agent/design instructions with init/add/update, editor formats via `rules`, and `--no-agent-rules`; preserve project text outside markers.
 
 - Add bounded, read-only project inspection with explicit uncertainty: `inspect --json` collects configuration and file hashes locally.

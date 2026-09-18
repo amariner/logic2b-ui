@@ -1159,6 +1159,13 @@
       "sha256": "638706eb1a443427f4d962ce88b91db8e130e459ee85ea018ffd55b4e1e9450d"
     },
     {
+      "id": "es/review",
+      "title": "Revisión estática de interfaces",
+      "image": "/og/docs/es/review.png",
+      "bytes": 27395,
+      "sha256": "bdb60490d8e1286d5428906c749a947fc4e4ad4502caf001cbed20c793fc1a18"
+    },
+    {
       "id": "es/theming",
       "title": "Temas",
       "image": "/og/docs/es/theming.png",
@@ -1199,6 +1206,13 @@
       "image": "/og/docs/llms.png",
       "bytes": 22398,
       "sha256": "2534adcb3fb5c5069227965baa3ae780322c1d18e430d1d8dc7c3c2ad9a0e2de"
+    },
+    {
+      "id": "review",
+      "title": "Static UI review",
+      "image": "/og/docs/review.png",
+      "bytes": 24808,
+      "sha256": "e8c6db41cc5f21f692b1756f705cb1290bcd6a97b01e1e434a44a8639635d576"
     },
     {
       "id": "theming",

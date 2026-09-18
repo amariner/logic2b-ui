@@ -1,0 +1,136 @@
+---
+title: Revisión estática de interfaces
+description: Revisa TSX/JSX con cuatro reglas basadas en evidencia, políticas explícitas y límites visibles.
+---
+
+import ReviewRules from "@/components/ReviewRules.astro";
+
+El **candidato en código fuente** incorpora el comando CLI `review` y la
+herramienta MCP `review_ui`. Comprueba `--help` en tu CLI instalado o
+`tools/list` en el servidor antes de utilizarlos. Estos cambios no garantizan
+su disponibilidad en npm ni en el endpoint remoto desplegado.
+
+La revisión devuelve evidencia del código y posibles correcciones. Nunca
+ejecuta código, resuelve importaciones, consulta el registro ni modifica
+archivos. Esta versión tiene cuatro reglas en dos ámbitos: `tokens` y `a11y`.
+El HTML nativo es válido; la semántica de componentes personalizados y sus
+envoltorios queda sin resolver.
+
+## Revisa una composición local
+
+Desde una copia compilada del repositorio:
+
+```bash
+pnpm --filter logic2b build
+node packages/cli/dist/index.js review src/CustomerPage.tsx --cwd /path/to/app --semantic-colors --json
+```
+
+Selecciona archivos o directorios de código explícitamente. El recolector
+acepta TSX/JSX, rechaza enlaces simbólicos o duros y rutas externas, privadas
+o de dependencias. No ejecuta scripts del proyecto. El límite es de 64 archivos
+y 256 KiB de código UTF-8 en total. Rechaza selecciones solapadas.
+
+`--semantic-colors` activa explícitamente una **política de diseño del
+proyecto**. Detecta utilidades de color literales y colores de estilos en línea
+compatibles; las hojas CSS y los cambios intencionados de tokens quedan fuera
+de esta revisión. Sin la opción, `L2B-TOK-001` está desactivada. Los estilos
+dinámicos quedan como desconocidos.
+
+`--complete-label-context` declara que las etiquetas externas, los ancestros
+del componente y otras composiciones no pueden proporcionar un nombre
+accesible ausente. Úsalo solo cuando hayas comprobado esa declaración. Por
+defecto el contexto es parcial. Aportar varios archivos no resuelve etiquetas
+entre ellos. Con contexto parcial, la ausencia de un nombre local queda sin
+resolver; incluso el contexto completo mantiene como desconocidos los spreads,
+nombres dinámicos, envoltorios personalizados y referencias ambiguas.
+
+`--scope tokens,a11y` selecciona los ámbitos compatibles. `--fail-on error`
+es el valor predeterminado; `--fail-on warning` también falla con advertencias.
+La salida 1 indica que se alcanzó el umbral de hallazgos. La salida 2 indica
+datos de revisión inválidos, un fallo de análisis o un procesamiento truncado.
+Los errores de uso de la línea de comandos conservan la salida 1. Las dudas
+semánticas por sí solas no hacen fallar el comando: la salida 0 no certifica
+la accesibilidad.
+
+## Aporta código mediante MCP
+
+El host selecciona y aporta el código; un MCP remoto no puede leer tus
+archivos. Utiliza rutas relativas al proyecto y omite archivos privados
+ajenos a la revisión.
+
+```json
+{
+  "schemaVersion": 1,
+  "files": [{
+    "path": "src/CustomerPage.tsx",
+    "content": "export const Page = () => <button aria-label=\"Eliminar cliente\"><svg aria-hidden=\"true\" /></button>",
+    "labelContext": "partial"
+  }],
+  "scope": ["tokens", "a11y"],
+  "policy": { "semanticColors": true }
+}
+```
+
+Este objeto es el argumento de `review_ui`. Solo se admite la versión 1 y los
+campos mostrados. Cada ruta tiene un máximo de 256 caracteres. CLI y MCP
+comparten los límites de archivos y bytes. El código se analiza como datos,
+con un presupuesto de recorrido de 50.000 nodos; ninguna importación,
+configuración o componente se ejecuta.
+
+## Interpreta la evidencia
+
+- `findings` incluye identificador estable de regla, gravedad, categoría,
+  confianza, ubicación, evidencia, mensaje, corrección sugerida y documentación.
+- `summary` cuenta errores, advertencias e información sin suprimir.
+- `unknowns` identifica código o semántica que el motor no pudo establecer.
+- `evaluatedRules` enumera reglas ejecutadas en al menos un archivo analizado;
+  `disabledRules` explica exclusiones. No significan que todos los archivos
+  hayan superado una comprobación.
+- `suppressed` conserva cada hallazgo exceptuado y su justificación.
+- `assumptions` explica los límites de la evidencia. `truncated` indica una
+  revisión incompleta: selecciona menos código. Cada lista de resultados tiene
+  un máximo de 512 entradas, con 128 directivas de supresión por archivo.
+
+Desconocido no significa aprobado. Cero hallazgos puede coexistir con
+componentes sin resolver, etiquetas externas o estilos dinámicos. Comprueba
+teclado, foco, contraste, adaptación a pantalla y lector de pantalla en la
+aplicación consumidora. El resultado no incluye nota de calidad ni versión
+del registro.
+
+## Reglas y ejemplos
+
+Los ejemplos proceden del catálogo compartido del motor. Un ejemplo de color
+requiere `semanticColors: true`; un ejemplo de nombre ausente requiere declarar
+el contexto completo antes de convertirse en un defecto. Los hallazgos actuales
+tienen gravedad de error y confianza alta dentro de esos supuestos.
+
+<ReviewRules locale="es" />
+
+Las reglas de nombres cubren diálogos, inputs/selects/textareas, botones y
+acciones input nativos compatibles. Las etiquetas nativas estáticas, el texto,
+`aria-label`, `aria-labelledby` del mismo contexto y las alternativas nativas
+compatibles pueden proporcionar el nombre. Las importaciones `Dialog`, `Input`
+o `Button` no se resuelven solo por su nombre.
+
+## Registra una excepción intencionada
+
+Puedes suprimir una regla conocida en la siguiente línea con una justificación
+de 3–200 caracteres. El hallazgo sigue disponible en `suppressed`.
+
+```tsx
+// logic2b-review-disable-next-line L2B-TOK-001 -- Muestra de marca aprobada
+const swatch = <div className="bg-red-500" />
+```
+
+## Alcance y verificación independiente
+
+Las reglas de iconos, movimiento, estados, validación, radios y tamaño táctil
+quedan aplazadas. No hay corrección automática ni resolución de componentes
+personalizados. Aplica los cambios sugeridos con tus herramientas habituales,
+revísalos y verifica la aplicación.
+
+El benchmark de composición incluye identificadores y evidencia de las reglas
+compartidas junto a su puntuación existente. Los hallazgos y dudas no cambian
+esa nota ni sustituyen los builds observados de forma independiente o los
+resultados del recorrido de gestión de clientes. Consulta los
+[benchmarks de agentes](/es/docs/agent-benchmarks).

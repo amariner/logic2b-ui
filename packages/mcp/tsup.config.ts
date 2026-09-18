@@ -1,12 +1,13 @@
 import { defineConfig } from "tsup"
+import { readFileSync } from "node:fs"
 
-// @logic2b/tokens is a private workspace package (the theme source of truth);
-// it ships inlined in the published dist. The MCP SDK (in dependencies)
-// remains external.
+// Private workspace packages and the review parser ship inlined; the MCP SDK
+// remains external. Retain the bundled parser's complete license notice.
 export default defineConfig({
   entry: ["src/index.ts"],
   format: "esm",
   target: "node18",
   clean: true,
-  noExternal: ["@logic2b/scaffold", "@logic2b/tokens"],
+  banner: { js: `/*! @babel/parser (MIT)\n${readFileSync(new URL("../review/node_modules/@babel/parser/LICENSE", import.meta.url), "utf8")}*/` },
+  noExternal: ["@logic2b/scaffold", "@logic2b/tokens", "@logic2b/review", "@babel/parser"],
 })

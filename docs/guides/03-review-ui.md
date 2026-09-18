@@ -1,160 +1,151 @@
-# 03 — `review_ui`: design-system review as a tool
+# 03 — Evidence-based static UI review
 
-**Status:** proposed · **Lane:** guarantee quality · **Target:** v1.0 ·
-**Depends on:** [02 UI states & content contract](./02-ui-states-and-content-contract.md)
-for the state rules; runs without it for the rest.
+**Status:** implemented source candidate (M1-04); publication/deployment tracked
+separately · **Contract:** v1 · **Scopes:** `tokens`, `a11y` only.
 
-## Why (the user)
+## User outcome and boundary
 
-`lint_theme` proves a theme is still on-system after months of edits. Nothing
-does the same for **compositions**: the agent that hand-rolls a `<button>`
-because it forgot `Button` exists, the `Dialog` without a `DialogTitle` a
-screen reader user cannot name, the list that never renders an empty state,
-the `animate-*` class that ignores `prefers-reduced-motion`, the `text-red-500`
-that breaks the dark theme. These are the defects real people meet, and they
-are candidates for static inspection; cross-file context may prevent a conclusive
-finding. `review_ui` makes review something an
-agent runs on itself before it says "done".
+Review selected TSX/JSX before handing off a composition. The shared engine
+reports demonstrated findings, their source evidence and unresolved context.
+It never executes submitted code, resolves imports, reads a registry, writes
+files or awards an accessibility score. Native HTML is valid. A custom
+component name is not proof of its rendered semantics.
 
-## What ships
+The current candidate is deliberately four rules, not the broader catalog in
+the earlier proposal. CLI `review`, local/remote MCP `review_ui` adapters and
+the documentation use `packages/review`. A source implementation does not
+establish availability in the published npm package or deployed endpoint:
+check CLI `--help` or MCP `tools/list` first.
 
-- `packages/review`: a pure, DOM-free rule engine over TSX/JSX sources.
-- MCP tool `review_ui` (remote + local).
-- CLI `logic2b review [paths…] [--json] [--fail-on warning|error]`.
-- `/docs/review` documenting every rule with a bad → good example.
-- The agent benchmark scorer reuses the same rule ids for the composition
-  task, so the benchmark measures what the tool teaches.
-- `AGENTS.md` (guide 07) tells agents to run it before finishing UI work.
-
-## Design
-
-### Contract
+## Version-1 request
 
 ```ts
 interface ReviewRequest {
-  files: Array<{ path: string; content: string }>   // ≤ 64 files, ≤ 256 KB total
-  componentsJson?: string                            // to learn aliases + icon library
-  preset?: string                                     // enables theme-aware rules
-  scope?: Array<"primitives" | "tokens" | "states" | "a11y" | "motion" | "forms" | "icons">
-}
-
-interface ReviewFinding {
-  rule: string              // "L2B-PRIM-001"
-  severity: "error" | "warning" | "info"
-  category: "defect" | "design-policy" | "heuristic"
-  confidence: "high" | "medium" | "low"
-  evidence: string[]
-  file: string
-  line?: number
-  column?: number
-  message: string           // what and why, one sentence, user-facing impact first
-  fix?: string              // the registry way, as a code snippet or item name
-  docs: string              // absolute URL to the rule
-}
-
-interface ReviewResult {
-  registryVersion: string
-  summary: { errors: number; warnings: number; info: number }
-  findings: ReviewFinding[]
-  unknowns: Array<{ file: string; rule: string; reason: string }>
+  schemaVersion?: 1
+  files: Array<{
+    path: string                         // normalized project-relative .tsx/.jsx
+    content: string
+    labelContext?: "partial" | "complete" // partial by default
+  }>
+  scope?: Array<"tokens" | "a11y">         // both by default
+  policy?: { semanticColors?: boolean }  // disabled unless explicitly true
 }
 ```
 
-### Rules (v1)
+Inputs are bounded to 64 files, 256 KiB of total UTF-8 source and 256 characters
+per path. Unsafe/duplicate paths, unsupported fields or versions and invalid
+scope/policy values reject. The traversal budget is 50,000 AST nodes per
+request. Each findings/unknowns/suppressed array is capped at 512 entries;
+each file allows at most 128 reasoned suppression directives. Exhausting a
+processing/output budget sets `truncated`; a parse failure is an unknown with
+no rules evaluated for that file. The engine uses `@babel/parser` to parse
+source as data; imports and project configuration are never evaluated.
 
-| Id | Severity | Detects | Fix it suggests |
-| --- | --- | --- | --- |
-| `PRIM-001` | info | Native styled controls that differ from an explicitly enabled project policy | Suggest the registry primitive; native HTML is valid |
-| `PRIM-002` | info | Custom overlay requiring focus/keyboard verification | Suggest a runtime check; role alone is not a defect |
-| `TOK-001` | error | Hardcoded colors: `bg-[#…]`, `text-red-500`, `oklch(`, `rgb(` in className/style | semantic tokens (`bg-destructive`, `text-muted-foreground`) |
-| `TOK-002` | warning | Arbitrary radius/shadow (`rounded-[…]`, `shadow-[…]`) | `rounded-md`/`--radius`, no shadows per DESIGN.md |
-| `A11Y-001` | error | `Dialog`/`AlertDialog`/`Sheet` content without a `*Title` | add `DialogTitle` (visually hidden if needed) |
-| `A11Y-002` | error | `Input`/`Select`/`Switch` without `Label`, `aria-label` or `aria-labelledby` | `Field` + `Label` |
-| `A11Y-003` | error | Icon-only `Button` without an accessible name | `aria-label` or `<span className="sr-only">` |
-| `A11Y-004` | warning | Any item whose `accessibility.consumer` duty is unmet, derived from the registry contract | the duty text verbatim |
-| `STATE-001` | warning | A data-owning block (guide 02) rendered without `status` wiring, or `.map(` over props/state without an empty branch | `status` prop / `Empty` |
-| `STATE-002` | info | `fetch`/`useQuery`/`useSWR` present but no loading or error branch in the same component | `Skeleton` + `Alert` |
-| `MOTION-001` | warning | `animate-*`, `transition-*` on non-registry elements without a `motion-reduce:` variant or the `Motion` primitive | `Motion`, `motion-*` presets |
-| `FORM-001` | warning | `<form>` without `Form`/`Field` and no validation library | `Form` recipe |
-| `FORM-002` | info | Email/name/postal/telephone inputs without `autoComplete` | the correct `autoComplete` token |
-| `ICON-001` | error | Icon imports from a package other than the one in `components.json` | rewrite the import |
-| `TOUCH-001` | warning | Clickable element sized below 24 px (`h-4 w-4` + `onClick`) | `size="icon"` / hit-area padding |
+`labelContext: "complete"` is an explicit assertion by the host that external
+labels, caller ancestors and composition cannot supply a missing name. It is
+not inferred from the number of submitted files. Do not assert it for isolated
+primitives or unresolved compositions. Even with this assertion, spreads,
+dynamic names, custom wrappers and ambiguous references remain unknown.
+Cross-file label resolution is not supported.
 
-Accessible-name rules are errors only when proven from resolved source. Valid
-nested/external labels and wrappers must pass; dynamic children/spreads and
-unresolved cross-file context are unknown. Token/icon/radius rules enforce an
-explicit design policy, not universal accessibility requirements. Missing local
-loading branches, validation libraries or motion classes are heuristics because
-providers, native validation or global CSS may supply the behavior. Support
-reasoned suppressions and report which rules were actually evaluated.
+## Version-1 result
 
-Rule ids are stable and namespaced `L2B-<GROUP>-<NNN>`; the docs page is the
-canonical description. Severity is user-impact ordered: errors are things a
-real user will hit (cannot name a dialog, cannot see text in dark mode),
-warnings are likely defects, infos are hygiene.
+`schemaVersion: 1` results include `summary`, `findings`, `unknowns`,
+`suppressed`, `evaluatedRules`, `disabledRules`, `assumptions` and `truncated`.
+Each finding has a stable rule id, severity, category, confidence, evidence,
+relative file path, one-based line/column, message, suggested fix and docs URL.
+The summary counts unsuppressed findings only. A suppression retains the
+entire finding and its explanation in `suppressed`.
 
-### Engine
+`evaluatedRules` means a rule ran against at least one parsed file; it does not
+mean every use passed or every file was understood. `disabledRules` explains
+scope exclusions and an absent semantic-color policy. `unknowns` and
+`truncated` are incomplete evidence, never a passing accessibility result.
+The result has no `registryVersion`: this engine does not read the registry.
 
-- Parse with the TypeScript compiler API already used for
-  `packages/registry/api.generated.ts` extraction (`typescript` is a workspace
-  dependency). Prototype and measure first: lazy imports do not remove a parser
-  from Worker deployment size. Use a bounded parser or document a local-only
-  subset if needed; do not claim local/remote parity without evidence.
-- Registry knowledge comes from `/r/index.json` + each item's `accessibility`
-  and `states` — the engine never hardcodes component names.
-- No execution of the reviewed code, ever. Same posture as `lint_theme`.
+## Implemented rules
 
-### Where it lives
+The machine-readable source of truth is
+[`packages/review/src/rules.ts`](../../packages/review/src/rules.ts), including
+the examples and documentation anchors. The English and Spanish website and
+plain-Markdown docs render that catalog.
+
+| Id | Category | Evidence boundary |
+| --- | --- | --- |
+| `L2B-TOK-001` | design-policy, error/high | Explicit `semanticColors: true`; supported literal color utilities and inline style values bypass semantic tokens. Dynamic styling is unknown; stylesheet token overrides are outside scope. |
+| `L2B-A11Y-001` | defect, error/high | Native dialog or native element with a literal dialog/alertdialog role has no supported authored name, within declared complete label context. |
+| `L2B-A11Y-002` | defect, error/high | Supported native input/select/textarea has no supported authored name, within declared complete label context. |
+| `L2B-A11Y-003` | defect, error/high | Native button or supported input action has no supported authored name, within declared complete label context. |
+
+Names can come from static text, native labels, `aria-label`, locally resolved
+`aria-labelledby` and supported native naming fallbacks. Resolution is bounded
+to the same JSX/function context. Hidden elements, external labels, conditional
+references, dynamic values and custom components require careful treatment;
+see the positive/negative/unknown fixtures for the supported subset.
+
+Reasoned exceptions apply to one rule on the next source line only:
+
+```tsx
+// logic2b-review-disable-next-line L2B-TOK-001 -- Approved brand swatch example
+const swatch = <div className="bg-red-500" />
+```
+
+Use a known rule id and a 3–200 character reason. This records an exception;
+it does not change a finding into proof of accessibility. Invalid directives
+do not suppress findings.
+
+## Adapters and workflow
+
+Build the checkout with `pnpm --filter logic2b build`, then:
+
+```bash
+node packages/cli/dist/index.js review src/CustomerPage.tsx --cwd /path/to/app --semantic-colors --json
+```
+
+The CLI requires explicit files/directories, reads TSX/JSX only, rejects
+symlink/hard-linked files, external paths, private/dependency directories and
+overlapping file selections. It does not auto-read the whole repository.
+Use `--complete-label-context` only when that assertion is justified;
+`--scope tokens,a11y` selects the supported scopes. `--fail-on error` is the
+default, with `warning` also accepted. Exit 1 means the selected finding
+threshold was reached; exit 2 means invalid review input, a parse unknown or
+truncated review. Commander usage errors retain their standard exit 1.
+Ordinary semantic unknowns do not fail the command, so exit 0 alone is not
+a complete review.
+
+MCP receives the same bounded request as `review_ui` arguments. It has no
+filesystem access: the host selects and supplies source. The result follows
+the MCP structured/text parity contract. Fix suggestions are text, not writes;
+the host applies authorized changes and verifies the consuming application.
+
+The composition benchmark reports the shared rule ids/result beside its
+existing protocol score. Semantic colors are explicit in that task's prompt;
+label context stays partial. Review findings/unknowns never award or deduct
+points, replace the evaluator-observed build or alter historical protocol
+criteria. Runtime, keyboard, mobile and human outcomes remain independent
+evidence under guides 12 and 14.
+
+## Verification and ownership
 
 | Piece | Path |
 | --- | --- |
-| Engine, rules, fixtures | `packages/review/src/{index,parse,rules/*.ts}`, `packages/review/test/fixtures/{bad,good}/*` |
-| MCP | `packages/mcp/src/tools.ts` |
-| CLI | `packages/cli/src/index.ts` (`review` command) |
-| Docs | `apps/web/src/content/docs/review.mdx` (+ `docs-es`) |
-| Benchmark | `benchmarks/agents/scripts/score.ts` (import rule ids) |
+| Shared contract, parser, rules, fixture tests | `packages/review` |
+| CLI collector/command | `packages/cli/src/review.ts`, `packages/cli/src/index.ts` |
+| MCP adapters/schema/protocol tests | `packages/mcp` |
+| Localized docs/shared rule rendering | `apps/web/src/content/{docs,docs-es}/review.mdx`, `apps/web/src/data/review-rules.ts` |
+| Independent scorer + supplementary rule report | `benchmarks/agents/scripts/scorer.mjs` |
 
-## Implementation steps
+Required checks: `pnpm --filter @logic2b/review test` and `lint`, relevant
+CLI/MCP tests including bounded invalid inputs and protocol envelopes,
+`pnpm benchmark:agents:test`, web lint/build and Worker bundle budget,
+and `pnpm test:release-artifacts`. Record actual outcomes in the execution
+queue. Registry/demos are partial-context evidence: zero findings alone must
+never be promoted to a claim that every component is accessible.
 
-1. Scaffold `packages/review` (private workspace package, `node:test`, strict
-   TS) with the parser wrapper and the finding types.
-2. Implement explicit `TOK-001` policy and provable `A11Y-001..003` cases first,
-   then `ICON-001`, then advisory `MOTION-001`, `FORM-*`,
-   `TOUCH-001`, then `STATE-*` (need guide 02 metadata; ship as `info` until
-   it lands).
-3. Fixture corpus: for every rule, one file that must trigger it and one that
-   must not. Add the registry's own blocks and demos as a "must produce zero
-   errors" corpus — the registry has to pass its own review.
-4. Register `review_ui` in MCP with the size limits; return the docs URL per
-   finding.
-5. CLI `review` reading the paths, printing grouped findings with
-   `file:line`, exit code by `--fail-on`.
-6. Docs page generated from the rule table (one source of truth in
-   `packages/review/src/rules/index.ts` exporting `RULES` with `docs`
-   strings).
-7. Report rules in the benchmark alongside independent browser/human outcomes
-   (guide 14). The intervention must not be the sole judge of its own success.
-8. Optional: a `logic2b review` GitHub Action example in `/docs/review`.
+## Deferred
 
-## Gates
-
-- `pnpm --filter @logic2b/review test`: every rule has a positive and a
-  negative fixture; the registry corpus yields zero errors.
-- MCP test: `review_ui` rejects oversize input and returns schema-valid
-  results.
-- Bundle budget: the remote MCP worker size after adding the engine stays
-  within the Cloudflare limit; assert in `apps/web` budgets.
-- Benchmark tests still pass (`pnpm benchmark:agents:test`).
-
-## Out of scope
-
-- Runtime checks in this static engine — guide 12 supplies consumer verification.
-- Auto-fixing — `fix` is a suggestion; the host applies it.
-- Non-React sources.
-
-## Open questions
-
-- No mandatory numeric quality score. Block on demonstrated defects and selected
-  policies, report uncertainty, and test native controls, external labels,
-  wrappers, spreads, global motion rules and intentional token overrides as
-  false-positive fixtures. A static pass does not certify accessibility.
+Custom component/import resolution, registry-derived responsibilities, icon,
+radius, motion, touch-size, form-validation and state rules are deferred.
+There is no `primitives`, `states`, `motion`, `forms` or `icons` scope, no
+`componentsJson`/`preset` input, no automatic fixes and no non-React parser.
+Runtime checks belong to consumer verification, not this static engine.
