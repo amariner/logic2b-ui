@@ -1119,3 +1119,14 @@ CSS, demo data and immutable registry files are unchanged. Both new PNGs were
 visually reviewed. CI now preserves functional screenshot diffs on failure.
 The complete customer journey suite passed 31/31 on Chrome 153; the two revised
 snapshots also passed on headless Chromium 140 without updating baselines.
+
+Run 35348837517 confirmed equal 414 × 1366 geometry but still found 9376
+light / 9445 dark pixels differing across macOS and Linux. Its preserved
+actual/expected/diff PNGs show host text rasterization and native select widths;
+all six rows, card boundaries, controls and content remain intact. Both initial
+and retry captures are byte-identical. Reviewed Linux references now cover only
+these two populated-table states; existing macOS references and the 1.5% pixel
+tolerance remain unchanged. No product source or registry bytes change. The
+failed-browser artifact upload moves after the remaining site gates so their
+failure evidence is retained too. Local targeted success captures and web type
+checks pass; a new Linux CI run remains necessary to confirm the new references.
