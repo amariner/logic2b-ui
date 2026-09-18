@@ -1,5 +1,6 @@
 import { PROJECT_INSPECTION_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { CHANGE_PLAN_SCHEMA } from "@logic2b/scaffold/change-plan-schema"
+import { VERIFICATION_SUMMARY_SCHEMA } from "@logic2b/scaffold/verification-schema"
 import { BEHAVIOR_SCHEMA } from "@logic2b/scaffold/behavior"
 import { REVIEW_OUTPUT_SCHEMA } from "./review-schemas.ts"
 /** Wire contracts shared by the stdio server and the remote HTTP endpoint.
@@ -85,6 +86,7 @@ const parsedMode = object({
 })
 
 export const OUTPUT_SCHEMAS = {
+  verify_report: VERIFICATION_SUMMARY_SCHEMA,
   change_plan: CHANGE_PLAN_SCHEMA,
   review_ui: REVIEW_OUTPUT_SCHEMA,
   inspect_project: PROJECT_INSPECTION_SCHEMA,

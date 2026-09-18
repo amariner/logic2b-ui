@@ -1,6 +1,7 @@
 import { CLI_PACKAGE_SELECTOR, PACKAGE_RUNNERS, REGISTRY_DEFAULT_CHANNEL } from "@logic2b/scaffold/package-selectors"
 import assert from "node:assert/strict"
 import { execFile } from "node:child_process"
+import { createHash } from "node:crypto"
 import { access, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import { createServer } from "node:http"
 import { tmpdir } from "node:os"
@@ -13,6 +14,8 @@ import { McpError } from "@modelcontextprotocol/sdk/types.js"
 import { DEFAULT_CONFIG, encodePreset } from "@logic2b/tokens"
 import { reviewUi, REVIEW_LIMITS } from "@logic2b/review"
 import { buildChangePlan, CHANGE_LIMITS, validateChangePlan } from "@logic2b/scaffold/change-plan"
+import { summarizeVerificationReport, validateVerificationReport } from "@logic2b/scaffold/verification"
+import { verificationReport } from "../test/helpers/verification-report.ts"
 
 const execFileAsync = promisify(execFile)
 const repoRoot = resolve(import.meta.dirname, "../../..")
@@ -163,8 +166,47 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review", "change"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review", "change", "verify"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
+  }
+
+  // The packed CLI must carry the private verification core and return honest
+  // unavailable reports without installing browser tools or executing source.
+  const verifyTarget = join(root, "verification-consumer")
+  await mkdir(verifyTarget)
+  const verificationSource = "throw new Error('Selected source must never execute during unavailable verification');\n"
+  await writeFile(join(verifyTarget, "App.tsx"), verificationSource)
+  await writeFile(join(verifyTarget, "package.json"), '{"private":true,"scripts":{"build":"exit 88"}}')
+  const verificationSuite = { schemaVersion: 1, projectFiles: ["App.tsx"], viewports: [{ id: "desktop", width: 1280, height: 800 }], scenarios: [{ id: "customers", route: "/customers", steps: [{ type: "check", id: "heading", assertion: "visible", target: { by: "role", role: "heading", name: "Customers" } }] }] }
+  const verificationInput = join(root, "verification-suite.json")
+  await writeFile(verificationInput, JSON.stringify(verificationSuite))
+  for (const [directory, additionalArgs] of [
+    ["missing-tools", []],
+    ["failed-build", ["--app-unavailable", "Build failed in the separate host step."]],
+  ] as const) {
+    const output = join(root, `verification-${directory}`)
+    let stdout = ""
+    await assert.rejects(execFileAsync(cliBin, ["verify", verificationInput, "--cwd", verifyTarget, "--url", "http://127.0.0.1:3000", "--output", output, "--json", ...additionalArgs]), error => {
+      const failure = error as Error & { code?: number; stdout?: string }
+      assert.equal(failure.code, 2)
+      stdout = failure.stdout ?? ""
+      return true
+    })
+    const result = JSON.parse(stdout)
+    const report = await validateVerificationReport(result.report)
+    assert.equal(result.summary.status, "skipped")
+    assert.deepEqual(result.summary, await summarizeVerificationReport(report))
+    assert.equal(report.project.files[0].sha256, createHash("sha256").update(verificationSource).digest("hex"))
+    assert.equal(report.project.servedSourceBinding, "unverified")
+    assert.ok(report.runs.every(run => run.status === "skipped"))
+    assert.ok(report.checks.every(check => check.status === "skipped"))
+    assert.ok(report.runs.every(run => directory === "missing-tools" ? run.reason.includes("Browser capability unavailable") : run.reason.includes("Build failed in the separate host step")))
+    assert.deepEqual(report.evidence, [])
+    assert.ok(!report.tools.some(tool => tool.name === "playwright"))
+    assert.deepEqual(await json(join(output, "report.json")), report)
+    assert.deepEqual(await json(join(output, "summary.json")), result.summary)
+    assert.equal(await readFile(join(verifyTarget, "App.tsx"), "utf8"), verificationSource)
+    assert.deepEqual((await readdir(verifyTarget)).sort(), ["App.tsx", "package.json"])
   }
   await withLocalRegistry(async (registry) => {
     const target = join(root, "generated-from-tarball")
@@ -308,6 +350,7 @@ try {
           "review_ui",
           "scaffold_plan",
           "search_components",
+          "verify_report",
         ]
       )
       for (const tool of tools) {
@@ -324,11 +367,18 @@ try {
       const defaultVersion = versions.channels[REGISTRY_DEFAULT_CHANNEL]
       assert.ok(defaultVersion, `registry fixture publishes no "${REGISTRY_DEFAULT_CHANNEL}" channel`)
       const css = (theme.files as Array<{ content: string }>)[0]!.content
+      const verifiedReport = await verificationReport()
+      const incompleteReport = { ...verifiedReport, checks: verifiedReport.checks.slice(0, 4), runs: verifiedReport.runs.slice(0, 1) }
       const cases: Array<[string, Record<string, unknown>]> = [
         ["list_components", {}],
         ["list_presets", {}],
         ["agent_rules", { formats: ["agents", "claude", "cursor", "copilot"] }],
         ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "1.0.0-rc.16", candidates: [{ path: "src/Customer.tsx", content: "process.exit(88); export const filter = 'active';", reason: "Candidate source is data and must never execute." }], missingFiles: ["src/Customer.tsx"] }],
+        ["verify_report", { ...verifiedReport }],
+        ["verify_report", { ...await verificationReport("fail") }],
+        ["verify_report", { ...await verificationReport("skipped") }],
+        ["verify_report", { ...await verificationReport("unknown") }],
+        ["verify_report", incompleteReport],
         ["inspect_project", { snapshot: { schemaVersion: 1, configurations: [{ path: "package.json", content: JSON.stringify({ dependencies: { vite: "^8", react: "^19" } }) }, { path: "tsconfig.json", content: JSON.stringify({ compilerOptions: { paths: { "@/*": ["src/*"] } } }) }], files: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } }, detail: "full" }],
         ["review_ui", { files: [
           { path: "src/Customer.tsx", content: '<button><svg aria-hidden="true"/></button>', labelContext: "complete" },
@@ -395,6 +445,11 @@ try {
           assert.deepEqual(result.structuredContent, await buildChangePlan(args))
           await validateChangePlan(result.structuredContent)
         }
+        if (name === "verify_report") {
+          assert.deepEqual(result.structuredContent, await summarizeVerificationReport(args))
+          assert.equal(result.structuredContent?.expectedChecks, 8)
+          if (args === incompleteReport) assert.equal(result.structuredContent?.status, "unknown")
+        }
         if (name === "add_command") {
           for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
             assert.equal(
@@ -417,6 +472,10 @@ try {
         ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "next", candidates: [{ path: "src/Customer.tsx", content: "PRIVATE_REVIEW_SOURCE", reason: "Change" }], missingFiles: ["src/Customer.tsx"] }],
         ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "1.0.0-rc.16", candidates: [{ path: "../PRIVATE_REVIEW_SOURCE.tsx", content: "PRIVATE_REVIEW_SOURCE", reason: "Change" }] }],
         ["change_plan", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, registryVersion: "1.0.0-rc.16", candidates: [{ path: "src/Large.tsx", content: "x".repeat(CHANGE_LIMITS.fileBytes + 1), reason: "Change" }], missingFiles: ["src/Large.tsx"] }],
+        ["verify_report", { ...verifiedReport, schemaVersion: 2, private: "PRIVATE_REVIEW_SOURCE" }],
+        ["verify_report", { ...verifiedReport, suiteSha256: "a".repeat(64) }],
+        ["verify_report", { ...verifiedReport, checks: [{ ...verifiedReport.checks[0], evidenceIds: ["PRIVATE_REVIEW_SOURCE"] }, ...verifiedReport.checks.slice(1)] }],
+        ["verify_report", { ...verifiedReport, checks: [{ ...verifiedReport.checks[0], evidenceIds: [] }, ...verifiedReport.checks.slice(1)] }],
       ] as const) {
         await assert.rejects(
           () => client.callTool({ name, arguments: args as Record<string, unknown> }),
@@ -431,8 +490,8 @@ try {
   })
 
   passed = true
-  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, scaffold/review/incremental plan/apply verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 20 tool output contracts verified over stdio`)
+  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, scaffold/review/incremental plan/apply and unavailable verification reports checked`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 21 tool output contracts verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

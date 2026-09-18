@@ -2,11 +2,17 @@ import * as React from "react"
 
 import { cn } from "@/registry/lib/utils"
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
+type TableProps = React.ComponentProps<"table"> & {
+  /** Label and focus a scrolling table region when its content needs overflow. */
+  containerProps?: React.ComponentProps<"div">
+}
+
+function Table({ className, containerProps, ...props }: TableProps) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      {...containerProps}
+      className={cn("relative w-full overflow-x-auto", containerProps?.className)}
     >
       <table
         data-slot="table"

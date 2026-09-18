@@ -4,6 +4,11 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Add declarative local `verify` against an explicitly started loopback app,
+  with bounded source fingerprints, browser/axe evidence and honest coverage.
+  Missing tools and incomplete measurements remain skipped/unknown; no implicit
+  installation, build or app start. Source candidate pending publication.
+
 - Add bounded incremental `change plan`, explicit `change apply` with dry-run,
   stale-file preconditions and a recovery journal, plus `change status` and
   `change recover`. Preserve already-applied files and newer edits; never run

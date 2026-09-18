@@ -8,10 +8,10 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes the current source candidate: 20 tools with
+This catalog describes the current source candidate: 21 tools with
 structured results, verified default reads and bounded inputs. Older
 `1.0.0-rc.2` installations have 15 tools and lack these additions. Confirm
-`inspect_project`, `review_ui` and `change_plan` appear in `tools/list` before using them; source changes need
+`inspect_project`, `review_ui`, `change_plan` and `verify_report` appear in `tools/list` before using them; source changes need
 a package release or endpoint deployment to become available to other hosts.
 
 ### Inspect an existing project
@@ -51,6 +51,7 @@ snapshot schema, inheritance limits and CLI collector workflow.
 | `agent_rules` | Generate bounded AGENTS.md/DESIGN.md and optional Claude, Cursor and Copilot formats without network access; merge managed blocks with existing project instructions. |
 | `review_ui` | Source candidate: statically review host-supplied TSX/JSX with four shared token-policy/accessibility rules, source evidence and explicit unknowns. No network, filesystem reads or source execution. |
 | `change_plan` | Source candidate: assemble explicit candidate files and host-supplied snapshot evidence into a strict hashed plan with preconditions, conflicts and unsupported work. No network, filesystem access or source execution. |
+| `verify_report` | Source candidate: validate a bounded host-supplied verification report and summarize declared route/viewport coverage. No browser, artifact reads, URL fetching or authentication of evidence. |
 | `scaffold_plan` | Generate a complete runnable Next.js, Vite or Astro project from a marketing, dashboard or auth starter: framework shell, routing entry, exact-pinned package manifest, theme and all registry files. An optional `/create` preset applies its theme and icon library. |
 | `add_command` | The exact `logic2b add` invocation (npm/pnpm/yarn/bun, names validated) for when a shell **is** available. |
 | `list_presets` | List the curated preset gallery with canonical ids, full configs, `/create` links, exact CLI commands and measured contrast/readability warnings. |
@@ -129,6 +130,7 @@ Documented limits (`packages/mcp/src/limits.ts`, mirrored in the input schemas):
 | Source bytes returned by one registry item read or registry plan | 4 MiB |
 | `change_plan` candidates / content | 1–32 files; 128 KiB each, 256 KiB total UTF-8 |
 | Change request/plan / path length | 2 MiB serialized / 256 characters |
+| Verification report / expected browser checks | 1 MiB serialized / 256 across the scenario/viewport matrix |
 
 Errors never echo more than 80 characters of caller input, and registry
 fetches time out after 15 s. The public read-only endpoint needs no account;
@@ -367,3 +369,45 @@ An MCP response performs none of those writes. No dependency installation,
 script, verification command or automatic deletion is part of planning.
 See [incremental changes](https://ui.logic2b.com/docs/changes) for local
 transaction recovery and the stable-workspace requirement.
+
+## Consumer verification reports (source candidate)
+
+`verify_report` accepts a complete `VerificationReportV1` directly as its
+arguments. Use the parsed `report.json` produced by CLI `verify`; do not wrap
+it in a `report` field or pass the CLI's combined report/summary output.
+Confirm tool availability in `tools/list`; this twenty-first source tool still
+needs package publication or endpoint deployment for other hosts.
+
+The report embeds a declarative suite, its SHA-256, origin, selected-file
+fingerprint, optional plan id, route/viewport run records, per-check statuses,
+evidence references/hashes and tool versions. The shared validator checks
+every declared field, fingerprint and reference. Unsupported versions, unsafe
+paths, count/byte violations, duplicate records, dangling references and
+inconsistent hashes become sanitized JSON-RPC `-32602` errors.
+
+The summary retains tool versions, evidence references, routes, viewports,
+reasons and counts. Missing runs/checks become `unknown`; static or human
+passes cannot establish browser assertions. Failed checks override a claimed
+passing run, and an action failure after the final passing assertion still
+fails its run. Unknown and skipped coverage never produce an overall pass.
+Axe exclusions remain explicit. Screenshot capture does not approve the visual
+design, and automated checks do not certify WCAG conformance.
+
+This tool never opens a browser, starts/builds an app, loads dependencies,
+reads local artifacts, fetches evidence URLs or authenticates submitted
+measurements. Hashes establish internal consistency, not author trust.
+`project.scope` is `selected-files` and `servedSourceBinding` is `unverified`:
+the report does not prove that a server loaded those source bytes. An optional
+suite `planId` does not prove that the associated plan was applied.
+
+Reports allow 1 MiB serialized JSON, 64 selected-file digests, 16 scenarios,
+four viewports, 64 steps per scenario, 256 expected checks, 512 evidence
+references, 16 references per check, 16 tools and 32 notes. Each scenario has at
+least one check. Evidence references are safe relative paths or credential-free
+HTTP(S) URLs; neither kind is followed. The HTTP envelope retains its 2 MiB cap.
+Both transports return the same summary in structured content and JSON text.
+
+See [consumer verification](https://ui.logic2b.com/docs/verification) for the
+local runner, explicit host dependency installation, declarative suite example,
+fixture commands and evidence limitations. Keep source and screenshots local
+unless sharing is authorized; the report carries references, not image uploads.

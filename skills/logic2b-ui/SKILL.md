@@ -29,6 +29,15 @@ applicable loading, empty, failure/retry, validation, submitting, permissions
 and unsaved-change behavior, plus keyboard and mobile operation. Run the
 project's available type, build and runtime checks; report unverified behavior.
 
+When a compatible local CLI exposes `verify`, run a bounded declarative suite
+against the explicitly started loopback app and write to a new evidence directory.
+Install browser tools, build and start the app separately within authorization;
+verification does none of these automatically. Read failed, skipped and unknown
+checks with their evidence. Screenshots prove capture, not visual approval, and
+file hashes do not prove which build the server loaded. `verify_report`, when
+exposed by MCP, only validates and summarizes host evidence; it never runs an app
+or follows evidence URLs. Preserve incomplete accessibility measurements as unknown.
+
 When the running catalog exposes `review_ui`, supply only the relevant TSX/JSX
 sources; with a compatible CLI, use `logic2b review <paths> --json`. Enable
 `semanticColors` only for an explicit project policy. Keep label context partial

@@ -2915,7 +2915,15 @@ export const API_CONTRACTS: RegistryApiContracts = {
       {
         "name": "Table",
         "kind": "component",
-        "propsType": "React.ComponentProps<\"table\">"
+        "propsType": "TableProps",
+        "props": [
+          {
+            "name": "containerProps",
+            "type": "React.ComponentProps<\"div\">",
+            "required": false,
+            "description": "Label and focus a scrolling table region when its content needs overflow."
+          }
+        ]
       },
       {
         "name": "TableHeader",

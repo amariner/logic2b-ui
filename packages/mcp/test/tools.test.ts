@@ -7,6 +7,7 @@ import { ToolInputError } from "../src/limits.ts"
 import { DEFAULT_REGISTRY_CHANNEL, type FetchLike } from "../src/registry.ts"
 import { runTool as dispatchTool, TOOLS } from "../src/tools.ts"
 import { ImmutableRegistry, mirrorUrls, type FixtureItem } from "./helpers/immutable-registry.ts"
+import { verificationReport } from "./helpers/verification-report.ts"
 
 const validator = new AjvJsonSchemaValidator()
 const contracts = new Map(TOOLS.map((tool) => [tool.name, validator.getValidator(tool.outputSchema)]))
@@ -87,6 +88,7 @@ describe("TOOLS", () => {
         "scaffold_plan",
         "agent_rules",
         "change_plan",
+        "verify_report",
         "review_ui",
         "inspect_project",
         "list_presets",
@@ -647,6 +649,14 @@ test("change_plan supplies source deltas through the shared typed network-free c
   assert.equal(result.structuredContent!.schemaVersion, 1)
   assert.equal((result.structuredContent!.operations as unknown[]).length, 1)
   assert.equal(TOOLS.find(tool => tool.name === "change_plan")!.annotations.openWorldHint, false)
+})
+
+test("verify_report summarizes host runtime evidence through the shared typed network-free contract", async () => {
+  const result = await runTool("verify_report", await verificationReport(), { fetchImpl: noFetch })
+  assert.equal(result.structuredContent!.schemaVersion, 1)
+  assert.equal(result.structuredContent!.status, "pass")
+  assert.equal(result.structuredContent!.expectedChecks, 8)
+  assert.equal(TOOLS.find(tool => tool.name === "verify_report")!.annotations.openWorldHint, false)
 })
 
 test("agent_rules supplies bounded editor writes through the shared typed contract", async () => {

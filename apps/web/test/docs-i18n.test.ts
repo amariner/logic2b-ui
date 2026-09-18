@@ -108,6 +108,7 @@ describe("Spanish documentation", () => {
       "llms",
       "review",
       "theming",
+      "verification",
       "vscode",
     ]);
     for (const id of translatedIds) {

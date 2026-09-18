@@ -160,6 +160,9 @@ importers:
         specifier: 7.8.5
         version: 7.8.5
     devDependencies:
+      '@axe-core/playwright':
+        specifier: 4.12.1
+        version: 4.12.1(playwright-core@1.61.1)
       '@logic2b/registry':
         specifier: workspace:*
         version: link:../registry
@@ -175,6 +178,9 @@ importers:
       '@types/node':
         specifier: ^26.1.0
         version: 26.1.0
+      playwright:
+        specifier: 1.61.1
+        version: 1.61.1
       tsup:
         specifier: ^8.5.0
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.16)(tsx@4.23.0)(typescript@6.0.3)

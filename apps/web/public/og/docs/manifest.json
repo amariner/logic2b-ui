@@ -1187,6 +1187,13 @@
       "sha256": "adaf7c289dd0a3912df8367f783b364e320c8fcc27161a83b02fbb42f2c04d59"
     },
     {
+      "id": "es/verification",
+      "title": "Verificación en la aplicación",
+      "image": "/og/docs/es/verification.png",
+      "bytes": 28335,
+      "sha256": "a7aef8b888bf57018d6502374546a5281daf3b8304cabb217bc4f4b1b5f952a0"
+    },
+    {
       "id": "es/vscode",
       "title": "Extensión de VS Code",
       "image": "/og/docs/es/vscode.png",
@@ -1234,6 +1241,13 @@
       "image": "/og/docs/theming.png",
       "bytes": 21181,
       "sha256": "742b2ea93c417af519ed30dc3b7a780134e8d3cf77fc14afbcfb29e4ab9de3f7"
+    },
+    {
+      "id": "verification",
+      "title": "Consumer verification",
+      "image": "/og/docs/verification.png",
+      "bytes": 26890,
+      "sha256": "6898597bef341f3d99aa7059b4cec98669b2b6dd19cd8adcd8b32cd4555c15fe"
     },
     {
       "id": "vscode",
