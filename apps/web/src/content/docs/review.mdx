@@ -1,0 +1,125 @@
+---
+title: Static UI review
+description: Review selected TSX/JSX with four evidence-based rules, explicit project policies and visible uncertainty.
+---
+
+import ReviewRules from "@/components/ReviewRules.astro";
+
+The **source candidate** adds the CLI `review` command and MCP `review_ui`
+tool. Check your installed CLI's `--help` or the server's `tools/list` before
+using them. These source changes do not establish npm or remote-endpoint
+availability.
+
+Review reports source evidence and suggested fixes. It never executes source,
+resolves imports, reads a registry or modifies files. The current version has
+four rules in two scopes: `tokens` and `a11y`. Native HTML is valid; custom
+components and wrappers are unresolved without their runtime semantics.
+
+## Review a local composition
+
+From a built checkout:
+
+```bash
+pnpm --filter logic2b build
+node packages/cli/dist/index.js review src/CustomerPage.tsx --cwd /path/to/app --semantic-colors --json
+```
+
+Select files or source directories explicitly. The collector accepts TSX/JSX,
+rejects symbolic/hard-linked files and external/private/dependency paths, and
+does not run project scripts. Select at most 64 files and 256 KiB of total
+UTF-8 source. Overlapping selections are rejected.
+
+`--semantic-colors` explicitly enables a **project design policy**. The rule
+identifies supported literal color utilities and inline style colors;
+stylesheets and intentional token overrides are outside this review. Without
+the flag, `L2B-TOK-001` is disabled. Dynamic styling is unknown.
+
+`--complete-label-context` asserts that external labels, caller ancestors and
+other composition cannot provide a missing accessible name. Use it only when
+you have verified that assertion. The default is partial context. Providing
+several files does not resolve labels across them. Missing local names remain
+unknown in partial context; even complete context cannot resolve spreads,
+dynamic names, custom wrappers or ambiguous references.
+
+`--scope tokens,a11y` selects supported scopes. `--fail-on error` is the
+default; `--fail-on warning` also fails on warnings. Exit 1 means the selected
+finding threshold was reached. Exit 2 means invalid review input, parse
+failure or truncated processing. Command-line usage errors retain exit 1.
+Semantic unknowns alone do not fail the command: exit 0 is not an accessibility
+certificate.
+
+## Supply source through MCP
+
+The host selects and supplies source; a remote MCP cannot read your files.
+Use project-relative paths and omit unrelated private files.
+
+```json
+{
+  "schemaVersion": 1,
+  "files": [{
+    "path": "src/CustomerPage.tsx",
+    "content": "export const Page = () => <button aria-label=\"Remove customer\"><svg aria-hidden=\"true\" /></button>",
+    "labelContext": "partial"
+  }],
+  "scope": ["tokens", "a11y"],
+  "policy": { "semanticColors": true }
+}
+```
+
+The request is the argument object for `review_ui`. Only version 1 and these
+fields are supported. Each path is at most 256 characters. The same file/count
+limits apply in CLI and MCP. Source is parsed as data, with a 50,000-node
+traversal budget; no import, configuration or component is executed.
+
+## Read the evidence
+
+- `findings` contain a stable rule id, severity, category, confidence, source
+  location, evidence, message, suggested fix and documentation link.
+- `summary` counts unsuppressed errors, warnings and informational findings.
+- `unknowns` identify source or semantics the engine could not establish.
+- `evaluatedRules` lists rules run on at least one parsed file;
+  `disabledRules` explains exclusions. Neither means every file passed.
+- `suppressed` retains each explicitly excepted finding and its reason.
+- `assumptions` states the evidence boundary. `truncated` means review is
+  incomplete; select a smaller source set. Each result array is capped at
+  512 entries, with at most 128 suppression directives per file.
+
+Unknown is not pass. Zero findings can coexist with unresolved components,
+external labels or dynamic styles. Keep keyboard, focus, contrast, responsive
+behavior and screen-reader verification in the consuming application. This
+static result has no quality score or registry version.
+
+## Rules and examples
+
+The following examples come from the engine's shared rule catalog. A token
+example requires `semanticColors: true`; a missing-name example requires
+declared complete label context before it can become a defect. Each current
+finding has error severity and high confidence within those assumptions.
+
+<ReviewRules />
+
+The naming rules cover supported native dialogs, inputs/selects/textareas,
+buttons and input actions. Static native labels, authored text, `aria-label`,
+same-context `aria-labelledby` and supported native fallbacks can provide the
+name. `Dialog`, `Input` or `Button` imports are not resolved by name alone.
+
+## Record an intentional exception
+
+A known rule can be suppressed on the next source line with a 3–200 character
+reason. The finding remains available in `suppressed`.
+
+```tsx
+// logic2b-review-disable-next-line L2B-TOK-001 -- Approved brand swatch example
+const swatch = <div className="bg-red-500" />
+```
+
+## Scope and independent verification
+
+Icon, motion, state, validation, radius and touch-target rules are deferred.
+There is no automatic fix or custom component resolution. Apply a suggested
+change with your normal tools, review it and verify the application.
+
+The agent composition benchmark includes shared review rule ids and evidence
+beside its existing score. Findings and unknowns do not change that score or
+replace independently observed builds and customer-journey outcomes. See
+[agent benchmarks](/docs/agent-benchmarks).

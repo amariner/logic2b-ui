@@ -12,6 +12,7 @@ import { tmpdir } from "node:os"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { after, before, describe, test } from "node:test"
+import { RULES } from "../../../packages/review/src/rules.ts"
 
 import {
   leaderboard,
@@ -140,6 +141,83 @@ describe("scoreRun", () => {
     assert.equal(result.percent, 100)
     assert.equal(result.durationMs, 6000)
     assert.ok(result.tasks.every((task) => task.rules.every((rule) => rule.passed)))
+    const report = result.tasks[1].sharedReview
+    assert.equal(report.affectsScore, false)
+    assert.equal(report.status, "reported")
+    assert.deepEqual(report.ruleIds, Object.keys(RULES))
+    assert.deepEqual(report.policy, { semanticColors: true })
+    assert.equal(report.labelContext, "partial")
+    assert.equal(result.tasks[0].sharedReview, undefined)
+    assert.equal(result.tasks[2].sharedReview, undefined)
+  })
+
+  test("reports shared findings and unknowns without changing the independent score", async () => {
+    const path = join(runDir, "artifacts/02-compose-settings/src/App.tsx")
+    const original = await readFile(path, "utf8")
+    await writeFile(path, `${original}\nconst extra = <input style={{ color: '#ff0000' }} />\n`)
+    try {
+      const result = await scoreRun(runDir, { protocolPath })
+      assert.equal(result.score, 300)
+      assert.equal(result.tasks[1].score, 100)
+      const report = result.tasks[1].sharedReview.result
+      assert.ok(report.findings.some(finding => finding.rule === "L2B-TOK-001"))
+      assert.ok(report.unknowns.some(unknown => unknown.rule === "L2B-A11Y-002"))
+      assert.equal(report.findings.some(finding => finding.rule === "L2B-A11Y-002"), false)
+      assert.equal(report.truncated, false)
+    } finally {
+      await writeFile(path, original)
+    }
+  })
+
+  test("retains parse uncertainty without awarding or deducting points", async () => {
+    const path = join(runDir, "artifacts/02-compose-settings/src/App.tsx")
+    const original = await readFile(path, "utf8")
+    await writeFile(path, `${original}\nconst broken = <input`)
+    try {
+      const result = await scoreRun(runDir, { protocolPath })
+      assert.equal(result.score, 300)
+      const report = result.tasks[1].sharedReview
+      assert.equal(report.status, "reported")
+      assert.ok(report.result.unknowns.some(unknown => unknown.rule === "parse"))
+      assert.deepEqual(report.result.evaluatedRules, [])
+    } finally {
+      await writeFile(path, original)
+    }
+  })
+
+  test("reports oversized review artifacts as unavailable while preserving protocol checks", async () => {
+    const path = join(runDir, "artifacts/02-compose-settings/src/App.tsx")
+    const original = await readFile(path, "utf8")
+    await writeFile(path, `${original}\n/*${"x".repeat(256 * 1024)}*/`)
+    try {
+      const result = await scoreRun(runDir, { protocolPath })
+      assert.equal(result.score, 300)
+      const report = result.tasks[1].sharedReview
+      assert.equal(report.status, "unavailable")
+      assert.match(report.reason, /256 KiB/)
+      assert.equal(report.result, undefined)
+    } finally {
+      await writeFile(path, original)
+    }
+  })
+
+  test("does not read a symlinked composition for shared review", async () => {
+    if (process.platform === "win32") return
+    const path = join(runDir, "artifacts/02-compose-settings/src/App.tsx")
+    const outside = join(temporaryRoot, "outside-app.tsx")
+    await rename(path, outside)
+    await symlink(outside, path)
+    try {
+      const result = await scoreRun(runDir, { protocolPath })
+      const report = result.tasks[1].sharedReview
+      assert.equal(report.status, "unavailable")
+      assert.match(report.reason, /Symlinks are not scored/)
+      assert.equal(report.result, undefined)
+      assert.equal(result.tasks[1].rules.find(rule => rule.id === "app").passed, false)
+    } finally {
+      await rm(path, { force: true })
+      await rename(outside, path)
+    }
   })
 
   test("deducts the declared points for a failed evaluator-observed build", async () => {

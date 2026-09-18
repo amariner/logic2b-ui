@@ -1,4 +1,5 @@
 import { buildAgentRules, RULE_FORMATS, type AgentRulesOptions } from "@logic2b/scaffold/rules"
+import { reviewUi, validateReview, ReviewInputError } from "@logic2b/review"
 import { inspectProject } from "@logic2b/scaffold/project-context"
 import { PROJECT_SNAPSHOT_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
@@ -13,6 +14,7 @@ import { buildInstallPlan } from "./plan.ts"
 import { PACKAGE_VERSION } from "./version.ts"
 import { LIMITS, ToolInputError, byteLength, echo } from "./limits.ts"
 import { OUTPUT_SCHEMAS } from "./output-schemas.ts"
+import { REVIEW_INPUT_SCHEMA } from "./review-schemas.ts"
 import {
   assertArgumentsObject,
   cssArg,
@@ -284,6 +286,11 @@ const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "review_ui",
+    description: "Review 1–64 host-supplied TSX/JSX files (256 KiB total UTF-8 source) without filesystem, network access or execution. Reports proof-backed accessible-name findings, opt-in semantic-color policy, reasoned suppressions and explicit unknowns. Partial label context is the default; static results do not certify runtime accessibility.",
+    inputSchema: REVIEW_INPUT_SCHEMA,
+  },
+  {
     name: "inspect_project",
     description: "Inspect a bounded host-supplied project snapshot without filesystem or network access. Reports framework, aliases, installed hashes and explicit uncertainty. Summary is compact; request full detail before planning writes.",
     inputSchema: {
@@ -431,7 +438,7 @@ const TOOL_DEFINITIONS = [
   },
 ] as const
 
-const PURE_TOOLS = new Set(["agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["review_ui", "agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -583,6 +590,12 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
     throw new ToolInputError(
       `Unknown tool "${echo(name)}". Available tools: ${[...TOOL_NAMES].join(", ")}.`
     )
+  }
+  if (name === "review_ui") {
+    try { return { review: validateReview(rawArgs) } }
+    catch (error) {
+      throw new ToolInputError(error instanceof ReviewInputError ? error.message : "Invalid review request.")
+    }
   }
   const args = assertArgumentsObject(rawArgs)
   const out: Record<string, unknown> = {}
@@ -815,6 +828,8 @@ export async function runTool(
 
     if (name === "agent_rules") return textResult(args.rules)
 
+    if (name === "review_ui") return textResult(reviewUi(args.review))
+
     if (name === "inspect_project") return textResult(args.inspection)
 
     if (name === "list_presets") {
@@ -986,6 +1001,7 @@ export async function runTool(
     throw new ToolInputError(`Unknown tool "${echo(name)}".`)
   } catch (err) {
     if (err instanceof ToolInputError) throw err
+    if (name === "review_ui") return errorResult("Static review could not complete. Reduce the supplied source and try again.")
     return errorResult(
       `logic2b-mcp error: ${err instanceof Error ? err.message : String(err)}`
     )

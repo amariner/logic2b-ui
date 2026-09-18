@@ -4,6 +4,11 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+- Add network-free `review_ui` for bounded TSX/JSX source: shared static
+  accessible-name checks, opt-in semantic color policy, explicit unknowns and
+  reasoned suppressions. Both transports return the same strict typed result
+  and reject malformed input without exposing supplied source.
+
 - Add network-free `agent_rules`, managed rules in scaffolds (`agentRules: false` opts out), and the packaged logic2b-ui skill.
 
 - Add bounded, read-only project inspection with explicit uncertainty: `inspect_project` validates host-supplied snapshots without filesystem or network access.

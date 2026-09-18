@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { reviewLocalFiles } from "./review.ts"
+import { REVIEW_SCOPES, type ReviewScope } from "@logic2b/review"
 import { generateLocalRules, refreshLocalRules } from "./rules.ts"
 import { RULE_FORMATS, type RuleFormat } from "@logic2b/scaffold/rules"
 import { inspectLocalProject } from "./inspect.ts"
@@ -42,6 +44,35 @@ program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
   .version(PACKAGE_VERSION)
+
+program
+  .command("review")
+  .description("Review explicit TSX/JSX sources, reporting demonstrated findings and unresolved context.")
+  .argument("<paths...>", "source files or directories within the application")
+  .option("-c, --cwd <path>", "application directory")
+  .option("--json", "emit the versioned review result")
+  .option("--semantic-colors", "enforce the project's explicitly selected semantic color policy")
+  .option("--complete-label-context", "assert that selected JSX contains the complete label/ancestor context (never use for unresolved compositions)")
+  .option("--scope <list>", "comma-separated tokens,a11y", "tokens,a11y")
+  .option("--fail-on <severity>", "error or warning", "error")
+  .action(async (paths: string[], opts) => {
+    process.exitCode = 2
+    const scope = String(opts.scope).split(",")
+    if (!scope.length || new Set(scope).size !== scope.length || scope.some(name => !REVIEW_SCOPES.includes(name as ReviewScope))) throw new Error("--scope must contain distinct tokens,a11y values.")
+    if (!["error", "warning"].includes(opts.failOn)) throw new Error("--fail-on must be error or warning.")
+    const result = await reviewLocalFiles({ cwd: resolve(opts.cwd ?? process.cwd()), paths, semanticColors: opts.semanticColors, completeLabelContext: opts.completeLabelContext, scope: scope as ReviewScope[] })
+    if (opts.json) console.log(JSON.stringify(result, null, 2))
+    else console.log([
+      ...result.findings.map(f => `${f.file}:${f.line}:${f.column} ${f.severity} ${f.rule}: ${f.message}`),
+      ...result.unknowns.map(f => `${f.file}:${f.line}:${f.column} unknown ${f.rule}: ${f.reason}`),
+      `${result.summary.errors} errors, ${result.summary.warnings} warnings; ${result.unknowns.length} unresolved contexts; ${result.suppressed.length} reasoned suppressions.`,
+      `Evaluated rules: ${result.evaluatedRules.join(", ") || "none"}.`,
+      ...result.disabledRules.map(rule => `Disabled ${rule.rule}: ${rule.reason}`),
+      ...result.assumptions,
+      ...(result.truncated ? ["Review was truncated; select a smaller source set."] : []),
+    ].join("\n"))
+    process.exitCode = result.truncated || result.unknowns.some(f => f.rule === "parse") ? 2 : result.summary.errors > 0 || opts.failOn === "warning" && result.summary.warnings > 0 ? 1 : 0
+  })
 
 program
   .command("rules")
@@ -422,5 +453,5 @@ program
 
 program.parseAsync().catch((err) => {
   console.error(`✗ ${err instanceof Error ? err.message : err}`)
-  process.exit(1)
+  process.exit(process.exitCode ?? 1)
 })

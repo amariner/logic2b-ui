@@ -86,6 +86,7 @@ describe("TOOLS", () => {
         "install_plan",
         "scaffold_plan",
         "agent_rules",
+        "review_ui",
         "inspect_project",
         "list_presets",
         "get_theme",
@@ -626,6 +627,13 @@ test("inspect_project uses the shared typed network-free snapshot contract", asy
   const result = await runTool("inspect_project", { snapshot: { schemaVersion: 1, configurations: [], files: [] }, detail: "full" }, { fetchImpl: noFetch })
   assert.equal(parseText(result).context.framework.name, "unknown")
   assert.equal(TOOLS.find(tool => tool.name === "inspect_project")!.annotations.openWorldHint, false)
+})
+
+test("review_ui supplies findings through the shared typed network-free contract", async () => {
+  const result = await runTool("review_ui", { files: [{ path: "App.tsx", content: "<input/>", labelContext: "complete" }] }, { fetchImpl: noFetch })
+  assert.equal(result.structuredContent!.schemaVersion, 1)
+  assert.equal((result.structuredContent!.findings as unknown[]).length, 1)
+  assert.equal(TOOLS.find(tool => tool.name === "review_ui")!.annotations.openWorldHint, false)
 })
 
 test("agent_rules supplies bounded editor writes through the shared typed contract", async () => {

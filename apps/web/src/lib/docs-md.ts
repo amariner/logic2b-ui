@@ -2,6 +2,7 @@ import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import type { CollectionEntry } from "astro:content";
 import type { RegistryApiContract } from "@logic2b/registry/types";
 import { integrationPathsMarkdown } from "@/data/integration-paths";
+import { reviewRulesMarkdown } from "@/data/review-rules";
 
 const demoSources = import.meta.glob<string>("../demos/*.tsx", {
   query: "?raw",
@@ -133,6 +134,11 @@ export function entryToMarkdown(
   body = body.replace(
     /<IntegrationPaths(?:\s+locale="(es)")?\s*\/>/g,
     (_match, locale: "es" | undefined) => integrationPathsMarkdown(locale ?? "en"),
+  );
+
+  body = body.replace(
+    /<ReviewRules(?:\s+locale="(es)")?\s*\/>/g,
+    (_match, locale: "es" | undefined) => reviewRulesMarkdown(locale ?? "en"),
   );
 
   const sections = [

@@ -50,6 +50,7 @@ npx logic2b@next list
 | `list` | List all components available in the registry. |
 | `rules` | Regenerate managed AGENTS.md/DESIGN.md; `--format agents,claude,cursor,copilot` adds editor formats. |
 | `inspect` | Read bounded project configuration and installed hashes; `--json --details full` includes aliases, inventory and uncertainty. |
+| `review <paths...>` | Source candidate: review selected TSX/JSX with explicit token policy, supported native accessible-name checks and unresolved context. |
 
 `add` snapshots what it installs under `.logic2b/base/` — that snapshot is the
 base side of `update`'s merge, so keep the directory (committing it is fine).
@@ -132,3 +133,41 @@ were omitted. In a monorepo, run the command with `--cwd apps/web`.
 also applies CSS and records that preset in components.json while preserving
 other configuration fields. Actual CSS overrides remain authoritative. An
 icon-library conflict between preset and project must be resolved explicitly.
+
+## Static UI review (source candidate)
+
+Build this checkout with `pnpm --filter logic2b build`, then:
+
+```bash
+node packages/cli/dist/index.js review src/CustomerPage.tsx --cwd /path/to/app --semantic-colors --json
+```
+
+Confirm `review` appears in installed CLI help before using an npm copy. This
+source change does not establish publication. The command requires explicit
+files/directories, reads TSX/JSX only, does not execute project code, and rejects
+symlink/hard-linked files, escaping/private/dependency paths, invalid UTF-8 and
+overlapping selections. Limits: 64 files, 256 KiB total source, 256-character
+relative paths and a 50,000-node AST traversal budget.
+
+The shared engine has four rules in `tokens` and `a11y`; choose scopes with
+`--scope tokens,a11y`. `--semantic-colors` explicitly enables `L2B-TOK-001`, a
+project policy for supported literal color classes/styles. Without the flag it
+is disabled. Stylesheet token overrides are outside scope.
+
+Accessible-name rules `L2B-A11Y-001..003` cover supported native dialogs,
+controls and buttons. The default label context is partial. Use
+`--complete-label-context` only after verifying that external labels and
+caller ancestors cannot supply missing names. Cross-file labels, wrappers,
+spreads and dynamic semantics remain unresolved. Native HTML is valid.
+
+JSON output reports findings with evidence/locations/fixes, unknowns, reasoned
+suppressions, evaluated/disabled rules, assumptions and truncation. Text output
+also shows unknowns and assumptions. `--fail-on error` is the default;
+`--fail-on warning` also fails for warnings. Exit 1 means the finding threshold
+was reached; exit 2 means invalid review input, parse failure or truncation.
+Command-line usage errors retain exit 1. Semantic unknowns alone do not fail:
+exit 0 and zero findings are not a passing accessibility certificate.
+
+See [the review guide](https://ui.logic2b.com/docs/review) for all four rules,
+reasoned next-line suppression syntax and the MCP equivalent. Keep runtime,
+keyboard and responsive verification in the consuming application.

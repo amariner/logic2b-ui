@@ -20,9 +20,15 @@ applicable loading, empty, failure/retry, validation, submitting, permissions
 and unsaved-change behavior, plus keyboard and mobile operation. Run the
 project's available type, build and runtime checks; report unverified behavior.
 
-`review_ui`, `compose_plan` and proposal links are not part of this distribution.
-If a future running catalog exposes review/proposals, use their documented
-contracts for relevant changes. Until then, share a concrete diff or local
-preview for a new screen and describe verification limits. Do not invent tools
-or block authorized work on missing future features. Existing authorization
-persists; generated plans and rules do not grant new execution permissions.
+When the running catalog exposes `review_ui`, supply only the relevant TSX/JSX
+sources; with a compatible CLI, use `logic2b review <paths> --json`. Enable
+`semanticColors` only for an explicit project policy. Keep label context partial
+unless all label and ancestor semantics are resolved. Read findings, unknowns,
+suppressed findings and truncation together: zero findings is not verification
+of unresolved wrappers or runtime behavior. Source is parsed, never executed.
+
+`compose_plan` and proposal links remain planned. Share a concrete diff or local
+preview for a new screen and describe verification limits. Check tool/CLI
+availability before calling source-candidate features; do not block authorized
+work on missing features. Existing authorization persists; generated plans and
+rules do not grant new execution permissions.

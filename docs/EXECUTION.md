@@ -1,6 +1,6 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 6 September 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 18 September 2026.
 Owners below identify active work, not permanent maintainers. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
@@ -19,7 +19,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | Codex (M1-03) |
-| M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
+| M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | done | Codex (M1-04) |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | ready | — |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | ready | — |
 | M2-03 | Customer journey create/change/update acceptance fixture | M2-01, M2-02 | ready | — |
@@ -680,3 +680,108 @@ reference, not a scan of custom CSS. Review/proposal tools remain planned.
 Next ready task: M1-04 (evidence-based static review). REL-03, external pilot
 work and real EVAL-01 measurements remain separate unfinished work. The user's
 overall development goal remains active.
+
+
+### 18 September 2026 — M1-04
+
+Delivered on `codex/m1-04-static-review` (commit subject: `feat(review): add evidence-based static UI review`).
+Completed the existing uncommitted shared-engine/CLI work, then integrated and
+verified MCP, documentation, agent instructions and benchmark reporting.
+
+The private `@logic2b/review` package owns a version-1, DOM-free TSX/JSX review
+contract. Four stable rules cover explicitly enabled semantic-color policy and
+supported native dialog/control/button names. Findings include category,
+confidence, location, evidence, suggested fix and canonical documentation.
+Missing names become defects only with a justified host assertion of complete
+label context; unresolved wrappers, external/dynamic labels and styling remain
+unknown. Native HTML is valid. Results expose evaluated/disabled rules,
+reasoned suppressions and truncation; there is no global quality score or
+invented registry version. Code, imports and project configuration never execute.
+
+Limits: 64 files, 256 KiB total UTF-8 source, 256-character normalized paths,
+50,000 traversed AST nodes and 512 entries per result list. Suppressions are
+rule-specific, require reasons, preserve their findings and are limited to 128
+per file. Babel parser 7.29.7 is pinned and bundled with its complete MIT notice
+in both public artifacts; public runtime dependency lists are unchanged.
+
+CLI `review <paths...>` reads bounded, explicitly selected local sources and
+rejects escapes, private/dependency directories, symbolic/hard-linked files,
+overlapping selections, invalid UTF-8 and oversized input. It never modifies
+sources. JSON and human-readable output distinguish uncertainty and disabled
+rules. Exit 1 reports threshold findings, exit 2 invalid review input, parse
+failures or truncated processing; Commander usage errors retain exit 1.
+`review_ui` is the 19th MCP tool, with strict nested schemas, read-only
+annotations, sanitized errors and identical text/structured shared-core results.
+The existing 2 MiB HTTP body cap supports worst-case JSON escaping of 256 KiB
+source without increasing the transport limit.
+
+English/Spanish review docs render rule ids and before/after examples from the
+shared catalog, including plain Markdown and two new OG cards. Managed agent
+instructions and the packaged skill check actual tool availability. The
+benchmark attaches supplementary review evidence to the composition artifact,
+including unknowns/unavailable results, without changing independent scoring.
+Historical result files and protocol inputs remain unchanged; read-only rescoring
+preserved 272/300, 294/300 and 266/300 for the existing three runs.
+
+Verification (Node 26.8.1 / pnpm 11.10.0):
+
+- `pnpm lint`: all nine workspace packages passed. Direct final review lint,
+  MCP lint/build, benchmark lint and web lint also passed. Workspace links
+  were installed explicitly with `CI=true pnpm install --frozen-lockfile=false
+  --ignore-scripts`; the lockfile adds only review workspace/dependency links.
+- `pnpm test`: 358 tests passed across nine packages (CLI 78, MCP 126,
+  review 14, scaffold 22, web 25, VS Code 9, tokens 47, registry 8,
+  benchmark 29). Final CLI/MCP/benchmark tests also ran directly after engine
+  fixes, avoiding cross-package Turbo cache assumptions.
+- Review fixtures cover all four bad/good rules plus native/external/hidden
+  labels, custom wrappers, dynamic/duplicate/spread attributes, inert controls,
+  semantic CSS variables, URL fragments, CSS comments, all JS line separators,
+  parse failures and input/output limits. The 178-file corpus (139 registry
+  sources, all 39 block demos) has zero findings/parse errors under partial
+  context with token policy off. This proves parsing/conservative uncertainty,
+  not complete accessibility or design-policy compliance.
+- `pnpm --filter @logic2b/web build` passed, including OG generation; final
+  `pnpm --filter @logic2b/web exec astro build` passed after the core and
+  keyboard fixes. Existing registry payloads/manifests remain byte-identical.
+- `pnpm --filter @logic2b/web test:budgets` passed. MCP chunk: 739,735 bytes;
+  all 13 server modules: 1,554,184 bytes. The old 256 KiB MCP budget explicitly
+  becomes 1 MiB for the parser; an additional 2 MiB total-module guard prevents
+  split chunks from escaping measurement. Both the web test and budget command
+  enforce these project limits. Browser JS remains 1,985.9 KiB, maximum chunk
+  193.4 KiB; 175 docs OG images total 3,896.4 KiB.
+- `pnpm test:release-artifacts` passed: rc.3 CLI/MCP tarballs install in an
+  isolated consumer; all 19 output schemas pass official-client stdio checks.
+  Packed CLI review and MCP match the shared core, including uncertainty,
+  suppressions, parse failures and invalid/oversize inputs. Parser notices
+  and the exact packaged skill are verified.
+- With `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`,
+  the web Playwright beta-onboarding and review-docs tests passed at 390/1280px
+  in both locales. An initial mobile axe failure exposed unfocusable scrolling
+  code examples; replaced them with Astro Code and verified actual keyboard
+  horizontal scrolling. Final review-docs rerun: two tests passed. No page
+  overflow or serious/critical axe issues under the existing color-contrast
+  exclusion. Inspected desktop/mobile screenshots; no baseline was changed.
+- Local `wrangler dev --config dist/server/wrangler.json --port 4328
+  --inspector-port 9248 --local` served the actual built Worker. HTTP handshake
+  listed 19 tools; six review cases (including inert, suppression, parse failure
+  and full 256 KiB input) exactly matched shared-core structured/text results;
+  two invalid-input cases rejected without source echo. This is local runtime
+  evidence, not production latency or quota certification.
+- `pnpm exec wrangler deploy --dry-run --config dist/server/wrangler.json
+  --outdir /tmp/logic2b-m1-04-worker-dry-run` from apps/web passed: 1,517.76 KiB
+  raw / 345.88 KiB gzip. No deployment performed. These are project budgets,
+  distinct from [current Cloudflare platform limits](https://developers.cloudflare.com/workers/platform/limits/#worker-size).
+- Skill-creator `quick_validate.py skills/logic2b-ui` passed in a temporary
+  Python environment with PyYAML 6.0.2. `git diff --check` passed.
+
+Logs: `/tmp/logic2b-m1-04-{install,lint,tests,cli-final,mcp-final,benchmark-final,web,web-final,web-lint-final,release,browser,browser-final,budgets-final,worker,worker-smoke,dry-run}.log`.
+Limitations: no cross-file/import resolution, full CSS parser, runtime DOM,
+focus/contrast certification, broader state/icon/motion/form rules or auto-fix.
+No full-site visual/axe, Lighthouse, scaffold-build matrix or remote CI run for
+this scope. No npm publication, endpoint deployment, merge or push. Package
+versions remain rc.3 source candidates; release work must recheck tag/version
+availability. External pilots and real comparative EVAL-01 runs remain pending.
+
+Next ready task: M2-01, preconditioned incremental change plans/apply/recovery
+that preserve custom columns, copy and tokens. M2-02 consumer runtime checks
+are now unblocked too. The user's overall development goal remains active.

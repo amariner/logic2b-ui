@@ -11,6 +11,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js"
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { McpError } from "@modelcontextprotocol/sdk/types.js"
 import { DEFAULT_CONFIG, encodePreset } from "@logic2b/tokens"
+import { reviewUi, REVIEW_LIMITS } from "@logic2b/review"
 
 const execFileAsync = promisify(execFile)
 const repoRoot = resolve(import.meta.dirname, "../../..")
@@ -146,6 +147,7 @@ try {
         access(join(packageRoot, path)),
       ),
     )
+    assert.match(await readFile(join(packageRoot, "dist/index.js"), "utf8"), /Copyright \(C\) 2012-2014 by various contributors/, "Bundled Babel parser license must ship in both artifacts")
   }
 
   assert.deepEqual(await readdir(join(installedMcp, "skills")), ["logic2b-ui"])
@@ -160,7 +162,7 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
   await withLocalRegistry(async (registry) => {
@@ -218,6 +220,11 @@ try {
     assert.equal(context.sourceRoot, "src")
     assert.equal(context.installed.find((item: { name: string }) => item.name === "login-01").files[0].modified, true)
     assert.equal(await readFile(installedFile, "utf8"), `${before}\n// Consumer customization preserved by inspection.\n`)
+    const reviewFile = { path: "review-fixture.tsx", content: '// logic2b-review-disable-next-line L2B-TOK-001 -- approved brand color\n<div className="text-red-500"/>;\n<button>{label}</button>', labelContext: "partial" as const }
+    await writeFile(join(target, reviewFile.path), reviewFile.content)
+    const review = await execFileAsync(cliBin, ["review", reviewFile.path, "--cwd", target, "--json", "--semantic-colors"])
+    assert.deepEqual(JSON.parse(review.stdout), reviewUi({ files: [reviewFile], policy: { semanticColors: true } }))
+    assert.equal(await readFile(join(target, reviewFile.path), "utf8"), reviewFile.content)
   })
 
   await withLocalRegistry(async (registry) => {
@@ -254,6 +261,7 @@ try {
           "list_components",
           "list_presets",
           "list_registry_versions",
+          "review_ui",
           "scaffold_plan",
           "search_components",
         ]
@@ -277,6 +285,12 @@ try {
         ["list_presets", {}],
         ["agent_rules", { formats: ["agents", "claude", "cursor", "copilot"] }],
         ["inspect_project", { snapshot: { schemaVersion: 1, configurations: [{ path: "package.json", content: JSON.stringify({ dependencies: { vite: "^8", react: "^19" } }) }, { path: "tsconfig.json", content: JSON.stringify({ compilerOptions: { paths: { "@/*": ["src/*"] } } }) }], files: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } }, detail: "full" }],
+        ["review_ui", { files: [
+          { path: "src/Customer.tsx", content: '<button><svg aria-hidden="true"/></button>', labelContext: "complete" },
+          { path: "src/Unknown.tsx", content: '<input aria-labelledby="external"/>' },
+          { path: "src/Brand.tsx", content: '// logic2b-review-disable-next-line L2B-TOK-001 -- approved brand color\n<div className="text-red-500"/>' },
+          { path: "src/Parse.tsx", content: 'const PRIVATE_REVIEW_SOURCE = <broken' },
+        ], policy: { semanticColors: true } }],
         ["search_components", { query: "button" }],
         ["get_component", { name: "button", version: "1.0.0-rc.16" }],
         ["get_component", { name: "customer-edit-01" }],
@@ -325,6 +339,13 @@ try {
           const inspection = result.structuredContent as { context: { sourceRoot: string } }
           assert.equal(inspection.context.sourceRoot, "src")
         }
+        if (name === "review_ui") {
+          assert.deepEqual(result.structuredContent, reviewUi(args))
+          assert.equal((result.structuredContent?.findings as unknown[]).length, 1)
+          assert.equal((result.structuredContent?.suppressed as unknown[]).length, 1)
+          assert.ok((result.structuredContent?.unknowns as unknown[]).length >= 2)
+          assert.equal(JSON.stringify(result).includes("PRIVATE_REVIEW_SOURCE"), false)
+        }
         if (name === "add_command") {
           for (const [manager, runner] of Object.entries(PACKAGE_RUNNERS)) {
             assert.equal(
@@ -342,10 +363,12 @@ try {
         ["nope", {}],
         ["search_components", { query: "x", limit: 0 }],
         ["install_plan", { items: ["button", "button"] }],
+        ["review_ui", { files: [{ path: "../PRIVATE_REVIEW_SOURCE.tsx", content: "PRIVATE_REVIEW_SOURCE" }] }],
+        ["review_ui", { files: [{ path: "src/Large.tsx", content: "x".repeat(REVIEW_LIMITS.sourceBytes + 1) }] }],
       ] as const) {
         await assert.rejects(
           () => client.callTool({ name, arguments: args as Record<string, unknown> }),
-          (error: unknown) => error instanceof McpError && error.code === -32602,
+          (error: unknown) => error instanceof McpError && error.code === -32602 && !error.message.includes("PRIVATE_REVIEW_SOURCE"),
           `${name}: expected JSON-RPC invalid params`
         )
       }
@@ -357,7 +380,7 @@ try {
 
   passed = true
   console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/scaffold verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 18 tool output contracts verified over stdio`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 19 tool output contracts verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

@@ -1,5 +1,6 @@
 import { lstat, readFile } from "node:fs/promises"
 import { isAbsolute, relative, resolve, sep } from "node:path"
+import { reviewUi, RULES } from "../../../packages/review/src/index.ts"
 
 const MAX_FILE_BYTES = 1_000_000
 const FIXTURES = new Set(["vite-base", "vite-settings", "empty"])
@@ -118,6 +119,41 @@ async function evaluate(check, artifactRoot, taskRun) {
     throw new Error(`Unknown check type: ${check.type}`)
   } catch (error) {
     return { passed: false, evidence: error.message }
+  }
+}
+
+/** Supplementary evidence only: v1 protocol scoring remains independent. */
+async function sharedCompositionReview(artifactRoot) {
+  const sourcePaths = ["src/App.tsx"]
+  const context = {
+    engine: "@logic2b/review",
+    schemaVersion: 1,
+    sourcePaths,
+    ruleIds: Object.keys(RULES),
+    scope: ["tokens", "a11y"],
+    // The composition prompt explicitly requires semantic colors. It does not
+    // assert that the one submitted source file contains all label context.
+    policy: { semanticColors: true },
+    labelContext: "partial",
+    affectsScore: false,
+  }
+  try {
+    const content = await artifactText(artifactRoot, sourcePaths[0])
+    const result = reviewUi({
+      schemaVersion: 1,
+      files: [{ path: sourcePaths[0], content, labelContext: context.labelContext }],
+      scope: context.scope,
+      policy: context.policy,
+    })
+    // "reported" means evidence is present; inspect unknowns/truncated rather
+    // than treating a successful invocation as a passing accessibility check.
+    return { ...context, status: "reported", result }
+  } catch (error) {
+    return {
+      ...context,
+      status: "unavailable",
+      reason: error instanceof Error ? error.message : "Shared review could not read this artifact.",
+    }
   }
 }
 
@@ -264,6 +300,9 @@ export async function scoreRun(runDir, options = {}) {
       durationMs: Number.isFinite(taskRun.durationMs) ? taskRun.durationMs : null,
       toolCalls: Number.isFinite(taskRun.toolCalls) ? taskRun.toolCalls : null,
       rules,
+      ...(task.id === "compose-settings"
+        ? { sharedReview: await sharedCompositionReview(artifactRoot) }
+        : {}),
     })
   }
 

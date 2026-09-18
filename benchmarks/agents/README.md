@@ -30,6 +30,23 @@ The static scorer never executes submitted code. It reads files up to 1 MB,
 rejects symlinks and paths outside the task directory, and combines that
 artifact evidence with build exit codes captured by the trusted evaluator.
 
+The source-candidate scorer also attaches a supplementary `sharedReview` to
+the `compose-settings` result. It reviews only the requested `src/App.tsx`
+through `@logic2b/review` and reports the shared `L2B-*` ids, findings, unknowns,
+suppressions and evidence boundaries. The task explicitly requires semantic
+colors, so that policy is enabled. Label context stays partial: the artifact
+does not prove that all external labels or component implementations are known.
+This report has `affectsScore: false`; the existing protocol rules, point
+totals, evaluator-observed builds and leaderboard criteria remain unchanged.
+It is supplementary static evidence, not an independent usability outcome.
+
+`status: "reported"` means a result exists, not that accessibility passed:
+read `unknowns` and `truncated`. An unreadable, unsafe or oversized artifact
+returns `status: "unavailable"` with a reason, never a clean report. Review is
+bounded to 256 KiB and 50,000 AST nodes. Historical checked-in results do not
+gain this field until explicitly rescored; raw runs and protocol fingerprints
+are not rewritten by this implementation.
+
 The versioned runner is that evaluator. It creates deterministic fixtures from
 the built registry in staging outside the repository, fingerprints them with
 SHA-256, invokes an agent without a shell, enforces task/output limits and

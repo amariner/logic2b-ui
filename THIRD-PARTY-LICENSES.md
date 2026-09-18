@@ -32,6 +32,7 @@ identification purposes only.
 | Package | License | Copyright |
 | --- | --- | --- |
 | [commander](https://github.com/tj/commander.js) | MIT | © 2011 TJ Holowaychuk |
+| [@babel/parser](https://github.com/babel/babel/tree/main/packages/babel-parser) (bundled in CLI/MCP static review) | MIT | © 2012–2014 various contributors |
 | [zod](https://github.com/colinhacks/zod) | MIT | © 2025 Colin McDonnell |
 | [astro](https://github.com/withastro/astro) | MIT | © Astro contributors |
 | [esbuild](https://github.com/evanw/esbuild) | MIT | © 2020 Evan Wallace |

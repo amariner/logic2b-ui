@@ -1,12 +1,14 @@
 import { readFile, readdir, stat } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { checkMcpWorkerBudget } from "./mcp-worker-budget.mjs"
 
 const appDir = dirname(dirname(fileURLToPath(import.meta.url)))
 const assetDir = join(appDir, "dist/client/_astro")
 const registryDir = join(appDir, "public/r")
 const tokenDir = join(appDir, "public/tokens/default")
 const docsOgDir = join(appDir, "public/og/docs")
+const worker = checkMcpWorkerBudget(join(appDir, "dist/server"))
 
 const budgets = {
   maxBrowserChunk: 350 * 1024,
@@ -142,6 +144,7 @@ if (totalDocsOg > budgets.totalDocsOgImages) {
 console.log(
   [
     `browser JS: ${jsFiles.length} chunks, ${kib(totalJs)} total, ${kib(largestJs.size)} largest`,
+    `worker: ${kib(worker.mcpBytes)} MCP chunk, ${kib(worker.totalBytes)} across ${worker.moduleCount} server modules`,
     `active registry: ${currentItems.length} items, ${kib(activeRegistry)} total, ${kib(largestRegistry.size)} largest, ${kib(indexSize)} index`,
     `version storage: ${historicalFiles.length} artifacts, ${kib(totalRegistryStorage - activeRegistry)} total, ${kib(currentVersionManifestSize)} current manifest, ${kib(changelogSize)} changelogs`,
     `portable tokens: ${tokenFiles.length} artifacts, ${kib(totalPortableTokens)} total`,

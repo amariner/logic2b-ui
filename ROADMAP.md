@@ -1,6 +1,6 @@
 # logic2b ui — Interfaces agents can build, verify and maintain
 
-Updated: 5 September 2026. This is the canonical product direction and delivery
+Updated: 18 September 2026. This is the canonical product direction and delivery
 order. [EXECUTION.md](./docs/EXECUTION.md) is the actionable queue;
 [implementation guides](./docs/guides/README.md) define individual contracts.
 The previous roadmap is preserved in [ROADMAP-HISTORY.md](./ROADMAP-HISTORY.md).
@@ -42,8 +42,16 @@ also exist, with explicit uncertainty and opt-in full inventory. Managed agent
 and design instructions now ship through CLI installs, MCP scaffold/rules plans
 and the VS Code workspace adapter, preserving project text outside markers.
 
-Incremental change plans, broader behavior/content contracts,
-`review_ui`, consumer runtime verification, structured composition, proposal
+The source candidate also provides shared static review through CLI `review`
+and MCP `review_ui`: four rules in `tokens`/`a11y`, an explicitly enabled
+semantic-color policy, and native accessible-name findings only with justified
+complete label context. Wrappers, dynamic source and unresolved labels remain
+unknown. This is not runtime verification or broad catalog coverage; npm
+publication and remote deployment are separate release steps. See
+[guide 03](./docs/guides/03-review-ui.md) and the execution queue for checks.
+
+Incremental change plans, broader behavior/content and static-review rules,
+consumer runtime verification, structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.
 Versioned integrity exists: since M0-03 the MCP resolves an omitted version

@@ -1,5 +1,6 @@
 import { PROJECT_INSPECTION_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { BEHAVIOR_SCHEMA } from "@logic2b/scaffold/behavior"
+import { REVIEW_OUTPUT_SCHEMA } from "./review-schemas.ts"
 /** Wire contracts shared by the stdio server and the remote HTTP endpoint.
  * Keep additive registry metadata allowed; known fields and nested payloads
  * are typed. Validation runs in contract/consumer tests, not via runtime code
@@ -83,6 +84,7 @@ const parsedMode = object({
 })
 
 export const OUTPUT_SCHEMAS = {
+  review_ui: REVIEW_OUTPUT_SCHEMA,
   inspect_project: PROJECT_INSPECTION_SCHEMA,
   agent_rules: object({ schemaVersion: { type: "integer", const: 1 }, files: { type: "array", minItems: 2, maxItems: 5, items: object({ path: enumeration("AGENTS.md", "DESIGN.md", "CLAUDE.md", ".cursor/rules/logic2b.mdc", ".github/copilot-instructions.md"), content: { type: "string", maxLength: 131072 } }) }, notes: strings }),
   list_components: object({ ...version, count, items: array(summary) }, [...versionRequired, "count", "items"]),

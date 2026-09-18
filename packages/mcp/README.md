@@ -8,10 +8,10 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes the current source candidate: 18 tools with
+This catalog describes the current source candidate: 19 tools with
 structured results, verified default reads and bounded inputs. Older
 `1.0.0-rc.2` installations have 15 tools and lack these additions. Confirm
-`inspect_project` appears in `tools/list` before using it; source changes need
+`inspect_project` and `review_ui` appear in `tools/list` before using them; source changes need
 a package release or endpoint deployment to become available to other hosts.
 
 ### Inspect an existing project
@@ -49,6 +49,7 @@ snapshot schema, inheritance limits and CLI collector workflow.
 | --- | --- |
 | `install_plan` | Resolve items into an executable plan: every file to write (project-relative path + full content, registry dependencies resolved) and the npm dependencies to add. Accepts `iconLibrary` (`lucide`, `tabler`, `phosphor` or `hugeicons`). |
 | `agent_rules` | Generate bounded AGENTS.md/DESIGN.md and optional Claude, Cursor and Copilot formats without network access; merge managed blocks with existing project instructions. |
+| `review_ui` | Source candidate: statically review host-supplied TSX/JSX with four shared token-policy/accessibility rules, source evidence and explicit unknowns. No network, filesystem reads or source execution. |
 | `scaffold_plan` | Generate a complete runnable Next.js, Vite or Astro project from a marketing, dashboard or auth starter: framework shell, routing entry, exact-pinned package manifest, theme and all registry files. An optional `/create` preset applies its theme and icon library. |
 | `add_command` | The exact `logic2b add` invocation (npm/pnpm/yarn/bun, names validated) for when a shell **is** available. |
 | `list_presets` | List the curated preset gallery with canonical ids, full configs, `/create` links, exact CLI commands and measured contrast/readability warnings. |
@@ -246,3 +247,47 @@ canonical skill. Copy that directory into your host's configured skill location
 if desired; running npx does not install the skill into an editor automatically.
 The skill uses the running tool catalog and does not require planned tools.
 Check `tools/list` before using these source-candidate additions from npm.
+
+## Static UI review (source candidate)
+
+`review_ui` accepts the version-1 shared review request directly:
+
+```json
+{
+  "schemaVersion": 1,
+  "files": [{
+    "path": "src/CustomerPage.tsx",
+    "content": "export const Page = () => <input aria-label=\"Customer name\" />",
+    "labelContext": "partial"
+  }],
+  "scope": ["tokens", "a11y"],
+  "policy": { "semanticColors": true }
+}
+```
+
+The host selects and supplies source; neither remote nor local MCP assumes
+filesystem access. Limits: 64 TSX/JSX files, 256 KiB of total UTF-8 source,
+256-character normalized relative paths and a 50,000-node traversal budget.
+Unsupported versions/fields, unsafe or duplicate paths and invalid scopes or
+policy values reject. The tool never imports or executes submitted source.
+
+`L2B-TOK-001` requires explicit `semanticColors: true` and enforces a project
+design policy for supported literal colors. `L2B-A11Y-001..003` cover supported
+native dialogs, controls and buttons. Missing names become defects only when
+the host declares `labelContext: "complete"` and the supported source proves
+absence. Default/partial context, custom components, external labels, spreads
+and dynamic semantics remain unknown. Multiple files do not resolve labels
+across them. Do not assert complete context for unresolved compositions.
+
+The result includes `schemaVersion: 1`, summary, evidence-backed findings,
+unknowns, suppressed findings/reasons, evaluated/disabled rules, assumptions
+and `truncated`. A parse failure produces an unknown, not a passing file.
+The arrays are capped at 512 entries and each file allows 128 reasoned
+suppression directives. A truncated result is incomplete. No registry version
+is returned because the engine never reads a registry. Structured content and
+the text fallback contain the same result.
+
+This source addition needs a package release or endpoint deployment; check
+`tools/list` before relying on it. See [static UI review](https://ui.logic2b.com/docs/review)
+for rule examples and intentional exceptions. Unknown is not pass; retain
+independent keyboard, screen-reader and application behavior checks.
