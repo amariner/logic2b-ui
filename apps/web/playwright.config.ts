@@ -14,8 +14,9 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : 4,
   reporter: process.env.CI ? [["github"], ["list"]] : "list",
-  // Keep one baseline set across macOS development and Linux CI. The visual
-  // matcher below owns the small host antialiasing tolerance.
+  // Share baselines across macOS and Linux where host rendering fits the
+  // matcher tolerance. The dense customer-state captures name their Linux
+  // references explicitly; all other snapshots keep their existing paths.
   snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{ext}",
   timeout: 60_000,
   expect: { timeout: 10_000 },

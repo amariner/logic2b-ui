@@ -102,7 +102,11 @@ for (const [block, contract] of Object.entries(BEHAVIOR_CONTRACTS)) {
         const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).disableRules(["color-contrast"]).analyze()
         expect(violations.filter(v => v.impact === "serious" || v.impact === "critical")).toEqual([])
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-        await expect(page).toHaveScreenshot(`${block}-${state}-${mode}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.015 })
+        // The dense populated table exceeds the shared baseline's tolerance
+        // because Linux and macOS rasterize its text and native controls
+        // differently. Keep reviewed Linux references for these two captures.
+        const host = block === "admin-customers-01" && state === "success" && process.platform === "linux" ? "-linux" : ""
+        await expect(page).toHaveScreenshot(`${block}-${state}-${mode}${host}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.015 })
       })
     }
   }
