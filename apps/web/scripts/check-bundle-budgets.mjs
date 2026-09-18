@@ -20,7 +20,10 @@ const budgets = {
   changelogs: 128 * 1024,
   portableTokens: 32 * 1024,
   maxDocsOgImage: 64 * 1024,
-  totalDocsOgImages: 4 * 1024 * 1024,
+  // 179 routes after the six EN/ES review/change/verification additions.
+  // Linux SVG rasterization totals 4099.5 KiB (macOS: 4002.3 KiB).
+  // Keep the per-image cap and a bounded aggregate allowance for this set.
+  totalDocsOgImages: 4.25 * 1024 * 1024,
 }
 
 async function filesIn(dir, predicate) {

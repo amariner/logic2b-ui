@@ -1084,3 +1084,20 @@ work to GitHub and deploying production. Those delivery actions require actual
 remote confirmation; local checks alone do not establish a deployment or a
 successful GitHub CI run. npm publication is a separate release action. M3-01
 remains the next queued task and has not been started.
+
+### 18 September 2026 — Delivery follow-up
+
+Merged the completed work through M2-03 into `main` and pushed `7d0202d` as
+requested. GitHub run 35346959973 passed build, lint, unit tests, package and
+starter consumer checks, then exposed the aggregate docs OG budget on Linux:
+179 images total 4099.5 KiB versus the old 4096 KiB cap. The same images total
+4002.3 KiB on the local macOS renderer. The original main had 173 images; the
+six added routes are EN/ES review, changes and verification documentation.
+
+The delivery follow-up sets the aggregate allowance to 4.25 MiB for that
+expanded set, retaining the existing 64 KiB individual image cap and all JS,
+Worker, registry and token limits. PNG generation already uses maximum
+compression/effort; no image pixels, generator settings or dependencies change.
+Local `pnpm --filter @logic2b/web test:budgets` and `git diff --check` pass.
+A fresh GitHub run and actual Cloudflare production checks must confirm delivery;
+this entry does not label the failed first CI run as successful.
