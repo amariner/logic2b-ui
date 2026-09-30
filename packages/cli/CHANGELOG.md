@@ -4,6 +4,11 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Add read-only `compose` for structured customer list/form requirements,
+  exact verified registry metadata, dependency closure and explicit consumer
+  gaps. Callback declarations do not imply wiring; no prose interpretation,
+  composed scaffold, preview or apply. Source candidate pending publication.
+
 - Merge independent edits on adjacent lines during upstream updates. Keep
   genuine unresolved conflicts explicit across repeated updates with tagged
   markers and local records; exit 1 for conflicts or missing-base differences.

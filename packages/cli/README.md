@@ -352,6 +352,24 @@ relative and at most 256 characters. Local artifacts are bounded to 4 MiB each
 and 64 MiB total. Keep evidence local unless sharing is authorized.
 
 
+## Customer composition (source candidate)
+
+`logic2b compose <requirements.json> [--json] [--registry-version <selector>]`
+grounds explicit customer intents and list/primary-form roles in verified
+immutable registry metadata. It returns content slots, state support, callback
+and accessibility duties, dependency closure and gaps; it makes no writes.
+Use `pnpm --filter logic2b dev compose <requirements.json> --json` from source.
+CLI uses the bundled registry version unless the request or option specifies
+one; MCP defaults to `next`. Pin the same version for parity.
+
+Exit 0 means no metadata gaps, 1 means a valid plan with consumer work/gaps, and
+2 means invalid data or execution failure (usage errors retain Commander exit
+1). Coverage does not establish runtime correctness. Prose interpretation,
+`--apply`, composed scaffolds and previews remain pending. See
+[customer composition](../../docs/guides/16-customer-composition.md) for a
+complete request, bounds and English/Spanish instructions. Confirm `compose`
+in your installed CLI help; source availability does not imply publication.
+
 ## Customer change/update acceptance (source checkout)
 
 The reference lifecycle exercises the installed customer block with a custom

@@ -78,8 +78,15 @@ each stage; outstanding contrast measurements remain unknown. Upstream updates
 merge independent adjacent edits and keep unresolved conflicts visible on
 repeat. See [guide 15](./docs/guides/15-customer-journey-acceptance.md).
 
+An initial structured customer composition slice now exists in source: CLI
+`compose` and MCP `compose_plan` share a bounded explicit-requirement core,
+verify the selected immutable block/dependency payloads, and return metadata
+coverage and consumer gaps. Only customer list/form intents and roles are
+supported; callback wiring remains partial and coverage is not runtime proof.
+See [guide 16](./docs/guides/16-customer-composition.md). M3-01 remains in progress.
+
 Broader behavior/content and static-review rules,
-structured composition, proposal
+broader composition, composed source/scaffolds, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.
 Versioned integrity exists: since M0-03 the MCP resolves an omitted version

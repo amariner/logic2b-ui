@@ -1,9 +1,17 @@
 # 01 — `compose_plan`: from a brief to a grounded composition
 
-**Status:** proposed · **Lane:** understand intent · **Target:** v1.1 ·
+**Status:** in progress — customer core/CLI/MCP slice, 30 September 2026 · **Lane:** understand intent · **Target:** v1.1 ·
 **Depends on:** [02 UI states & content contract](./02-ui-states-and-content-contract.md)
-(for `intents`/`journey` metadata), [04 Proposal links](./04-proposal-links.md)
-(for the preview URL).
+(for `intents`/`journey` metadata), [10 Project context](./10-project-context.md).
+Proposal links are delivered later by M3-02, not a core dependency.
+
+The implemented first slice and its exact constraints are documented in
+[customer composition](./16-customer-composition.md). It accepts JSON
+requirements, supports the customer list/form pair, verifies immutable payloads
+and reports callback/state gaps. The larger design below remains planned;
+there is no prose interpretation, `--apply`, composed scaffold, studio tab or
+proposal URL. Only two blocks currently have behavior evidence. Do not add
+invented intent/state metadata to the rest merely to pass catalog gates.
 
 ## Why (the user)
 
