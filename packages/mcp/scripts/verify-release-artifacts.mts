@@ -16,6 +16,7 @@ import { reviewUi, REVIEW_LIMITS } from "@logic2b/review"
 import { buildChangePlan, CHANGE_LIMITS, validateChangePlan } from "@logic2b/scaffold/change-plan"
 import { summarizeVerificationReport, validateVerificationReport } from "@logic2b/scaffold/verification"
 import { verificationReport } from "../test/helpers/verification-report.ts"
+import { REGISTRY_VERSION } from "../../registry/version.ts"
 
 const execFileAsync = promisify(execFile)
 const repoRoot = resolve(import.meta.dirname, "../../..")
@@ -166,7 +167,7 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review", "change", "verify"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review", "change", "verify", "compose"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
 
@@ -209,6 +210,15 @@ try {
     assert.deepEqual((await readdir(verifyTarget)).sort(), ["App.tsx", "package.json"])
   }
   await withLocalRegistry(async (registry) => {
+    const composeRequest = join(consumer, "compose-request.json")
+    await writeFile(composeRequest, JSON.stringify({ requirements: [{ id: "browse", route: "/customers", task: "browse-customers", roles: ["list"], requiredStates: ["loading", "empty", "error"], actions: [] }] }))
+    const composition = await execFileAsync(cliBin, ["compose", composeRequest, "--registry", registry, "--json"])
+    const composed = JSON.parse(composition.stdout)
+    assert.equal(composed.registryVersion, REGISTRY_VERSION)
+    assert.equal(composed.next.install.version, REGISTRY_VERSION)
+    assert.equal(composed.coverage[0].status, "covered")
+    assert.deepEqual(composed.next.install.items, ["admin-customers-01"])
+    assert.ok(composed.items.includes("table"))
     const target = join(root, "generated-from-tarball")
     await execFileAsync(process.execPath, [
       cliEntry,
@@ -334,6 +344,7 @@ try {
           "agent_rules",
           "apply_preset",
           "change_plan",
+          "compose_plan",
           "contrast_audit",
           "decode_preset",
           "export_tokens",
@@ -370,6 +381,7 @@ try {
       const verifiedReport = await verificationReport()
       const incompleteReport = { ...verifiedReport, checks: verifiedReport.checks.slice(0, 4), runs: verifiedReport.runs.slice(0, 1) }
       const cases: Array<[string, Record<string, unknown>]> = [
+        ["compose_plan", { requirements: [{ id: "browse", route: "/customers", task: "browse-customers", roles: ["list"], requiredStates: ["loading", "empty", "error"], actions: ["retry"] }] }],
         ["list_components", {}],
         ["list_presets", {}],
         ["agent_rules", { formats: ["agents", "claude", "cursor", "copilot"] }],
@@ -445,6 +457,14 @@ try {
           assert.deepEqual(result.structuredContent, await buildChangePlan(args))
           await validateChangePlan(result.structuredContent)
         }
+        if (name === "compose_plan") {
+          assert.equal(versioned.registryVersion, defaultVersion)
+          const plan = result.structuredContent as { coverage: { status: string }[]; next: { install: { version: string; items: string[] } }; items: string[] }
+          assert.equal(plan.coverage[0].status, "partial")
+          assert.equal(plan.next.install.version, defaultVersion)
+          assert.deepEqual(plan.next.install.items, ["admin-customers-01"])
+          assert.ok(plan.items.includes("table"))
+        }
         if (name === "verify_report") {
           assert.deepEqual(result.structuredContent, await summarizeVerificationReport(args))
           assert.equal(result.structuredContent?.expectedChecks, 8)
@@ -490,8 +510,8 @@ try {
   })
 
   passed = true
-  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, scaffold/review/incremental plan/apply and unavailable verification reports checked`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 21 tool output contracts verified over stdio`)
+  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, composition/scaffold/review/incremental plan/apply and unavailable verification reports checked`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 22 tool output contracts verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

@@ -1,3 +1,4 @@
+import { COMPOSE_PLAN_SCHEMA } from "@logic2b/scaffold/compose-schema"
 import { PROJECT_INSPECTION_SCHEMA } from "@logic2b/scaffold/project-context-schema"
 import { CHANGE_PLAN_SCHEMA } from "@logic2b/scaffold/change-plan-schema"
 import { VERIFICATION_SUMMARY_SCHEMA } from "@logic2b/scaffold/verification-schema"
@@ -86,6 +87,7 @@ const parsedMode = object({
 })
 
 export const OUTPUT_SCHEMAS = {
+  compose_plan: COMPOSE_PLAN_SCHEMA,
   verify_report: VERIFICATION_SUMMARY_SCHEMA,
   change_plan: CHANGE_PLAN_SCHEMA,
   review_ui: REVIEW_OUTPUT_SCHEMA,

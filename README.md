@@ -10,7 +10,9 @@ components, verify behavior and preserve local work through subsequent changes.
 The source candidate includes bounded project inspection, managed agent
 instructions, evidence-based static review and preconditioned incremental
 change plans with local apply/recovery, and consumer browser verification with
-explicit evidence and coverage limits. Structured composition and
+  explicit evidence and coverage limits, plus an initial explicit customer
+  composition core through CLI `compose` and MCP `compose_plan`.
+  Broader composition and
 proposal previews remain planned; see [ROADMAP.md](./ROADMAP.md) for delivery
 boundaries and priorities. Source availability does not imply npm publication
 or deployment of those additions.
@@ -133,6 +135,14 @@ a generated app. It checks that the custom column, copy and theme survive,
 that stale plans reject without writes, and that unresolved merge conflicts
 remain failures until explicitly resolved. Each stage retains its own build
 and browser evidence, including remaining contrast review needs.
+
+The [customer composition slice](./docs/guides/16-customer-composition.md)
+grounds structured customer list/form requirements in verified immutable
+payloads. It reports content slots, state support, callback/accessibility duties,
+dependency closure and gaps. Coverage is declared metadata, not a functional
+application: callback wiring remains partial, unsupported intents remain gaps,
+and composed routing/scaffolds and previews remain pending. Confirm `compose`
+in CLI help or `compose_plan` in MCP `tools/list`; this is a source candidate.
 
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
 selectors and `--registry-version` / MCP `version` select different artifacts.

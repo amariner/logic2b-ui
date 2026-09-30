@@ -23,7 +23,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | done | Codex (M2-01) |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | done | Codex (M2-02) |
 | M2-03 | Customer journey create/change/update acceptance fixture — [15](guides/15-customer-journey-acceptance.md) | M2-01, M2-02 | done | Codex (M2-03) |
-| M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | ready | — |
+| M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | in-progress | Codex (customer composition slice) |
 | M3-02 | Versioned proposal preview/install equivalence — [04](guides/04-proposal-links.md) | M3-01 | ready | — |
 | M3-03 | JSON Schema forms and explicit-column tables — [06](guides/06-form-and-table-plan.md) | M1-04, M3-01 | ready | — |
 | M3-04 | One MCP Apps proposal pilot, web fallback — [04](guides/04-proposal-links.md) | M3-02, M0-02 | ready | — |
@@ -1130,3 +1130,75 @@ tolerance remain unchanged. No product source or registry bytes change. The
 failed-browser artifact upload moves after the remaining site gates so their
 failure evidence is retained too. Local targeted success captures and web type
 checks pass; a new Linux CI run remains necessary to confirm the new references.
+
+### 30 September 2026 — M3-01 customer composition slice
+
+Delivered the first structured composition slice on
+`codex/m3-01-structured-composition`. **M3-01 remains in progress**; this is a
+complete bounded customer core/CLI/MCP slice, not the full composition initiative.
+Guide 16 documents the actual version-1 request/plan, English/Spanish usage,
+covered/partial/gap meaning and the remaining work.
+
+Shared scaffold functions validate explicit requirements before registry I/O,
+retrieve only the customer list/form candidates with declared intent support,
+and build pure metadata plans. Results carry routes and roles, content slot keys,
+state support, callbacks, consumer/accessibility duties, requirement evidence,
+deduplicated transitive items and gaps. Prose is not interpreted. Callback
+declarations remain partial because wiring/persistence cannot be established.
+Unknown metadata never awards support; required states apply to each selected
+role. Constraints include transitive item/category exclusions, missing or
+unassigned inclusions and explicit page limits. Candidate roots respect
+`install_plan`'s 32-item bound; graph and output bytes are also bounded.
+
+CLI `compose <requirements.json> --json` and both MCP transports use the same
+core with one immutable verified registry client per operation. CLI defaults to
+its bundled registry version; MCP defaults to `next`; explicit selectors give
+parity. Integrity failures retain errors without mutable fallbacks. Installation
+suggestions pin the resolved release. CLI never writes projects, installs
+dependencies or executes input; exits distinguish metadata gaps from invalid
+inputs. The generated `/r/schemas/compose-plan.json` matches the shared contract.
+No dependency, existing registry payload or immutable manifest was changed.
+
+Checks and outcomes (Node 24.19.0, pnpm 11.19.0):
+
+- `pnpm --filter @logic2b/scaffold lint` and `test`: passed, 72 tests,
+  including 20 structured golden cases plus constraints, unsafe/duplicate input,
+  missing metadata, graph cycles, malformed payloads and byte/count bounds.
+- `pnpm --filter @logic2b/mcp lint` and `test`: passed, 146 tests, including
+  real immutable customer payloads, CLI/core parity, strict nested schema,
+  integrity tampering, before-fetch input rejection and official-client/HTTP
+  response parity. New tool coverage is also part of the full catalog fixtures.
+- CLI type checks passed; `NODE_PATH= pnpm test` includes all 139 CLI tests,
+  actual composition commands, valid/gap/invalid exits, bounded UTF-8 JSON and
+  no project writes. Initial testing exposed ambient `/opt/codex/.../playwright`
+  loading via this host's `NODE_PATH`, then a second workspace Playwright load.
+  The unchanged verification test passes with that ambient module search path
+  cleared; browser product code was not changed to conceal it.
+- Final `pnpm build`: all six tasks passed, including registry integrity and
+  schema prerender. Cloudflare's optional `Request.cf` probe logged DNS fallback;
+  the build completed successfully. Host-rendered OG image changes were discarded
+  because this scope changes no site content pages or image baselines.
+- `pnpm lint` and `NODE_PATH= pnpm test`: all nine tasks passed, 489 total
+  tests across the workspace. The final incremental rerun reused seven cached
+  tasks; the earlier full run executed all nine. Relevant core/MCP changes
+  were rerun after the final bounds checks.
+- `NODE_PATH= pnpm test:release-artifacts`: passed after final changes. Packed
+  CLI consumer executes `compose` against real immutable payloads; packed MCP
+  exercises all 22 output contracts through the actual stdio handshake. Root
+  CI already invokes these updated tests and the artifact gate.
+- `pnpm --filter @logic2b/web test:budgets`: passed; browser JS 1,986.0 KiB,
+  MCP Worker 796.7 KiB, server modules 1,566.2 KiB, unchanged OG set 4,002.3 KiB.
+  A scaffold-package `node --import tsx` artifact check confirms the built
+  schema equals `COMPOSE_PLAN_SCHEMA`. All 57 checked local documentation links
+  and `git diff --check` passed.
+
+Not run: the full site axe/visual/Lighthouse suites (no rendered UI changes),
+three-framework composed consumer builds (composed source is not implemented),
+customer maintenance browser replay, live endpoint or remote GitHub CI. No npm
+publication, merge, push or deployment was performed. Metadata coverage and
+confidence are not runtime or accessibility approval.
+
+Next: finish M3-01's broader grounded intent/role contracts and composition
+integration, with actual consumer source/build equivalence, preset/studio work,
+dedicated site docs/browser gates and held-out evaluation. Only then start
+dependent M3-02 proposal previews; do not infer that broader composition shipped.

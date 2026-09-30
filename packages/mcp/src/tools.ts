@@ -1,3 +1,5 @@
+import { buildComposePlan, loadComposeItems, validateComposeRequest, ComposeInputError, type ComposeRequest } from "@logic2b/scaffold/compose"
+import { COMPOSE_INPUT_SCHEMA } from "@logic2b/scaffold/compose-schema"
 import { buildAgentRules, RULE_FORMATS, type AgentRulesOptions } from "@logic2b/scaffold/rules"
 import { reviewUi, validateReview, ReviewInputError } from "@logic2b/review"
 import { inspectProject } from "@logic2b/scaffold/project-context"
@@ -288,6 +290,11 @@ const TOOL_DEFINITIONS = [
         } } },
       },
     },
+  },
+  {
+    name: "compose_plan",
+    description: "Ground explicit customer intents and list/primary-form roles in one immutable registry release. Returns static metadata coverage, content slots, states, callback and accessibility responsibilities, verified dependency closure and gaps. Brief is not interpreted. No routing source, proposal preview, filesystem writes, dependency installation or runtime verification.",
+    inputSchema: COMPOSE_INPUT_SCHEMA,
   },
   {
     name: "change_plan",
@@ -605,6 +612,10 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
       `Unknown tool "${echo(name)}". Available tools: ${[...TOOL_NAMES].join(", ")}.`
     )
   }
+  if (name === "compose_plan") {
+    try { return { compose: validateComposeRequest(rawArgs) } }
+    catch (error) { throw new ToolInputError(error instanceof ComposeInputError ? error.message : "Invalid composition request.") }
+  }
   if (name === "review_ui") {
     try { return { review: validateReview(rawArgs) } }
     catch (error) {
@@ -710,6 +721,12 @@ export async function runTool(
 ): Promise<ToolResult> {
   const args = validateToolArguments(name, rawArgs)
   try {
+    if (name === "compose_plan") {
+      const request = args.compose as unknown as ComposeRequest
+      const client = await createRegistryClient(base, request.version, fetchImpl)
+      const items = await loadComposeItems(request, client.index, name => client.getItem(name))
+      return textResult(buildComposePlan(request, client.resolvedVersion, items))
+    }
     if (name === "verify_report") return textResult(await summarizeVerificationReport(args.report))
     if (name === "change_plan") return textResult(await buildChangePlan(args.change))
     if (name === "list_components") {

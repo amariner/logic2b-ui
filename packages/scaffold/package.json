@@ -15,7 +15,9 @@
     "./change-plan": "./src/change-plan.ts",
     "./change-plan-schema": "./src/change-plan-schema.ts",
     "./verification": "./src/verification.ts",
-    "./verification-schema": "./src/verification-schema.ts"
+    "./verification-schema": "./src/verification-schema.ts",
+    "./compose": "./src/compose.ts",
+    "./compose-schema": "./src/compose-schema.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",

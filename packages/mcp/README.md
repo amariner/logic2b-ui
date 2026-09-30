@@ -8,10 +8,10 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes the current source candidate: 21 tools with
+This catalog describes the current source candidate: 22 tools with
 structured results, verified default reads and bounded inputs. Older
 `1.0.0-rc.2` installations have 15 tools and lack these additions. Confirm
-`inspect_project`, `review_ui`, `change_plan` and `verify_report` appear in `tools/list` before using them; source changes need
+`inspect_project`, `review_ui`, `compose_plan`, `change_plan` and `verify_report` appear in `tools/list` before using them; source changes need
 a package release or endpoint deployment to become available to other hosts.
 
 ### Inspect an existing project
@@ -44,6 +44,16 @@ snapshot schema, inheritance limits and CLI collector workflow.
 | `get_demo` | Usage examples for an item — the demo components the docs render, with imports rewritten to installed-project paths. |
 
 ### Act on a project
+
+`compose_plan` accepts explicit structured customer requirements (intent, route,
+roles, required states and actions) and returns metadata coverage, consumer
+gaps, content slots, accessibility duties and the verified dependency closure
+from one immutable release. An omitted version resolves `next`; installation
+suggestions pin the exact release. The first slice supports customer list and
+form roles only. Callback wiring stays partial, missing metadata never passes,
+and free text is not interpreted. No preview, composed scaffold, filesystem
+writes or runtime checking occurs. See [the composition guide](../../docs/guides/16-customer-composition.md)
+for request examples, resource bounds and CLI parity.
 
 | Tool | What it does |
 | --- | --- |

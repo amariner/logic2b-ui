@@ -87,6 +87,7 @@ describe("TOOLS", () => {
         "install_plan",
         "scaffold_plan",
         "agent_rules",
+        "compose_plan",
         "change_plan",
         "verify_report",
         "review_ui",
@@ -102,6 +103,13 @@ describe("TOOLS", () => {
     )
   })
 
+})
+
+test("composition gaps have a successful typed contract when no supported item exists", async () => {
+  const registry = new ImmutableRegistry({ items: [{ name: "button", type: "registry:ui" }] })
+  const result = await runTool("compose_plan", { requirements: [{ id: "billing", route: "/billing", task: "compare-plans", roles: ["primary-form"], requiredStates: ["loading"], actions: [] }] }, { base: registry.base, fetchImpl: registry.fetchImpl })
+  assert.equal(result.structuredContent?.confidence, "low")
+  assert.deepEqual(result.structuredContent?.items, [])
 })
 
 describe("runTool — versioned registry", () => {

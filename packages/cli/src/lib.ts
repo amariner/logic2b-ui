@@ -50,6 +50,7 @@ export interface ApiContract {
 }
 
 export interface RegistryItem {
+  behavior?: import("@logic2b/scaffold/behavior").RegistryBehavior
   name: string
   type: string
   title?: string

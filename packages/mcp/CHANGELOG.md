@@ -4,6 +4,11 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+- Add `compose_plan` for bounded explicit customer intents and roles. CLI and
+  both MCP transports share metadata coverage, state/content/accessibility
+  responsibilities, verified dependency closure and integration gaps from one
+  immutable release. No composed source or proposal URL is inferred.
+
 - Add pure `verify_report` for host-produced runtime reports: validate the
   declared suite, selected-file fingerprints, bounded evidence references and
   coverage, then summarize pass/fail/skipped/unknown without running a browser

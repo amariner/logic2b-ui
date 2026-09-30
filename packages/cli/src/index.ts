@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { composeLocal, readComposeRequest } from "./compose.ts"
 import { reviewLocalFiles } from "./review.ts"
 import { verifyLocal, readVerificationArtifact } from "./verify.ts"
 import { planLocalChange, applyLocalChange, recoverLocalChange, listChangeTransactions, readChangeArtifact, writeChangeArtifact, type ChangeResult } from "./change.ts"
@@ -46,6 +47,26 @@ program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
   .version(PACKAGE_VERSION)
+
+program.command("compose")
+  .description("Ground explicit customer requirements in verified registry metadata; report integration gaps without writes.")
+  .argument("<requirements.json>", "structured composition request; prose is not interpreted")
+  .option("--registry <url>", "registry base URL")
+  .option("--registry-version <selector>", "immutable registry semver, range or channel; default: bundled registry version")
+  .option("--json", "print the complete versioned composition plan")
+  .action(async (path: string, opts) => {
+    process.exitCode = 2
+    const plan = await composeLocal(await readComposeRequest(path), { registry: opts.registry, version: opts.registryVersion })
+    console.log(opts.json ? JSON.stringify(plan, null, 2) : [
+      `Composition · registry ${plan.registryVersion} · ${plan.stack} · ${plan.locale}`,
+      ...plan.pages.flatMap(page => [`${page.route}: ${page.purpose}`, ...page.sections.map(section => `  ${section.role}: ${section.item}`)]),
+      ...plan.coverage.map(row => `${row.requirementId}: ${row.status}`),
+      ...plan.gaps.map(gap => `Gap${gap.requirementId ? ` (${gap.requirementId})` : ""}: ${gap.need}`),
+      `${plan.items.length} verified items including dependencies; confidence ${plan.confidence} describes metadata only.`,
+      ...plan.notes,
+    ].join("\n"))
+    process.exitCode = plan.gaps.length ? 1 : 0
+  })
 
 program.command("verify")
   .description("Check a running local application with a bounded declarative browser suite; save local evidence.")
