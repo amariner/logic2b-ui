@@ -51,8 +51,11 @@ gaps, content slots, accessibility duties and the verified dependency closure
 from one immutable release. An omitted version resolves `next`; installation
 suggestions pin the exact release. The first slice supports customer list and
 form roles only. Callback wiring stays partial, missing metadata never passes,
-and free text is not interpreted. No preview, composed scaffold, filesystem
-writes or runtime checking occurs. See [the composition guide](../../docs/guides/16-customer-composition.md)
+and free text is not interpreted. `output: "project"` adds grounded Next/Vite/Astro
+demo source, static routes, local callbacks and optional preset transforms.
+Unknown requirements suppress project output. Production callback wiring remains
+partial; no preview, filesystem writes, installation or runtime checking occurs.
+See [the composition guide](../../docs/guides/16-customer-composition.md)
 for request examples, resource bounds and CLI parity.
 
 | Tool | What it does |
@@ -232,7 +235,8 @@ By default the server reads from `https://ui.logic2b.com`. Override it with the
 ```bash
 pnpm --dir packages/mcp dev     # run from source (tsx)
 pnpm --dir packages/mcp test    # unit tests (node:test)
-pnpm --dir packages/mcp test:scaffolds # install/build generated starters
+pnpm --dir packages/mcp test:scaffolds # install/build starters + compositions
+pnpm --dir packages/mcp test:compositions # build + customer browser/axe evidence
 pnpm --dir packages/mcp build   # emit dist/
 ```
 

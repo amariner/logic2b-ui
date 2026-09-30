@@ -8,9 +8,11 @@ Proposal links are delivered later by M3-02, not a core dependency.
 The implemented first slice and its exact constraints are documented in
 [customer composition](./16-customer-composition.md). It accepts JSON
 requirements, supports the customer list/form pair, verifies immutable payloads
-and reports callback/state gaps. The larger design below remains planned;
-there is no prose interpretation, `--apply`, composed scaffold, studio tab or
-proposal URL. Only two blocks currently have behavior evidence. Do not add
+and reports callback/state gaps. Optional project output adds static routes,
+local sample callbacks and presets in Next/Vite/Astro; CLI `--apply` only writes
+new directories. The larger design below remains planned: prose interpretation,
+broader catalog coverage, studio tab and proposal URL do not exist.
+Only two blocks currently have behavior evidence. Do not add
 invented intent/state metadata to the rest merely to pass catalog gates.
 
 ## Why (the user)

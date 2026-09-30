@@ -6,7 +6,8 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { promisify } from "node:util"
 import { test } from "node:test"
-import { composeLocal, readComposeRequest } from "../src/compose.ts"
+import { composeLocal, readComposeRequest, applyCompositionProject } from "../src/compose.ts"
+import type { ComposePlan } from "@logic2b/scaffold/compose"
 const execFileAsync = promisify(execFile)
 const request = { requirements: [{ id: "browse", route: "/customers", task: "browse-customers", roles: ["list"], requiredStates: ["loading", "empty", "error"], actions: [] }] }
 
@@ -32,6 +33,16 @@ test("CLI composes immutable real items without project writes; exit codes disti
   assert.deepEqual(JSON.parse(result.stdout), await composeLocal(request, { registry }))
   assert.deepEqual(await readdir(cwd), before)
   assert.match((await run()).stdout, /list: admin-customers-01/)
+  const projectResult = await run("--project", "--json")
+  const projectPlan = JSON.parse(projectResult.stdout) as ComposePlan
+  assert.ok(projectPlan.project)
+  assert.deepEqual(await readdir(cwd), before, "project output itself is read-only")
+  const target = join(cwd, "generated")
+  await run("--apply", target, "--json")
+  for (const file of projectPlan.project!.files) assert.equal(await readFile(join(target, file.path), "utf8"), file.content)
+  await assert.rejects(run("--apply", target), error => (error as { code: number }).code === 2)
+  assert.equal(await readFile(join(target, "package.json"), "utf8"), projectPlan.project!.files.find(file => file.path === "package.json")!.content)
+  await assert.rejects(applyCompositionProject({ ...projectPlan, project: { ...projectPlan.project!, files: [{ path: "../escape", content: "NEVER_WRITE" }] } }, join(cwd, "unsafe")), /unsafe/)
   const partial = { requirements: [{ ...request.requirements[0], actions: ["retry"] }] }
   await writeFile(file, JSON.stringify(partial))
   await assert.rejects(run("--json"), error => { const failure = error as { code: number; stdout: string }; assert.equal(failure.code, 1); assert.equal(JSON.parse(failure.stdout).coverage[0].status, "partial"); return true })

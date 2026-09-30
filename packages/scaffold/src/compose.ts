@@ -1,5 +1,7 @@
 import { assertRegistryBehavior, BEHAVIOR_STATES, type RegistryBehavior } from "./behavior.ts"
 import { CUSTOMER_COMPOSITION } from "./compose-templates.ts"
+import { decodePreset, encodePreset, type IconLibrary } from "@logic2b/tokens"
+import type { CompositionProjectPlan } from "./compose-project.ts"
 
 export const COMPOSE_LIMITS = { requirements: 24, roles: 8, actions: 16, pages: 6, items: 128, constraints: 32, text: 128, route: 256, brief: 2000, bytes: 65536 } as const
 export type ComposeState = typeof BEHAVIOR_STATES[number]
@@ -20,6 +22,8 @@ export interface ComposeRequest {
   locale?: string
   constraints?: { mustInclude?: string[]; avoid?: string[]; maxPages?: number }
   version?: string
+  preset?: string
+  output?: "metadata" | "project"
 }
 export interface ComposeItem {
   name: string
@@ -34,6 +38,7 @@ export interface ComposePlan {
   registryVersion: string
   stack: "next" | "vite" | "astro"
   locale: string
+  preset?: string
   coverage: { requirementId: string; status: "covered" | "partial" | "gap"; evidence: string[] }[]
   pages: { route: string; purpose: string; sections: {
     item: string; role: string; requirementIds: string[]; why: string
@@ -44,7 +49,9 @@ export interface ComposePlan {
   }[] }[]
   items: string[]
   gaps: { requirementId?: string; need: string; suggestion: string; primitives: string[] }[]
-  next: { install: { items: string[]; version: string } | null }
+  next: { install: { items: string[]; version: string; iconLibrary?: IconLibrary } | null }
+  /** Present only when project output was requested; null records a named gap. */
+  project?: CompositionProjectPlan | null
   confidence: "high" | "medium" | "low"
   notes: string[]
 }
@@ -71,7 +78,7 @@ function strings(value: unknown, where: string, max: number, min = 0): string[] 
 const itemName = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 /** Validate before registry I/O. Never echo private brief or requirement values. */
 export function validateComposeRequest(value: unknown): ComposeRequest {
-  const data = object(value, "request", ["schemaVersion", "requirements", "brief", "stack", "locale", "constraints", "version"])
+  const data = object(value, "request", ["schemaVersion", "requirements", "brief", "stack", "locale", "constraints", "version", "preset", "output"])
   let serialized: string
   try { serialized = JSON.stringify(value) } catch { return fail("request", "expected JSON data") }
   if (new TextEncoder().encode(serialized).length > COMPOSE_LIMITS.bytes) fail("request", "above 65536-byte input limit")
@@ -101,7 +108,14 @@ export function validateComposeRequest(value: unknown): ComposeRequest {
   if (new Set([...mustInclude, ...candidateRoots]).size > COMPOSE_LIMITS.constraints) fail("constraints.mustInclude", "at most 32 total candidate roots, including matched blocks, can be passed to install_plan")
   const maxPages = constraints.maxPages ?? COMPOSE_LIMITS.pages
   if (!Number.isInteger(maxPages) || Number(maxPages) < 1 || Number(maxPages) > COMPOSE_LIMITS.pages) fail("constraints.maxPages", "expected 1–6")
-  return { schemaVersion: 1, requirements, stack: stack as ComposeRequest["stack"], locale, constraints: { mustInclude, avoid, maxPages: Number(maxPages) }, ...(data.brief !== undefined ? { brief: text(data.brief, "brief", COMPOSE_LIMITS.brief) } : {}), ...(data.version !== undefined ? { version: text(data.version, "version", 64) } : {}) }
+  if (data.output !== undefined && !["metadata", "project"].includes(data.output as string)) fail("output", "expected metadata or project")
+  let preset: string | undefined
+  if (data.preset !== undefined) {
+    const config = decodePreset(text(data.preset, "preset", 256))
+    if (!config) fail("preset", "expected a valid theme preset id")
+    preset = encodePreset(config)
+  }
+  return { schemaVersion: 1, requirements, stack: stack as ComposeRequest["stack"], locale, constraints: { mustInclude, avoid, maxPages: Number(maxPages) }, ...(data.brief !== undefined ? { brief: text(data.brief, "brief", COMPOSE_LIMITS.brief) } : {}), ...(data.version !== undefined ? { version: text(data.version, "version", 64) } : {}), ...(preset ? { preset } : {}), ...(data.output !== undefined ? { output: data.output as ComposeRequest["output"] } : {}) }
 }
 
 /** Only explicit supported intents select candidates; prose never supplies coverage. */
@@ -154,10 +168,11 @@ export function buildComposePlan(raw: unknown, registryVersion: string, registry
   const byName = new Map(registryItems.map(item => [item.name, item]))
   const avoid = new Set(request.constraints!.avoid)
   const plan: ComposePlan = { schemaVersion: 1, registryVersion, stack: request.stack!, locale: request.locale!, coverage: [], pages: [], items: [], gaps: [], next: { install: null }, confidence: "low", notes: [
-    "This slice supports explicit customer intents and list/primary-form roles. Brief text is not interpreted; locale is recorded, not translated.",
+    "This slice supports explicit customer intents and list/primary-form roles. Brief text is not interpreted. Metadata locale records the target; project output supports English/Spanish demo copy.",
     "Coverage describes registry metadata, not consumer runtime verification. Wire callbacks, data, persistence, authorization, routing and content; inspect existing projects before applying changes.",
-    "No proposal preview, composed route source or scaffold equivalence is available. Stack records the requested target; framework build compatibility remains unverified by this plan.",
+    "Metadata output contains no route source. Request output=project for a bounded customer demo project; generated source still needs separate builds and consumer checks. Proposal previews remain unavailable.",
   ] }
+  if (request.preset) plan.preset = request.preset
   const roots = new Set<string>()
   const closure = (name: string, seen = new Set<string>()): string[] => {
     if (seen.has(name)) return []
@@ -215,7 +230,7 @@ export function buildComposePlan(raw: unknown, registryVersion: string, registry
   plan.items = [...new Set([...roots].flatMap(name => closure(name)))].sort()
   // Constraint failures do not yield an executable installation suggestion.
   const constraintFailure = plan.gaps.some(entry => !entry.requirementId && entry.need.includes("absent or conflicts"))
-  if (roots.size && !constraintFailure) plan.next.install = { items: [...roots].sort(), version: registryVersion }
+  if (roots.size && !constraintFailure) plan.next.install = { items: [...roots].sort(), version: registryVersion, ...(request.preset ? { iconLibrary: decodePreset(request.preset)!.iconLibrary } : {}) }
   plan.confidence = plan.coverage.some(row => row.status === "gap") || constraintFailure ? "low" : plan.gaps.length ? "medium" : "high"
   if (new TextEncoder().encode(JSON.stringify(plan)).length > 4 * 1024 * 1024) throw new Error("Composition plan exceeds the 4 MiB output limit; narrow the requirements.")
   return plan

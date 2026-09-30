@@ -141,7 +141,9 @@ grounds structured customer list/form requirements in verified immutable
 payloads. It reports content slots, state support, callback/accessibility duties,
 dependency closure and gaps. Coverage is declared metadata, not a functional
 application: callback wiring remains partial, unsupported intents remain gaps,
-and composed routing/scaffolds and previews remain pending. Confirm `compose`
+and previews remain pending. Optional project output now provides grounded
+Next/Vite/Astro source with static routes, local demo callbacks and presets;
+CLI `--apply` materializes only a new directory. Confirm `compose`
 in CLI help or `compose_plan` in MCP `tools/list`; this is a source candidate.
 
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
@@ -173,7 +175,8 @@ pnpm --filter @logic2b/web generate:og # regenerate docs social cards
 pnpm build                           # full build (turbo)
 pnpm lint && pnpm test               # registry/type checks + unit tests
 pnpm test:release-artifacts          # pack/install CLI + MCP consumer smoke
-pnpm --filter @logic2b/mcp test:scaffolds # install/build generated starters
+pnpm --filter @logic2b/mcp test:scaffolds # install/build starters + compositions
+pnpm --filter @logic2b/mcp test:compositions # build + customer browser/axe evidence
 pnpm --filter logic2b test:scaffold     # install/build a generated monorepo
 pnpm --filter @logic2b/web test:e2e  # 712 axe analyses + 652 visual checks (after build)
 pnpm --filter @logic2b/web test:budgets

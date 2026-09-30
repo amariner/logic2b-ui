@@ -1,5 +1,6 @@
 import { buildComposePlan, loadComposeItems, validateComposeRequest, ComposeInputError, type ComposeRequest } from "@logic2b/scaffold/compose"
 import { COMPOSE_INPUT_SCHEMA } from "@logic2b/scaffold/compose-schema"
+import { addCompositionProject, type CompositionAsset } from "@logic2b/scaffold/compose-project"
 import { buildAgentRules, RULE_FORMATS, type AgentRulesOptions } from "@logic2b/scaffold/rules"
 import { reviewUi, validateReview, ReviewInputError } from "@logic2b/review"
 import { inspectProject } from "@logic2b/scaffold/project-context"
@@ -293,7 +294,7 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: "compose_plan",
-    description: "Ground explicit customer intents and list/primary-form roles in one immutable registry release. Returns static metadata coverage, content slots, states, callback and accessibility responsibilities, verified dependency closure and gaps. Brief is not interpreted. No routing source, proposal preview, filesystem writes, dependency installation or runtime verification.",
+    description: "Ground explicit customer intents and list/primary-form roles in one immutable registry release. Return static metadata coverage, content slots, states, callback/accessibility responsibilities, verified dependency closure and gaps. Optional output=project adds bounded Next/Vite/Astro demo files with static routes, local callbacks and a preset; unsupported roles/states suppress project output. Brief is not interpreted. No writes, installs, builds, browser checks or proposal previews. Production backend integration stays partial.",
     inputSchema: COMPOSE_INPUT_SCHEMA,
   },
   {
@@ -724,8 +725,13 @@ export async function runTool(
     if (name === "compose_plan") {
       const request = args.compose as unknown as ComposeRequest
       const client = await createRegistryClient(base, request.version, fetchImpl)
-      const items = await loadComposeItems(request, client.index, name => client.getItem(name))
-      return textResult(buildComposePlan(request, client.resolvedVersion, items))
+      const cache = new Map<string, CompositionAsset>()
+      const getItem = async (name: string): Promise<CompositionAsset> => {
+        if (!cache.has(name)) cache.set(name, await client.getItem(name))
+        return cache.get(name)!
+      }
+      const items = await loadComposeItems(request, client.index, getItem)
+      return textResult(await addCompositionProject(request, buildComposePlan(request, client.resolvedVersion, items), { base, getItem }))
     }
     if (name === "verify_report") return textResult(await summarizeVerificationReport(args.report))
     if (name === "change_plan") return textResult(await buildChangePlan(args.change))

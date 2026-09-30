@@ -35,7 +35,8 @@ export const SERVER_INSTRUCTIONS =
   "the host must verify all preconditions before authorized local apply. " +
   "Planning does not execute sources, write files or install dependencies. " +
   "Use `compose_plan` for explicit customer intents and list/form roles; it reports " +
-  "metadata coverage and consumer gaps, not implemented routing or callback wiring. " +
+  "metadata coverage and consumer gaps. Optional project output supplies grounded " +
+  "Next/Vite/Astro routes, presets and local demo callbacks; production wiring stays partial. " +
   "Use `verify_report` to validate and summarize a host-produced runtime report. " +
   "Coverage gaps remain unknown; supplied hashes do not authenticate evidence " +
   "or bind the served application to the selected source files. No tool runs a browser."

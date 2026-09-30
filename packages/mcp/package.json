@@ -42,6 +42,7 @@
     "test": "node --import tsx --test test/*.test.ts",
     "test:release-artifacts": "node --import tsx scripts/verify-release-artifacts.mts",
     "test:scaffolds": "node --import tsx scripts/verify-scaffolds.mts",
+    "test:compositions": "node --import tsx scripts/verify-scaffolds.mts --compositions-only --browser",
     "prepack": "tsup && node scripts/package-skills.mjs",
     "test:beta-onboarding": "node --import tsx scripts/verify-beta-onboarding.mts",
     "demo:walkthrough": "node --import tsx scripts/demo-walkthrough.mts"
@@ -52,9 +53,11 @@
     "semver": "7.8.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "@logic2b/review": "workspace:*",
     "@logic2b/scaffold": "workspace:*",
     "@logic2b/tokens": "workspace:*",
+    "@playwright/test": "1.61.1",
     "@types/node": "^26.1.0",
     "tsup": "^8.5.0",
     "tsx": "^4.23.0",

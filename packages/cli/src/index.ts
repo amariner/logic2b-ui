@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { composeLocal, readComposeRequest } from "./compose.ts"
+import { composeLocal, readComposeRequest, applyCompositionProject } from "./compose.ts"
+import { validateComposeRequest } from "@logic2b/scaffold/compose"
 import { reviewLocalFiles } from "./review.ts"
 import { verifyLocal, readVerificationArtifact } from "./verify.ts"
 import { planLocalChange, applyLocalChange, recoverLocalChange, listChangeTransactions, readChangeArtifact, writeChangeArtifact, type ChangeResult } from "./change.ts"
@@ -54,9 +55,14 @@ program.command("compose")
   .option("--registry <url>", "registry base URL")
   .option("--registry-version <selector>", "immutable registry semver, range or channel; default: bundled registry version")
   .option("--json", "print the complete versioned composition plan")
+  .option("--project", "include a complete grounded local demo project without installing or building")
+  .option("--apply <directory>", "write grounded project output into a new directory; refuses any existing destination")
   .action(async (path: string, opts) => {
     process.exitCode = 2
-    const plan = await composeLocal(await readComposeRequest(path), { registry: opts.registry, version: opts.registryVersion })
+    const raw = await readComposeRequest(path)
+    const request = opts.project || opts.apply ? { ...validateComposeRequest(raw), output: "project" } : raw
+    const plan = await composeLocal(request, { registry: opts.registry, version: opts.registryVersion })
+    if (opts.apply) await applyCompositionProject(plan, opts.apply)
     console.log(opts.json ? JSON.stringify(plan, null, 2) : [
       `Composition · registry ${plan.registryVersion} · ${plan.stack} · ${plan.locale}`,
       ...plan.pages.flatMap(page => [`${page.route}: ${page.purpose}`, ...page.sections.map(section => `  ${section.role}: ${section.item}`)]),
@@ -64,6 +70,7 @@ program.command("compose")
       ...plan.gaps.map(gap => `Gap${gap.requirementId ? ` (${gap.requirementId})` : ""}: ${gap.need}`),
       `${plan.items.length} verified items including dependencies; confidence ${plan.confidence} describes metadata only.`,
       ...plan.notes,
+      ...(plan.project ? [`Project output: ${plan.project.files.length} files; dependencies and build were not run.`, ...plan.project.notes] : []),
     ].join("\n"))
     process.exitCode = plan.gaps.length ? 1 : 0
   })
