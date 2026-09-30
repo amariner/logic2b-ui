@@ -31,7 +31,7 @@ async function json(path: string) {
 }
 
 function releaseHeading(version: unknown) {
-  assert.equal(typeof version, "string")
+  assert.ok(typeof version === "string")
   return new RegExp(`^## ${version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "m")
 }
 
@@ -219,6 +219,12 @@ try {
     assert.equal(composed.coverage[0].status, "covered")
     assert.deepEqual(composed.next.install.items, ["admin-customers-01"])
     assert.ok(composed.items.includes("table"))
+    const projectOutput = JSON.parse((await execFileAsync(cliBin, ["compose", composeRequest, "--registry", registry, "--project", "--json"])).stdout)
+    assert.ok(projectOutput.project.files.some((file: { path: string }) => file.path === "src/components/composition-screen.tsx"))
+    const projectTarget = join(root, "composed-from-tarball")
+    await execFileAsync(cliBin, ["compose", composeRequest, "--registry", registry, "--apply", projectTarget, "--json"])
+    for (const file of projectOutput.project.files as { path: string; content: string }[]) assert.equal(await readFile(join(projectTarget, file.path), "utf8"), file.content)
+    await assert.rejects(execFileAsync(cliBin, ["compose", composeRequest, "--registry", registry, "--apply", projectTarget]), error => (error as { code: number }).code === 2)
     const target = join(root, "generated-from-tarball")
     await execFileAsync(process.execPath, [
       cliEntry,
@@ -382,6 +388,7 @@ try {
       const incompleteReport = { ...verifiedReport, checks: verifiedReport.checks.slice(0, 4), runs: verifiedReport.runs.slice(0, 1) }
       const cases: Array<[string, Record<string, unknown>]> = [
         ["compose_plan", { requirements: [{ id: "browse", route: "/customers", task: "browse-customers", roles: ["list"], requiredStates: ["loading", "empty", "error"], actions: ["retry"] }] }],
+        ["compose_plan", { output: "project", preset, requirements: [{ id: "browse", route: "/customers", task: "browse-customers", roles: ["list"], requiredStates: ["loading", "empty", "error"], actions: ["retry"] }] }],
         ["list_components", {}],
         ["list_presets", {}],
         ["agent_rules", { formats: ["agents", "claude", "cursor", "copilot"] }],
@@ -464,6 +471,11 @@ try {
           assert.equal(plan.next.install.version, defaultVersion)
           assert.deepEqual(plan.next.install.items, ["admin-customers-01"])
           assert.ok(plan.items.includes("table"))
+          if (args.output === "project") {
+            const project = result.structuredContent?.project as { registryVersion: string; files: { path: string }[] }
+            assert.equal(project.registryVersion, defaultVersion)
+            assert.ok(project.files.some(file => file.path === "src/components/composition-screen.tsx"))
+          }
         }
         if (name === "verify_report") {
           assert.deepEqual(result.structuredContent, await summarizeVerificationReport(args))

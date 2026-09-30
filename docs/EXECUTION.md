@@ -1,6 +1,6 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 18 September 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 30 September 2026.
 Owners below identify active work, not permanent maintainers. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
@@ -23,7 +23,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | done | Codex (M2-01) |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | done | Codex (M2-02) |
 | M2-03 | Customer journey create/change/update acceptance fixture — [15](guides/15-customer-journey-acceptance.md) | M2-01, M2-02 | done | Codex (M2-03) |
-| M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | in-progress | Codex (customer composition slice) |
+| M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | in-progress | Codex (customer project source slice) |
 | M3-02 | Versioned proposal preview/install equivalence — [04](guides/04-proposal-links.md) | M3-01 | ready | — |
 | M3-03 | JSON Schema forms and explicit-column tables — [06](guides/06-form-and-table-plan.md) | M1-04, M3-01 | ready | — |
 | M3-04 | One MCP Apps proposal pilot, web fallback — [04](guides/04-proposal-links.md) | M3-02, M0-02 | ready | — |
@@ -1202,3 +1202,84 @@ Next: finish M3-01's broader grounded intent/role contracts and composition
 integration, with actual consumer source/build equivalence, preset/studio work,
 dedicated site docs/browser gates and held-out evaluation. Only then start
 dependent M3-02 proposal previews; do not infer that broader composition shipped.
+
+### 30 September 2026 — M3-01 grounded customer project source
+
+Continued the slice from `838b206` on
+`codex/m3-01-structured-composition`. **M3-01 remains in progress**. The shared
+core now exports complete customer demo projects through CLI and both MCP
+transports. The additive request accepts `output: "project"` and a canonical
+theme `preset`; default metadata output remains read-only. Optional `project`
+contains exact verified item evidence, files, framework, commands and notes.
+Unsupported roles/states, non-EN/ES locales, private route segments and excluded
+foundations return named gaps with `project: null`. Integrity failures remain
+execution errors, including a tampered theme fetched only for project output.
+
+One cached registry client supplies the selected customer blocks and shared
+theme to the existing scaffold core, retaining preset/icon transforms, managed
+rules and update snapshots. Only declared roles render. Next and Astro have
+native static routes; Vite needs a history-fallback host. Same-route list/form
+roles support synthetic local create/edit, save failure/retry, validation,
+submitting, discard, navigation warnings and focus restoration. Separate routes
+have independent data, which resets on reload. Local callbacks never establish
+production persistence or server authorization; metadata coverage stays partial.
+
+CLI `--project` only prints source. Explicit `--apply <new-directory>` validates
+paths before creating a directory and refuses any existing destination, then
+writes with exclusive file creation and parent/root checks. It does not install,
+build or execute anything. Failures may leave a partially written new directory;
+this is not the incremental change/recovery transaction workflow. Valid plans
+with production gaps still exit 1 even after successful apply. Guide 16,
+package instructions/changelogs, the roadmap and HTTP tool guidance document
+these contracts and limits. No existing registry payload or manifest changed.
+
+Checks and outcomes (Node 24.19.0, pnpm 11.19.0):
+
+- `NODE_PATH= pnpm build`, `NODE_PATH= pnpm lint`, `NODE_PATH= pnpm test`:
+  six build tasks and nine lint/test tasks passed; 491 tests. The initial full
+  follow-up build executed five tasks; final incremental checks reused three
+  build and seven lint/test tasks. MCP's 148 tests reran after the final
+  foundation-integrity assertion. Clearing this host's ambient Playwright
+  `NODE_PATH` remains the environment adjustment described in the prior entry.
+- `NODE_PATH= pnpm --filter @logic2b/mcp test:scaffolds`: nine generated apps
+  installed and built, including the six existing starter/icon combinations
+  and three customer compositions. The final customer-only gate rebuilt the
+  corrected generated source after browser testing found and fixed select
+  labels whose names included option text.
+- `PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium
+  LOGIC2B_COMPOSITION_EVIDENCE_DIR=/tmp/logic2b-composition-final-evidence
+  NODE_PATH= pnpm --filter @logic2b/mcp test:compositions`: passed actual
+  install/build and all six browser runs (Next/Vite/Astro at 390px light and
+  1280px dark). Search/no-results, loading/error/retry, empty/permission states,
+  creation/save retry, submitting, navigation protection, discard/focus and
+  direct form-only routes passed. Twelve complete axe analyses had zero
+  violations and zero incomplete observations; twelve captures produced four
+  distinct image hashes, equal across frameworks, all visually reviewed.
+  No accessibility certification is implied. CI now runs this gate and retains
+  its evidence; remote CI has not run for this branch.
+- The final browser-report change preserves an overall `unknown` for any
+  incomplete axe observations. Its six-run replay also passed, with evidence
+  at `/tmp/logic2b-composition-final-browser-2`. Strict NodeNext typing passed
+  for the browser, scaffold and packed-release scripts; an existing `unknown`
+  version assertion was narrowed without changing its runtime check.
+- `NODE_PATH= pnpm test:release-artifacts`: passed after final script edits.
+  Installed CLI tarballs export/apply exact composed files and reject a second
+  apply; installed MCP tarballs verify all 22 tool contracts, including project
+  output and presets, through real stdio.
+- `pnpm --filter @logic2b/web test:budgets`: passed; browser JS 1,986.0 KiB,
+  MCP Worker 819.0 KiB, server modules 1,588.6 KiB. The built composition schema
+  matches the shared contract plus endpoint `$id`/`$schema`. All 57 local
+  Markdown targets and `git diff --check` passed. Host-rendered OG differences
+  were discarded; the committed OG set and immutable registry bytes remain
+  unchanged.
+
+The two browser tools are explicit MCP development dependencies already present
+in the workspace lockfile; frozen installation passed without new resolved
+versions. They are not added to generated consumer packages. Evidence is local
+and reproducible with the committed gate; no uploads were performed here.
+
+Not run: full-site axe/visual/Lighthouse, customer maintenance replay, live
+endpoint or remote GitHub CI. No merge, push, deployment or npm publication was
+performed. Next work remains M3-01's broader grounded contracts/discovery,
+studio composition, dedicated site docs/browser checks and held-out evaluation;
+M3-02 stays dependent on completion of that scope.

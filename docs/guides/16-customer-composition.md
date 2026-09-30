@@ -1,15 +1,16 @@
-# Customer composition — first source slice
+# Customer composition — metadata and project source
 
 Updated 30 September 2026. M3-01 remains in progress; this source slice provides
 the shared core, CLI `compose` and MCP `compose_plan` for the customer journey.
+It also exports grounded project files and presets for Next, Vite and Astro.
 It requires a new package release/endpoint deployment before external use.
 Check CLI help or MCP `tools/list`; npm rc.2 does not have these additions.
 
 ## Explicit requirements
 
 The host interprets a brief and supplies stable requirement ids, static routes,
-intent identifiers, roles, required states and action names. Nothing evaluates
-source, calls a model, writes a project or installs dependencies. `brief` is
+intent identifiers, roles, required states and action names. Planning does not
+evaluate source, call a model, write a project or install dependencies. `brief` is
 an optional input and does not affect matching or coverage; it is not echoed in
 the plan.
 
@@ -74,14 +75,59 @@ can yield `covered` metadata; runtime verification is still required. Requiring
 `offline` returns a consumer-owned state gap. Asking for `compare-plans` and
 `primary-form` returns a gap, empty installation suggestion and low confidence.
 
+## Project source and explicit new-project apply
+
+Add `"output": "project"` to the request, or use CLI `--project`. Optional
+`preset` accepts a real `/create` id and is canonicalized before registry reads.
+Metadata installation suggestions include its icon library. Project output
+applies the same theme/icon transforms as the existing scaffold core and retains
+immutable item evidence and update snapshots. One cached verified client handles
+selected assets and the theme foundation; a moving channel cannot mix releases.
+
+```bash
+pnpm --filter logic2b dev compose /absolute/path/customer-requirements.json --project --json
+pnpm --filter logic2b dev compose /absolute/path/customer-requirements.json --apply /tmp/my-new-customer-app --json
+```
+
+The first command prints a plan. `--apply` writes its grounded files into a
+newly created directory whose parent exists; any existing destination rejects,
+including an empty directory. It never installs, starts or builds the app.
+Inspect the new project, explicitly install dependencies and run its build.
+Apply failures may retain a partially written new directory; inspect it instead
+of treating this as the incremental transaction workflow. Existing applications
+must use inspect/change plans to preserve customizations.
+
+Project output is `project: null` with named gaps when roles/states are
+unsupported, inclusions have no assigned role, a theme foundation conflicts
+with exclusions, routes use private underscore segments or locale is outside
+English/Spanish. Integrity/malformed-asset failures remain execution errors.
+No unsupported need is replaced with a guessed screen.
+
+`project` contains exact registry metadata, framework, preset, icon library,
+install item evidence, complete files, commands and consumer notes. Next and
+Astro receive native static route entries; Vite uses pathname routing and needs
+a history-fallback host. Nested routes and `/index` remain distinct from `/`.
+Only declared list/form roles render. The framework/theme foundation is explicit
+in `project.items`; it does not grant requirement coverage.
+
+Use the same route for list and form requirements to create/edit within one
+customer screen. The generated host supplies synthetic customers, local save,
+retry, error and permission demonstrations, validation, submitting, discard and
+focus restoration. Form-only pages expose a new draft; list-only pages remain
+read-only. Data resets on reload and is independent per route. Navigation warns
+about dirty drafts; this is not backend persistence or server authorization.
+Original callback coverage stays partial despite local demonstration wiring.
+English/Spanish copy is included in project source; other locale targets remain
+supported by metadata output for a consumer to implement.
+
 ## Results and subsequent work
 
 `schemaVersion: 1` includes an exact `registryVersion`, declared target stack
 and locale, requirement coverage with evidence, pages/roles, content slot keys,
 all state support values, callbacks, consumer and accessibility duties,
 deduplicated dependency closure, gaps and metadata confidence. Missing
-accessibility contracts remain `unknown`. Locale records intent; no translation
-is generated. Target stack is recorded without claiming framework build proof.
+accessibility contracts remain `unknown`. Metadata locale records intent;
+project output provides EN/ES sample copy. A source plan is not a build result.
 The output schema is generated at `/r/schemas/compose-plan.json` on site build.
 
 `covered` means all requested roles and states have declared built-in support
@@ -101,11 +147,12 @@ can cover only part of the request, so review `coverage` and `gaps` first.
 
 CLI exit 0 means no declared metadata gaps, 1 means a valid plan with gaps,
 and 2 means invalid input or execution failure. Commander usage errors retain
-its standard exit 1. No `--apply` exists in this slice. Inspect the existing
-project, preserve customized source with explicit change plans, wire data,
-callbacks, routing, persistence and authorization, then separately build and
-run the consumer verification workflow. No scaffold request or preview URL is
-returned: current starters do not materialize these composed routes.
+its standard exit 1. Metadata verdicts also apply when project files are
+successfully exported/applied: local demo wiring does not remove production gaps.
+Do not chain install/build using `&&` when a valid plan deliberately exits 1.
+Inspect existing projects, preserve customized source with explicit change plans,
+wire real services and separately build/run consumer verification. Preview URLs
+remain a later M3-02 contract.
 
 Bounds: 64 KiB JSON, 24 requirements, eight roles and 16 actions per requirement,
 six pages, 32 entries per constraint list, 128 dependency items and 4 MiB fetched
@@ -116,14 +163,16 @@ routes at most 256; brief at most 2,000; version/locale at most 64. Routes allow
 dynamic segments, encoded segments and traversal are rejected. Duplicate ids,
 array entries, unsupported states/schema versions and unknown fields reject
 before registry work. File input is UTF-8 JSON and is never executed.
+Project output adds at most 512 files. Presets are bounded to 256 characters;
+supported `output` values are `metadata` (default) and `project`.
 
 ## Uso en español
 
 El agente convierte la solicitud en requisitos explícitos; los identificadores
 `browse-customers`, `edit-customer`, `list` y `primary-form` no se traducen.
 Puedes usar `"locale": "es-ES"` y las rutas `/clientes` y `/clientes/editar`.
-El plan registra ese idioma, pero la aplicación debe proporcionar los textos
-traducidos mediante los slots de contenido.
+La salida de metadatos registra ese idioma; la salida de proyecto incluye los
+textos de ejemplo en inglés o español mediante los slots de contenido.
 
 Ejecuta el comando anterior con tu archivo JSON o envía el mismo objeto a
 `compose_plan`. Revisa `coverage`, `gaps` y las responsabilidades del consumidor
@@ -131,10 +180,16 @@ antes de usar `next.install`. Los callbacks `onSave`, `onCancel`, `onCreate`,
 `onEdit` y `onRetry` siguen necesitando implementación. La cobertura declarada
 no acredita una aplicación funcional ni una auditoría de accesibilidad.
 
+Para exportar la aplicación de ejemplo usa `"output": "project"` o
+`--project`. `--apply /ruta/nueva` crea exclusivamente un proyecto nuevo sin
+instalar ni ejecutar dependencias. Usa la misma ruta para lista y formulario si
+quieres editar dentro de una pantalla. Los datos del ejemplo son locales y se
+restablecen al recargar; la persistencia y los permisos del servidor siguen
+pendientes aunque el ejemplo se compile y funcione.
+
 ## Remaining M3-01 scope
 
-Broader intent/role contracts, discovery templates, preset integration, composed
-source/scaffold equivalence, three-framework composed consumer builds, studio
+Broader intent/role contracts, discovery templates, studio
 composition, dedicated site docs with browser gates and the held-out benchmark
 remain pending. M3-02 proposal links are a separate dependent task. Preserve
 existing immutable releases; extending metadata requires a new release rather

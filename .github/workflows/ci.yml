@@ -84,6 +84,19 @@ jobs:
       # against the dist/client built above.
       - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
 
+      # Reify grounded customer routes in Next/Vite/Astro, install/build them,
+      # then assert interactions/focus and retain screenshots + full axe results.
+      - run: pnpm --filter @logic2b/mcp test:compositions
+        env:
+          LOGIC2B_COMPOSITION_EVIDENCE_DIR: ${{ runner.temp }}/logic2b-composition-evidence
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logic2b-composition-verification
+          path: ${{ runner.temp }}/logic2b-composition-evidence
+          if-no-files-found: warn
+
       # Exercise the shipped declarative runner, including failures and missing
       # capabilities, independently from the site's component demonstrations.
       - run: pnpm --filter logic2b test:verify-browser

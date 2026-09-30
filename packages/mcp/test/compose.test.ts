@@ -12,6 +12,7 @@ import { runTool, TOOLS } from "../src/tools.ts"
 import { createServer } from "../src/server.ts"
 import { handleHttpPost } from "../src/http.ts"
 import { ToolInputError } from "../src/limits.ts"
+import { DEFAULT_CONFIG, encodePreset } from "@logic2b/tokens"
 
 const base = "https://compose.test"
 const calls: string[] = []
@@ -74,4 +75,57 @@ test("official local client and stateless HTTP return the same composition evide
   const wire = await response.json() as { result: unknown }
   assert.equal(response.status, 200); assert.deepEqual(wire.result, local)
   assert.deepEqual(tool.annotations, { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true })
+})
+
+test("source output reuses one verified release, applies presets and produces only grounded routes/roles with CLI parity", async () => {
+  for (const stack of ["next", "vite", "astro"] as const) {
+    const args = { ...request, stack, preset: encodePreset({ ...DEFAULT_CONFIG, iconLibrary: "tabler" }), output: "project" }
+    calls.length = 0
+    const result = await runTool("compose_plan", args, { base, fetchImpl })
+    assert.equal(result.isError, undefined, JSON.stringify(result))
+    assert.equal(calls.filter(url => url.endsWith("/r/versions.json")).length, 1)
+    assert.equal(calls.filter(url => url.includes("/r/versions/")).length, 1)
+    assert.equal(new Set(calls).size, calls.length, "each verified asset is fetched once")
+    const checked = validate(result.structuredContent); assert.ok(checked.valid, checked.errorMessage)
+    const project = result.structuredContent!.project as { files: { path: string; content: string }[]; items: { name: string }[]; registryVersion: string; iconLibrary: string }
+    assert.equal(project.registryVersion, REGISTRY_VERSION)
+    assert.equal(project.iconLibrary, "tabler")
+    assert.ok(project.items.some(item => item.name === "theme"))
+    assert.ok(project.items.every(item => item.name !== "login-01"))
+    const source = project.files.filter(file => /\.[jt]sx?$/.test(file.path)).map(file => file.content).join("\n")
+    assert.ok(source.includes("@tabler/icons-react")); assert.ok(!source.includes("lucide-react"))
+    if (stack === "next") assert.ok(project.files.some(file => file.path === "app/customers/edit/page.tsx"))
+    if (stack === "astro") assert.ok(project.files.some(file => file.path === "src/pages/customers/edit/index.astro"))
+    assert.ok(project.files.every(file => !file.path.endsWith("starter-page.tsx")))
+    assert.deepEqual(result.structuredContent, await composeLocal(args, { registry: base, fetchImpl }))
+    assert.equal(result.structuredContent!.confidence, "medium", "local callbacks never attest production wiring")
+    assert.ok(validate({ ...result.structuredContent, project: { ...project, registryVersion: "next" } }).valid === false)
+  }
+})
+test("unsupported source requirements stay named gaps, preset errors reject before fetch, and foundation integrity failures remain errors", async () => {
+  for (const changes of [{ locale: "fr" }, { requirements: [{ ...request.requirements[0], requiredStates: ["offline"] }] }, { requirements: [{ ...request.requirements[0], actions: ["export"] }] }, { requirements: [{ ...request.requirements[0], route: "/_private" }] }]) {
+    const result = await runTool("compose_plan", { ...request, ...changes, output: "project" }, { base, fetchImpl })
+    assert.equal(result.isError, undefined); assert.equal(result.structuredContent!.project, null)
+    assert.equal(result.structuredContent!.confidence, "low")
+    assert.ok((result.structuredContent!.gaps as unknown[]).length)
+  }
+  let fetches = 0
+  await assert.rejects(runTool("compose_plan", { ...request, preset: "PRIVATE_BAD_PRESET" }, { fetchImpl: async () => { fetches++; throw new Error("unexpected") } }), ToolInputError)
+  assert.equal(fetches, 0)
+  const forbidden = await runTool("compose_plan", { ...request, output: "project", constraints: { avoid: ["theme"] } }, { base, fetchImpl })
+  assert.equal(forbidden.isError, undefined); assert.equal(forbidden.structuredContent!.project, null); assert.match(forbidden.content[0].text, /foundation conflicts/)
+  const tamperedFoundation: FetchLike = async url => {
+    const response = await fetchImpl(url)
+    if (!url.includes("/r/content/")) return response
+    const text = await response.text()
+    return { ...response, text: async () => JSON.parse(text).name === "theme" ? `${text} ` : text }
+  }
+  const broken = await runTool("compose_plan", { ...request, output: "project" }, { base, fetchImpl: tamperedFoundation })
+  assert.equal(broken.isError, true); assert.equal(broken.structuredContent, undefined); assert.match(broken.content[0].text, /Integrity check failed/)
+  const form = await runTool("compose_plan", { ...request, locale: "es-ES", output: "project", requirements: [request.requirements[1]] }, { base, fetchImpl })
+  assert.equal(form.isError, undefined)
+  const project = form.structuredContent!.project as { files: { path: string; content: string }[]; items: { name: string }[] }
+  const host = project.files.find(file => file.path.endsWith("composition-screen.tsx"))!.content
+  assert.ok(host.includes("Guardar cliente")); assert.ok(!host.includes('import { AdminCustomers }'))
+  assert.ok(project.items.every(item => item.name !== "admin-customers-01"))
 })

@@ -17,7 +17,8 @@
     "./verification": "./src/verification.ts",
     "./verification-schema": "./src/verification-schema.ts",
     "./compose": "./src/compose.ts",
-    "./compose-schema": "./src/compose-schema.ts"
+    "./compose-schema": "./src/compose-schema.ts",
+    "./compose-project": "./src/compose-project.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",
