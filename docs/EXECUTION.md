@@ -7,7 +7,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
-| DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | in-progress | Codex (deployment recovery) |
+| DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | done | Codex (deployment recovery) |
 | REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | Codex |
 | SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | Codex |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
@@ -1338,3 +1338,41 @@ Once access is ready and CI is qualified, deploy the regenerated Worker from
 `apps/web` with `pnpm exec wrangler deploy --config dist/server/wrangler.json`,
 then verify the live registry/schema and an actual Spanish `compose_plan`
 project response. No renewed deployment authorization is needed.
+
+### 2 October 2026 — Automatic production deployment confirmed
+
+After pushing CI recovery commit `27ff620` to `main`, the connected Cloudflare
+Workers Builds integration started a production build. Its GitHub check
+`Workers Builds: logic2b-ui` completed successfully for exact source commit
+`27ff620deb7d11ac300869549a8055dd05a679e0` and returned production version
+`2416e0f0-6c93-4d7a-84ed-97d76bc2c0a9`. Provider evidence:
+[build af424bba-3efe-4a96-b229-7b7f059b22f2](https://dash.cloudflare.com/aae490dbbef82853249e6d50951427b3/workers/services/view/logic2b-ui/production/builds/af424bba-3efe-4a96-b229-7b7f059b22f2).
+The deployed destination is [ui.logic2b.com](https://ui.logic2b.com).
+
+This establishes provider-confirmed production deployment, including both
+customer composition commits. The environment-secret request above was
+withdrawn: GitHub's connected production pipeline supplies Cloudflare access.
+For future deliveries, use that integration; this environment's absent Wrangler
+authentication does not block automatic deployment. Its egress still prevents
+direct live HTTP/MCP smoke, which remains unverified. Do not infer endpoint
+health or a production accessibility audit from the provider check. The fresh
+local Worker smoke and exact source CI provide separate evidence.
+
+Replacement [CI run 36972230759](https://github.com/amariner/logic2b-ui/actions/runs/36972230759)
+has passed both bounded Chromium installation steps, confirming the six-hour
+APT blocker is resolved. The complete job finished successfully for `27ff620`:
+46 successful steps, zero failures/cancellations; only failure-only artifact
+upload was skipped. All package/scaffold checks, composed consumer browsers,
+declarative verification, generated consumer and customer maintenance stages,
+site functional/axe/visual checks and Lighthouse passed. Existing maintenance
+contrast unknowns remain qualified evidence, not accessibility certification.
+
+**DEPLOY-01 is done:** production is provider-confirmed and the exact deployed
+source has complete passing CI. The direct live HTTP/MCP smoke limitation
+remains explicit. Next development stays with the unfinished broader M3-01
+scope; this delivery does not complete that milestone or publish npm packages.
+The final follow-up changes only this execution record. Its documentation-only
+commit uses GitHub's `[skip ci]` directive because product/runtime source is
+unchanged from the passing deployed commit; Cloudflare may independently build
+that documentation follow-up. Do not infer a new product version or additional
+browser measurements from that rebuild.
