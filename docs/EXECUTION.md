@@ -1,12 +1,13 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 30 September 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 2 October 2026.
 Owners below identify active work, not permanent maintainers. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
+| DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | in-progress | Codex (deployment recovery) |
 | REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | Codex |
 | SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | Codex |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
@@ -1283,3 +1284,57 @@ endpoint or remote GitHub CI. No merge, push, deployment or npm publication was
 performed. Next work remains M3-01's broader grounded contracts/discovery,
 studio composition, dedicated site docs/browser checks and held-out evaluation;
 M3-02 stays dependent on completion of that scope.
+
+### 2 October 2026 — Production delivery recovery
+
+The user asked to continue the authorized production deployment. Source delivery
+`708da8d` is already integrated and pushed to `main`; production deployment has
+not been established. **DEPLOY-01 remains in progress.** The previous GitHub
+[CI run 36731181081](https://github.com/amariner/logic2b-ui/actions/runs/36731181081)
+was cancelled at its six-hour job limit. Decoded logs show Chromium's APT
+dependency installer stalled on the runner's Azure Ubuntu HTTP mirror from
+14:45 UTC until cancellation at 20:43 UTC on 30 September. Build, lint, unit
+tests, packaged consumers, nine generated app builds and budgets had passed;
+browser installation and every browser gate remained unverified.
+
+The scoped `codex/production-deployment-recovery` change uses the canonical
+Ubuntu HTTPS archive only for that exact mirror URI, preserves other hosts and
+paths, and bounds APT HTTP/HTTPS timeouts to 30 seconds with two retries.
+Dependency and matching Chromium installations now have separate ten/five-minute
+step limits. Every existing downstream gate stays in place and in the same
+order. YAML parsing, Bash syntax, exact-host/path fixtures, gate-order invariants
+and `git diff --check` passed. This managed host cannot validate GitHub's APT
+installation; the replacement remote CI must confirm the fix.
+
+An explicit `NODE_PATH= pnpm --filter @logic2b/web build` passed and regenerated
+the production Worker from current source. The prior local artifact still had
+older HTTP composition guidance despite a clean source tree, so a cached root
+build was not treated as fresh deployment evidence. Host-rendered OG differences
+were discarded; no product source, immutable registry payload or image baseline
+was changed. `pnpm --filter @logic2b/web test:budgets` passed (MCP Worker
+819.1 KiB, server modules 1,588.7 KiB). From `apps/web`, `pnpm exec wrangler
+deploy --dry-run --config dist/server/wrangler.json --outdir
+/tmp/logic2b-production-oct02-dry-run` passed: 1,588.70 KiB raw / 371.47 KiB
+gzip, 2,787 static assets and ASSETS/SESSION/IMAGES bindings. This is packaging
+evidence, not publication.
+
+The regenerated Worker also passed local Wrangler runtime smoke: home, registry
+release/manifest and schema HTTP 200; `/mcp` GET 405; protocol `2025-11-25`
+initialization; 22 tools with current project instructions. A Spanish/Vite
+same-route list/form `compose_plan` returned 35 files, exact registry `rc.18`,
+valid advertised schema and structured/text parity, preserving medium confidence
+and all five production callback gaps. The local process was stopped and its
+port closed. Evidence: `/tmp/logic2b-production-oct02-local-smoke.json`.
+Wrangler's external `Request.cf` probe used a placeholder because of network
+restrictions; this local smoke does not verify production.
+
+The environment's observed configuration still has no Cloudflare secrets and
+package-manager-only egress. `wrangler whoami` reports unauthenticated; the
+proxy rejects both `api.cloudflare.com` and `ui.logic2b.com` with HTTP 403.
+Cloudflare plugin discovery returned no available integration. The user was
+asked to supply `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` as environment
+secrets and permit those hosts, without pasting secret values into chat.
+Once access is ready and CI is qualified, deploy the regenerated Worker from
+`apps/web` with `pnpm exec wrangler deploy --config dist/server/wrangler.json`,
+then verify the live registry/schema and an actual Spanish `compose_plan`
+project response. No renewed deployment authorization is needed.

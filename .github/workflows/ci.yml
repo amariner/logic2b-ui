@@ -82,7 +82,21 @@ jobs:
       # a11y — accessible names, roles, labels, valid ARIA and keyboard access.
       # Color contrast is owned by the studio's WCAG 2.2 + APCA audit. Runs
       # against the dist/client built above.
-      - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
+      - name: Install Chromium system dependencies
+        timeout-minutes: 10
+        run: |
+          # The runner's Azure mirror stalled apt index downloads for six hours.
+          # Use the canonical HTTPS mirror and bound network retries while still
+          # installing every dependency required by this Playwright version.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i -E 's#https?://azure\.archive\.ubuntu\.com/ubuntu/?([[:space:]]|$)#https://archive.ubuntu.com/ubuntu/\1#g' /etc/apt/apt-mirrors.txt
+          fi
+          printf '%s\n' 'Acquire::http::Timeout "30";' 'Acquire::https::Timeout "30";' 'Acquire::Retries "2";' | sudo tee /etc/apt/apt.conf.d/99logic2b-ci-network >/dev/null
+          pnpm --filter @logic2b/web exec playwright install-deps chromium
+
+      - name: Install matching Chromium browser
+        timeout-minutes: 5
+        run: pnpm --filter @logic2b/web exec playwright install chromium
 
       # Reify grounded customer routes in Next/Vite/Astro, install/build them,
       # then assert interactions/focus and retain screenshots + full axe results.
