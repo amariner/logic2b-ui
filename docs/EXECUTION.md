@@ -1,12 +1,13 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 2 October 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 4 October 2026.
 Owners below identify active work, not permanent maintainers. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
+| DEPLOY-02 | Reconcile local static-review work with current production; merge, push and deploy (user authorized) | M1-04; DEPLOY-01 | in-progress | Codex (review integration) |
 | DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | done | Codex (deployment recovery) |
 | REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | Codex |
 | SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | Codex |
@@ -1376,3 +1377,72 @@ commit uses GitHub's `[skip ci]` directive because product/runtime source is
 unchanged from the passing deployed commit; Cloudflare may independently build
 that documentation follow-up. Do not infer a new product version or additional
 browser measurements from that rebuild.
+
+### 4 October 2026 — DEPLOY-02 integration
+
+The user authorized merging the local changes, pushing to GitHub and deploying
+production. Fetch revealed that `origin/main` at `abb0d96` already contained
+independent M1 implementations plus the M2 customer maintenance workflow and
+customer composition. The local `57ef51b` branch had diverged before those
+deliveries. Replacing production with that tree would remove three MCP tools
+and break the deployed version-1 review request/result contract.
+
+The integration branch `codex/integrate-static-review-production` reconciles
+both histories using current production as the base. It preserves all 22 tools,
+`change_plan`, `verify_report`, customer composition, registry rc.18, consumer
+customization protections, current CI recovery and reviewed Linux baselines.
+Overlapping earlier customer/context/rules/benchmark implementations retain
+their current production versions. The original local commits remain reachable
+through the merge parent; their competing review API is not promoted.
+
+Ported compatible improvements from the local review delivery: shared bounded
+analysis work, depth limits, cached AST/attribute/ancestor lookups, linear index
+construction, conservative handling of refs/styles/JSX attribute values and
+CLI descriptor/path/ancestor identity checks with nonblocking reads. Existing
+directory selection, hardlink rejection, 256 KiB source allowance, scopes,
+default partial label context, token-policy severity, inline suppressions and
+CLI exit codes remain supported. The `A11Y` suppression identifier now accepts
+its digits; previously those documented directives did not match. Exhaustion
+discards a file's partial results and retains `truncated`/unknown evidence.
+
+No public review schema, rule catalog, dependency version, npm version, Worker
+size cap, immutable payload or image baseline is replaced. Browser tests use
+manually paired trusted React markup to check naming independently of reviewed
+source. CI now runs those 14 cases plus the existing bilingual review docs
+checks and uploads their evidence before later suites clear the directory.
+Docs distinguish the already available remote tool from npm publication.
+
+Before integration, direct production HTTP returned 200 for home, both review
+docs and `/r/versions.json`; `/mcp` returned the expected GET 405 and negotiated
+an actual MCP session advertising 22 tools. Cloudflare's current 100% version
+was `2416e0f0-6c93-4d7a-84ed-97d76bc2c0a9`, deployment
+`e1562399-17ea-4127-8b91-03adf381b5fc`. This is the recovery reference if the
+new deployment fails. GitHub's connected Workers Builds integration is the
+production path; npm publication is separate from this authorization.
+
+Local package gates passed: review 37/37 after the independent CSS-visibility
+correction, CLI review 10/10, MCP 154/154, package lint and strict typing of the
+new adapter tests. The new six-case transport corpus also passed against the
+fresh MCP bundle (`LOGIC2B_REVIEW_BUNDLED=1 pnpm --filter @logic2b/mcp exec node
+--import tsx --test test/review-integration.test.ts`). Frozen installation
+passed without lockfile changes. The first full build passed six uncached
+tasks and budgets passed at 824.6 KiB MCP / 1,626.1 KiB total server modules.
+It preceded the final visibility-only correction and is being rebuilt.
+
+The first full workspace test run exposed an environment limitation in the
+existing composition apply test: macOS `/tmp` is a symlink, correctly rejected
+by its destination preconditions. That run is not a pass. The final local
+suite uses the physical temporary directory `TMPDIR=/private/tmp`; no product
+path check or test assertion is weakened. The independent browser oracle also
+retains the visibility override and invalid CSS-value examples. Unknown style
+semantics are not treated as proof of an invisible subtree.
+
+Remote CI, merge and production confirmation remain pending for DEPLOY-02;
+the final delivery entry will record their actual results and source version.
+
+The first integration CI (`37157996490`) passed install/build/lint but failed
+the isolated review stress subprocess's five-second limit while Turbo ran nine
+package suites together. CI now uses `pnpm test --concurrency=2`, matching the
+bounded local workspace run. The stress timeout, input cases, assertions and
+all downstream gates remain unchanged; the replacement CI must establish the
+result. This run is not counted as passing verification.

@@ -31,7 +31,9 @@ jobs:
       # duplicate item names) + tsc --noEmit on the non-Astro packages.
       - run: pnpm lint
 
-      - run: pnpm test
+      # Keep bounded-work subprocess checks meaningful on the shared runner;
+      # nine concurrent package suites can starve their wall-clock allowance.
+      - run: pnpm test --concurrency=2
 
       # Bundle the native VS Code extension and validate its Marketplace
       # manifest by producing the same unsigned preview VSIX documented for
@@ -159,7 +161,14 @@ jobs:
             ${{ runner.temp }}/logic2b-journey/journey-state.json
           if-no-files-found: warn
 
-      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts tests/verification-docs.spec.ts
+      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts tests/verification-docs.spec.ts tests/review-docs.spec.ts tests/review-oracle.spec.ts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: onboarding-customer-review-browser-evidence
+          path: apps/web/test-results
+          if-no-files-found: ignore
 
       - run: pnpm --filter @logic2b/web test:a11y
 

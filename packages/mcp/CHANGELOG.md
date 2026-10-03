@@ -4,6 +4,10 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+- Bound static-review analysis work and depth while retaining its version-1
+  request/result contract. Treat unresolved refs, styles and JSX attribute values
+  conservatively; add independent browser-name and actual transport regressions.
+
 - Add `compose_plan` for bounded explicit customer intents and roles. CLI and
   both MCP transports share metadata coverage, state/content/accessibility
   responsibilities, verified dependency closure and integration gaps from one
