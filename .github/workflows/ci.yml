@@ -159,7 +159,14 @@ jobs:
             ${{ runner.temp }}/logic2b-journey/journey-state.json
           if-no-files-found: warn
 
-      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts tests/verification-docs.spec.ts
+      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/customer-journey.spec.ts tests/verification-docs.spec.ts tests/review-docs.spec.ts tests/review-oracle.spec.ts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: onboarding-customer-review-browser-evidence
+          path: apps/web/test-results
+          if-no-files-found: ignore
 
       - run: pnpm --filter @logic2b/web test:a11y
 

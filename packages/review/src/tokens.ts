@@ -1,4 +1,4 @@
-import { attribute, attributes, list, literal, node, position, type AstNode, type ParsedFile } from "./parse.ts"
+import { attribute, attributes, list, literal, node, position, spend, type AstNode, type ParsedFile } from "./parse.ts"
 import type { ReviewFinding, ReviewUnknown } from "./contract.ts"
 import { RULES } from "./rules.ts"
 const COLOR = /^(?:(?:bg|text|border(?:-[trblxyse])?|ring(?:-offset)?|outline|shadow|divide|decoration|placeholder|accent|caret|fill|stroke|from|via|to)-(?:(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|[1-9]00|950)|black|white)(?:\/[\d.]+)?$)/
@@ -40,18 +40,24 @@ const propertyName = (property: AstNode) => {
 }
 export function reviewTokens(parsed: ParsedFile): { findings: ReviewFinding[]; unknowns: ReviewUnknown[] } {
   const findings: ReviewFinding[] = [], unknowns: ReviewUnknown[] = []
+  spend(parsed, parsed.nodes.length)
   const report = (at: AstNode, value: string) => findings.push({ rule: "L2B-TOK-001", severity: "error", category: "design-policy", confidence: "high", evidence: ["The host explicitly enabled semanticColors.", `Literal color in a JSX className/style: ${value.slice(0, 96)}`], file: parsed.file.path, ...position(at), message: "A literal color bypasses this project's semantic token policy.", fix: "Use an appropriate semantic utility or CSS variable; preserve intentional theme overrides in the stylesheet.", docs: RULES["L2B-TOK-001"].docs })
   const unknown = (at: AstNode) => unknowns.push({ file: parsed.file.path, rule: "L2B-TOK-001", ...position(at), reason: "Dynamic, overridden or unsupported styling was not evaluated; inspect its resolved values or stylesheet." })
   for (const element of parsed.nodes.filter(n => n.type === "JSXElement")) {
+    spend(parsed)
     const attrs = attributes(element)
     const unresolved = (key: string) => attrs.some(attr => attr.type === "JSXSpreadAttribute") || attrs.filter(attr => node(attr.name)?.name === key).length > 1
     const className = attribute(element, "className")
     if (className) {
       const value = literal(className.value)
       if (value === undefined || unresolved("className")) unknown(className)
-      else for (const utility of utilityCandidates(value)) {
-        const arbitrary = utility.match(/^(?:bg|text|border(?:-[trblxyse])?|ring(?:-offset)?|outline|shadow|divide|decoration|placeholder|accent|caret|fill|stroke|from|via|to)-\[(.+)\](?:\/[\d.]+)?$/)
-        if (COLOR.test(utility) || arbitrary && hasLiteralColor(arbitrary[1].replace(/_/g, " "))) report(className, utility)
+      else {
+        spend(parsed, Math.ceil(value.length / 64))
+        for (const utility of utilityCandidates(value)) {
+          spend(parsed)
+          const arbitrary = utility.match(/^(?:bg|text|border(?:-[trblxyse])?|ring(?:-offset)?|outline|shadow|divide|decoration|placeholder|accent|caret|fill|stroke|from|via|to)-\[(.+)\](?:\/[\d.]+)?$/)
+          if (COLOR.test(utility) || arbitrary && hasLiteralColor(arbitrary[1].replace(/_/g, " "))) report(className, utility)
+        }
       }
     }
     const style = attribute(element, "style")
@@ -59,11 +65,13 @@ export function reviewTokens(parsed: ParsedFile): { findings: ReviewFinding[]; u
       const expression = node(node(style.value)?.expression)
       if (expression?.type !== "ObjectExpression" || unresolved("style")) { unknown(style); continue }
       const properties = list(expression.properties), keys = properties.map(propertyName)
+      spend(parsed, properties.length)
       if (properties.some(property => property.type !== "ObjectProperty") || keys.includes(undefined) || new Set(keys).size !== keys.length) { unknown(style); continue }
       for (const property of properties) {
         const name = propertyName(property)!
         if (!COLOR_PROPERTY.test(name)) continue
         const value = literal(property.value)
+        if (value !== undefined) spend(parsed, Math.ceil(value.length / 64))
         if (value === undefined) unknown(property)
         else if (hasLiteralColor(value)) report(property, `${name}: ${value}`)
         else if (!/^(?:var\(--[a-z0-9-]+\)|(?:hsl|rgb)a?\(var\(--[a-z0-9-]+\)(?:\s*\/\s*[\d.%]+)?\)|transparent|currentcolor|inherit|initial|unset|revert|none)$/i.test(value)) unknown(property)

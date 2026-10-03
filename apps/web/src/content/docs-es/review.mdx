@@ -5,10 +5,10 @@ description: Revisa TSX/JSX con cuatro reglas basadas en evidencia, políticas e
 
 import ReviewRules from "@/components/ReviewRules.astro";
 
-El **candidato en código fuente** incorpora el comando CLI `review` y la
-herramienta MCP `review_ui`. Comprueba `--help` en tu CLI instalado o
-`tools/list` en el servidor antes de utilizarlos. Estos cambios no garantizan
-su disponibilidad en npm ni en el endpoint remoto desplegado.
+El MCP remoto en `https://ui.logic2b.com/mcp` ofrece `review_ui`. El comando
+CLI `review` está disponible en el **candidato en código fuente**; su publicación
+en npm se gestiona por separado. Comprueba `--help` en tu CLI instalado o
+`tools/list` si utilizas otro servidor antes de invocarlos.
 
 La revisión devuelve evidencia del código y posibles correcciones. Nunca
 ejecuta código, resuelve importaciones, consulta el registro ni modifica
@@ -74,8 +74,10 @@ ajenos a la revisión.
 Este objeto es el argumento de `review_ui`. Solo se admite la versión 1 y los
 campos mostrados. Cada ruta tiene un máximo de 256 caracteres. CLI y MCP
 comparten los límites de archivos y bytes. El código se analiza como datos,
-con un presupuesto de recorrido de 50.000 nodos; ninguna importación,
-configuración o componente se ejecuta.
+con un presupuesto de recorrido de 50.000 nodos, profundidad máxima de 256 y
+250.000 pasos de análisis compartidos. Si se agota, se descartan los hallazgos
+parciales del archivo afectado, se marca la revisión como truncada y se dejan
+dudas explícitas. No se ejecutan importaciones, configuraciones ni componentes.
 
 ## Interpreta la evidencia
 

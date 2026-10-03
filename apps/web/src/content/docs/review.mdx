@@ -5,10 +5,10 @@ description: Review selected TSX/JSX with four evidence-based rules, explicit pr
 
 import ReviewRules from "@/components/ReviewRules.astro";
 
-The **source candidate** adds the CLI `review` command and MCP `review_ui`
-tool. Check your installed CLI's `--help` or the server's `tools/list` before
-using them. These source changes do not establish npm or remote-endpoint
-availability.
+The remote MCP at `https://ui.logic2b.com/mcp` provides `review_ui`. The CLI
+`review` command is available in the **source candidate**; its npm publication
+is tracked separately. Check your installed CLI's `--help` or a different
+server's `tools/list` before using them.
 
 Review reports source evidence and suggested fixes. It never executes source,
 resolves imports, reads a registry or modifies files. The current version has
@@ -69,7 +69,10 @@ Use project-relative paths and omit unrelated private files.
 The request is the argument object for `review_ui`. Only version 1 and these
 fields are supported. Each path is at most 256 characters. The same file/count
 limits apply in CLI and MCP. Source is parsed as data, with a 50,000-node
-traversal budget; no import, configuration or component is executed.
+traversal budget, maximum AST depth 256 and a shared 250,000-step analysis
+budget. Exhaustion discards partial findings for the affected file, marks
+review as truncated and leaves explicit unknowns. No import, configuration
+or component is executed.
 
 ## Read the evidence
 

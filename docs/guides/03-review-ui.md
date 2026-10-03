@@ -35,7 +35,10 @@ interface ReviewRequest {
 Inputs are bounded to 64 files, 256 KiB of total UTF-8 source and 256 characters
 per path. Unsafe/duplicate paths, unsupported fields or versions and invalid
 scope/policy values reject. The traversal budget is 50,000 AST nodes per
-request. Each findings/unknowns/suppressed array is capped at 512 entries;
+request, with maximum AST depth 256 and 250,000 shared analysis steps. If the
+work budget is exhausted, partial findings for that file are discarded and
+remaining files receive explicit unknowns without repeating costly analysis.
+Each findings/unknowns/suppressed array is capped at 512 entries;
 each file allows at most 128 reasoned suppression directives. Exhausting a
 processing/output budget sets `truncated`; a parse failure is an unknown with
 no rules evaluated for that file. The engine uses `@babel/parser` to parse
@@ -104,7 +107,9 @@ node packages/cli/dist/index.js review src/CustomerPage.tsx --cwd /path/to/app -
 
 The CLI requires explicit files/directories, reads TSX/JSX only, rejects
 symlink/hard-linked files, external paths, private/dependency directories and
-overlapping file selections. It does not auto-read the whole repository.
+overlapping file selections. It verifies the root, ancestors, source path and
+open descriptor before and after reading; detected replacements fail with
+sanitized errors. It does not auto-read the whole repository.
 Use `--complete-label-context` only when that assertion is justified;
 `--scope tokens,a11y` selects the supported scopes. `--fail-on error` is the
 default, with `warning` also accepted. Exit 1 means the selected finding
