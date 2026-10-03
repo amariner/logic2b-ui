@@ -1,5 +1,11 @@
 # logic2b agent benchmark
 
+The [v2 comparative outcome protocol](./v2/README.md) and offline evidence report
+are implemented separately. Real v2 measurements are pending; the v1 scores below
+are installation/composition smoke evidence, not comparative product advantage.
+Run `pnpm benchmark:agents:report:v2` from the repository root to regenerate the
+pending report without invoking an agent or executing submitted source.
+
 A reproducible benchmark for the question that matters to this registry: can a
 coding agent install, theme and compose logic2b ui correctly, or does it fall
 back to hand-written lookalikes?

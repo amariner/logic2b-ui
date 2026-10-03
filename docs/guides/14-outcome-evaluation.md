@@ -1,6 +1,8 @@
 # 14 — Measure whether Logic2b improves the outcome
 
-Status: proposed. Task: EVAL-01; starts alongside M0 and continues per milestone.
+Status: protocol and offline evidence/report tooling implemented; real baseline
+measurements, consumer fixtures and runtime evaluators pending. Task: EVAL-01;
+starts alongside M0 and continues per milestone.
 
 ## Question
 
@@ -62,3 +64,35 @@ numbers; until real attempts run, publish the protocol and pending status.
 Pilot observations may precede automated telemetry. Editing copied source is
 often the intended workflow: collect the reason before classifying it as a
 defect. Guide 09 stays opt-in and is not a prerequisite for product learning.
+
+## Implemented evidence contract
+
+The [v2 method](../../benchmarks/agents/v2/README.md), protocol and attempt/cohort
+JSON schemas live beside the immutable v1 history. The shared benchmark core is
+`benchmarks/agents/scripts/evaluation-v2.mts`; the offline CLI is
+`pnpm benchmark:agents:report:v2`. `pnpm --dir benchmarks/agents report:v2 --plan`
+prints the seeded schedule without invoking agents. No dependency was added.
+
+Freeze `cohorts.json` before outcomes, including the exact protocol digest,
+commit, documentation/registry/rubric digests, browser identity, host/model,
+environment, capabilities, versions, budgets, task fixture digests and full
+seeded assignments. The reporter reconciles every real attempt against its assigned
+slot. Missing outcomes remain in the assigned primary denominator and prevent
+pilot readiness; without a manifest only observed counts are available and
+coverage is unverified. An attempt that needs human correction remains a
+primary failure and is also reported in the assisted stratum. Preserve original
+pre-rescue observations as evidence; rescue usage is not autonomous usage.
+
+Attempt metadata and artifacts are bounded. Relative paths, regular files,
+declared sizes and SHA-256 hashes are checked without executing source or
+following symlinks/special files. Missing checks or evidence are not a pass;
+self-reports do not become independent acceptance. Missing budget usage is
+unknown, while uninstrumented token usage is allowed only with an explicitly
+unavailable token budget. Hashes verify retained bytes; evaluator independence
+and truthful observation remain responsibilities of the trusted collector.
+
+The default checked-in report has no real samples and states `pending`. Planned
+tool conditions cannot accept real attempts. Remaining work is to freeze actual
+customer/held-out fixtures and independent assertions, then collect authorized
+repeated baseline and treatment attempts. This tooling does not establish an
+advantage and does not complete EVAL-01's baseline measurements.

@@ -1,0 +1,426 @@
+{
+  "schemaVersion": 2,
+  "id": "logic2b-outcome-v2",
+  "version": "2.0.0",
+  "status": "pending",
+  "description": "Pilot protocol for comparative usable and maintainable interface outcomes. No real v2 attempts have been collected; protocol v1 remains an immutable installation/composition smoke benchmark.",
+  "minimumAttempts": 5,
+  "conditions": [
+    {
+      "id": "baseline",
+      "label": "Public documentation and standard registry integration",
+      "availability": "available",
+      "tools": [],
+      "access": [
+        "Frozen public documentation",
+        "Exact-version standard registry integration",
+        "Same shell, browser, network and package-install capabilities as every condition"
+      ],
+      "intervention": "No Logic2b CLI or MCP tools. Use the frozen public documentation and the same immutable registry catalog."
+    },
+    {
+      "id": "existing-cli-mcp",
+      "label": "Existing Logic2b CLI/MCP workflow",
+      "availability": "available",
+      "tools": [
+        "list_components",
+        "search_components",
+        "get_component",
+        "list_registry_versions",
+        "get_changelog",
+        "get_demo",
+        "add_command",
+        "install_plan",
+        "scaffold_plan",
+        "list_presets",
+        "get_theme",
+        "export_tokens",
+        "decode_preset",
+        "apply_preset",
+        "contrast_audit",
+        "lint_theme"
+      ],
+      "access": [
+        "Everything in baseline",
+        "Pinned shipped Logic2b CLI and MCP tools"
+      ],
+      "intervention": "Use the shipped CLI/MCP contracts; planned context, behavior, review and change contracts are not supplied."
+    },
+    {
+      "id": "new-workflow",
+      "label": "Project context, behavior contracts, review and change planning",
+      "availability": "planned",
+      "tools": [
+        "list_components",
+        "search_components",
+        "get_component",
+        "list_registry_versions",
+        "get_changelog",
+        "get_demo",
+        "add_command",
+        "install_plan",
+        "scaffold_plan",
+        "list_presets",
+        "get_theme",
+        "export_tokens",
+        "decode_preset",
+        "apply_preset",
+        "contrast_audit",
+        "lint_theme",
+        "inspect_project",
+        "review_ui",
+        "change_plan"
+      ],
+      "unavailableTools": [
+        "inspect_project",
+        "review_ui",
+        "change_plan"
+      ],
+      "access": [
+        "Everything in existing-cli-mcp",
+        "Versioned behavior metadata on get_component/list_components/install_plan",
+        "Bounded project context, static review and preconditioned change plans"
+      ],
+      "intervention": "Pending implementation of M1-01, M1-02, M1-04 and M2-01 and a frozen intervention tool/schema inventory. This condition must not be run or described as shipped before those contracts are available."
+    },
+    {
+      "id": "ablation-no-review",
+      "label": "New Logic2b workflow without static review",
+      "availability": "planned",
+      "tools": [
+        "list_components",
+        "search_components",
+        "get_component",
+        "list_registry_versions",
+        "get_changelog",
+        "get_demo",
+        "add_command",
+        "install_plan",
+        "scaffold_plan",
+        "list_presets",
+        "get_theme",
+        "export_tokens",
+        "decode_preset",
+        "apply_preset",
+        "contrast_audit",
+        "lint_theme",
+        "inspect_project",
+        "change_plan"
+      ],
+      "unavailableTools": [
+        "inspect_project",
+        "change_plan"
+      ],
+      "access": [
+        "Everything in new-workflow except review_ui and its findings"
+      ],
+      "intervention": "Within-Logic2b ablation: withhold review_ui and its output while keeping context, behavior and change-plan access identical to new-workflow. Pending the same workflow implementation."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "customer-journey",
+      "title": "Build a customer list, filter and edit journey",
+      "prompt": "In the supplied React consumer fixture, build the customer-management screen from the frozen brief and realistic customer data. Users must browse, filter, create and edit customers. Include the brief's loading, empty, error, success, submitting and denied-operation states and the specified recovery actions. Preserve the supplied design tokens. The evaluator runs the production build and independent checks after the autonomous attempt.",
+      "fixtureId": "customer-journey-v2",
+      "fixtureStatus": "pending",
+      "heldOut": false,
+      "checks": [
+        {
+          "id": "build",
+          "kind": "build",
+          "description": "An evaluator-observed production build exits successfully in the declared consumer environment.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "task-completion",
+          "kind": "browser",
+          "description": "Independent browser assertions complete the task's stated list, filter and edit or maintenance outcomes.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "required-states",
+          "kind": "browser",
+          "description": "Independent browser assertions cover each required loading, empty, error, success, submitting and permission state relevant to the task, including recovery.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "keyboard",
+          "kind": "browser",
+          "description": "Independent keyboard assertions verify named controls, focus order, dialog entry/return and completion of the required interaction without a pointer.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "mobile-overflow",
+          "kind": "browser",
+          "description": "Independent assertions at 390 px and 1280 px verify readable required content, reachable actions and no unintended horizontal page overflow.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "hierarchy-copy",
+          "kind": "human",
+          "description": "A reviewer independent of the agent and intervention assesses information hierarchy, task clarity and realistic copy against the frozen task rubric.",
+          "required": true,
+          "independent": true
+        }
+      ]
+    },
+    {
+      "id": "recovery-and-permission",
+      "title": "Recover from slow or failing data and a denied operation",
+      "prompt": "In the supplied customer-management fixture, implement the frozen slow-data, request-failure and denied-operation scenarios. Make progress, failure and permissions understandable; preserve entered data where the brief requires it; provide working retry and recovery actions. Follow the supplied keyboard and mobile requirements. The evaluator controls deterministic data and permission responses.",
+      "fixtureId": "customer-recovery-v2",
+      "fixtureStatus": "pending",
+      "heldOut": false,
+      "checks": [
+        {
+          "id": "build",
+          "kind": "build",
+          "description": "An evaluator-observed production build exits successfully in the declared consumer environment.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "task-completion",
+          "kind": "browser",
+          "description": "Independent browser assertions complete the task's stated list, filter and edit or maintenance outcomes.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "required-states",
+          "kind": "browser",
+          "description": "Independent browser assertions cover each required loading, empty, error, success, submitting and permission state relevant to the task, including recovery.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "keyboard",
+          "kind": "browser",
+          "description": "Independent keyboard assertions verify named controls, focus order, dialog entry/return and completion of the required interaction without a pointer.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "mobile-overflow",
+          "kind": "browser",
+          "description": "Independent assertions at 390 px and 1280 px verify readable required content, reachable actions and no unintended horizontal page overflow.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "hierarchy-copy",
+          "kind": "human",
+          "description": "A reviewer independent of the agent and intervention assesses information hierarchy, task clarity and realistic copy against the frozen task rubric.",
+          "required": true,
+          "independent": true
+        }
+      ]
+    },
+    {
+      "id": "preserve-customizations",
+      "title": "Add a filter without losing local customizations",
+      "prompt": "In the supplied customer-management fixture with custom copy, column choices and semantic token overrides, add the evaluator-specified filter. Preserve all declared local customizations and working create/edit/recovery interactions. The evaluator compares against the frozen customization inventory and checks the result in the browser.",
+      "fixtureId": "customer-customizations-v2",
+      "fixtureStatus": "pending",
+      "heldOut": false,
+      "checks": [
+        {
+          "id": "build",
+          "kind": "build",
+          "description": "An evaluator-observed production build exits successfully in the declared consumer environment.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "task-completion",
+          "kind": "browser",
+          "description": "Independent browser assertions complete the task's stated list, filter and edit or maintenance outcomes.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "required-states",
+          "kind": "browser",
+          "description": "Independent browser assertions cover each required loading, empty, error, success, submitting and permission state relevant to the task, including recovery.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "keyboard",
+          "kind": "browser",
+          "description": "Independent keyboard assertions verify named controls, focus order, dialog entry/return and completion of the required interaction without a pointer.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "mobile-overflow",
+          "kind": "browser",
+          "description": "Independent assertions at 390 px and 1280 px verify readable required content, reachable actions and no unintended horizontal page overflow.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "hierarchy-copy",
+          "kind": "human",
+          "description": "A reviewer independent of the agent and intervention assesses information hierarchy, task clarity and realistic copy against the frozen task rubric.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "preserved-edits",
+          "kind": "browser",
+          "description": "Independent assertions and preserved source evidence verify that custom copy, column choices and semantic token overrides survive the requested change.",
+          "required": true,
+          "independent": true
+        }
+      ]
+    },
+    {
+      "id": "upstream-update",
+      "title": "Apply an upstream change while preserving local edits",
+      "prompt": "In the supplied customized customer-management fixture, apply the evaluator's exact-version upstream component change. Preserve the declared local copy, column choices and semantic token overrides. Handle the supplied overlapping edit case explicitly, without silently overwriting it; maintain required interactions and states. The evaluator compares the resulting artifacts with the frozen preservation inventory and independently verifies the consumer.",
+      "fixtureId": "customer-upstream-v2",
+      "fixtureStatus": "pending",
+      "heldOut": false,
+      "checks": [
+        {
+          "id": "build",
+          "kind": "build",
+          "description": "An evaluator-observed production build exits successfully in the declared consumer environment.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "task-completion",
+          "kind": "browser",
+          "description": "Independent browser assertions complete the task's stated list, filter and edit or maintenance outcomes.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "required-states",
+          "kind": "browser",
+          "description": "Independent browser assertions cover each required loading, empty, error, success, submitting and permission state relevant to the task, including recovery.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "keyboard",
+          "kind": "browser",
+          "description": "Independent keyboard assertions verify named controls, focus order, dialog entry/return and completion of the required interaction without a pointer.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "mobile-overflow",
+          "kind": "browser",
+          "description": "Independent assertions at 390 px and 1280 px verify readable required content, reachable actions and no unintended horizontal page overflow.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "hierarchy-copy",
+          "kind": "human",
+          "description": "A reviewer independent of the agent and intervention assesses information hierarchy, task clarity and realistic copy against the frozen task rubric.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "preserved-edits",
+          "kind": "browser",
+          "description": "Independent assertions and preserved source evidence verify that custom copy, column choices and semantic token overrides survive the requested change.",
+          "required": true,
+          "independent": true
+        }
+      ]
+    },
+    {
+      "id": "held-out-transfer",
+      "title": "Transfer to a held-out domain with long content",
+      "prompt": "Implement the evaluator-supplied held-out domain brief using its separately reserved fixture and realistic long content. Complete its list, filter, create/edit and recovery interactions, required states, keyboard use and mobile layout. The domain-specific brief, fixture and acceptance cases must remain outside tool-authoring examples until this pilot's intervention and rubrics are frozen.",
+      "fixtureId": "held-out-transfer-v2",
+      "fixtureStatus": "pending",
+      "heldOut": true,
+      "checks": [
+        {
+          "id": "build",
+          "kind": "build",
+          "description": "An evaluator-observed production build exits successfully in the declared consumer environment.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "task-completion",
+          "kind": "browser",
+          "description": "Independent browser assertions complete the task's stated list, filter and edit or maintenance outcomes.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "required-states",
+          "kind": "browser",
+          "description": "Independent browser assertions cover each required loading, empty, error, success, submitting and permission state relevant to the task, including recovery.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "keyboard",
+          "kind": "browser",
+          "description": "Independent keyboard assertions verify named controls, focus order, dialog entry/return and completion of the required interaction without a pointer.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "mobile-overflow",
+          "kind": "browser",
+          "description": "Independent assertions at 390 px and 1280 px verify readable required content, reachable actions and no unintended horizontal page overflow.",
+          "required": true,
+          "independent": true
+        },
+        {
+          "id": "hierarchy-copy",
+          "kind": "human",
+          "description": "A reviewer independent of the agent and intervention assesses information hierarchy, task clarity and realistic copy against the frozen task rubric.",
+          "required": true,
+          "independent": true
+        }
+      ]
+    }
+  ],
+  "design": {
+    "seed": 20261003,
+    "budgets": {
+      "elapsedMs": 900000,
+      "toolCalls": 120,
+      "inputBytes": 2097152,
+      "outputBytes": 2097152
+    },
+    "randomizedOrder": true,
+    "freshWorkspace": true,
+    "retainFailures": true,
+    "repetitionUnit": "An independently started autonomous attempt for one condition and task in a fresh workspace; every condition-task cell requires at least minimumAttempts observations.",
+    "schedule": "Seeded random permutation of condition-task-repetition assignments; freeze the complete createSchedule output in the cohort manifest before observing outcomes. Real attempts must match their assigned cohort/condition/task/repetition/order exactly. Available cells may run while planned cells remain planned.",
+    "cohortManifest": "cohorts.json in the evidence root is an array of frozen manifests with schemaVersion 2, cohortId, protocolSha256 from canonical protocolDigest(protocol), pins {commit, documentationSha256, registrySha256, rubricSha256, browser {name, version}}, the complete createSchedule output as schedule, and controls {host, model, environment, versions, budget, capabilities {network, shell, mcp}, fixtures [{id, sha256}]}. See cohort.schema.json. Without a manifest, assignment coverage is unverified and the report can never be pilot-ready.",
+    "control": "Freeze controls before the first outcome: host {name, version}, model {name, version, versionKind}, environment {os, node}, versions {registry, cli, mcp, toolSchema}, budget {elapsedMs, toolCalls, inputBytes, outputBytes, tokens}, Boolean capabilities {network, shell, mcp}, and exactly every protocol fixture ID once with its actual SHA-256 digest. All observations, including the first, must match the pre-frozen controls; mismatches reject. Changed controls require a separate frozen cohort. Keep aliases labelled as aliases when no immutable model version exists; freeze documentation and task/rubric revisions before collecting outcomes.",
+    "toolVersions": "Each attempt records the actual CLI/MCP and intervention tool/schema versions. Do not substitute a planned condition with the existing workflow; record unavailable conditions as pending.",
+    "freshWorkspaceRule": "Create a unique workspace from the pinned initial task fixture for every attempt. Do not reuse artifacts, transcripts, failure feedback or agent context from a previous attempt.",
+    "failures": "Retain assigned attempts, failures, timeouts, budget exhaustion and partial artifacts. Do not replace unsuccessful runs or publish only the best outcome.",
+    "assistance": "A human-assisted rescue remains a failed primary assignment and also appears in the assisted stratum. Preserve pre-rescue evidence as hashed artifacts; primary autonomous usage is unavailable for assisted records. Positive correction counts require hashed reason artifact references. Normal source customization is not automatically a defect.",
+    "independence": "The agent's self-report and intervention review engine cannot supply the sole acceptance verdict. Build/browser evidence is produced by the trusted evaluator; human design evidence comes from an independent reviewer.",
+    "humanReview": "Use a frozen hierarchy, task-clarity and copy rubric with condition-blinded artifact identifiers where practical. Record when treatment could not be concealed. Participant contact requires applicable authorization.",
+    "heldOut": "Reserve the transfer fixture, brief and assertion bodies outside tool-authoring examples. Freeze intervention code, schemas and rubrics before revealing held-out evidence; record any exposure.",
+    "evidence": "Store bounded attempt records and relative SHA-256 artifact references. Redact secrets, personal data and private paths before evidence ingestion/publication. Published transcripts retain provenance without private filesystem paths.",
+    "missingMetrics": "Missing elapsed time, calls or input/output byte usage makes budgetStatus unknown and cannot be accepted. A numeric token budget requires measured token usage; unavailable tokens are permitted without blocking acceptance only when the token budget is unavailable. Missing instrumentation is never zero. Failed, missing or unknown required checks cannot count as autonomous success.",
+    "primaryOutcome": "Autonomous successes divided by every frozen assignment in each available condition-task cell, including retained failures/timeouts, missing outcomes and human-assisted rescues. Missing outcomes remain pending; planned assignments remain planned with no rate. Complete success requires every required independent check and budget to pass with no human correction.",
+    "summary": "Report assigned, observed, missing and planned counts, primary success denominator, observed profile summaries and median/minimum/maximum of available measurements; report unavailable counts and every failure. Without frozen cohorts.json, only observed counts are available, assignment coverage is unverified and pilot readiness is impossible. Empty cells remain pending without invented numeric outcomes.",
+    "interpretation": "At least five attempts per condition/task is a pilot threshold, not a broad statistical claim. Cross-registry comparisons require a separate protocol controlling unequal catalogs and functionality.",
+    "executionBoundary": "The v2 tooling validates evidence and generates a schedule/report; it does not invoke an agent, execute submitted source or run paid models. Independent consumer/browser evaluators are separate trusted work and remain pending.",
+    "authorization": "Do not launch paid model runs or contact participants without applicable authorization. No telemetry or arbitrary remote code is part of this protocol."
+  }
+}
