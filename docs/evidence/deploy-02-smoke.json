@@ -1,0 +1,350 @@
+{
+  "startedAt": "2026-10-03T22:48:04.586Z",
+  "base": "https://ui.logic2b.com",
+  "expectedRegistryVersion": "1.0.0-rc.18",
+  "status": "passed",
+  "http": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/docs/review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/es/docs/review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/r/versions.json",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/r/versions/1.0.0-rc.18.json",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/schema/registry-versions.json",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/r/schemas/compose-plan.json",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/mcp",
+      "status": 405
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 202
+    },
+    {
+      "method": "GET",
+      "path": "/mcp",
+      "status": 405
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/mcp",
+      "status": 200
+    }
+  ],
+  "checks": [
+    {
+      "check": "GET /",
+      "status": "passed",
+      "bytes": 208054,
+      "contentType": "text/html"
+    },
+    {
+      "check": "GET /docs/review",
+      "status": "passed",
+      "bytes": 155615,
+      "contentType": "text/html"
+    },
+    {
+      "check": "GET /es/docs/review",
+      "status": "passed",
+      "bytes": 159496,
+      "contentType": "text/html"
+    },
+    {
+      "check": "GET /r/versions.json",
+      "status": "passed",
+      "bytes": 2134,
+      "contentType": "application/json"
+    },
+    {
+      "check": "GET /r/versions/1.0.0-rc.18.json",
+      "status": "passed",
+      "bytes": 111952,
+      "contentType": "application/json"
+    },
+    {
+      "check": "GET /schema/registry-versions.json",
+      "status": "passed",
+      "bytes": 945,
+      "contentType": "application/json"
+    },
+    {
+      "check": "GET /r/schemas/compose-plan.json",
+      "status": "passed",
+      "bytes": 15503,
+      "contentType": "application/json"
+    },
+    {
+      "check": "MCP initialize and tools/list",
+      "status": "passed",
+      "toolCount": 22
+    },
+    {
+      "check": "review_ui default partial context",
+      "status": "passed",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "info": 0
+      },
+      "findingRules": [],
+      "unknownRules": [
+        "L2B-A11Y-003"
+      ],
+      "suppressed": 0,
+      "truncated": false,
+      "schemaValidated": true,
+      "textParity": true
+    },
+    {
+      "check": "review_ui complete context",
+      "status": "passed",
+      "summary": {
+        "errors": 1,
+        "warnings": 0,
+        "info": 0
+      },
+      "findingRules": [
+        "L2B-A11Y-003"
+      ],
+      "unknownRules": [],
+      "suppressed": 0,
+      "truncated": false,
+      "schemaValidated": true,
+      "textParity": true
+    },
+    {
+      "check": "review_ui policy disabled",
+      "status": "passed",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "info": 0
+      },
+      "findingRules": [],
+      "unknownRules": [],
+      "suppressed": 0,
+      "truncated": false,
+      "schemaValidated": true,
+      "textParity": true
+    },
+    {
+      "check": "review_ui policy enabled",
+      "status": "passed",
+      "summary": {
+        "errors": 1,
+        "warnings": 0,
+        "info": 0
+      },
+      "findingRules": [
+        "L2B-TOK-001"
+      ],
+      "unknownRules": [],
+      "suppressed": 0,
+      "truncated": false,
+      "schemaValidated": true,
+      "textParity": true
+    },
+    {
+      "check": "review_ui imperative ref stays unknown",
+      "status": "passed",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "info": 0
+      },
+      "findingRules": [],
+      "unknownRules": [
+        "L2B-A11Y-003"
+      ],
+      "suppressed": 0,
+      "truncated": false,
+      "schemaValidated": true,
+      "textParity": true
+    },
+    {
+      "check": "review_ui JSX attribute stays unknown",
+      "status": "passed",
+      "summary": {
+        "errors": 0,
+        "warnings": 0,
+        "info": 0
+      },
+      "findingRules": [],
+      "unknownRules": [
+        "L2B-A11Y-003"
+      ],
+      "suppressed": 0,
+      "truncated": false,
+      "schemaValidated": true,
+      "textParity": true
+    },
+    {
+      "check": "review_ui rejects unsupported schema",
+      "status": "passed",
+      "jsonRpcCode": -32602
+    },
+    {
+      "check": "compose_plan Spanish Vite project",
+      "status": "passed",
+      "registryVersion": "1.0.0-rc.18",
+      "framework": "vite",
+      "locale": "es-ES",
+      "files": 35,
+      "routes": [
+        "/customers"
+      ],
+      "confidence": "medium",
+      "coverage": [
+        {
+          "requirementId": "browse",
+          "status": "partial"
+        },
+        {
+          "requirementId": "edit",
+          "status": "partial"
+        }
+      ],
+      "gaps": [
+        {
+          "requirementId": "browse",
+          "need": "Action create requires consumer callback wiring"
+        },
+        {
+          "requirementId": "browse",
+          "need": "Action edit requires consumer callback wiring"
+        },
+        {
+          "requirementId": "browse",
+          "need": "Action retry requires consumer callback wiring"
+        },
+        {
+          "requirementId": "edit",
+          "need": "Action save requires consumer callback wiring"
+        },
+        {
+          "requirementId": "edit",
+          "need": "Action cancel requires consumer callback wiring"
+        }
+      ],
+      "schemaValidated": true,
+      "textParity": true,
+      "sourceExecuted": false
+    },
+    {
+      "check": "MCP final ping",
+      "status": "passed"
+    }
+  ],
+  "protocol": {
+    "negotiatedProtocol": "2025-11-25",
+    "server": {
+      "name": "logic2b-ui",
+      "version": "1.0.0-rc.3"
+    },
+    "tools": [
+      "add_command",
+      "agent_rules",
+      "apply_preset",
+      "change_plan",
+      "compose_plan",
+      "contrast_audit",
+      "decode_preset",
+      "export_tokens",
+      "get_changelog",
+      "get_component",
+      "get_demo",
+      "get_theme",
+      "inspect_project",
+      "install_plan",
+      "lint_theme",
+      "list_components",
+      "list_presets",
+      "list_registry_versions",
+      "review_ui",
+      "scaffold_plan",
+      "search_components",
+      "verify_report"
+    ]
+  },
+  "finishedAt": "2026-10-03T22:48:06.974Z"
+}
