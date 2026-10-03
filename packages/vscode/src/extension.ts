@@ -1,9 +1,13 @@
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors"
+import { RULES_LIMITS, validateRulePrecondition } from "@logic2b/scaffold/rules"
+import { execFile } from "node:child_process"
+import { promisify } from "node:util"
 import * as vscode from "vscode"
 
 import {
   applyPresetToProject,
   COMMAND_IDS,
+  cliArgsForAgentRules,
   DEFAULT_REGISTRY,
   documentationUrl,
   normalizeRegistryUrl,
@@ -11,7 +15,136 @@ import {
   themePathFromCssEntry,
   type RegistryIndexItem,
 } from "./core"
+import {
+  agentRulesOptionsFromProject,
+  applyWorkspaceAgentRules,
+  prepareWorkspaceAgentRules,
+  projectAgentRulesEnabled,
+  type AgentRulesWorkspace,
+  type WorkspaceAgentRulesOptions,
+} from "./agent-rules"
 import { RegistryItemNode, RegistryTreeProvider } from "./registry-tree"
+
+const runFile = promisify(execFile)
+const RULE_FILE_BYTES = RULES_LIMITS.currentFileBytes
+const RULE_FORMATS = ["agents", "claude", "cursor", "copilot"] as const
+
+function agentRulesEnabled(folder: vscode.WorkspaceFolder): boolean {
+  return vscode.workspace.getConfiguration("logic2b", folder.uri).get("agentRules.enabled", true)
+}
+
+function configuredRuleFormats(folder: vscode.WorkspaceFolder): typeof RULE_FORMATS[number][] {
+  const configured = vscode.workspace.getConfiguration("logic2b", folder.uri).get<unknown>("agentRules.formats", ["agents"])
+  if (!Array.isArray(configured) || !configured.length || configured.some((value) => !(RULE_FORMATS as readonly unknown[]).includes(value))) {
+    throw new Error("logic2b.agentRules.formats must select agents, claude, cursor or copilot.")
+  }
+  return [...new Set(configured)] as typeof RULE_FORMATS[number][]
+}
+
+function isMissing(error: unknown): boolean {
+  return error instanceof vscode.FileSystemError && error.code === "FileNotFound"
+}
+
+async function safeRulesUri(folder: vscode.WorkspaceFolder, path: string): Promise<{ uri: vscode.Uri; stat?: vscode.FileStat }> {
+  const segments = path.split("/")
+  if (segments.some((segment) => !segment || segment === "." || segment === ".." || /[\\:\u0000-\u001f]/.test(segment))) throw new Error("Agent rules paths must remain inside the workspace.")
+  let stat: vscode.FileStat | undefined
+  for (let index = 1; index <= segments.length; index++) {
+    const uri = vscode.Uri.joinPath(folder.uri, ...segments.slice(0, index))
+    try { stat = await vscode.workspace.fs.stat(uri) } catch (error) { if (isMissing(error)) { stat = undefined; break } throw error }
+    if (stat.type & vscode.FileType.SymbolicLink) throw new Error(`Agent rules cannot use a symlink at ${segments.slice(0, index).join("/")}.`)
+    if (index < segments.length && !(stat.type & vscode.FileType.Directory)) throw new Error("An agent rules parent path is not a directory.")
+  }
+  return { uri: vscode.Uri.joinPath(folder.uri, ...segments), stat }
+}
+
+async function readWorkspaceRuleText(folder: vscode.WorkspaceFolder, path: string): Promise<string | null> {
+  const { uri, stat } = await safeRulesUri(folder, path)
+  const open = vscode.workspace.textDocuments.find((document) => document.uri.toString() === uri.toString())
+  if (open?.isDirty) throw new Error(`Save ${path} before generating agent rules.`)
+  if (!stat) return null
+  if (!(stat.type & vscode.FileType.File)) throw new Error(`${path} must be a regular workspace file.`)
+  if (stat.size > RULE_FILE_BYTES) throw new Error(`${path} exceeds the 64 KiB agent rules input limit.`)
+  const bytes = await vscode.workspace.fs.readFile(uri)
+  if (bytes.byteLength > RULE_FILE_BYTES) throw new Error(`${path} exceeds the 64 KiB agent rules input limit.`)
+  return new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes)
+}
+
+function rulesWorkspace(folder: vscode.WorkspaceFolder): AgentRulesWorkspace {
+  return {
+    read: (path) => readWorkspaceRuleText(folder, path),
+    async apply(files) {
+      const documents = new Map<string, { document: vscode.TextDocument; bom: string }>()
+      for (const file of files) {
+        const content = await readWorkspaceRuleText(folder, file.path)
+        await validateRulePrecondition(content ?? undefined, file.precondition)
+        if (file.action !== "create") {
+          const document = await vscode.workspace.openTextDocument(vscode.Uri.joinPath(folder.uri, ...file.path.split("/")))
+          if (document.isDirty) throw new Error(`Save ${file.path} before generating agent rules.`)
+          // VS Code keeps the encoding BOM outside TextDocument.getText().
+          const bom = content?.startsWith("\ufeff") ? "\ufeff" : ""
+          await validateRulePrecondition(bom + document.getText(), file.precondition)
+          documents.set(file.path, { document, bom })
+        }
+      }
+      // Parent directories are created only after every file precondition passes.
+      for (const file of files) if (file.action === "create" && file.path.includes("/")) {
+        await vscode.workspace.fs.createDirectory(vscode.Uri.joinPath(folder.uri, ...file.path.split("/").slice(0, -1)))
+      }
+      const edit = new vscode.WorkspaceEdit()
+      for (const file of files) {
+        const { uri } = await safeRulesUri(folder, file.path)
+        await validateRulePrecondition((await readWorkspaceRuleText(folder, file.path)) ?? undefined, file.precondition)
+        const opened = documents.get(file.path)
+        if (file.action === "create") edit.createFile(uri, { overwrite: false, contents: new TextEncoder().encode(file.content) })
+        else if (opened) {
+          const { document, bom } = opened
+          if (document.isDirty) throw new Error(`Save ${file.path} before generating agent rules.`)
+          await validateRulePrecondition(bom + document.getText(), file.precondition)
+          edit.replace(uri, wholeDocumentRange(document), bom && file.content.startsWith(bom) ? file.content.slice(1) : file.content)
+        }
+      }
+      if (!(await vscode.workspace.applyEdit(edit))) return false
+      for (const { document } of documents.values()) if (!(await document.save())) throw new Error("Agent rules were edited but a workspace file could not be saved. Review the affected files.")
+      return true
+    },
+  }
+}
+
+async function generateAgentRules(
+  provider: RegistryTreeProvider,
+  requestedFolder?: vscode.WorkspaceFolder,
+  automatic = false,
+): Promise<void> {
+  const folder = requestedFolder ?? await pickWorkspaceFolder()
+  if (!folder || (automatic && !agentRulesEnabled(folder))) return
+  try {
+    let formats = configuredRuleFormats(folder)
+    if (!automatic) {
+      const selected = await vscode.window.showQuickPick(RULE_FORMATS.map((format) => ({
+        label: ({ agents: "AGENTS.md", claude: "Claude Code", cursor: "Cursor", copilot: "GitHub Copilot" })[format],
+        description: ({ agents: "Universal project instructions", claude: "CLAUDE.md import and AGENTS.md", cursor: ".cursor/rules/logic2b.mdc", copilot: ".github/copilot-instructions.md" })[format],
+        picked: formats.includes(format),
+        format,
+      })), { canPickMany: true, title: "Generate logic2b agent rules", placeHolder: "Choose editor formats; DESIGN.md is included" })
+      if (!selected?.length) return
+      formats = selected.map((entry) => entry.format)
+    }
+    const config = await readWorkspaceRuleText(folder, "components.json")
+    if (config === null) throw new Error("Initialize logic2b before generating agent rules.")
+    const projectEnabled = projectAgentRulesEnabled(config)
+    if (automatic && !projectEnabled) return
+    const manifest = await readWorkspaceRuleText(folder, ".logic2b/manifest.json")
+    const pkg = await readWorkspaceRuleText(folder, "package.json")
+    const options: WorkspaceAgentRulesOptions = { ...agentRulesOptionsFromProject(config, manifest, pkg), formats }
+    const workspace = rulesWorkspace(folder)
+    const plan = await prepareWorkspaceAgentRules(workspace, options)
+    const changed = await applyWorkspaceAgentRules(workspace, plan)
+    if (!automatic) await vscode.window.showInformationMessage(changed ? `Updated logic2b agent rules in ${changed} file(s).` : "logic2b agent rules are already current.")
+  } catch (error) {
+    await vscode.window.showErrorMessage(`Could not generate agent rules: ${error instanceof Error ? error.message : error}`)
+  }
+}
 
 function registryUrl(): string {
   return normalizeRegistryUrl(
@@ -45,9 +178,19 @@ async function executeCliTask(
   command: "init" | "add",
   args: string[],
 ): Promise<void> {
+  const enabled = agentRulesEnabled(folder)
+  let help = ""
+  if (!enabled) {
+    try {
+      help = (await runFile("npx", [CLI_PACKAGE_SELECTOR, command, "--help"], { cwd: folder.uri.fsPath, timeout: 15_000, maxBuffer: 64 * 1024 })).stdout
+    } catch {
+      await vscode.window.showErrorMessage("Could not check the CLI's agent rules opt-out support. Retry when CLI help is available; no install task was started.")
+      return
+    }
+  }
   const execution = new vscode.ShellExecution(
     "npx",
-    [CLI_PACKAGE_SELECTOR, command, ...args],
+    [CLI_PACKAGE_SELECTOR, command, ...cliArgsForAgentRules(args, enabled, help)],
     { cwd: folder.uri.fsPath },
   )
   const task = new vscode.Task(
@@ -230,6 +373,7 @@ export function activate(context: vscode.ExtensionContext): void {
         )
       },
     ),
+    vscode.commands.registerCommand(COMMAND_IDS[8], () => generateAgentRules(provider)),
   )
 
   const watcher = vscode.workspace.createFileSystemWatcher(
@@ -245,8 +389,13 @@ export function activate(context: vscode.ExtensionContext): void {
         provider.refresh({ refetch: true })
       }
     }),
-    vscode.tasks.onDidEndTaskProcess((event) => {
-      if (event.execution.task.definition.type === "logic2b") provider.refresh()
+    vscode.tasks.onDidEndTaskProcess(async (event) => {
+      const task = event.execution.task
+      if (task.definition.type !== "logic2b") return
+      provider.refresh()
+      if (event.exitCode !== 0 || !["init", "add"].includes(task.definition.command)) return
+      const folder = task.scope
+      if (typeof folder === "object" && "uri" in folder) await generateAgentRules(provider, folder, true)
     }),
   )
 }

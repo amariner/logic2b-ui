@@ -75,7 +75,7 @@ async function pack(packageRoot: string, destination: string) {
       .split(/\r?\n/)
       .map((path) => path.replace(/^package\//, ""))
       .sort(),
-    ["CHANGELOG.md", "LICENSE", "README.md", "dist/index.js", "package.json"],
+    ["CHANGELOG.md", "LICENSE", "README.md", "dist/index.js", "package.json", ...(packageRoot === mcpRoot ? ["skills/logic2b-ui/SKILL.md"] : [])],
     `unexpected publication contents in ${tarball}`,
   )
   return tarball
@@ -138,7 +138,7 @@ try {
     ["logic2b", cliRoot, cliSource],
     ["@logic2b/mcp", mcpRoot, mcpSource],
   ] as const) {
-    assert.deepEqual(manifest.files, ["dist", "CHANGELOG.md"], `${name} publish allowlist drifted`)
+    assert.deepEqual(manifest.files, ["dist", "CHANGELOG.md", ...(packageRoot === mcpRoot ? ["skills/logic2b-ui/SKILL.md"] : [])], `${name} publish allowlist drifted`)
     assert.deepEqual(manifest.publishConfig, { access: "public" })
     assert.match(
       await readFile(join(packageRoot, "CHANGELOG.md"), "utf8"),
@@ -169,6 +169,7 @@ try {
   assert.equal(mcpManifest.version, mcpSource.version)
   assert.deepEqual(cliManifest.bin, { logic2b: "dist/index.js" })
   assert.deepEqual(mcpManifest.bin, { "logic2b-mcp": "dist/index.js" })
+  assert.equal(await readFile(join(installedMcp, "skills/logic2b-ui/SKILL.md"), "utf8"), await readFile(join(repoRoot, "skills/logic2b-ui/SKILL.md"), "utf8"), "published skill must match the canonical source exactly")
   for (const packageRoot of [installedCli, installedMcp]) {
     await Promise.all(
       ["dist/index.js", "README.md", "LICENSE", "CHANGELOG.md"].map((path) =>
@@ -185,7 +186,7 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
   const customerRelease = await customerFixtures(customerRegistryVersion)
@@ -220,7 +221,16 @@ try {
         ),
       ),
       access(join(target, ".logic2b/base/theme.css")),
+      access(join(target, "AGENTS.md")),
+      access(join(target, "DESIGN.md")),
     ])
+    const originalRules = await readFile(join(target, "AGENTS.md"), "utf8")
+    assert.match(originalRules, /logic2b:rules:start v1/)
+    assert.match(originalRules, /Recorded installed inventory/)
+    assert.match(originalRules, /`login-01`/)
+    const userPrefix = "# Consumer policy\nKeep our native controls and public APIs.\n\n"
+    const userSuffix = "\n# Local copy\nKeep customer-facing labels.\n"
+    await writeFile(join(target, "AGENTS.md"), userPrefix + originalRules + userSuffix)
     const oldLoginSnapshot = await readFile(join(target, ".logic2b/base/blocks/login-01/login-form.tsx"), "utf8")
     const added = await execFileAsync(process.execPath, [
       cliEntry,
@@ -265,6 +275,17 @@ try {
     assert.equal(inspection.summary.inventory.unknownFiles, 0)
     assert.ok(inspection.context.installed.find((item: { name: string }) => item.name === "customer-edit-01").files.length > 0)
     assert.equal(await readFile(join(target, ".logic2b/base/blocks/login-01/login-form.tsx"), "utf8"), oldLoginSnapshot, "adding customer blocks must preserve the rc.16 login snapshot")
+    const refreshedRules = await readFile(join(target, "AGENTS.md"), "utf8")
+    assert.ok(refreshedRules.startsWith(userPrefix) && refreshedRules.endsWith(userSuffix), "packed add must preserve instructions outside the managed region")
+    assert.match(refreshedRules, /registry=1\.0\.0-rc\.17/)
+    assert.match(refreshedRules, /`customer-edit-01`/)
+    await execFileAsync(process.execPath, [cliEntry, "rules", "--cwd", target, "--format", "claude,cursor,copilot"])
+    assert.equal(await readFile(join(target, "CLAUDE.md"), "utf8"), "@AGENTS.md\n")
+    assert.match(await readFile(join(target, ".cursor/rules/logic2b.mdc"), "utf8"), /^---\n/)
+    assert.match(await readFile(join(target, ".github/copilot-instructions.md"), "utf8"), /logic2b:rules:start v1/)
+    const beforeUpdateRules = await readFile(join(target, "AGENTS.md"), "utf8")
+    await execFileAsync(process.execPath, [cliEntry, "update", "--cwd", target, "--registry", registry, "--registry-version", customerRegistryVersion, "--no-install"])
+    assert.equal(await readFile(join(target, "AGENTS.md"), "utf8"), beforeUpdateRules, "packed update must preserve outside instructions and be idempotent")
     assert.match(added.stdout, /npm install[^\n]*\blucide-react\b/)
     const formSource = await readFile(join(target, "src/components/customer-edit-01/customer-edit-form.tsx"), "utf8")
     assert.match(formSource, /onCancelRequest\?:\s*\(\)\s*=>\s*void/)
@@ -293,6 +314,7 @@ try {
         tools.map((tool) => tool.name).sort(),
         [
           "add_command",
+          "agent_rules",
           "apply_preset",
           "contrast_audit",
           "decode_preset",
@@ -345,6 +367,7 @@ try {
         ["contrast_audit", { preset }],
         ["contrast_audit", { tokens: { foreground: "oklch(0 0 0)", background: "oklch(1 0 0)" } }],
         ["lint_theme", { css, preset }],
+        ["agent_rules", { preset, stack: "vite", formats: ["agents", "claude", "cursor", "copilot"] }],
       ]
       for (const [name, args] of cases) {
         // The official client validates structuredContent against tools/list.
@@ -381,6 +404,16 @@ try {
         assert.deepEqual(result.structuredContent, JSON.parse(content[0]!.text!))
         return result.structuredContent as Record<string, unknown>
       }
+      const existingRules = "# Consumer instructions\nPreserve intentional wrappers.\n"
+      const rulePlan = await callPackedTool("agent_rules", { currentFiles: [{ path: "AGENTS.md", content: existingRules }], inventory: [{ name: "button", kind: "component" }] }) as { files: Array<{ path: string; content: string; action: string; precondition: { kind: string; sha256?: string } }> }
+      const ruleFile = rulePlan.files.find((file) => file.path === "AGENTS.md")!
+      assert.ok(ruleFile.content.startsWith(existingRules))
+      assert.equal(ruleFile.action, "update")
+      assert.equal(ruleFile.precondition.kind, "sha256")
+      assert.match(ruleFile.precondition.sha256!, /^[a-f0-9]{64}$/)
+      const noRulesScaffold = await callPackedTool("scaffold_plan", { framework: "vite", starter: "auth", version: "1.0.0-rc.16", agentRules: false }) as { files: Array<{ path: string; content: string }> }
+      assert.ok(!noRulesScaffold.files.some((file) => ["AGENTS.md", "DESIGN.md"].includes(file.path)))
+      assert.equal(JSON.parse(noRulesScaffold.files.find((file) => file.path === "components.json")!.content).logic2b.agentRules, false)
       const defaultCustomers = defaultVersion === customerRegistryVersion ? customerRelease : await customerFixtures(defaultVersion)
       for (const name of customerItems) {
         for (const selector of [customerRegistryVersion, undefined]) {
@@ -424,6 +457,8 @@ try {
         ["nope", {}],
         ["search_components", { query: "x", limit: 0 }],
         ["install_plan", { items: ["button", "button"] }],
+        ["agent_rules", { currentFiles: [{ path: "../AGENTS.md", content: "private" }] }],
+        ["agent_rules", { currentFiles: [{ path: "AGENTS.md", content: "<!-- logic2b:rules:start v2 -->\n<!-- logic2b:rules:end -->" }] }],
       ] as const) {
         await assert.rejects(
           () => client.callTool({ name, arguments: args as Record<string, unknown> }),
@@ -438,8 +473,8 @@ try {
   })
 
   passed = true
-  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/inspect/rc.16 scaffold and rc.17 customer installs verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 17 tool output contracts, project inspection and customer behavior plans verified over stdio`)
+  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/inspect/rules, managed refresh and rc.16/rc.17 installs verified`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: canonical skill packaged, all 18 tool output contracts, bounded rule plans and scaffold opt-out verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

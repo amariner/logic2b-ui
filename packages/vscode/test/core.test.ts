@@ -157,7 +157,8 @@ test("the extension manifest contributes every registered command", () => {
 test("the extension-host bundle stays single-file and within budget", () => {
   const bundlePath = resolve("dist/extension.js")
   const bundle = readFileSync(bundlePath, "utf8")
-  assert.ok(statSync(bundlePath).size <= 32 * 1024)
+  // Shared agent/design generation is bundled locally for remote/offline workspaces.
+  assert.ok(statSync(bundlePath).size <= 64 * 1024)
   assert.match(bundle, /require\(["']vscode["']\)/)
   assert.doesNotMatch(bundle, /require\(["']@logic2b\/tokens/)
 })

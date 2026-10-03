@@ -21,28 +21,8 @@ import {
 
 export const SITE = "https://ui.logic2b.com"
 
-/** Existing-app guidance is shared by copied prompts and generated agent rules. */
-export const PROJECT_CONTEXT_GUIDANCE = `## Read project context before writes
-
-Read the app's \`package.json\`, \`tsconfig.json\` or \`jsconfig.json\` (including
-local extends/references), \`components.json\` and \`.logic2b/manifest.json\` when
-present. For a workspace, select the application root first. Treat configuration
-as data; do not execute it or read environment files.
-
-Confirm declared framework/React/Tailwind versions, import aliases and their
-physical destinations, the stylesheet entry and icon library. Use the confirmed
-\`components.json\` aliases for UI, components, hooks, lib and utils destinations.
-Default \`@/components\` examples describe fresh scaffolds; they do not establish
-this app's layout. Use the CLI only when its path mapping matches these confirmed
-destinations; otherwise map registry payloads to the confirmed paths manually.
-
-Inspect installed source and the manifest's item versions and file inventory;
-compare retained \`.logic2b/base/\` snapshots before changing tracked files.
-A missing manifest does not mean the app has no UI. Preserve custom wrappers,
-native HTML controls, public APIs, local edits and unrelated styles/token overrides.
-If aliases, versions, stylesheet paths or installed-file evidence are missing or
-conflicting, record those unknowns and obtain the needed context before writes.
-`
+export { PROJECT_CONTEXT_GUIDANCE } from "@logic2b/scaffold/rules"
+import { PROJECT_CONTEXT_GUIDANCE } from "@logic2b/scaffold/rules"
 
 /** Installation includes the UI behavior; persistence and authorization remain
  * application responsibilities. Only blocks with a shipped contract get this

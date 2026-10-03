@@ -75,8 +75,9 @@ registry `version`. Record the MCP handshake version and CLI `--version` because
 `next` can move. The remote MCP and current source provide structured results,
 verified default registry reads, input limits and `list_presets`. The npm
 `@next` package still resolves to `1.0.0-rc.2`: it returns JSON text and does
-not yet include those additions. Use the remote endpoint for the full catalog
-described below until the next npm release.
+not yet include those additions. Use the remote endpoint for the deployed
+registry, theme and install tools until the next npm release. Project inspection
+and managed rules are repository additions awaiting deployment, as described below.
 
 `/mcp` is a protocol endpoint, not a browser page. A GET returning HTTP 405 is
 expected; use an MCP client handshake to check the connection.
@@ -141,6 +142,44 @@ Or in any client that takes a JSON config:
 **Local (stdio)** — `npx -y @logic2b/mcp@next` runs the published package as a
 local process, with the release differences described above. See the
 [repo](https://github.com/amariner/logic2b-ui) for details.
+
+## Managed project rules and the Claude Code skill
+
+The repository implements `inspect_project` and `agent_rules`; deployment to
+the remote endpoint and the paired npm packages is still pending. Discover the
+connected server's tool catalog before using either tool. `inspect_project`
+accepts a sanitized host-supplied project snapshot and never reads a remote
+filesystem. It returns a compact summary by default; request details or selected
+hashes when a change needs installed-file evidence.
+
+`agent_rules` is a read-only, network-free plan generator. It accepts an optional
+preset, stack, icon library, exact registry version, installed/available
+inventory and editor formats. Its default files are `AGENTS.md` and `DESIGN.md`;
+the additional formats are `claude`, `cursor` and `copilot`. Supply the current
+instruction files when refreshing an existing project. Each returned file has
+a missing-file or SHA-256 precondition; the host must compare it with the current
+file immediately before writing. A stale plan must be rebuilt. Project text
+outside managed markers remains intact.
+
+Rules describe the supplied tool capabilities and the duties to confirm aliases
+and preserve customizations; they do not authorize writes or declare a static review
+passed. Use only tools exposed by the host and report unavailable checks.
+Scaffold plans in the repository candidate include rules by default, with an
+`agentRules: false` opt-out. Use scaffolding only for an empty destination.
+
+The optional Claude Code procedure lives at
+[`skills/logic2b-ui/SKILL.md`](https://github.com/amariner/logic2b-ui/blob/main/skills/logic2b-ui/SKILL.md)
+in the repository candidate and is included under `skills/logic2b-ui/SKILL.md`
+in the candidate MCP package. It detects a logic2b project, discovers available
+tools, prefers installed primitives and confirmed plan paths, and preserves
+native/customized UI and project instructions. It never edits `.logic2b`
+records by hand or requires an unavailable review/proposal tool. The npm
+publication and automatic host discovery of that packaged skill are separate;
+users of the current published package should use the repository file until
+the candidate is released. Adding MCP alone does not install a Claude Code skill.
+
+See [Installation](/docs/installation) for source CLI generation and the VS Code
+workspace command.
 
 ## Conventions an agent can rely on
 

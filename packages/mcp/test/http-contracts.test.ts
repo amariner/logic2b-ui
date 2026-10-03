@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
 import { test } from "node:test"
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv"
 import { DEFAULT_CONFIG, encodePreset } from "@logic2b/tokens"
@@ -55,4 +56,28 @@ test("the site endpoint exposes pure project inspection with the shared result s
     assert.deepEqual(result.structuredContent, JSON.parse(result.content[0].text))
     assert.equal(Boolean(result.structuredContent.context), details)
   }
+})
+
+test("the site endpoint returns typed managed rules with preserved editor content and hash preconditions", async () => {
+  const rules = TOOLS.find((entry) => entry.name === "agent_rules")!
+  const original = "---\nalwaysApply: false\n---\nProject-owned rules · 😀\n"
+  const result = await rpc("tools/call", {
+    name: "agent_rules", arguments: {
+      stack: "vite", formats: ["cursor"],
+      currentFiles: [{ path: ".cursor/rules/logic2b.mdc", content: original }],
+    },
+  })
+  assert.equal(result.isError, undefined)
+  const checked = new AjvJsonSchemaValidator().getValidator(rules.outputSchema)(result.structuredContent)
+  assert.ok(checked.valid, checked.errorMessage)
+  assert.deepEqual(result.structuredContent, JSON.parse(result.content[0].text))
+  assert.equal(result.structuredContent.schemaVersion, 1)
+  assert.deepEqual(result.structuredContent.files.map((file: { path: string }) => file.path).sort(),
+    [".cursor/rules/logic2b.mdc", "DESIGN.md"])
+  const cursor = result.structuredContent.files.find((file: { path: string }) => file.path === ".cursor/rules/logic2b.mdc")
+  assert.ok(cursor.content.startsWith(original))
+  assert.equal(cursor.action, "update")
+  assert.deepEqual(cursor.precondition, {
+    kind: "sha256", sha256: createHash("sha256").update(original, "utf8").digest("hex"),
+  })
 })

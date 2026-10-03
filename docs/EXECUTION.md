@@ -18,7 +18,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/report landed; real baselines pending) | Codex (EVAL-01) |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
-| M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
+| M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | Codex (M1-03) |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | ready | — |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | ready | — |
@@ -698,3 +698,114 @@ this contract/generator change. No npm publication, push, deployment, paid trial
 or outreach was performed. EVAL-01 real baselines and M0 pilot evidence remain
 pending. Next ready task: M1-03, agent rules delivered with installs; M1-04 and
 M2-01 are now unblocked by the implemented project-context contract.
+
+### 3 October 2026 — M1-03
+
+Completed on `codex/m1-03-agent-rules` (delivery commit subject:
+`feat(rules): deliver managed agent instructions across installs`). CLI `init`
+now supplies AGENTS/DESIGN in both modes; `add` and `update` refresh installed
+inventory while preserving project text outside versioned markers. The explicit
+`rules` command supports universal, Claude, Cursor and Copilot formats.
+`--no-agent-rules` persists the opt-out in `components.json`; explicit generation
+does not silently enable future automatic refreshes. Existing managed editor
+targets refresh with installs. Missing preset evidence is labeled unknown and
+default tokens remain a reference, not a claim about the active theme.
+
+Changed contracts: `@logic2b/scaffold/rules` owns the pure generator,
+`AgentRulesOptions`, `AgentRulesPlan` schemaVersion 1 and missing/SHA-256 write
+preconditions. MCP adds the read-only/network-free `agent_rules` tool (18 total)
+with nested schemas and structured/text parity; `scaffold_plan` includes rules
+unless `agentRules: false`. Instructions name tools only when available, and
+distinguish installed inventory from the available source catalog. The studio
+uses the shared core while retaining its full pre-move AGENTS/DESIGN bytes.
+
+The managed rules budget is 6,144 UTF-8 bytes; inputs allow five fixed paths,
+160 inventory entries, 64 tool identifiers, 64 KiB per current file and 256 KiB
+total. Invalid paths, enums, exact versions, conflicting presets/icons,
+duplicate or unsupported markers, fenced/quoted/indented marker examples and
+stale hashes are rejected. An unclosed fence prevents appending generated
+instructions. CLI uses exclusive staged writes and checks root/ancestor identity,
+symlinks and preconditions. The VS Code preview adds format selection and an
+automatic-refresh setting through workspace APIs, retaining remote URI support,
+BOM and user text, and rejecting dirty files, stale edits and save failures.
+Metadata JSON accepts an initial UTF-8 BOM, including persistent opt-outs.
+
+The canonical `skills/logic2b-ui/SKILL.md` ships as the sole allowed skill in the
+MCP tarball; prepack copies it and the artifact gate compares its exact bytes.
+English/Spanish docs, package readmes/changelogs, roadmap and the implementation
+guide describe source availability separately from npm/remote deployment.
+No new runtime dependency was added. VS Code explicitly adds the workspace's
+existing `@types/node` version as a dev dependency; the lockfile changes only
+that importer. The workspace install was explicit, never an implicit test step.
+
+Verification (Node 24.7.0 / pnpm 11.10.0, macOS):
+
+- `pnpm build`: final run passed all six build tasks, uncached, including
+  immutable registry integrity, CLI/MCP bundles and the complete Astro site.
+- `pnpm lint`: final run passed all eight packages, five cached.
+- `pnpm test --concurrency=2`: final run passed all eight packages, three
+  cached; 553 tests, no skips (scaffold 60, CLI 92, MCP 220, VS Code 17,
+  web 29, tokens 47, registry 12, benchmark protocol 76). Includes the actual
+  bundled extension's command dispatch and remote workspace edit simulation.
+- `pnpm test:release-artifacts`: passed real tarball packing/consumer install,
+  exact allowlists and skill bytes, CLI help/version/inspect/rules, preserved
+  instructions through rc.16 scaffolding and rc.17 additions/update, editor
+  formats, all 18 official-client MCP output contracts, bounded rule plans,
+  preconditions and scaffold opt-out.
+- `pnpm --filter logic2b test:scaffold`: passed the generated Turbo/Vite
+  marketing consumer's dependency install, type check and production build;
+  user AGENTS prefix/suffix survive a real CLI update.
+- `pnpm --filter @logic2b/mcp test:scaffolds`: all six dependency installs and
+  production builds passed: Next marketing, Vite dashboard, Astro auth, and
+  Vite marketing with Tabler/Phosphor/Hugeicons. Every consumer exercised
+  disk-backed rule refresh, SHA-256 preconditions, outside-text preservation
+  and repeat idempotence through the public MCP tool. The final semver import
+  reduction was made afterward and is covered by the complete MCP suite and
+  final packed gate; the six framework builds were not repeated for that change.
+- `pnpm --filter @logic2b/mcp exec node --import tsx
+  scripts/verify-rules-refresh.mts`: final rerun passed both default-reference
+  and selected-preset disk-backed refresh cases.
+- `pnpm --filter @logic2b/web test:budgets`: passed. Browser JS 2,014.4 KiB,
+  largest chunk 193.4 KiB; active registry 776.9 KiB/index 97.4 KiB. The worker
+  test measures 253,787 bytes, below its unchanged 262,144-byte cap. Direct
+  documented semver subpath imports remove unused functions without changing
+  resolution behavior; their reference identity matches the previous exports.
+- `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  pnpm --filter @logic2b/web exec playwright test tests/agent-rules.spec.ts
+  tests/beta-onboarding.spec.ts tests/a11y.spec.ts --grep
+  'studio downloads|beta onboarding|es/installation|es/llms'`: 7/7 passed.
+  Browser downloads match the pre-move AGENTS/DESIGN fixtures; onboarding works
+  at 390/1280 px with English/Spanish HTML/Markdown parity. Selected docs pass
+  serious/critical axe checks under the existing color-contrast exclusion.
+  Studio, desktop docs and mobile endpoint screenshots were visually inspected;
+  no screenshot baseline was changed.
+- `pnpm package:vscode`: passed; VSIX has eight files, 21.99 KiB compressed,
+  with one 51.16 KiB extension bundle. The extension's budget increases from
+  32 to 64 KiB to include the shared offline rules generator; its existing
+  single-file/no-workspace-runtime-import checks remain in force.
+- `git diff --check` and `git diff --quiet -- apps/web/public/r
+  apps/web/public/og apps/web/public/tokens packages/registry/api.generated.ts`:
+  passed; immutable registry and generated asset bytes are unchanged.
+
+Earlier attempts are not counted as passes: sandboxed consumer installs failed
+DNS and tsx required local IPC permissions; authorized retries passed. One
+concurrent test run hit a 20-second CLI harness timeout (now 60 seconds), a
+worker-size failure led to the semver import reduction above, and one Astro
+prerender attempt failed its localhost connection. The final sequential build
+and bounded-concurrency workspace suite passed. Review additionally caught
+installed-inventory fallback, fenced marker examples and metadata BOM handling;
+retained regression cases cover each correction.
+
+Limits: individual CLI file replacements are atomic, but a multi-file write or
+workspace save failure can leave an applied prefix; reinspection is required,
+not an overwrite-based rollback. MCP supplies plans and cannot access host
+files. Unknown project/theme metadata remains unknown. Actual Node 18 execution
+was not run; Node-only WebCrypto fallback is tested in a child with the global
+removed. VS Code GUI/real remote extension hosts, full-site axe/visual suites,
+Lighthouse, live npm beta onboarding and CI were not run for this delivery.
+No npm/Marketplace publication, push, deployment, paid evaluation or outreach
+was performed. M0 pilot evidence and EVAL-01 real baselines remain pending.
+
+Next ready task: M1-04, proof-backed accessible-name and token-policy static
+review, with wrappers/native controls and unresolved semantics handled honestly.
+M1-03 completion does not complete M1 or authorize the separate release work.

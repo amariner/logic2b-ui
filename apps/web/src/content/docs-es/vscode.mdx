@@ -17,6 +17,7 @@ componentes ni un segundo instalador.
 | Instalación | Ejecuta `npx logic2b@next add <name>` como tarea del workspace; la CLI sigue siendo dueña de dependencias, iconos y lock. |
 | Inicialización | Ejecuta `npx logic2b@next init`; puedes configurar un registro HTTPS con `logic2b.registryUrl`. |
 | Aplicar preset | Parchea `theme.css` con el codec compartido de `@logic2b/tokens` y actualiza `components.json` con preset canónico, base e iconos. |
+| Generar reglas | Escribe secciones gestionadas para AGENTS, Claude, Cursor o Copilot y un DESIGN.md separado mediante la API del workspace; conserva el texto propio fuera de los marcadores. |
 
 Los ítems instalados se leen desde `.logic2b/manifest.json` y se marcan en el
 árbol. En workspaces multirraíz eliges el destino. Las escrituras usan la API de
@@ -36,9 +37,9 @@ code --install-extension packages/vscode/dist/logic2b-ui.vsix
 
 El comando comprueba tipos, empaqueta la extensión y usa la versión exacta de
 VSCE para generar un archivo instalable. CI ejecuta el mismo contrato y sube el
-VSIX como artefacto del workflow. La preview ocupa 11,82 KiB e incluye
-manifiesto, documentación, licencia, un único bundle de 22 KiB para el host de
-extensiones y el icono de la barra de actividad.
+VSIX como artefacto del workflow. El archivo incluye manifiesto, documentación,
+licencia, una única entrada empaquetada para el host de extensiones y el icono
+de la barra de actividad.
 
 ## Comandos
 
@@ -50,6 +51,20 @@ extensiones y el icono de la barra de actividad.
 - **logic2b: Apply Preset…** acepta el id copiado desde [/create](/create) y
   actualiza tema y metadatos del proyecto en una sola edición de workspace.
 - **logic2b: Open Theme Studio** abre `/create` para diseñar otro preset.
+- **logic2b: Generate Agent Rules…** permite elegir formatos y actualizar las
+  instrucciones gestionadas y la referencia de diseño separada.
+
+La preview del código fuente actualiza los formatos de
+`logic2b.agentRules.formats` tras inicializar o instalar correctamente (por
+defecto, `agents`). Usa `logic2b.agentRules.enabled: false` para desactivar la
+actualización automática; el comando explícito sigue disponible. La extensión
+comprueba la ayuda de la CLI antes de pasar `--no-agent-rules`, por lo que una
+CLI publicada antigua no recibe una opción desconocida. La actualización automática
+también respeta `logic2b.agentRules: false` en `components.json`; el comando
+explícito conserva esa preferencia. La generación usa el
+núcleo compartido sin consultar el registro. Los archivos con cambios sin
+guardar, symlinks, marcadores incorrectos o hashes obsoletos detienen la edición
+con un mensaje concreto. La CLI sigue siendo dueña de los metadatos de `.logic2b`.
 
 El modo restringido no está soportado: las instalaciones ejecutan una tarea y
 los presets escriben archivos. Los registros deben usar HTTPS; solo se acepta

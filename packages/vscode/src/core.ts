@@ -17,7 +17,15 @@ export const COMMAND_IDS = [
   "logic2b.applyPreset",
   "logic2b.openCreate",
   "logic2b.openDocumentation",
+  "logic2b.generateAgentRules",
 ] as const
+
+/** Old published CLIs have no rules flag; never pass an option their help does not advertise. */
+export function cliArgsForAgentRules(args: string[], enabled: boolean, help = ""): string[] {
+  return !enabled && /(?:^|\s)--no-agent-rules(?:\s|,|$)/.test(help)
+    ? [...args, "--no-agent-rules"]
+    : [...args]
+}
 
 export type RegistryKind = "component" | "block" | "chart"
 

@@ -39,7 +39,12 @@ versioned behavior/content contract in source (M1-01), with keyboard/mobile,
 failure/retry, unsaved-change and state-matrix evidence in the execution queue.
 This coverage is limited to those two blocks; it is not a published release.
 
-Project inspection, incremental change plans, broader behavior/content coverage,
+Bounded read-only project inspection (M1-02) and install-delivered agent rules
+(M1-03) exist in source; their exact contracts, checks and publication gaps are
+recorded in the execution queue. Neither implies filesystem access by a remote
+MCP or permission to overwrite local instructions.
+
+Incremental change plans, broader behavior/content coverage,
 `review_ui`, consumer runtime verification, structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.

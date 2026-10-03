@@ -8,7 +8,8 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "skills/logic2b-ui/SKILL.md"
   ],
   "keywords": [
     "logic2b",
@@ -41,7 +42,7 @@
     "test": "node --import tsx --test test/*.test.ts",
     "test:release-artifacts": "node --import tsx scripts/verify-release-artifacts.mts",
     "test:scaffolds": "node --import tsx scripts/verify-scaffolds.mts",
-    "prepack": "tsup",
+    "prepack": "tsup && node scripts/copy-skills.mjs",
     "test:beta-onboarding": "node --import tsx scripts/verify-beta-onboarding.mts",
     "demo:walkthrough": "node --import tsx scripts/demo-walkthrough.mts"
   },

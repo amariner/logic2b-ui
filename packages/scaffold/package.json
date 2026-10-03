@@ -10,7 +10,8 @@
     "./package-selectors": "./src/package-selectors.ts",
     "./behavior": "./src/behavior.ts",
     "./project-context": "./src/project-context.ts",
-    "./project-collector": "./src/project-collector.ts"
+    "./project-collector": "./src/project-collector.ts",
+    "./rules": "./src/rules.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",

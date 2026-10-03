@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import "./node-runtime.ts"
 import { Command } from "commander"
 import { existsSync } from "node:fs"
 import { readFile, writeFile } from "node:fs/promises"
@@ -32,6 +33,7 @@ import { applyPresetToCss, decodePreset } from "@logic2b/tokens"
 import { PACKAGE_VERSION } from "./version.ts"
 import { REGISTRY_VERSION } from "@logic2b/registry/version"
 import { registerInspectCommand } from "./inspect.ts"
+import { createAgentRulesConfig, prepareAgentRulesRefresh, refreshAgentRules, registerRulesCommand, updateAgentRulesConfig } from "./rules.ts"
 
 const program = new Command()
 
@@ -41,6 +43,7 @@ program
   .version(PACKAGE_VERSION)
 
 registerInspectCommand(program)
+registerRulesCommand(program)
 
 program
   .command("init")
@@ -54,6 +57,7 @@ program
   .option("--name <name>", "generated package name (defaults to the target directory)")
   .option("--package-manager <name>", "npm, pnpm, yarn or bun")
   .option("--no-install", "skip installing npm dependencies")
+  .option("--no-agent-rules", "disable automatic agent-rule files and remember the preference")
   .option("--monorepo", "create a Turbo workspace with the app in apps/web", false)
   .action(async (opts) => {
     const cwd = resolve(opts.cwd ?? process.cwd())
@@ -99,6 +103,7 @@ program
         monorepo: opts.monorepo,
         install: opts.install,
         packageManager: opts.packageManager as PackageManager | undefined,
+        agentRules: opts.agentRules,
       })
       const appDir = opts.monorepo ? join(cwd, "apps/web") : cwd
       const installCommand = packageManagerInstallCommand(
@@ -134,33 +139,34 @@ program
     const cssPath = detectCssPath(cwd, srcDir)
     const configPath = join(cwd, "components.json")
 
+    await prepareAgentRulesRefresh(cwd, {
+      agentRules: opts.agentRules,
+      preset: opts.preset,
+      registryVersion: registryClient.resolvedVersion,
+      inventory: [{ name: "utils", kind: "other" }, { name: "theme", kind: "other" }],
+    })
+
     if (!existsSync(configPath)) {
-      await writeFile(
-        configPath,
-        JSON.stringify(
-          {
-            $schema: "https://ui.logic2b.com/schema.json",
-            style: "default",
-            tailwind: {
-              css: cssPath,
-              baseColor: preset?.base ?? "neutral",
-              cssVariables: true,
-            },
-            aliases: DEFAULT_ALIASES,
-            iconLibrary: preset?.iconLibrary ?? "lucide",
-            logic2b: {
-              registry: opts.registry,
-              version: registryClient.resolvedVersion ?? opts.registryVersion,
-              ...(opts.preset ? { preset: opts.preset } : {}),
-            },
-          },
-          null,
-          2
-        )
-      )
+      await createAgentRulesConfig(cwd, {
+        $schema: "https://ui.logic2b.com/schema.json",
+        style: "default",
+        tailwind: {
+          css: cssPath,
+          baseColor: preset?.base ?? "neutral",
+          cssVariables: true,
+        },
+        aliases: DEFAULT_ALIASES,
+        iconLibrary: preset?.iconLibrary ?? "lucide",
+        logic2b: {
+          registry: opts.registry,
+          version: registryClient.resolvedVersion ?? opts.registryVersion,
+          ...(opts.preset ? { preset: opts.preset } : {}),
+          ...(opts.agentRules === false ? { agentRules: false } : {}),
+        },
+      })
       console.log(`✓ created ${configPath} (css: ${cssPath})`)
     } else {
-      console.log(`components.json already exists, leaving it untouched.`)
+      console.log("Using existing components.json aliases and stylesheet.")
     }
 
     // Install cn() and the design system so components look like logic2b.
@@ -170,13 +176,21 @@ program
       cwd,
       install: opts.install,
       client: registryClient,
+      agentRules: opts.agentRules,
+      refreshRules: false,
     })
 
-    const themeTarget = join(cwd, dirname(cssPath), "theme.css")
+    const installedConfig = await loadConfig(cwd, opts.registry, opts.registryVersion)
+    const themeTarget = join(cwd, dirname(installedConfig.cssPath), "theme.css")
     if (preset) {
       if (existsSync(themeTarget)) {
         const css = await readFile(themeTarget, "utf8")
         await writeFile(themeTarget, applyPresetToCss(css, preset))
+        await updateAgentRulesConfig(cwd, {
+          preset: opts.preset,
+          iconLibrary: preset.iconLibrary,
+          ...(opts.agentRules === false ? { agentRules: false } : {}),
+        })
         console.log(
           `✓ applied preset — base: ${preset.base}, accent: ${preset.theme}, ` +
             `chart: ${preset.chart}, radius: ${preset.radius}, ` +
@@ -189,8 +203,10 @@ program
       }
     }
 
+    await refreshAgentRules(cwd, { agentRules: opts.agentRules })
+
     console.log(
-      `\nDesign system installed → ${join(dirname(cssPath), "theme.css")}\n` +
+      `\nDesign system installed → ${join(dirname(installedConfig.cssPath), "theme.css")}\n` +
         `  • Fresh project: make theme.css your app's stylesheet entry.\n` +
         `  • Existing globals.css: it already @imports tailwindcss, so either\n` +
         `    replace your entry with theme.css or copy its :root/.dark tokens over.\n` +
@@ -208,6 +224,7 @@ program
   .option("-o, --overwrite", "overwrite existing files", false)
   .option("-a, --all", "add every component in the registry", false)
   .option("--no-install", "skip installing npm dependencies")
+  .option("--no-agent-rules", "disable automatic agent-rule refresh and remember the preference")
   .action(async (components: string[], opts) => {
     let names = components
     if (opts.all) {
@@ -236,6 +253,7 @@ program
   .option("-r, --registry <url>", "registry base URL")
   .option("--registry-version <range>", "registry semver, range or channel")
   .option("--no-install", "skip installing npm dependencies")
+  .option("--no-agent-rules", "disable automatic agent-rule refresh and remember the preference")
   .action(async (components: string[], opts) => {
     let names = components
     if (names.length === 0) {

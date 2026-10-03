@@ -16,6 +16,7 @@ webview, hidden component fork or second installer.
 | Install | Runs `npx logic2b@next add <name>` as a workspace task, so dependency resolution, icon rewriting and the install lock remain owned by the CLI. |
 | Initialize | Runs `npx logic2b@next init`; a custom HTTPS registry can be configured with `logic2b.registryUrl`. |
 | Apply preset | Patches `theme.css` with the shared `@logic2b/tokens` codec and updates `components.json` with the canonical preset, base color and icon library. |
+| Generate agent rules | Writes AGENTS, Claude, Cursor or Copilot managed sections plus DESIGN.md through the workspace API; preserves project text outside the markers. |
 
 Installed items are read from `.logic2b/manifest.json` and marked in the tree.
 Multi-root workspaces ask which root should receive a command. File edits use
@@ -35,9 +36,8 @@ code --install-extension packages/vscode/dist/logic2b-ui.vsix
 
 The package command type-checks and bundles the extension, then uses the exact
 pinned VSCE version to produce an installable archive. CI runs the same command
-and uploads the VSIX as a workflow artifact. The preview is 11.82 KiB and
-contains the manifest, docs, license, one 22 KiB extension-host bundle and its
-Activity Bar icon.
+and uploads the VSIX as a workflow artifact. The archive contains the manifest,
+docs, license, one bundled extension-host entry and its Activity Bar icon.
 
 ## Commands
 
@@ -49,6 +49,19 @@ Activity Bar icon.
 - **logic2b: Apply Preset…** accepts the id copied from [/create](/create) and
   updates both theme and project metadata in one workspace edit.
 - **logic2b: Open Theme Studio** opens `/create` for a new preset.
+- **logic2b: Generate Agent Rules…** selects editor formats and refreshes the
+  managed project instructions and separate design reference.
+
+The source preview refreshes `logic2b.agentRules.formats` after successful
+initialization or installation (default: `agents`). Set
+`logic2b.agentRules.enabled` to `false` to opt out; the explicit command remains
+available. The extension checks CLI help before passing the new
+`--no-agent-rules` flag, so an older published CLI receives no unknown option.
+Automatic refresh also respects `components.json`'s persistent
+`logic2b.agentRules: false`; the explicit command preserves that preference.
+Rules generation uses the shared pure generator without a registry request.
+Dirty files, symlinked rule paths, malformed markers and stale hashes stop an
+edit with an actionable message. Keep `.logic2b` metadata owned by the CLI.
 
 Restricted Mode is intentionally unsupported because install commands execute
 a task and presets write project files. Registry origins must use HTTPS; plain

@@ -1,4 +1,5 @@
 import { PROJECT_LIMITS } from "@logic2b/scaffold/project-context"
+import { RULES_LIMITS } from "@logic2b/scaffold/rules"
 
 /**
  * Documented resource limits shared by the stdio server and the remote HTTP
@@ -38,6 +39,14 @@ export const LIMITS = {
   projectPathLength: PROJECT_LIMITS.paths,
   projectCompactBytes: PROJECT_LIMITS.compactBytes,
   projectDetailBytes: PROJECT_LIMITS.detailBytes,
+  /** agent_rules shares bounded instruction metadata and managed sections. */
+  rulesManagedBytes: RULES_LIMITS.managedBytes,
+  rulesCurrentFileBytes: RULES_LIMITS.currentFileBytes,
+  rulesCurrentTotalBytes: RULES_LIMITS.currentTotalBytes,
+  rulesInventoryItems: RULES_LIMITS.inventoryItems,
+  rulesFormats: RULES_LIMITS.formats,
+  rulesToolNames: RULES_LIMITS.toolNames,
+  rulesPathLength: RULES_LIMITS.pathLength,
   /** Maximum size of one fetched registry document in bytes. */
   registryDocumentBytes: 4 * 1024 * 1024,
   /** Maximum total file-content bytes returned by one plan or item read. */

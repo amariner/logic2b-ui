@@ -25,7 +25,8 @@
     "onView:logic2b.registry",
     "onCommand:logic2b.installItems",
     "onCommand:logic2b.initializeWorkspace",
-    "onCommand:logic2b.applyPreset"
+    "onCommand:logic2b.applyPreset",
+    "onCommand:logic2b.generateAgentRules"
   ],
   "extensionKind": [
     "workspace"
@@ -98,6 +99,10 @@
       {
         "command": "logic2b.openDocumentation",
         "title": "logic2b: Open Documentation"
+      },
+      {
+        "command": "logic2b.generateAgentRules",
+        "title": "logic2b: Generate Agent Rules…"
       }
     ],
     "menus": {
@@ -133,6 +138,22 @@
           "type": "string",
           "default": "https://ui.logic2b.com",
           "description": "Registry origin used by the explorer and by workspace initialization. HTTPS is required except for localhost development."
+        },
+        "logic2b.agentRules.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Refresh managed agent instructions after successful logic2b initialization or installation. Disable to opt out; Generate Agent Rules remains available on demand."
+        },
+        "logic2b.agentRules.formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["agents", "claude", "cursor", "copilot"]
+          },
+          "uniqueItems": true,
+          "minItems": 1,
+          "default": ["agents"],
+          "description": "Editor formats refreshed after successful installs. DESIGN.md accompanies every selection; Claude also includes AGENTS.md."
         }
       }
     }
@@ -148,6 +169,7 @@
     "@logic2b/scaffold": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^26.1.0",
     "@types/vscode": "1.95.0",
     "@vscode/vsce": "3.9.2",
     "esbuild": "0.28.2",

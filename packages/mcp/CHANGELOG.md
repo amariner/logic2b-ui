@@ -4,6 +4,15 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## Unreleased
 
+- Add the pure `agent_rules` tool with bounded editor-format plans, managed
+  sections, preserved project instructions and current-file hash preconditions.
+  Scaffold plans include AGENTS.md and DESIGN.md by default with an explicit
+  `agentRules: false` opt-out recorded in project configuration.
+- Include the canonical logic2b UI skill in the MCP tarball through a narrow
+  allowlist and byte-identical prepack staging, with instructions that discover
+  available tools before using them.
+- Initialize WebCrypto in the Node server when the runtime lacks the global
+  API, so Node 18 can hash rule preconditions and verify registry integrity.
 - Add the pure `inspect_project` tool with shared schemaVersion 1 snapshot validation, compact/detail typed results, explicit host capabilities and bounded invalid-params errors across stdio/HTTP.
 - Guide existing-app installs through confirmed aliases and inventory while retaining explicit empty-project scaffolding.
 

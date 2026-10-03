@@ -7,7 +7,8 @@ and internal tools with coding agents; hosted on Cloudflare Workers.
 
 Our direction is a complete workflow: understand the project, compose real
 components, verify behavior and preserve local work through subsequent changes.
-Project inspection, composition/review tools and proposal previews are planned;
+Read-only project inspection and install-delivered agent rules exist in source;
+composition/review tools and proposal previews are planned;
 see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
 
 ## What's inside
@@ -95,6 +96,17 @@ configuration, host capabilities and unresolved context; `--details` adds
 installed-file hashes. The corresponding pure MCP `inspect_project` consumes
 host-supplied metadata. These changes await npm/remote publication; the contract,
 limits and adaptation guidance are in [project context](docs/guides/10-project-context.md).
+
+Source installs now generate bounded, managed `AGENTS.md` and `DESIGN.md` files.
+`pnpm --filter logic2b dev rules --cwd /path/to/app --format claude,cursor,copilot`
+adds editor formats while preserving existing instructions. `init`/`add`/`update`
+refresh managed rules; `--no-agent-rules` records a persistent project opt-out.
+MCP `agent_rules` returns file plans with missing/SHA-256 preconditions, and
+`scaffold_plan` includes default rules unless `agentRules: false`. VS Code has
+a matching generation command and automatic refresh setting. The canonical
+[Claude Code skill](skills/logic2b-ui/SKILL.md) is included in the MCP tarball,
+but requires explicit host installation. See [agent rules](docs/guides/07-agent-rules-distribution.md)
+for bounds, preservation and the pending npm/remote delivery boundary.
 
 ## Beta onboarding
 

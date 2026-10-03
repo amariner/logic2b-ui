@@ -5,9 +5,10 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
     "noEmit": true,
     "lib": ["ES2022", "DOM"],
-    "types": ["vscode"]
+    "types": ["vscode", "node"]
   },
   "include": ["src"]
 }

@@ -9,6 +9,7 @@ import { validateBehavior, type RegistryBehavior } from "@logic2b/scaffold/behav
 import { ICON_LIBRARIES, type IconLibrary } from "@logic2b/tokens"
 
 import { merge3 } from "./merge.ts"
+import { prepareAgentRulesRefresh, refreshAgentRules, validateAgentRulesConfig } from "./rules.ts"
 
 export const DEFAULT_REGISTRY = "https://ui.logic2b.com"
 export const FETCH_TIMEOUT_MS = 15_000
@@ -709,10 +710,14 @@ export async function addComponents(
     install?: boolean
     fetchImpl?: FetchLike
     client?: RegistryClient
+    agentRules?: boolean
+    /** init refreshes after applying its requested preset. */
+    refreshRules?: boolean
   }
 ): Promise<Map<string, RegistryItem>> {
   const { resolve } = await import("node:path")
   const cwd = resolve(opts.cwd ?? process.cwd())
+  await validateAgentRulesConfig(cwd)
   const config = await loadConfig(cwd, opts.registry, opts.registryVersion)
   const client =
     opts.client ??
@@ -726,6 +731,14 @@ export async function addComponents(
     await resolveGraph(names, (name) => client.getItem(name)),
     config.iconLibrary,
   )
+
+  if (opts.refreshRules !== false) {
+    await prepareAgentRulesRefresh(cwd, {
+      agentRules: opts.agentRules,
+      registryVersion: client.resolvedVersion,
+      inventory: [...resolved.values()].map((item) => ({ name: item.name, kind: item.type === "registry:ui" ? "component" : item.files?.some((file) => file.path.startsWith("charts/")) ? "chart" : item.type === "registry:block" ? "block" : "other" })),
+    })
+  }
 
   const npmDeps = new Set<string>()
   let written = 0
@@ -749,6 +762,7 @@ export async function addComponents(
   }
 
   await recordResolvedItems(cwd, client, resolved)
+  if (opts.refreshRules !== false) await refreshAgentRules(cwd, { agentRules: opts.agentRules })
   console.log(`\n✓ ${written} file(s) written, ${skipped} skipped.`)
   if (client.resolvedVersion) {
     console.log(
@@ -796,10 +810,12 @@ export async function updateComponents(
     cwd?: string
     install?: boolean
     fetchImpl?: FetchLike
+    agentRules?: boolean
   }
 ): Promise<UpdateSummary> {
   const { resolve } = await import("node:path")
   const cwd = resolve(opts.cwd ?? process.cwd())
+  await validateAgentRulesConfig(cwd)
   const config = await loadConfig(cwd, opts.registry, opts.registryVersion)
   const client = await createRegistryClient(
     config.registry,
@@ -811,6 +827,12 @@ export async function updateComponents(
     await resolveGraph(names, (name) => client.getItem(name)),
     config.iconLibrary,
   )
+
+  await prepareAgentRulesRefresh(cwd, {
+    agentRules: opts.agentRules,
+    registryVersion: client.resolvedVersion,
+    inventory: [...resolved.values()].map((item) => ({ name: item.name, kind: item.type === "registry:ui" ? "component" : item.files?.some((file) => file.path.startsWith("charts/")) ? "chart" : item.type === "registry:block" ? "block" : "other" })),
+  })
 
   const summary: UpdateSummary = {
     updated: 0,
@@ -871,6 +893,7 @@ export async function updateComponents(
   }
 
   await recordResolvedItems(cwd, client, resolved)
+  await refreshAgentRules(cwd, { agentRules: opts.agentRules })
   const parts = [
     `${summary.updated} updated`,
     `${summary.merged} merged`,

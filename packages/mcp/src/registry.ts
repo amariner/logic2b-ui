@@ -1,6 +1,8 @@
 import { REGISTRY_DEFAULT_CHANNEL } from "@logic2b/scaffold/package-selectors"
 import { validateBehavior, type RegistryBehavior } from "@logic2b/scaffold/behavior"
-import { maxSatisfying, valid as validVersion, validRange } from "semver"
+import maxSatisfying from "semver/ranges/max-satisfying.js"
+import validVersion from "semver/functions/valid.js"
+import validRange from "semver/ranges/valid.js"
 
 import { byteLength, LIMITS } from "./limits.ts"
 

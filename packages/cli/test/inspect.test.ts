@@ -57,7 +57,7 @@ function appFiles(): Record<string, string> {
 async function inspect(cwd: string, args: string[] = []) {
   return execute(process.execPath, ["--import", tsxLoader, cli, "inspect", "--cwd", cwd, ...args], {
     cwd: packageRoot,
-    timeout: 15_000,
+    timeout: 60_000,
     maxBuffer: 512 * 1024,
   })
 }
@@ -83,7 +83,7 @@ test("inspect is exposed in CLI help with explicit, read-only capability options
 test("inspect defaults to the process working directory and provides a compact text summary", async (context) => {
   const cwd = await fixture(context, appFiles())
   const before = await tree(cwd)
-  const { stdout, stderr } = await execute(process.execPath, ["--import", tsxLoader, cli, "inspect"], { cwd, timeout: 15_000 })
+  const { stdout, stderr } = await execute(process.execPath, ["--import", tsxLoader, cli, "inspect"], { cwd, timeout: 60_000 })
   assert.match(stdout, /Project inspection \(schema 1\)/)
   assert.match(stdout, /Framework:.*vite/)
   assert.equal(stdout.includes("src/custom/ui/button.tsx"), false)

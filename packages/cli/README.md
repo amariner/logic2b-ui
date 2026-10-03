@@ -92,6 +92,51 @@ The host must declare its capabilities: `--file-writes`,
 `--dependency-install` and `--browser` default to false. These flags describe
 available permissions for later work; inspection itself still only reads.
 
+## Install-delivered agent rules (source)
+
+Agent-rule delivery is implemented in this repository and awaits npm publication.
+The source CLI's `init`, including `init --template`, creates `AGENTS.md` and
+`DESIGN.md`. `add` and `update` refresh their managed blocks from the project's
+configuration and recorded installed inventory. Existing instructions and design
+notes outside `logic2b:rules` / `logic2b:design` markers retain their exact bytes.
+Without markers, a block is appended once. Malformed, duplicate or unsupported
+markers abort preflight instead of replacing the project file.
+
+Generate rules alone, or select editor formats without contacting a registry
+or installing dependencies:
+
+```bash
+pnpm --filter logic2b dev rules --cwd /path/to/my-app
+pnpm --filter logic2b dev rules --cwd /path/to/my-app --format claude,cursor,copilot
+```
+
+`--format` accepts comma-separated names or repeated flags: `agents`, `design`,
+`claude`, `cursor`, `copilot`. Every selection includes `DESIGN.md`; Claude also
+includes `AGENTS.md` and appends a real `@AGENTS.md` import to `CLAUDE.md`.
+Cursor uses `.cursor/rules/logic2b.mdc` and Copilot uses
+`.github/copilot-instructions.md`. Previously managed editor files also refresh
+with automatic installs. Unselected, unmanaged editor files remain untouched.
+
+Pass `--no-agent-rules` to source `init`, `add` or `update` to save
+`logic2b.agentRules: false` in `components.json`. Later automatic refreshes
+respect that preference. Running `rules` explicitly can generate files once
+without changing the preference. Set the field to `true` or remove it to resume
+automatic refreshes.
+
+Rules advertise the local CLI's existing features and preserve uncertainty
+about unsupported context. An absent preset is recorded as unknown; default
+tokens in `DESIGN.md` are reference values. Instructions preserve custom
+wrappers, native controls and local edits, and use confirmed aliases and style
+paths before proposing writes. They do not assume that a remote host has
+filesystem access or unadvertised review/proposal tools.
+
+The adapter bounds configuration and text reads, rejects symlink targets and
+ancestors, and checks missing/SHA-256 preconditions before applying a batch.
+Each file replacement is atomic; the batch has no rollback transaction. If a
+concurrent edit or I/O failure interrupts application, inspect the result and
+retry. Managed rule blocks are limited to 6 KiB; existing rule files to 64 KiB
+each and 256 KiB total.
+
 `add` snapshots what it installs under `.logic2b/base/` — that snapshot is the
 base side of `update`'s merge, so keep the directory (committing it is fine).
 Files installed by older CLI versions have no snapshot; `update` leaves them

@@ -143,9 +143,10 @@ function sanitizeConfig(kind: ProjectConfigKind, input: unknown): Record<string,
     if (data.tailwind !== undefined) { const css = record(data.tailwind, "Tailwind configuration").css; if (css !== undefined) result.tailwind = { css: normalizeProjectPath(css) } }
     if (data.iconLibrary !== undefined) { const icon = boundedString(data.iconLibrary, 64, "Icon library"); result.iconLibrary = Object.hasOwn(ICON_LIBRARIES, icon) ? icon : "unknown" }
     if (data.logic2b !== undefined) {
-      const config = record(data.logic2b, "logic2b configuration"), selected: Record<string, string> = {}
+      const config = record(data.logic2b, "logic2b configuration"), selected: Record<string, unknown> = {}
       if (config.preset !== undefined) { const preset = boundedString(config.preset, 256, "logic2b preset"); selected.preset = decodePreset(preset) ? preset : "unknown" }
       if (config.version !== undefined) { const selector = boundedString(config.version, 256, "logic2b version"); selected.version = registryVersion(selector) ?? "unknown" }
+      if (config.agentRules !== undefined) { if (typeof config.agentRules !== "boolean") fail("logic2b agentRules must be a boolean."); selected.agentRules = config.agentRules }
       result.logic2b = selected
     }
     return result

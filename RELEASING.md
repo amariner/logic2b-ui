@@ -38,7 +38,10 @@ Before publishing, also confirm:
 - Both changelogs describe the candidate and both package versions match.
 - `git status` is clean and CI passed for the exact commit being tagged.
 - `pnpm --dir packages/cli pack --dry-run` and the MCP equivalent contain only
-  `dist`, `README.md`, `LICENSE`, `CHANGELOG.md` and `package.json`.
+  `dist`, `README.md`, `LICENSE`, `CHANGELOG.md` and `package.json`, plus exactly
+  `skills/logic2b-ui/SKILL.md` in the MCP package. Its bytes must match the
+  canonical repository skill; `prepack` stages it and the artifact gate compares
+  the consumer-installed copy. No other skills are allowlisted.
 - The remote registry and MCP endpoint are healthy at `ui.logic2b.com`.
 
 ## Advertised beta onboarding
@@ -83,8 +86,8 @@ Checked against the public npm registry on 7 September 2026:
 
 | Package | Published `next` | Published `latest` | Pending delivery |
 | --- | --- | --- | --- |
-| `@logic2b/mcp` | `1.0.0-rc.2` | `0.2.0` | Structured outputs, verified default registry reads, bounded inputs/protocol errors, beta command selectors and the 16th tool, `list_presets` |
-| `logic2b` | `1.0.0-rc.2` | `0.4.0` | Paired candidate required by the shared CLI/MCP version policy; no new CLI command from the gallery integration |
+| `@logic2b/mcp` | `1.0.0-rc.2` | `0.2.0` | Structured outputs, verified default reads, bounded inputs/protocol errors, beta selectors, `list_presets`, source `inspect_project` / `agent_rules`, scaffolded rules and the packaged skill (18 source tools) |
+| `logic2b` | `1.0.0-rc.2` | `0.4.0` | Paired candidate, source `inspect` / `rules`, managed install/update instructions and persistent agent-rule opt-out |
 
 The website and remote MCP deploy from GitHub independently of npm. The gallery
 is available through `/themes`, `/es/themes`, `/themes/index.json` and remote
@@ -92,9 +95,11 @@ is available through `/themes`, `/es/themes`, `/themes/index.json` and remote
 either npm dist-tag. Tokens and scaffold are private workspace packages bundled
 into the distributable binaries; they need no separate npm publication.
 
-The manifests still carry the already published `1.0.0-rc.2` version. Before
-publishing, allocate an unused paired version (`1.0.0-rc.3` was available at this
-check), update both changelogs/manifests, run the release-candidate gate above
-and publish both packages to `next`. Keep `latest` unchanged. After publication,
+The source manifests now carry the paired `1.0.0-rc.3` candidate. Before
+publishing, recheck the public registry to confirm this version remains unused;
+if either package has already used it, allocate another unused paired version
+and update both changelogs/manifests. Run the release-candidate gate above and,
+with publication authorization, publish both packages to `next`. Keep `latest`
+unchanged. After publication,
 run the live beta-onboarding check and update the compatibility tables and MCP
 availability notes in English and Spanish. This integration does not publish npm.
