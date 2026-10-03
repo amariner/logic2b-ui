@@ -72,8 +72,10 @@ de `version` del registro. Registra la versión del handshake MCP y `--version`
 de la CLI: `next` puede cambiar. El MCP remoto y el código actual ofrecen
 resultados estructurados, lecturas verificadas por defecto, límites de entrada
 y `list_presets`. El paquete npm `@next` sigue en `1.0.0-rc.2`: devuelve JSON
-como texto y aún no incluye esas novedades. Usa el endpoint remoto para acceder
-al catálogo completo descrito aquí hasta la próxima publicación npm.
+como texto y aún no incluye esas novedades. Usa el endpoint remoto para las
+herramientas desplegadas de registro, temas e instalación hasta la próxima
+publicación npm. La inspección de proyectos y las reglas gestionadas del
+repositorio siguen pendientes de despliegue, como se explica más abajo.
 
 Si omites `version`, el MCP resuelve el canal `next` del registro a una
 versión exacta, verifica el SHA-256 de cada payload y devuelve `registryVersion`;
@@ -131,6 +133,44 @@ O en un cliente con configuración JSON:
 
 **Local (stdio)** — `npx -y @logic2b/mcp@next` ejecuta el paquete publicado como
 proceso local, con las diferencias de versión indicadas arriba.
+
+## Reglas gestionadas y skill de Claude Code
+
+El repositorio implementa `inspect_project` y `agent_rules`; su despliegue al
+endpoint remoto y a los paquetes npm conjuntos está pendiente. Descubre el
+catálogo del servidor conectado antes de usar estas herramientas.
+`inspect_project` acepta un snapshot saneado aportado por el host y nunca lee
+un sistema de archivos remoto. Devuelve un resumen compacto; solicita detalles
+o hashes seleccionados cuando el cambio necesite evidencia de archivos instalados.
+
+`agent_rules` genera un plan de solo lectura sin acceso a la red. Acepta preset,
+stack, librería de iconos, versión exacta del registro, inventario instalado o
+disponible y formatos de editor opcionales. Por defecto devuelve `AGENTS.md` y
+`DESIGN.md`; los formatos adicionales son `claude`, `cursor` y `copilot`. Para
+actualizar un proyecto, aporta los archivos de instrucciones actuales. Cada
+archivo devuelto tiene una precondición de ausencia o SHA-256 que el host debe
+comparar con el archivo actual inmediatamente antes de escribir. Un plan
+obsoleto debe regenerarse. El texto ajeno a los marcadores gestionados se conserva.
+
+Las reglas describen las capacidades indicadas y la obligación de confirmar alias
+y conservar personalizaciones; no autorizan escrituras ni declaran superada una revisión
+estática. Usa solo herramientas que el host exponga e informa de las comprobaciones
+no disponibles. Los planes de scaffold del candidato incluyen reglas por defecto,
+con `agentRules: false` para desactivarlas. Usa scaffold solo en un destino vacío.
+
+El procedimiento opcional para Claude Code está en
+[`skills/logic2b-ui/SKILL.md`](https://github.com/amariner/logic2b-ui/blob/main/skills/logic2b-ui/SKILL.md)
+del candidato del repositorio y se incluye bajo esa misma ruta en el paquete MCP
+candidato. Detecta proyectos logic2b, descubre herramientas disponibles, prefiere
+primitivas instaladas y rutas confirmadas, y conserva UI nativa, personalizaciones
+e instrucciones propias. Nunca modifica los registros de `.logic2b` a mano ni
+exige herramientas de revisión o propuestas que no existan. La publicación npm
+y el descubrimiento automático de la skill por el host son pasos separados;
+hasta la publicación usa el archivo del repositorio. Conectar MCP por sí solo
+no instala una skill de Claude Code.
+
+Consulta [Instalación](/es/docs/installation) para la generación desde la CLI del
+repositorio y el comando de workspace de VS Code.
 
 ## Convenciones fiables para un agente
 

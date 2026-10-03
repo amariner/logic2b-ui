@@ -55,6 +55,7 @@ describe("TOOLS", () => {
     }
     assert.equal(TOOLS.find((tool) => tool.name === "decode_preset")!.annotations.openWorldHint, false)
     assert.equal(TOOLS.find((tool) => tool.name === "inspect_project")!.annotations.openWorldHint, false)
+    assert.equal(TOOLS.find((tool) => tool.name === "agent_rules")!.annotations.openWorldHint, false)
     assert.equal(TOOLS.find((tool) => tool.name === "apply_preset")!.annotations.openWorldHint, true)
   })
 
@@ -94,6 +95,7 @@ describe("TOOLS", () => {
         "contrast_audit",
         "lint_theme",
         "inspect_project",
+        "agent_rules",
       ]
     )
   })
@@ -112,6 +114,17 @@ describe("runTool — project inspection", () => {
     assert.equal(result.isError, undefined)
     assert.equal(result.structuredContent?.schemaVersion, 1)
     assert.equal(result.structuredContent?.context, undefined)
+  })
+})
+
+describe("runTool — agent rules", () => {
+  test("returns a typed managed rules plan without fetching", async () => {
+    const result = await runTool("agent_rules", {}, { fetchImpl: noFetch })
+    assert.equal(result.isError, undefined)
+    assert.equal(result.structuredContent?.schemaVersion, 1)
+    const files = result.structuredContent?.files as Array<{ path: string; precondition: { kind: string } }>
+    assert.deepEqual(files.map((file) => file.path).sort(), ["AGENTS.md", "DESIGN.md"])
+    for (const file of files) assert.equal(file.precondition.kind, "missing")
   })
 })
 
@@ -419,6 +432,8 @@ describe("runTool — acting tools", () => {
     const plan = parseText(r)
     assert.equal(plan.projectName, "agent-app")
     assert.ok(plan.files.some((file: { path: string }) => file.path === "package.json"))
+    assert.ok(plan.files.some((file: { path: string }) => file.path === "AGENTS.md"))
+    assert.ok(plan.files.some((file: { path: string }) => file.path === "DESIGN.md"))
     assert.ok(
       plan.files.some(
         (file: { path: string }) => file.path === "src/components/login-01/login-form.tsx"
@@ -431,6 +446,16 @@ describe("runTool — acting tools", () => {
       () => runTool("scaffold_plan", { framework: "remix", starter: "auth" }, { base, fetchImpl: noFetch }),
       (error: unknown) => error instanceof ToolInputError && /"framework" argument must be one of: next, vite, astro/.test(error.message)
     )
+  })
+
+  test("scaffold_plan opts out of rules explicitly and rejects nonboolean flags before fetching", async () => {
+    const result = await runTool("scaffold_plan", { framework: "vite", starter: "auth", agentRules: false }, { base, fetchImpl })
+    const plan = parseText(result)
+    assert.equal(plan.files.some((file: { path: string }) => file.path === "AGENTS.md" || file.path === "DESIGN.md"), false)
+    for (const agentRules of [null, 0, "false", [], {}]) {
+      await assert.rejects(() => runTool("scaffold_plan", { framework: "vite", starter: "auth", agentRules }, { fetchImpl: noFetch }),
+        (error: unknown) => error instanceof ToolInputError && /"agentRules" argument must be a boolean/.test(error.message))
+    }
   })
 
   test("get_theme returns the stylesheet and the option catalog", async () => {

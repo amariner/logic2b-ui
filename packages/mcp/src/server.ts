@@ -1,3 +1,4 @@
+import { webcrypto } from "node:crypto"
 import { Server } from "@modelcontextprotocol/sdk/server/index.js"
 import {
   CallToolRequestSchema,
@@ -22,6 +23,11 @@ export interface StdioServerOptions {
  * failures are `isError` results, exactly like the remote HTTP transport.
  */
 export function createServer({ base = DEFAULT_REGISTRY, fetchImpl }: StdioServerOptions = {}): Server {
+  // Node 18 exposes WebCrypto through node:crypto without requiring a global
+  // flag. Keep this runtime fallback in the Node adapter, outside Worker code.
+  if (!globalThis.crypto?.subtle) {
+    Object.defineProperty(globalThis, "crypto", { value: webcrypto, configurable: true, writable: true })
+  }
   const server = new Server(SERVER_INFO, {
     capabilities: { tools: {} },
     instructions: SERVER_INSTRUCTIONS,

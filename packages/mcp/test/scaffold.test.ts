@@ -120,6 +120,9 @@ describe("buildScaffoldPlan", () => {
     assert.ok(files.has("components/landing-page-01/landing-page.tsx"))
     assert.ok(files.has("styles/theme.css"))
     assert.ok(files.has(".logic2b/manifest.json"))
+    assert.ok(files.has("AGENTS.md"))
+    assert.ok(files.has("DESIGN.md"))
+    assert.match(files.get("AGENTS.md")!, /logic2b:rules:start/)
     assert.equal(
       files.get(".logic2b/base/blocks/hero-01-animated/hero.tsx"),
       "export function Hero() {}",
@@ -144,6 +147,22 @@ describe("buildScaffoldPlan", () => {
       ["blocks/landing-page-01/landing-page.tsx"],
     )
     assert.equal(new Set(plan.files.map((file) => file.path)).size, plan.files.length)
+  })
+
+  test("supports an explicit rules opt-out without changing source, manifest or dependencies", async () => {
+    const options = { base, framework: "vite" as const, starter: "auth" as const, fetchImpl }
+    const included = await buildScaffoldPlan(options)
+    const excluded = await buildScaffoldPlan({ ...options, agentRules: false })
+    const files = fileMap(excluded)
+    assert.equal(files.has("AGENTS.md"), false)
+    assert.equal(files.has("DESIGN.md"), false)
+    assert.deepEqual(
+      excluded.files.filter((file) => file.path !== "components.json"),
+      included.files.filter((file) => !["AGENTS.md", "DESIGN.md", "components.json"].includes(file.path)),
+    )
+    assert.equal(JSON.parse(files.get("components.json")!).logic2b.agentRules, false)
+    assert.deepEqual(excluded.items, included.items)
+    assert.deepEqual(excluded.npmDependencies, included.npmDependencies)
   })
 
   test("builds a Vite dashboard with source-root aliases", async () => {

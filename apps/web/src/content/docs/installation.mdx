@@ -135,7 +135,39 @@ version and integrity for every item.
 For an item-only plan, pass `iconLibrary` directly to `install_plan`; complete
 scaffolds read the same choice from the optional `/create` preset.
 
+## Project instructions for agents
+
+The repository candidate now delivers managed agent rules with `init`, `add`
+and `update`, plus a separate `DESIGN.md` token reference. This addition awaits
+the paired npm release; check the CLI's help before using it with `@next`.
+From a repository checkout, generate the files for an existing app with:
+
+```bash
+pnpm --filter logic2b dev rules --cwd /path/to/project --format agents --format claude
+```
+
+Formats are `agents`, `design`, `claude`, `cursor` and `copilot`. Claude includes
+an `@AGENTS.md` import; Cursor uses `.cursor/rules/logic2b.mdc`; Copilot uses a
+managed section in `.github/copilot-instructions.md`. `DESIGN.md` accompanies
+every selection. Text outside the versioned logic2b markers is preserved;
+malformed markers and changed file preconditions stop the refresh. Repeating
+the command with the same metadata makes no changes.
+
+On a CLI that advertises the option, `--no-agent-rules` opts out of automatic
+generation during initialization, installation or updates. The explicit
+`rules` command remains available. The source VS Code preview also provides
+**logic2b: Generate Agent Rules…**, format selection and the
+`logic2b.agentRules.enabled` opt-out setting; its writes use the workspace API.
+
+The rules record installed items and verification duties. They preserve native
+controls, custom wrappers, copy and token overrides, and use MCP tools only
+when those tools are available. `.logic2b` manifests and baseline snapshots
+remain owned by the CLI. See [For LLMs & Agents](/docs/llms) for the read-only MCP
+plan and the optional Claude Code procedure skill.
+
 ## Path aliases
 
-Components import from `@/lib/utils` and `@/components/ui/*`. Configure the `@`
-alias in your `tsconfig.json` and bundler to point at `src/`.
+Registry source defaults to `@/lib/utils` and `@/components/ui/*`. For a new app,
+configure the alias in both TypeScript and the bundler. For an existing app,
+inspect its confirmed aliases and destinations before adapting these imports;
+preserve customized UI folders instead of assuming `src/`.

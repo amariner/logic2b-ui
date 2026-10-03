@@ -1,5 +1,11 @@
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import {
+  buildAgentRulesPlan,
+  RULES_INPUT_SCHEMA,
+  validateAgentRulesOptions,
+  type AgentRulesOptions,
+} from "@logic2b/scaffold/rules"
+import {
   inspectProject,
   PROJECT_SNAPSHOT_SCHEMA,
   validateProjectSnapshot,
@@ -18,6 +24,7 @@ import { LIMITS, ToolInputError, byteLength, echo } from "./limits.ts"
 import { OUTPUT_SCHEMAS } from "./output-schemas.ts"
 import {
   assertArgumentsObject,
+  booleanArg,
   cssArg,
   enumArg,
   integerArg,
@@ -256,6 +263,11 @@ const TOOL_DEFINITIONS = [
           description:
             'Optional npm project name. Defaults to "logic2b-<starter>".',
         },
+        agentRules: {
+          type: "boolean",
+          default: true,
+          description: "Include managed AGENTS.md and DESIGN.md in the new application (default true). Pass false to opt out.",
+        },
         preset: {
           type: "string",
           maxLength: LIMITS.presetLength,
@@ -420,9 +432,15 @@ const TOOL_DEFINITIONS = [
       required: ["snapshot"],
     },
   },
+  {
+    name: "agent_rules",
+    description:
+      "Generate managed project instructions and separate design context as file writes with current-file hash preconditions. Accepts preset, stack, icon library, editor formats and bounded inventory/current instruction files. Preserves project-owned text outside managed sections; defaults to AGENTS.md plus DESIGN.md. Pure and read-only: no filesystem access, source execution or registry requests. The host checks each precondition and applies writes within the existing authorized scope.",
+    inputSchema: RULES_INPUT_SCHEMA,
+  },
 ] as const
 
-const PURE_TOOLS = new Set(["inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -580,6 +598,16 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
   const version = stringArg(args, "version", { max: LIMITS.versionLength })
   if (version !== undefined) out.version = version.trim()
   switch (name) {
+    case "agent_rules": {
+      try {
+        Object.assign(out, validateAgentRulesOptions(args))
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Invalid agent rules request."
+        throw new ToolInputError(echo(message, 300))
+      }
+      if (args.availableTools === undefined) out.availableTools = [...TOOL_NAMES]
+      break
+    }
     case "inspect_project": {
       const unknown = Object.keys(args).find((key) => key !== "snapshot" && key !== "details")
       if (unknown !== undefined) {
@@ -623,6 +651,7 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
       out.starter = enumArg(args, "starter", SCAFFOLD_STARTERS, { required: true })
       out.name = stringArg(args, "name", { max: LIMITS.projectNameLength })?.trim()
       out.preset = stringArg(args, "preset", { max: LIMITS.presetLength })?.trim()
+      out.agentRules = booleanArg(args, "agentRules") ?? true
       break
     case "list_presets":
       out.query = stringArg(args, "query", { max: LIMITS.queryLength })?.trim()
@@ -671,6 +700,14 @@ export async function runTool(
   { base = DEFAULT_REGISTRY, fetchImpl }: RunToolOptions = {}
 ): Promise<ToolResult> {
   const args = validateToolArguments(name, rawArgs)
+  if (name === "agent_rules") {
+    try {
+      return textResult(await buildAgentRulesPlan(args as AgentRulesOptions), true)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Invalid agent rules request."
+      throw new ToolInputError(echo(message, 300))
+    }
+  }
   if (name === "inspect_project") {
     try {
       return textResult(inspectProject(args.snapshot as ProjectSnapshotV1, { details: args.details as boolean | undefined }), true)
@@ -819,6 +856,8 @@ export async function runTool(
         starter: args.starter as ScaffoldStarter,
         name: args.name as string | undefined,
         preset: args.preset as string | undefined,
+        agentRules: args.agentRules as boolean,
+        availableRuleTools: [...TOOL_NAMES],
         version: versionArg(args),
       })
       assertResponseSource(plan.files, `The ${plan.framework} ${plan.starter.name} scaffold`)

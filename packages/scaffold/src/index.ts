@@ -5,6 +5,8 @@ import {
   type IconLibrary,
 } from "@logic2b/tokens"
 
+import { buildAgentRulesPlan } from "./rules.ts"
+
 import {
   ICON_PACKAGE_VERSIONS,
   rewriteIconDependencies,
@@ -14,6 +16,7 @@ import {
 export * from "./icons.ts"
 export * from "./behavior.ts"
 export * from "./project-context.ts"
+export * from "./rules.ts"
 
 export const SCAFFOLD_FRAMEWORKS = ["next", "vite", "astro"] as const
 export type ScaffoldFramework = (typeof SCAFFOLD_FRAMEWORKS)[number]
@@ -100,6 +103,8 @@ export interface ScaffoldPlanOptions {
   name?: string
   preset?: string
   version?: string
+  agentRules?: boolean
+  availableRuleTools?: string[]
   resolveInstallPlan: ScaffoldInstallPlanResolver
 }
 
@@ -287,6 +292,7 @@ function componentsConfig(
   iconLibrary: IconLibrary,
   preset?: string,
   registryVersion?: string,
+  agentRules = true,
 ): string {
   const root = framework === "next" ? "" : "src/"
   return json({
@@ -307,6 +313,7 @@ function componentsConfig(
     iconLibrary,
     logic2b: {
       registry: base,
+      ...(!agentRules ? { agentRules: false } : {}),
       ...(registryVersion ? { version: registryVersion } : {}),
       ...(preset ? { preset } : {}),
     },
@@ -580,8 +587,11 @@ export async function buildScaffoldPlan({
   name,
   preset,
   version,
+  agentRules = true,
+  availableRuleTools,
   resolveInstallPlan,
 }: ScaffoldPlanOptions): Promise<ScaffoldPlan> {
+  if (typeof agentRules !== "boolean") throw new Error("agentRules must be a boolean.")
   if (!SCAFFOLD_FRAMEWORKS.includes(framework)) {
     throw new Error(`Unknown framework "${framework}".`)
   }
@@ -642,12 +652,24 @@ export async function buildScaffoldPlan({
       iconLibrary,
       canonicalPreset,
       install.registryVersion,
+      agentRules,
     ),
   })
   files.push({
     path: ".logic2b/manifest.json",
     content: installManifest(base, transformedInstall),
   })
+  if (agentRules) {
+    const rules = await buildAgentRulesPlan({
+      ...(canonicalPreset ? { preset: canonicalPreset } : {}),
+      stack: framework,
+      registryVersion: install.registryVersion,
+      inventory: install.items.map((item) => ({ name: item.name, kind: item.files?.some((path) => path.startsWith("charts/")) ? "chart" : item.files?.some((path) => path.startsWith("blocks/")) ? "block" : item.files?.some((path) => path.startsWith("ui/")) ? "component" : "other" })),
+      inventoryKind: "installed",
+      availableTools: availableRuleTools ?? [],
+    })
+    files.push(...rules.files.map(({ path, content }) => ({ path, content })))
+  }
   for (const snapshot of transformedInstall.snapshots) {
     files.push({
       path: `.logic2b/base/${snapshot.path}`,

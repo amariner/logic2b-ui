@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process"
 import { existsSync } from "node:fs"
-import { mkdir, readdir, writeFile } from "node:fs/promises"
+import { lstat, mkdir, readdir, realpath, writeFile } from "node:fs/promises"
 import { dirname, resolve, sep } from "node:path"
 
 import {
@@ -32,6 +32,7 @@ export interface CliScaffoldOptions {
   install?: boolean
   packageManager?: PackageManager
   fetchImpl?: FetchLike
+  agentRules?: boolean
 }
 
 export interface CliScaffoldResult {
@@ -115,6 +116,8 @@ export async function buildCliScaffoldPlan(
     name: options.name,
     preset: options.preset,
     version: options.registryVersion,
+    agentRules: options.agentRules,
+    availableRuleTools: ["cli:inspect", "cli:add", "cli:update"],
     resolveInstallPlan: (names, installOptions) =>
       resolveCliInstallPlan(names, {
         ...installOptions,
@@ -222,12 +225,24 @@ function packageManagerVersion(packageManager: PackageManager): string {
 
 async function assertScaffoldTarget(cwd: string): Promise<void> {
   if (!existsSync(cwd)) return
+  const stat = await lstat(cwd)
+  if (stat.isSymbolicLink() || !stat.isDirectory()) throw new Error("Scaffolding requires a regular empty directory, not a symlink or file.")
   const entries = await readdir(cwd)
   const conflicts = entries.filter((entry) => entry !== ".git")
   if (conflicts.length > 0) {
     throw new Error(
       `Scaffolding requires an empty directory. ${cwd} already contains: ${conflicts.slice(0, 5).join(", ")}${conflicts.length > 5 ? ", …" : ""}`,
     )
+  }
+}
+
+async function createSafeParents(root: string, path: string): Promise<void> {
+  let current = root
+  for (const segment of path.split("/").slice(0, -1)) {
+    current = resolve(current, segment)
+    try { await mkdir(current) } catch (error) { if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error }
+    const stat = await lstat(current)
+    if (stat.isSymbolicLink() || !stat.isDirectory()) throw new Error("Scaffold output paths cannot traverse symlinks or non-directory files.")
   }
 }
 
@@ -265,11 +280,17 @@ export async function scaffoldProject(
     targets.add(target)
   }
 
+  // Registry resolution can take time: reject files that appeared since the first check.
+  await assertScaffoldTarget(cwd)
   await mkdir(cwd, { recursive: true })
+  const root = await realpath(cwd)
+  const rootStat = await lstat(root)
   for (const file of files) {
-    const target = safeTarget(cwd, file.path)
-    await mkdir(dirname(target), { recursive: true })
-    await writeFile(target, file.content)
+    const currentRoot = await lstat(root)
+    if (currentRoot.isSymbolicLink() || !currentRoot.isDirectory() || currentRoot.dev !== rootStat.dev || currentRoot.ino !== rootStat.ino || await realpath(root) !== root) throw new Error("Scaffold project root changed while writing; retry.")
+    const target = safeTarget(root, file.path)
+    await createSafeParents(root, file.path)
+    await writeFile(target, file.content, { flag: "wx" })
   }
 
   let installed = false

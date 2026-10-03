@@ -29,7 +29,12 @@ export const SERVER_INSTRUCTIONS =
   "`get_theme`/`decode_preset`/`apply_preset` inspect and rebuild theme.css " +
   "for any /create preset; `get_demo` returns real usage examples and " +
   "`add_command` the CLI equivalent. Prefer install_plan over hand-copying " +
-  "from `get_component` when the goal is to install."
+  "from `get_component` when the goal is to install. For existing apps, use " +
+  "`inspect_project` with a host-supplied sanitized snapshot to confirm aliases " +
+  "and installed inventory before adapting an install plan. `agent_rules` " +
+  "returns managed instruction-file plans with preservation and write " +
+  "preconditions; the host verifies and applies them within its authorization. " +
+  "These tools do not access the host filesystem or execute supplied content."
 
 export const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",

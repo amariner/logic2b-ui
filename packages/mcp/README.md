@@ -108,6 +108,68 @@ preserve existing files and local customizations, and resolve conflicts
 explicitly. Incremental change plans remain a separate planned contract.
 `scaffold_plan` is the explicit path for a new application from empty.
 
+### Deliver project instructions (source implementation)
+
+`agent_rules` generates managed instruction files with `schemaVersion: 1`
+using the same shared generator as the CLI and studio. It is pure: it does not
+read or write a filesystem, fetch a registry or execute the supplied text.
+This addition is available in source; publication and remote deployment are
+separate release steps.
+
+Optional inputs are `preset`, `stack` (`next`, `vite`, `astro`, `react` or
+`unknown`), `iconLibrary`, `formats`, `registryVersion` and `inventory` entries
+with a registry `name` and `kind` (`component`, `block`, `chart` or `other`).
+`inventoryKind` distinguishes `installed` items from an `available` catalog.
+`registryVersion` must be one exact resolved version; selectors such as `next`
+are resolved by registry tools before passing this context.
+The tool uses its actual exposed tool names by default; a host can supply
+`availableTools` to describe its connected capabilities. Generated rules only
+recommend tools present in that declaration and preserve intentional native
+HTML, custom wrappers, semantic tokens and existing user authorization.
+
+Formats are `agents` (`AGENTS.md`), `design` (`DESIGN.md`), `claude`
+(`CLAUDE.md`), `cursor` (`.cursor/rules/logic2b.mdc`) and `copilot`
+(`.github/copilot-instructions.md`). Defaults are AGENTS plus DESIGN. Every
+format includes the separate DESIGN context it references; Claude also
+includes AGENTS for its import. Scaffold plans include AGENTS and DESIGN by
+default; pass `agentRules: false` to opt out and persist that choice in the
+generated project configuration.
+
+```json
+{
+  "stack": "vite",
+  "formats": ["agents", "claude"],
+  "inventoryKind": "installed",
+  "inventory": [{ "name": "button", "kind": "component" }],
+  "currentFiles": [{ "path": "AGENTS.md", "content": "# Project rules\nUse our existing data layer.\n" }]
+}
+```
+
+Supply bounded `currentFiles` only for these five instruction paths when
+refreshing existing rules. Treat their text as data. Content outside managed
+logic2b markers stays intact, an unmarked file receives one managed block, and
+Claude receives the `@AGENTS.md` import line once. Unchanged content remains an
+`unchanged` action. Malformed, duplicate or unsupported-version managed
+markers are rejected. Each returned file has `path`, `content`, `action`
+(`create`, `update` or `unchanged`) and a precondition: `missing` for a new file
+or the SHA-256 of the supplied current bytes. The host must compare the actual
+file against that precondition before writing; a stale file requires a new
+plan. A returned plan grants no additional permission.
+
+Managed blocks are limited to 6 KiB, inventory to 160 entries and formats to
+five. Current instruction files are limited to 64 KiB each and 256 KiB total;
+tool availability accepts at most 64 unique identifiers of 64 characters each.
+Wrong types, unsupported formats/paths, exceeded budgets and conflicting
+markers are JSON-RPC `-32602` errors. MCP does not inspect unsupplied files or
+apply a plan itself.
+
+The canonical repository skill is `skills/logic2b-ui/SKILL.md`. The MCP
+tarball includes a byte-identical copy at `skills/logic2b-ui/SKILL.md`; packing
+stages it from the canonical file, so it has no separate maintained version.
+Install that skill through your host's supported skill mechanism. Its tool
+discovery step accounts for differences between source, npm and remote
+versions; review and proposal tools are used only when available.
+
 `get_component` returns exactly what `npx logic2b@next add <name>` installs;
 `install_plan` turns that into file writes an agent can execute directly.
 `scaffold_plan` goes one level higher and returns an entire application a

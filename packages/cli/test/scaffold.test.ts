@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { existsSync } from "node:fs"
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises"
+import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { after, before, describe, test } from "node:test"
@@ -140,6 +140,10 @@ describe("CLI project scaffolding", () => {
     assert.ok(files.has("src/components/landing-page-01/landing-page.tsx"))
     assert.ok(files.has("src/styles/theme.css"))
     assert.ok(files.has(".logic2b/manifest.json"))
+    assert.match(files.get("AGENTS.md")!, /logic2b:rules:start v1/)
+    assert.match(files.get("AGENTS.md")!, /Recorded installed inventory/)
+    assert.match(files.get("AGENTS.md")!, /logic2b inspect --json/)
+    assert.match(files.get("DESIGN.md")!, /logic2b:design:start v1/)
     assert.equal(
       files.get(".logic2b/base/blocks/navbar-01/navbar.tsx"),
       "export function Navbar() {}",
@@ -308,5 +312,30 @@ describe("CLI project scaffolding", () => {
     assert.deepEqual(packageManagerInstallCommand("yarn"), ["yarn"])
     assert.equal(packageManagerDevCommand("pnpm"), "pnpm run dev")
     assert.equal(packageManagerDevCommand("bun"), "bun run dev")
+  })
+
+  test("supports persistent agent-rule opt-out in standalone and monorepo plans", async () => {
+    const plan = await buildCliScaffoldPlan({ registry: base, framework: "vite", starter: "marketing", agentRules: false, fetchImpl })
+    const files = new Map(plan.files.map((file) => [file.path, file.content]))
+    assert.equal(files.has("AGENTS.md"), false)
+    assert.equal(files.has("DESIGN.md"), false)
+    assert.equal(JSON.parse(files.get("components.json")!).logic2b.agentRules, false)
+    const workspace = new Map(projectFiles(plan, true).map((file) => [file.path, file.content]))
+    assert.equal(workspace.has("apps/web/AGENTS.md"), false)
+    assert.equal(workspace.has("apps/web/DESIGN.md"), false)
+    assert.equal(JSON.parse(workspace.get("apps/web/components.json")!).logic2b.agentRules, false)
+  })
+
+  test("rejects a target that becomes nonempty while resolving registry files", async () => {
+    const target = join(root, "changed-during-resolution")
+    await mkdir(target)
+    let changed = false
+    const racingFetch: FetchLike = async (url, init) => {
+      if (!changed) { changed = true; await writeFile(join(target, "AGENTS.md"), "# Newly created user policy\n") }
+      return fetchImpl(url, init)
+    }
+    await assert.rejects(() => scaffoldProject({ cwd: target, registry: base, framework: "vite", starter: "marketing", install: false, fetchImpl: racingFetch }), /empty directory|already contains/i)
+    assert.deepEqual(await readFile(join(target, "AGENTS.md"), "utf8"), "# Newly created user policy\n")
+    assert.deepEqual(await readdir(target), ["AGENTS.md"])
   })
 })

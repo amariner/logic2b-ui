@@ -82,6 +82,14 @@ export function integerArg(
   return value
 }
 
+/** Optional booleans are explicit flags; null is not an omitted permission. */
+export function booleanArg(args: Args, key: string): boolean | undefined {
+  const value = args[key]
+  if (value === undefined) return undefined
+  if (typeof value !== "boolean") fail(`The "${key}" argument must be a boolean.`)
+  return value
+}
+
 /** Non-empty array of unique, bounded item names. */
 export function namesArg(args: Args, key: string): string[] {
   const value = args[key]

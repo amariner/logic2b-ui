@@ -1,35 +1,13 @@
 import { spawnSync } from "node:child_process"
-import { mkdtemp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises"
+import { mkdtemp, mkdir, readdir, rm, stat, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
-import { dirname, join, resolve } from "node:path"
-import { fileURLToPath } from "node:url"
+import { dirname, join } from "node:path"
 
 import { buildScaffoldPlan } from "../src/scaffold.ts"
-import type { FetchLike } from "../src/registry.ts"
 import { DEFAULT_CONFIG, ICON_LIBRARIES, encodePreset, type IconLibrary } from "@logic2b/tokens"
-
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..")
-const registryDir = join(repoRoot, "apps/web/public/r")
-
-// Serve the committed registry (versions, manifests, content-addressed
-// payloads) so plans resolve the default channel exactly like production.
-const fetchImpl: FetchLike = async (input) => {
-  const url = new URL(input)
-  if (!url.pathname.startsWith("/r/")) return { ok: false, status: 404, text: async () => "Not found" }
-  const registryPath = decodeURIComponent(url.pathname.slice(3))
-  if (
-    !registryPath.endsWith(".json") ||
-    registryPath.split("/").some((segment) => segment === "" || segment === "." || segment === "..")
-  ) {
-    return { ok: false, status: 404, text: async () => "Not found" }
-  }
-  try {
-    const content = await readFile(join(registryDir, registryPath), "utf8")
-    return { ok: true, status: 200, text: async () => content }
-  } catch {
-    return { ok: false, status: 404, text: async () => "Not found" }
-  }
-}
+import { createServer } from "../src/server.ts"
+import { committedRegistryFetch as fetchImpl } from "./helpers/committed-registry.mts"
+import { verifyRuleRefresh } from "./helpers/verify-rule-refresh.mts"
 
 const cases = [
   { directory: "next", framework: "next", starter: "marketing", name: "verify-next", preset: undefined, iconLibrary: "lucide" as const },
@@ -45,6 +23,7 @@ const cases = [
   })),
 ] as const
 
+await createServer().close()
 const root = await mkdtemp(join(tmpdir(), "logic2b-scaffolds-"))
 let passed = false
 
@@ -76,6 +55,11 @@ try {
       preset: entry.preset,
       fetchImpl,
     })
+    const agents = plan.files.find((file) => file.path === "AGENTS.md")
+    const design = plan.files.find((file) => file.path === "DESIGN.md")
+    if (!agents || !agents.content.includes("logic2b:rules:start") || !design?.content.trim()) {
+      throw new Error(`${entry.directory} did not include its managed agent rules and separate design context.`)
+    }
     if (entry.iconLibrary !== "lucide") {
       const generatedManifest = JSON.parse(
         plan.files.find((file) => file.path === "package.json")!.content,
@@ -103,6 +87,7 @@ try {
       await mkdir(dirname(path), { recursive: true })
       await writeFile(path, file.content)
     }
+    await verifyRuleRefresh(target, plan)
     console.log(`✓ materialized ${entry.directory}: ${entry.framework}/${entry.starter} (${plan.files.length} files)`)
   }
 

@@ -122,7 +122,43 @@ partir de un directorio vacío: pídele que use `scaffold_plan` con un framework
 respuesta contiene todos los archivos, el tema, dependencias transitivas y la
 integridad de la versión resuelta.
 
+## Instrucciones del proyecto para agentes
+
+El candidato del repositorio incorpora reglas gestionadas con `init`, `add` y
+`update`, y un `DESIGN.md` separado como referencia de tokens. Esta novedad está
+pendiente de la publicación conjunta en npm; comprueba la ayuda de la CLI antes
+de usarla con `@next`. Desde un checkout del repositorio puedes generar los
+archivos para una app existente:
+
+```bash
+pnpm --filter logic2b dev rules --cwd /path/to/project --format agents --format claude
+```
+
+Los formatos son `agents`, `design`, `claude`, `cursor` y `copilot`. Claude
+incluye una importación `@AGENTS.md`; Cursor usa `.cursor/rules/logic2b.mdc`;
+Copilot añade una sección gestionada en `.github/copilot-instructions.md`.
+`DESIGN.md` acompaña a cualquier selección. Se conserva el texto situado fuera
+de los marcadores versionados de logic2b; los marcadores incorrectos y las
+precondiciones de archivo obsoletas detienen la actualización. Repetir el
+comando con los mismos metadatos no cambia los archivos.
+
+En una CLI que anuncie la opción, `--no-agent-rules` desactiva la generación
+automática al inicializar, instalar o actualizar. El comando explícito `rules`
+sigue disponible. La preview de VS Code del código fuente también ofrece
+**logic2b: Generate Agent Rules…**, selección de formatos y la opción
+`logic2b.agentRules.enabled` para desactivar la actualización automática. Las
+escrituras usan la API del workspace.
+
+Las reglas registran los elementos instalados y las responsabilidades de
+verificación. Conservan controles nativos, wrappers, textos y tokens propios,
+y usan herramientas MCP solo cuando están disponibles. Los manifiestos y
+snapshots de `.logic2b` siguen siendo propiedad de la CLI. Consulta
+[Para LLM y agentes](/es/docs/llms) para el plan MCP de solo lectura y la skill
+procedimental opcional de Claude Code.
+
 ## Alias de rutas
 
-Los componentes importan desde `@/lib/utils` y `@/components/ui/*`. Configura
-el alias `@` en `tsconfig.json` y en tu bundler para que apunte a `src/`.
+El código del registro usa por defecto `@/lib/utils` y `@/components/ui/*`.
+En una app nueva, configura el alias en TypeScript y en el bundler. En una app
+existente, confirma los alias y destinos antes de adaptar esos imports;
+conserva las carpetas UI personalizadas en vez de asumir `src/`.

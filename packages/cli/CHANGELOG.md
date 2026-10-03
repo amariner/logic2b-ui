@@ -4,6 +4,9 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## Unreleased
 
+- Deliver shared managed `AGENTS.md` and `DESIGN.md` with both init modes; refresh recorded inventory after add/update while preserving project instructions outside markers.
+- Add source `rules --format` generation for Claude, Cursor and Copilot, and persistent `--no-agent-rules` through `components.json` without implicit dependency installation.
+- Bound local rule/configuration reads, reject symlink targets and stale write preconditions, and preserve the supported Node 18 runtime with a Node-only WebCrypto fallback.
 - Add read-only `inspect` with a schemaVersion 1 project snapshot/context, explicit app-root and host capabilities, confirmed aliases, opt-in installed/source hashes and preserved unknowns.
 - Sanitize bounded configuration metadata without executing sources, installing dependencies, fetching registries or changing project files.
 
