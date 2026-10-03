@@ -96,6 +96,7 @@ async function resolveCliInstallPlan(
       ...(item._registry?.integrity
         ? { integrity: item._registry.integrity }
         : {}),
+      ...(item.behavior ? { behavior: item.behavior } : {}),
       files: (item.files ?? []).map((file) => file.path).sort(),
     })),
     files,

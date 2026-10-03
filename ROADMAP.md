@@ -1,6 +1,6 @@
 # logic2b ui — Interfaces agents can build, verify and maintain
 
-Updated: 5 September 2026. This is the canonical product direction and delivery
+Updated: 3 October 2026. This is the canonical product direction and delivery
 order. [EXECUTION.md](./docs/EXECUTION.md) is the actionable queue;
 [implementation guides](./docs/guides/README.md) define individual contracts.
 The previous roadmap is preserved in [ROADMAP-HISTORY.md](./ROADMAP-HISTORY.md).
@@ -34,7 +34,12 @@ components and blocks, CLI, local/remote MCP, three starter families, token
 exports, three-way CLI updates, component accessibility metadata, generated API
 docs and consumer/visual/accessibility test infrastructure.
 
-Project inspection, incremental change plans, behavior/content contracts,
+The customer list and edit form now implement controlled data/actions and a
+versioned behavior/content contract in source (M1-01), with keyboard/mobile,
+failure/retry, unsaved-change and state-matrix evidence in the execution queue.
+This coverage is limited to those two blocks; it is not a published release.
+
+Project inspection, incremental change plans, broader behavior/content coverage,
 `review_ui`, consumer runtime verification, structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.

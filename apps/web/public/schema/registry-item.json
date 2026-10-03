@@ -30,6 +30,7 @@
     "cssVars": { "type": "object" },
     "css": { "type": "object" },
     "accessibility": { "$ref": "https://ui.logic2b.com/schema/accessibility.json" },
+    "behavior": { "$ref": "https://ui.logic2b.com/schema/behavior.json" },
     "api": {
       "type": "object",
       "required": ["source", "exports"],

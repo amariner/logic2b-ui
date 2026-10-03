@@ -3,6 +3,7 @@
  * are typed. Validation runs in contract/consumer tests, not via runtime code
  * generation inside the Cloudflare Worker. */
 type Schema = Record<string, unknown>
+import { BEHAVIOR_SCHEMA } from "@logic2b/scaffold/behavior"
 const string = { type: "string" }
 const number = { type: "number" }
 const boolean = { type: "boolean" }
@@ -52,10 +53,12 @@ const itemMetadata = {
 const summary = object({
   ...itemMetadata, kind: enumeration("component", "block", "chart", "theme"),
   accessibility: string, api: string,
+  behavior: BEHAVIOR_SCHEMA,
 }, ["name", "title", "description", "kind"])
 const installItem = object({
   name: string, title: string, requested: boolean, version: string,
   integrity: string, files: strings,
+  behavior: BEHAVIOR_SCHEMA,
 }, ["name", "title", "requested"])
 const plan = {
   ...version, items: array(installItem), files: array(file),
@@ -88,7 +91,7 @@ export const OUTPUT_SCHEMAS = {
     ...itemMetadata, type: string, content: string, dependencies: strings,
     registryDependencies: strings,
     files: array(object({ path: string, type: string, content: string })),
-    accessibility, api,
+    accessibility, api, behavior: BEHAVIOR_SCHEMA,
   }, ["name", "type", "description", "version", "registryVersion", "integrity", "content"]),
   list_registry_versions: object({
     registry: string, defaultChannel: string, schemaVersion: { const: 1 }, latest: string,

@@ -12,6 +12,7 @@ import {
 } from "./icons.ts"
 
 export * from "./icons.ts"
+export * from "./behavior.ts"
 
 export const SCAFFOLD_FRAMEWORKS = ["next", "vite", "astro"] as const
 export type ScaffoldFramework = (typeof SCAFFOLD_FRAMEWORKS)[number]
@@ -108,6 +109,7 @@ export interface ScaffoldInstallItem {
   version?: string
   integrity?: string
   files?: string[]
+  behavior?: import("./behavior.ts").RegistryBehavior
 }
 
 export interface ScaffoldInstallPlan {

@@ -12,8 +12,11 @@ const budgets = {
   maxBrowserChunk: 350 * 1024,
   totalBrowserJs: 2 * 1024 * 1024,
   maxRegistryItem: 32 * 1024,
-  registryIndex: 96 * 1024,
-  activeRegistry: 750 * 1024,
+  // M1-01 adds one required journey form and bounded behavior evidence for
+  // two blocks: +49 KiB over the rc.16 delivery. Keep item/browser limits;
+  // these aggregate caps cover the measured 97.4/776.9 KiB local release.
+  registryIndex: 104 * 1024,
+  activeRegistry: 800 * 1024,
   versionManifest: 128 * 1024,
   changelogs: 128 * 1024,
   portableTokens: 32 * 1024,

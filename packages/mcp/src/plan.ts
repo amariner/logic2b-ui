@@ -48,6 +48,7 @@ export interface InstallPlan {
     version?: string
     integrity?: string
     files?: string[]
+    behavior?: import("@logic2b/scaffold/behavior").RegistryBehavior
   }[]
   files: { path: string; content: string }[]
   /** Raw registry sources retained for scaffold update snapshots. */
@@ -131,6 +132,9 @@ export async function buildInstallPlan(
       "Import the theme stylesheet from your app entry (e.g. `@import \"./styles/theme.css\";`); dark mode toggles with the `dark` class on <html>."
     )
   }
+  for (const item of resolved.values()) if (item.behavior) {
+    notes.push(`${item.name} consumer responsibilities: ${item.behavior.consumer.join(" ")}`)
+  }
 
   return {
     registry: base,
@@ -143,6 +147,7 @@ export async function buildInstallPlan(
       ...(item.version ? { version: item.version } : {}),
       ...(item.integrity ? { integrity: item.integrity } : {}),
       files: (item.files ?? []).map((file) => file.path).sort(),
+      ...(item.behavior ? { behavior: item.behavior } : {}),
     })),
     files,
     snapshots,

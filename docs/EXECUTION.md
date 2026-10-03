@@ -16,7 +16,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
 | REL-01 | Publish the paired CLI/MCP npm release candidate — [release guide](../RELEASING.md) | M0-01, M0-02, M0-03, M0-04 | in-progress (rc.3 prepared and pushed; npm publication pending) | Codex |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/report landed; real baselines pending) | Codex (EVAL-01) |
-| M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | ready | — |
+| M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
@@ -491,3 +491,107 @@ Next ready task: M1-01, the state/content/action contract and customer list/edit
 form. Its implementation also supplies the customer behavior needed for v2
 fixtures. EVAL-01's remaining collection work must freeze those fixtures and
 obtain applicable authorization before launching paid trials or outreach.
+
+### 3 October 2026 — M1-01
+
+Completed the first two-block customer journey on
+`codex/m1-01-customer-journey` (delivery commit subject:
+`feat(customer): complete M1-01 behavior and edit journey`).
+The existing list now accepts data/status, copy, controlled/local search and
+create/edit/retry callbacks with derived counts. The new customer editor
+provides controlled name/email/company/segment fields, linked validation,
+submitting protection, preserved failed-save input, retry, permission denial,
+success and guarded cancellation. The integrated demo creates/edits in memory,
+guards all dialog dismissal paths, restores focus and retains drafts after a
+simulated failed save. It explicitly explains that no backend is connected.
+
+Changed contract: optional `RegistryItem.behavior`, schemaVersion 1, with all
+12 state classifications, transitions/preserved input, literal content slots,
+public action props, closed customer intents, journey, responsive evidence and
+consumer duties. Shared types/schema/validation live in scaffold. Registry lint
+parses inert TypeScript AST to verify declared copy samples/paths and action
+props; it never executes source. CLI and MCP validate/forward present metadata
+while preserving historical omission. MCP list/search/get/install outputs and
+CLI installs carry the duties. Copy Prompt, generated AGENTS and the live States
+section use the same evidence. No unimplemented tool is requested by those
+instructions. Guide 02 now describes this slice rather than all-catalog coverage.
+
+Local registry rc.17 adds one required editor block and changes the list,
+producing two new content-addressed payloads and a new manifest. Existing
+immutable payloads/manifests stayed byte-for-byte unchanged. The lockfile adds
+only the existing scaffold workspace link to registry; no third-party version
+or runtime dependency changed. Dependencies were installed explicitly with
+`CI=true pnpm install --frozen-lockfile --ignore-scripts --reporter=append-only`.
+An offline lock-only attempt could not verify supply-chain metadata; the
+authorized network-backed install passed. An incidental transitive lock change
+was restored before the final frozen installation and checks.
+
+Passed checks:
+
+- `pnpm --filter @logic2b/registry build`: 142 items, rc.17 integrity artifacts.
+  The sandboxed tsx command initially hit IPC EPERM; authorized execution passed.
+  The immutable guard correctly rejected a changed local draft; only this
+  delivery's unpublished/untracked draft was removed before final regeneration.
+- `pnpm lint` and `pnpm test`: all eight packages passed, 382 tests
+  (three unchanged packages cached). New coverage includes core negative
+  validation, inert AST drift checks, CLI boundaries/plan propagation and 22 MCP
+  behavior regressions. `pnpm --filter @logic2b/web lint` passed again after the
+  final demo changes.
+- `pnpm --filter @logic2b/web build`, then
+  `pnpm --filter @logic2b/web exec astro build` after the final interaction fixes:
+  passed. Final assets were built before final browser/packed checks.
+- `pnpm --filter @logic2b/web exec node --import tsx --test
+  test/behavior-contract.test.ts test/beta-onboarding.test.ts`: five tests passed.
+- `pnpm test:release-artifacts`: both source tarballs built/installed in an
+  isolated consumer. All 16 packed MCP tools passed official-client output
+  validation; new customer get/install metadata/source/duties matched immutable
+  rc.17 payloads. Packed CLI installs both blocks into an rc.16 starter and
+  preserves its existing login source/base snapshot. Early test assertions for
+  unexposed requestedVersion/snapshots were corrected to match the wire contract.
+  An early run during a build lacked generated endpoints; the final run passed.
+- With `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`,
+  `pnpm --filter @logic2b/web exec playwright test
+  tests/customer-journey.spec.ts --workers=1`: 12/12 passed, 2.9 minutes.
+  Covers keyboard create/edit, required-field focus, preserved failure/retry,
+  duplicate-submit prevention, Escape/Cancel/discard protection, focus recovery,
+  permission/empty/no-results/retry and working detail-page States.
+  All pageerror checks passed. Includes 52 light/dark state captures and
+  structural axe/overflow checks at 390/1280 px; 54 screenshots retained locally.
+  CI now runs the suite and uploads its browser evidence.
+- Same Chrome override and `PLAYWRIGHT_PORT=4321`:
+  `pnpm --filter @logic2b/web exec playwright test tests/visual.spec.ts
+  --grep 'blocks/(admin-customers-01|customer-edit-01)' --workers=1
+  --output=/tmp/logic2b-m1-visual-retry`: 4/4 passed.
+  Both new form baselines were visually inspected; existing baselines unchanged.
+  The initial missing-baseline run stalled during failure cleanup and was
+  interrupted, then retried with one worker and the reviewed baselines.
+- Same Chrome/port override:
+  `pnpm --filter @logic2b/web exec playwright test tests/a11y.spec.ts
+  --grep 'admin-customers-01|customer-edit-01' --workers=1
+  --output=/tmp/logic2b-m1-axe`: 4/4 passed. Structural axe excludes color contrast.
+  A separate isolated Chrome audit (`node /tmp/logic2b-m1-contrast-audit.cjs`
+  against `node tests/serve.mjs 4322`) checked six error/validation variants:
+  no contrast violations or incomplete results. Default error text ratios
+  ranged from 4.50:1 to 6.20:1; no global token change was needed.
+- `pnpm --filter @logic2b/web test:budgets`: passed. Final browser JS
+  2010.8 KiB / 2048 KiB, largest chunk 193.4 KiB / 350 KiB. Registry index
+  97.4 KiB and active delivery 776.9 KiB exceed the old aggregate caps; the
+  measured +49 KiB two-block source/evidence addition justifies new 104/800 KiB
+  caps. Per-item 32 KiB, browser and manifest 128 KiB caps stayed unchanged.
+- `git diff --check` and `git diff --quiet -- apps/web/public/r/content
+  apps/web/public/r/versions`: passed for tracked historical bytes.
+
+Browser checks caught and fixed a real nested-dialog reopen/focus race and
+fast-Escape stale-draft loss; assertions were retained. The initial journey run
+was 9/12 and is not accepted as completion; final 12/12 is the evidence above.
+Chrome is the installed macOS build; matching bundled Chromium/CI was not run.
+Full catalog browser/visual suites, three-framework scaffold builds, Lighthouse
+and root full build were not rerun locally. This does not claim all custom
+palettes pass contrast, a backend exists, M1 is complete, or npm/site publication
+has happened. Offline/partial handling and navigation/server authorization
+remain explicit consumer duties. EVAL-01 real baselines and M0 pilot evidence
+remain pending; no paid trials or outreach were launched.
+
+Next ready task: M1-02, the shared project-context contract and local collector.
+M1-03 is also unblocked. M1-04 static review still needs M1-02; M2 consumer
+change/update evidence remains separate from this journey implementation.

@@ -1,4 +1,5 @@
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
+import { behaviorFor } from "@logic2b/registry/behavior";
 /**
  * AI-assistant prompts — the "Copy Prompt" feature.
  *
@@ -19,6 +20,48 @@ import {
 } from "@/lib/themes"
 
 export const SITE = "https://ui.logic2b.com"
+
+/** Installation includes the UI behavior; persistence and authorization remain
+ * application responsibilities. Only blocks with a shipped contract get this
+ * guidance, so unrelated catalog items do not imply unimplemented coverage. */
+export function behaviorPromptSections(name: string): string {
+  const behavior = behaviorFor(name)
+  if (!behavior) return ""
+  const states = Object.entries(behavior.states)
+    .filter(([, state]) => state.support !== "not-applicable")
+    .map(([name, state]) => `- \`${name}\` (${state.support}): ${state.how}`)
+    .join("\n")
+  const actions = behavior.actions.map((action) =>
+    `- ${action.name} (\`${action.props.join("\`, \`")}\`): ${action.consumer.join(" ")}`,
+  ).join("\n")
+  const responsibilities = behavior.consumer.map((duty) => `- ${duty}`).join("\n")
+  const content = behavior.content.map((slot) => `\`${slot.path}\``).join(", ")
+  return `## ${name} behavior contract
+
+Read the registry item's \`behavior\` metadata (schema version ${behavior.schemaVersion}) alongside its exported props.
+Provide controlled application data and wire the action callbacks before treating the screen as complete.
+
+### States and recovery
+
+${states}
+
+### Actions to integrate
+
+${actions}
+
+### Consumer responsibilities
+
+${responsibilities}
+
+### Content and verification
+
+Customize the exported content object through its content prop. Editable source paths: ${content}.
+${behavior.responsive.strategy} Touch targets are ${behavior.responsive.touchTargets}.
+Exercise the built-in states and your consumer-owned states with keyboard navigation, mobile layout, failure/retry and preserved input.
+Preview a built-in state at ${SITE}/blocks/preview/${name}?state=<state> and compare it with your integration.
+
+`
+}
 
 /** Scaffold command per template, mirroring packages/cli. */
 export const SCAFFOLD_COMMANDS: Record<string, string> = {
@@ -319,5 +362,5 @@ Do it manually from the registry payload:
 3. Repeat (recursively) for each name in \`registryDependencies\`.
 4. Install every package listed in \`dependencies\` across those payloads.
 
-${notes ? `${notes}\n\n` : ""}${commonSections()}`
+${behaviorPromptSections(name)}${notes ? `${notes}\n\n` : ""}${commonSections()}`
 }

@@ -1,4 +1,5 @@
 import { CLI_PACKAGE_SELECTOR, MCP_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
+import { BEHAVIOR_CONTRACTS } from "@logic2b/registry/behavior";
 /**
  * AGENTS.md generator — the design system as executable context.
  *
@@ -36,6 +37,30 @@ function inventory() {
 function wrapList(names: string[]): string {
   // One flowing paragraph of names — compact enough to keep in agent context.
   return names.map((n) => `\`${n}\``).join(" · ")
+}
+
+function behaviorRules(): string {
+  const blocks = Object.entries(BEHAVIOR_CONTRACTS)
+  if (blocks.length === 0) return ""
+  return `## Customer journey behavior
+
+The following blocks ship a \`behavior\` contract. Read it with the installed
+source, preserve controlled inputs and local content customizations, and wire
+the callbacks to the consuming application's data and authorization rules.
+Only these blocks have this declared state coverage.
+
+${blocks.map(([name, behavior]) => `### \`${name}\`
+
+Built-in states: ${Object.entries(behavior.states).filter(([, state]) => state.support === "built-in").map(([state]) => `\`${state}\``).join(", ")}.
+${Object.entries(behavior.states).filter(([, state]) => state.support === "consumer").map(([state, contract]) => `- Consumer state \`${state}\`: ${contract.how}`).join("\n")}
+${behavior.actions.flatMap((action) => action.consumer.map((duty) => `- ${action.name} (\`${action.props.join("\`, \`")}\`): ${duty}`)).join("\n")}
+${behavior.consumer.map((duty) => `- ${duty}`).join("\n")}
+
+Copy lives in the exported content object; customize it through the content prop.
+${behavior.responsive.strategy} Check keyboard operation, failure/retry,
+preserved input and every applicable state at mobile and desktop sizes.
+`).join("\n")}
+`
 }
 
 export function buildAgentsMd(cfg: ThemeConfig): string {
@@ -109,10 +134,13 @@ DaisyUI…) are off-limits — they fight the token system.
   attribute — use it for reliable selection in tests and styles.
 - Extend by composition (wrap, pass \`className\`) instead of editing
   installed \`ui/*\` internals; if you must fork one, keep its public API.
-- Forms use react-hook-form + zod through the \`form\` component. Charts use
-  Recharts through the \`chart\` component so series colors bind to the
-  \`--chart-*\` tokens.
+- Preserve installed controlled forms and native HTML controls along with
+  their behavior contracts. Use react-hook-form + zod through the \`form\`
+  component when the application's form requirements need them.
+- Charts use Recharts through the \`chart\` component so series colors bind
+  to the \`--chart-*\` tokens.
 
+${behaviorRules()}
 ## Verify before finishing
 
 1. TypeScript compiles and the app renders with zero console errors.
