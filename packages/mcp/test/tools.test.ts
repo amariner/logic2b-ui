@@ -54,6 +54,7 @@ describe("TOOLS", () => {
       assert.equal(tool.annotations.idempotentHint, true)
     }
     assert.equal(TOOLS.find((tool) => tool.name === "decode_preset")!.annotations.openWorldHint, false)
+    assert.equal(TOOLS.find((tool) => tool.name === "inspect_project")!.annotations.openWorldHint, false)
     assert.equal(TOOLS.find((tool) => tool.name === "apply_preset")!.annotations.openWorldHint, true)
   })
 
@@ -92,10 +93,26 @@ describe("TOOLS", () => {
         "apply_preset",
         "contrast_audit",
         "lint_theme",
+        "inspect_project",
       ]
     )
   })
 
+})
+
+describe("runTool — project inspection", () => {
+  test("returns a successful bounded summary without fetching", async () => {
+    const result = await runTool("inspect_project", {
+      snapshot: {
+        schemaVersion: 1,
+        configs: [],
+        capabilities: { fileWrites: false, dependencyInstall: false, browser: false },
+      },
+    }, { fetchImpl: noFetch })
+    assert.equal(result.isError, undefined)
+    assert.equal(result.structuredContent?.schemaVersion, 1)
+    assert.equal(result.structuredContent?.context, undefined)
+  })
 })
 
 describe("runTool — versioned registry", () => {

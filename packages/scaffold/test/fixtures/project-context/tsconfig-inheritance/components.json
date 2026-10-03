@@ -1,0 +1,4 @@
+{
+  "tailwind": { "css": "client/design/tokens.css" },
+  "aliases": { "ui": "@/design/primitives", "utils": "@/support/utils" }
+}

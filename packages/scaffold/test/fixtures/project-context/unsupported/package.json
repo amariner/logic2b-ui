@@ -1,0 +1,4 @@
+{
+  "name": "customer-svelte",
+  "dependencies": { "svelte": "5.39.0", "@sveltejs/kit": "2.37.0" }
+}

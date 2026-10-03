@@ -31,6 +31,7 @@ import {
 import { applyPresetToCss, decodePreset } from "@logic2b/tokens"
 import { PACKAGE_VERSION } from "./version.ts"
 import { REGISTRY_VERSION } from "@logic2b/registry/version"
+import { registerInspectCommand } from "./inspect.ts"
 
 const program = new Command()
 
@@ -38,6 +39,8 @@ program
   .name("logic2b")
   .description("Add logic2b ui components to your project.")
   .version(PACKAGE_VERSION)
+
+registerInspectCommand(program)
 
 program
   .command("init")

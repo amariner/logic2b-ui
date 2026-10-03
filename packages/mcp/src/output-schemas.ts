@@ -4,6 +4,7 @@
  * generation inside the Cloudflare Worker. */
 type Schema = Record<string, unknown>
 import { BEHAVIOR_SCHEMA } from "@logic2b/scaffold/behavior"
+import { PROJECT_INSPECTION_SCHEMA } from "@logic2b/scaffold/project-context"
 const string = { type: "string" }
 const number = { type: "number" }
 const boolean = { type: "boolean" }
@@ -84,6 +85,7 @@ const parsedMode = object({
 })
 
 export const OUTPUT_SCHEMAS = {
+  inspect_project: PROJECT_INSPECTION_SCHEMA,
   list_components: object({ ...version, count, items: array(summary) }, [...versionRequired, "count", "items"]),
   search_components: object({ ...version, query: string, count, items: array(summary) },
     [...versionRequired, "query", "count", "items"]),

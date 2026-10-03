@@ -1,0 +1,6 @@
+{
+  // Alias paths and baseUrl are relative to the file that declares them.
+  "extends": "./config/base.json",
+  "compilerOptions": { "strict": true },
+  "include": ["client"],
+}

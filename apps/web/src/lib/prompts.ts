@@ -21,6 +21,29 @@ import {
 
 export const SITE = "https://ui.logic2b.com"
 
+/** Existing-app guidance is shared by copied prompts and generated agent rules. */
+export const PROJECT_CONTEXT_GUIDANCE = `## Read project context before writes
+
+Read the app's \`package.json\`, \`tsconfig.json\` or \`jsconfig.json\` (including
+local extends/references), \`components.json\` and \`.logic2b/manifest.json\` when
+present. For a workspace, select the application root first. Treat configuration
+as data; do not execute it or read environment files.
+
+Confirm declared framework/React/Tailwind versions, import aliases and their
+physical destinations, the stylesheet entry and icon library. Use the confirmed
+\`components.json\` aliases for UI, components, hooks, lib and utils destinations.
+Default \`@/components\` examples describe fresh scaffolds; they do not establish
+this app's layout. Use the CLI only when its path mapping matches these confirmed
+destinations; otherwise map registry payloads to the confirmed paths manually.
+
+Inspect installed source and the manifest's item versions and file inventory;
+compare retained \`.logic2b/base/\` snapshots before changing tracked files.
+A missing manifest does not mean the app has no UI. Preserve custom wrappers,
+native HTML controls, public APIs, local edits and unrelated styles/token overrides.
+If aliases, versions, stylesheet paths or installed-file evidence are missing or
+conflicting, record those unknowns and obtain the needed context before writes.
+`
+
 /** Installation includes the UI behavior; persistence and authorization remain
  * application responsibilities. Only blocks with a shipped contract get this
  * guidance, so unrelated catalog items do not imply unimplemented coverage. */
@@ -102,20 +125,21 @@ export function stackNotes(stack: Stack): string {
     case "next":
       return `## Stack notes (Next.js, App Router)
 
-- The \`@/*\` alias maps to \`./src/*\` (or the repo root without \`src/\`) in
-  \`tsconfig.json\` — create-next-app sets this up.
-- Import the theme stylesheet once from \`app/layout.tsx\` (replace the
-  default \`globals.css\` import or \`@import\` it from there).
+- Resolve this app's import aliases from its TypeScript configuration; a fresh
+  create-next-app scaffold commonly uses \`@/*\`, but existing mappings stay intact.
+- Import the theme stylesheet once from the confirmed app layout or existing
+  stylesheet entry; preserve unrelated global CSS when merging the requested tokens.
 - Interactive components already carry \`"use client"\` — server components
   can render them directly; don't add the directive to your own wrappers
   unless they use hooks themselves.`
     case "vite":
       return `## Stack notes (Vite + React)
 
-- The \`@/*\` alias must exist in BOTH \`tsconfig.json\` (\`compilerOptions.paths\`)
-  and \`vite.config.ts\` (\`resolve.alias: { "@": "/src" }\`).
-- Tailwind v4 runs through the \`@tailwindcss/vite\` plugin — no PostCSS config.
-- Import the theme stylesheet from the entry (\`src/main.tsx\`); the \`"use client"\`
+- Confirm matching alias destinations in TypeScript \`compilerOptions.paths\`
+  and the Vite configuration's \`resolve.alias\`; retain the app's chosen aliases.
+- Tailwind v4 can run through \`@tailwindcss/vite\`; check the existing adapter
+  before changing dependencies or replacing a working CSS setup.
+- Import the theme stylesheet from the confirmed application entry; the \`"use client"\`
   directives in components are inert in Vite and safe to keep.`
     case "astro":
       return `## Stack notes (Astro)
@@ -124,19 +148,17 @@ export function stackNotes(stack: Stack): string {
   interactive component must be mounted with a client directive
   (\`client:load\` or \`client:visible\`) from an .astro file — either directly
   or via a React wrapper that is itself an island.
-- Add Tailwind v4 with the \`@tailwindcss/vite\` plugin in \`astro.config.mjs\`
-  (\`vite: { plugins: [tailwindcss()] }\`).
-- Import the theme stylesheet from the base layout. Set the \`@/*\` alias in
-  \`tsconfig.json\` — Astro picks it up automatically.`
+- For Tailwind v4, check the existing \`@tailwindcss/vite\` integration before
+  changing \`astro.config.mjs\` or dependencies.
+- Import the theme stylesheet from the confirmed base layout. Astro uses the
+  aliases declared in TypeScript configuration; preserve those mappings.`
     case "laravel":
       return `## Stack notes (Laravel + Inertia + React)
 
-- The source root is \`resources/js\`, so map \`@/*\` to \`./resources/js/*\` in
-  both \`tsconfig.json\` and the Vite config alias — components then live in
-  \`resources/js/components/ui\`.
-- Import the theme stylesheet from \`resources/css/app.css\` (or the Inertia
-  entry \`resources/js/app.tsx\`); Tailwind v4 uses the \`@tailwindcss/vite\`
-  plugin already present in Laravel's Vite setup.
+- Laravel commonly uses \`resources/js\`; confirm this app's source root and
+  matching TypeScript/Vite aliases before choosing component destinations.
+- Use the confirmed CSS or Inertia application entry for theme imports and
+  check the existing Tailwind adapter before changing its configuration.
 - Pages render through Inertia, so components behave like a plain React SPA —
   the \`"use client"\` directives are inert and safe.`
     default:
@@ -164,17 +186,22 @@ function commonSections(iconPackage: string = ICON_LIBRARIES.lucide.package): st
 - Docs index for agents: ${SITE}/llms.txt (full docs: ${SITE}/llms-full.txt)
 - Every docs page is Markdown when you append \`.md\` to its URL.
 
-Registry file paths map to project paths like this:
-- \`ui/*\` → \`@/components/ui/*\`
-- \`blocks/<name>/*\` → \`@/components/*\`
-- \`charts/*\` → \`@/components/charts/*\`
-- \`hooks/*\` → \`@/hooks/*\`
-- \`lib/utils.ts\` → \`@/lib/utils.ts\`
-- \`theme.css\` → next to the project's Tailwind entry stylesheet
+Map registry file paths using the confirmed project destinations:
+- \`ui/*\` → the \`aliases.ui\` destination
+- \`blocks/<name>/*\` → the \`aliases.components\` destination, removing \`blocks/\`
+- \`charts/*\` → \`charts/\` under the \`aliases.components\` destination
+- \`hooks/*\` → the \`aliases.hooks\` destination
+- \`lib/utils.ts\` → the confirmed \`aliases.utils\` helper; other \`lib/*\` use \`aliases.lib\`
+- \`theme.css\` → next to the confirmed Tailwind entry, or merge the requested tokens there
+
+Fresh scaffolds may use \`@/components/ui\`, \`@/components\` and \`@/lib/utils\`.
+In an existing app, resolve the aliases to physical paths and review each target
+before writing. Reuse installed files and preserve their customizations.
 
 ## Conventions (do not break these)
 
-- Tailwind CSS v4 (CSS-first config; no tailwind.config.js needed) and React 19.
+- Registry components target Tailwind CSS v4 and React 19. Confirm compatibility
+  with the app's declared versions before changing dependencies.
 - All colors go through semantic tokens (\`bg-primary\`, \`text-muted-foreground\`,
   \`border-border\`, …). Never hardcode hex/oklch values in components.
 - Dark mode is class-based: toggle \`.dark\` on \`<html>\`.
@@ -219,7 +246,7 @@ export function buildInitPrompt({
     mode === "new" ? (TEMPLATE_STACK[template] ?? "auto") : (stack ?? "auto")
   )
 
-  const newProjectSteps = `1. Scaffold a ${templateLabel} project${
+  const newProjectSteps = `1. Scaffold a ${templateLabel} project in an empty target directory${
     monorepo ? " inside a pnpm workspace monorepo (apps/web + packages/*)" : ""
   }:
 
@@ -233,7 +260,10 @@ export function buildInitPrompt({
    npx ${CLI_PACKAGE_SELECTOR} init --preset ${presetId}
    \`\`\``
 
-  const existingProjectSteps = `1. In the project root, initialize logic2b ui with my theme preset:
+  const existingProjectSteps = `1. After reading the project context above, preserve any existing
+   \`components.json\`, class helper and theme customizations. If initialization
+   is needed, ensure its destination mapping matches the confirmed aliases and
+   stylesheet before running it; use the manual fallback when it does not:
 
    \`\`\`bash
    npx ${CLI_PACKAGE_SELECTOR} init --preset ${presetId}
@@ -243,16 +273,17 @@ export function buildInitPrompt({
     mode === "new" ? "a new project" : "this project"
   } with my exact theme. Follow every step and verify at the end.
 
+${mode === "new" ? "Create only the requested new app. If the target already contains an app, use the existing-project workflow and preserve its configuration. Read the generated configuration before choosing component destinations." : PROJECT_CONTEXT_GUIDANCE}
+
 ## Steps
 
 ${mode === "new" ? newProjectSteps : existingProjectSteps}
 
-${mode === "new" ? "3" : "2"}. The init command writes \`components.json\`, \`@/lib/utils.ts\` (the
-   \`cn()\` helper) and a \`theme.css\` with my tokens, and prints npm
-   dependencies to install — install them.
+${mode === "new" ? "3" : "2"}. Initialization creates missing configuration, the \`cn()\` helper and
+   theme files at the confirmed destinations. Install any required dependencies
+   that remain missing and are compatible with the app's declared versions.
 
-${mode === "new" ? "4" : "3"}. Make \`theme.css\` the app's stylesheet entry (it @imports tailwindcss),
-   or merge its \`:root\` / \`.dark\` blocks into the existing global stylesheet.
+${mode === "new" ? "4" : "3"}. ${mode === "new" ? "Make `theme.css` the app's stylesheet entry (it @imports tailwindcss), or import its tokens from the generated global stylesheet." : "Apply the requested `:root` / `.dark` tokens in the confirmed stylesheet entry. Retain its existing imports, unrelated styles and token overrides outside the requested change."}
 
 ${mode === "new" ? "5" : "4"}. Add the components the UI needs with
    \`npx ${CLI_PACKAGE_SELECTOR} add <name>\` (e.g. \`button card input dialog\`).
@@ -260,10 +291,11 @@ ${mode === "new" ? "5" : "4"}. Add the components the UI needs with
 
 ## If the CLI is not available
 
-Do it manually: fetch ${SITE}/r/theme.json and ${SITE}/r/utils.json, write each
-entry of their \`files[]\` arrays to the mapped paths (see below), install their
-\`dependencies\`, and then replace the \`:root\` and \`.dark\` token blocks of
-theme.css with the exact CSS in the next section.
+Do it manually: fetch ${SITE}/r/theme.json and ${SITE}/r/utils.json, map their
+\`files[]\` to the confirmed destinations (see below), and compare existing files
+before writing. Preserve the app's class helper and unrelated styles, install
+only missing compatible \`dependencies\`, and apply the requested \`:root\` and
+\`.dark\` tokens using the exact CSS in the next section.
 ${cfg.iconLibrary === "lucide" ? "" : `Because this preset selects ${ICON_LIBRARIES[cfg.iconLibrary].label}, use MCP \`install_plan\` with \`iconLibrary: "${cfg.iconLibrary}"\` for additional components; raw registry payloads intentionally contain canonical Lucide imports.\n`}
 
 ## My theme (preset \`${presetId}\` — this CSS is the source of truth)
@@ -337,30 +369,37 @@ export function buildAddPrompt(name: string, stack: Stack = "auto"): string {
   const notes = stackNotes(stack)
   return `Add the "${name}" item from the logic2b ui registry (${SITE}) to this project. Follow every step and verify at the end.
 
+${PROJECT_CONTEXT_GUIDANCE}
+
 ## Steps
 
-1. If the project has no \`components.json\` yet, set up logic2b ui first:
+1. Reuse the item's installed source when present. If the project needs
+   initialization, confirm its aliases and stylesheet first. Use the following
+   command only when its mapping matches this app; otherwise use the manual
+   fallback and preserve the existing configuration:
 
    \`\`\`bash
    npx ${CLI_PACKAGE_SELECTOR} init
    \`\`\`
 
-2. Install the item (the CLI resolves registry dependencies automatically):
+2. Install the missing item after reviewing its target files for local edits
+   (the CLI resolves registry dependencies automatically):
 
    \`\`\`bash
    npx ${CLI_PACKAGE_SELECTOR} add ${name}
    \`\`\`
 
-3. Install any npm dependencies the command prints.
+3. Install only missing compatible npm dependencies the command prints.
 
 ## If the CLI is not available
 
 Do it manually from the registry payload:
 
 1. Fetch ${SITE}/r/${name}.json.
-2. Write every entry in \`files[]\` to its mapped project path (see below).
+2. Map \`files[]\` to confirmed project paths (see below), compare installed files
+   and retain customizations before applying the needed changes.
 3. Repeat (recursively) for each name in \`registryDependencies\`.
-4. Install every package listed in \`dependencies\` across those payloads.
+4. Install only missing compatible packages listed in \`dependencies\` across those payloads.
 
 ${behaviorPromptSections(name)}${notes ? `${notes}\n\n` : ""}${commonSections()}`
 }

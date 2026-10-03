@@ -39,6 +39,75 @@ See [pending npm publication](https://github.com/amariner/logic2b-ui/blob/main/R
 | `contrast_audit` | WCAG 2.2 + APCA contrast of every text token pair (light + dark) for a preset, explicit options or raw token values — verify a generated theme before shipping it. |
 | `lint_theme` | Statically inspect a theme.css for missing, duplicate or invalid tokens, derived-sidebar drift and contrast regressions. Pass a preset id to verify exact preset fidelity. |
 
+### Inspect an existing project (source implementation)
+
+`inspect_project` consumes a versioned snapshot supplied by the host. It never
+reads the caller's filesystem, fetches a registry or executes configuration or
+source. This addition is available in source; npm publication and remote
+deployment are separate release steps.
+
+Pass `snapshot` with `schemaVersion: 1`, sanitized configuration metadata and
+the host's explicit `fileWrites`, `dependencyInstall` and `browser`
+capabilities. Config entries contain a project-relative `path`, a `kind`
+(`package`, `tsconfig`, `components`, `manifest` or `workspace`) and structured
+`data`. Optional directory and observed-file metadata let the host confirm
+source roots and installed-file hashes without sending source text. A local
+host can prepare this data with `logic2b inspect --snapshot`; shell-less hosts
+can supply the same bounded contract using their own read tools.
+Before publication, run
+`pnpm --filter logic2b dev inspect --cwd /path/to/app --snapshot` from this
+checkout. Add `--details` to collect installed-file and baseline hashes,
+`--file <relative-path>` for a selected hash, and capability flags
+`--file-writes`, `--dependency-install` or `--browser` only when the host has
+that permission. All capabilities default to false; the flags do not perform
+writes, installation or browser actions.
+
+```json
+{
+  "snapshot": {
+    "schemaVersion": 1,
+    "configs": [
+      {
+        "path": "package.json",
+        "kind": "package",
+        "data": { "dependencies": { "vite": "7.1.0", "react": "19.1.0" } }
+      }
+    ],
+    "capabilities": {
+      "fileWrites": true,
+      "dependencyInstall": false,
+      "browser": true
+    }
+  }
+}
+```
+
+The default result is `{ "schemaVersion": 1, "summary": ... }`, with supported
+framework detection, host capabilities and explicit unknowns. Set
+`details: true` to include the sanitized `context`, including aliases, styles,
+field evidence and the installed-file inventory. Conflicting framework or app
+candidates stay uncertain; capabilities are never inferred. Caller data is
+not returned as raw configs, scripts, credentials, URLs or source text. Normal
+configuration can contain unrelated fields; the shared core keeps only the
+metadata this contract recognizes before returning anything.
+
+Snapshot validation rejects unknown fields, unsupported versions, unsafe or
+duplicate normalized paths, malformed metadata and exceeded limits as
+JSON-RPC `-32602` before any I/O. Configuration metadata is limited to 32 entries
+and 128 KiB, inventory to 1,000 entries and relative paths to 256 characters.
+Compact and detailed results are bounded to 16 KiB and 512 KiB respectively. Select the
+application root locally before collecting a monorepo snapshot; use confirmed
+aliases and inventory when choosing later install or change operations.
+These budgets cover the result's JSON value; the MCP structured value and text
+fallback each carry that value, so the complete wire response is larger.
+
+`install_plan` still generates its documented default `@/*` paths from
+`srcDir`; it does not automatically remap a project snapshot or check file
+preconditions. Adapt confirmed custom locations before applying those writes,
+preserve existing files and local customizations, and resolve conflicts
+explicitly. Incremental change plans remain a separate planned contract.
+`scaffold_plan` is the explicit path for a new application from empty.
+
 `get_component` returns exactly what `npx logic2b@next add <name>` installs;
 `install_plan` turns that into file writes an agent can execute directly.
 `scaffold_plan` goes one level higher and returns an entire application a
@@ -86,9 +155,9 @@ distinguish protocol failures from tool results:
 | Malformed JSON body | HTTP 400, JSON-RPC `-32700` |
 | Invalid envelope (missing `jsonrpc`, bad `id`, empty batch, batch over the limit, unsupported `Mcp-Protocol-Version` header) | HTTP 400 or per-message `-32600` |
 | Unsupported method | `-32601` |
-| Unknown tool, wrong argument type, oversized/empty/duplicate value, unsafe `srcDir` | `-32602` (stdio: `McpError` invalid params) |
+| Unknown tool, wrong argument type, oversized/empty/duplicate value, unsafe `srcDir`, invalid project snapshot or inspection result above its requested budget | `-32602` (stdio: `McpError` invalid params) |
 | Unexpected server failure | `-32603` with a bounded message |
-| Tool execution failure (unknown item, invalid preset id, integrity mismatch, oversized response) | Successful response with `isError: true` and no `structuredContent` |
+| Tool execution failure (unknown item, invalid preset id, integrity mismatch, oversized registry-read or plan response) | Successful response with `isError: true` and no `structuredContent` |
 
 Documented limits (`packages/mcp/src/limits.ts`, mirrored in the input schemas):
 

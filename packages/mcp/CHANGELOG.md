@@ -2,6 +2,11 @@
 
 All notable changes to `@logic2b/mcp` are documented here.
 
+## Unreleased
+
+- Add the pure `inspect_project` tool with shared schemaVersion 1 snapshot validation, compact/detail typed results, explicit host capabilities and bounded invalid-params errors across stdio/HTTP.
+- Guide existing-app installs through confirmed aliases and inventory while retaining explicit empty-project scaffolding.
+
 ## 1.0.0-rc.3
 
 - Add `list_presets`, a network-free view of the shared curated gallery with

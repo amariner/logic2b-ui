@@ -34,3 +34,25 @@ test("HTTP tool errors remain errors rather than successful structured payloads"
   assert.equal(result.structuredContent, undefined)
   assert.match(result.content[0].text, /not a valid preset/)
 })
+
+test("the site endpoint exposes pure project inspection with the shared result schema", async () => {
+  const inspection = TOOLS.find((entry) => entry.name === "inspect_project")!
+  for (const details of [false, true]) {
+    const result = await rpc("tools/call", {
+      name: "inspect_project",
+      arguments: {
+        snapshot: {
+          schemaVersion: 1,
+          configs: [],
+          capabilities: { fileWrites: false, dependencyInstall: false, browser: false },
+        },
+        details,
+      },
+    })
+    assert.equal(result.isError, undefined)
+    const checked = new AjvJsonSchemaValidator().getValidator(inspection.outputSchema)(result.structuredContent)
+    assert.ok(checked.valid, checked.errorMessage)
+    assert.deepEqual(result.structuredContent, JSON.parse(result.content[0].text))
+    assert.equal(Boolean(result.structuredContent.context), details)
+  }
+})

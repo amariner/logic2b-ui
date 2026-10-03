@@ -1,0 +1,4 @@
+{
+  "name": "customer-custom-ui",
+  "dependencies": { "next": "16.0.1", "react": "19.2.0" }
+}

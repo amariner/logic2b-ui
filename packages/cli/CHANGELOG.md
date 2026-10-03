@@ -2,6 +2,11 @@
 
 All notable changes to the `logic2b` CLI are documented here.
 
+## Unreleased
+
+- Add read-only `inspect` with a schemaVersion 1 project snapshot/context, explicit app-root and host capabilities, confirmed aliases, opt-in installed/source hashes and preserved unknowns.
+- Sanitize bounded configuration metadata without executing sources, installing dependencies, fetching registries or changing project files.
+
 ## 1.0.0-rc.3
 
 - Align the published beta selector with the website, generated agent prompts,

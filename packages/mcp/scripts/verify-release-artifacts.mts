@@ -185,7 +185,7 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
   const customerRelease = await customerFixtures(customerRegistryVersion)
@@ -252,6 +252,18 @@ try {
         assert.equal(await readFile(join(target, ".logic2b/base", file.path), "utf8"), file.content, `${name} install snapshot differs from ${customerRegistryVersion}`)
       }
     }
+    const inspected = await execFileAsync(process.execPath, [cliEntry, "inspect", "--cwd", target, "--json", "--details"])
+    const inspection = JSON.parse(inspected.stdout)
+    assert.equal(inspection.schemaVersion, 1)
+    assert.equal(inspection.context.framework.name, "vite")
+    assert.equal(inspection.context.sourceRoot, "src")
+    assert.equal(inspection.context.locations.ui, "src/components/ui")
+    assert.equal(inspection.context.registryVersion, customerRegistryVersion)
+    assert.deepEqual(inspection.context.capabilities, { fileWrites: false, dependencyInstall: false, browser: false })
+    assert.equal(inspection.summary.inventory.modifiedFiles, 0)
+    assert.equal(inspection.summary.inventory.missingFiles, 0)
+    assert.equal(inspection.summary.inventory.unknownFiles, 0)
+    assert.ok(inspection.context.installed.find((item: { name: string }) => item.name === "customer-edit-01").files.length > 0)
     assert.equal(await readFile(join(target, ".logic2b/base/blocks/login-01/login-form.tsx"), "utf8"), oldLoginSnapshot, "adding customer blocks must preserve the rc.16 login snapshot")
     assert.match(added.stdout, /npm install[^\n]*\blucide-react\b/)
     const formSource = await readFile(join(target, "src/components/customer-edit-01/customer-edit-form.tsx"), "utf8")
@@ -289,6 +301,7 @@ try {
           "get_component",
           "get_demo",
           "get_theme",
+          "inspect_project",
           "install_plan",
           "lint_theme",
           "list_components",
@@ -313,6 +326,8 @@ try {
       assert.ok(defaultVersion, `registry fixture publishes no "${REGISTRY_DEFAULT_CHANNEL}" channel`)
       const css = (theme.files as Array<{ content: string }>)[0]!.content
       const cases: Array<[string, Record<string, unknown>]> = [
+        ["inspect_project", { snapshot: { schemaVersion: 1, configs: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } } }],
+        ["inspect_project", { snapshot: { schemaVersion: 1, configs: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } }, details: true }],
         ["list_components", {}],
         ["list_presets", {}],
         ["search_components", { query: "button" }],
@@ -423,8 +438,8 @@ try {
   })
 
   passed = true
-  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/rc.16 scaffold and rc.17 customer installs verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 16 tool output contracts and customer behavior plans verified over stdio`)
+  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/inspect/rc.16 scaffold and rc.17 customer installs verified`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: packed, consumer-installed, all 17 tool output contracts, project inspection and customer behavior plans verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

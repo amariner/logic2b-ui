@@ -1,3 +1,5 @@
+import { PROJECT_LIMITS } from "@logic2b/scaffold/project-context"
+
 /**
  * Documented resource limits shared by the stdio server and the remote HTTP
  * worker. Inputs are bounded before any registry or network work; oversized
@@ -29,6 +31,13 @@ export const LIMITS = {
   tokenEntries: 256,
   /** Maximum length of one raw token name or value. */
   tokenLength: 256,
+  /** inspect_project uses the shared snapshot and result budgets. */
+  projectConfigBytes: PROJECT_LIMITS.configBytes,
+  projectConfigEntries: PROJECT_LIMITS.configEntries,
+  projectInventoryEntries: PROJECT_LIMITS.inventoryEntries,
+  projectPathLength: PROJECT_LIMITS.paths,
+  projectCompactBytes: PROJECT_LIMITS.compactBytes,
+  projectDetailBytes: PROJECT_LIMITS.detailBytes,
   /** Maximum size of one fetched registry document in bytes. */
   registryDocumentBytes: 4 * 1024 * 1024,
   /** Maximum total file-content bytes returned by one plan or item read. */

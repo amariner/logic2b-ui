@@ -17,7 +17,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | REL-01 | Publish the paired CLI/MCP npm release candidate — [release guide](../RELEASING.md) | M0-01, M0-02, M0-03, M0-04 | in-progress (rc.3 prepared and pushed; npm publication pending) | Codex |
 | EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/report landed; real baselines pending) | Codex (EVAL-01) |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
-| M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
+| M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
 | M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | ready | — |
@@ -595,3 +595,106 @@ remain pending; no paid trials or outreach were launched.
 Next ready task: M1-02, the shared project-context contract and local collector.
 M1-03 is also unblocked. M1-04 static review still needs M1-02; M2 consumer
 change/update evidence remains separate from this journey implementation.
+
+
+### 3 October 2026 — M1-02
+
+Completed on `codex/m1-02-project-context` (delivery commit subject:
+`feat(project): add bounded project inspection for CLI and MCP`).
+The local CLI `inspect` reads configuration without writes, execution, installs
+or registry requests. It reports confirmed paths, declared versions, host
+capabilities and unknowns before component selection. `--app-root` selects one
+workspace application; `--details` hashes confirmed installed destinations and
+retained bases; repeatable `--file` fingerprints additional inert bytes.
+`--snapshot` exports sanitized metadata for hosts. The pure MCP
+`inspect_project` accepts that snapshot, performs no filesystem/network work and
+returns the same compact/detail contract as structured data and JSON text.
+Generated Copy Prompt/AGENTS guidance preserves existing aliases, stylesheet
+entries, native controls, wrappers and local edits, with an explicit empty-target
+scaffolding path. No unpublished inspect command is advertised in those public
+prompts; source instructions and package changelogs identify pending publication.
+
+Changed contracts: shared `ProjectSnapshotV1`, `ProjectContextV1` and
+`ProjectInspection`, all schemaVersion 1, plus exported nested JSON schemas and
+limits in scaffold. Pure and Node-only package subpaths keep filesystem code
+out of the worker. Context includes aliases/confirmed locations, static evidence,
+unknowns, per-item registry version/integrity and observed current/base hashes;
+capabilities require explicit host booleans and default false in CLI. Compact
+summaries omit source bodies/full inventory. Manifest paths remain registry
+relative; detail files use actual target paths. The last resolved registry
+selection does not imply all installed item versions are equal.
+
+Config limits: 128 KiB before extraction, 32 present configs, 1,000 inventory or
+recorded file entries, 256-character paths, eight inheritance levels and four
+extends parents. File/base reads are 1 MiB each/4 MiB total; result JSON values
+are bounded to 16 KiB compact/512 KiB detail. Source/scripts/package names,
+registry URLs and private dependency URL/file specifiers are not forwarded.
+Unknown wrapper fields, schemas, capabilities, unsafe paths, case collisions,
+symlink escapes and special files are rejected. Reader identity/metadata checks
+detect concurrent replacements. Unknown options are never repaired into guessed
+install locations.
+
+Verification (Node 24.7.0 on macOS; exact commands):
+
+- `pnpm lint`: passed all eight packages, four cached initially; final rerun
+  after inspection corrections passed all eight, five cached.
+- `pnpm test`: passed all eight packages, 468 checks, four packages cached.
+  Review then found additional alias/version/config-count/theme mapping defects;
+  the final relevant package reruns below cover those corrections.
+- `pnpm --filter @logic2b/scaffold test`: final 51/51 passed, including 40 new
+  context/collector checks across nine fixture families. Tree fingerprints stay
+  unchanged; JSONC/local inherits/references and wildcard precedence compare
+  against the installed TypeScript oracle. Missing, modified, unmodified and
+  unverified files remain distinct. Limits, malformed/unknown inputs, metadata
+  privacy, symlinks, FIFOs and concurrent replacement have retained regressions.
+- `pnpm --filter logic2b test`: final 76/76 passed, including 11 new real-command
+  checks for help/text/JSON, default cwd, app selection, capabilities, details,
+  sanitized snapshots, unknowns, unsafe paths and unchanged trees.
+- `pnpm --filter @logic2b/mcp test`: final 174/174 passed. Direct dispatcher,
+  official-client stdio and HTTP test schema/text/typed equality, custom UI/base
+  hashes, input privacy, no fetches, limits and oversized-detail -32602 errors.
+- `pnpm --filter @logic2b/scaffold exec tsc --ignoreConfig --noEmit --strict
+  --target ES2022 --module NodeNext --moduleResolution NodeNext
+  --allowImportingTsExtensions --types node --skipLibCheck
+  test/project-context.test.ts test/project-collector.test.ts`: passed. The first
+  invocation omitted TypeScript 6's `--ignoreConfig` and was corrected after
+  TS5112; that attempt is not counted as a pass.
+- `pnpm --filter @logic2b/web exec node --import tsx --test
+  test/beta-onboarding.test.ts test/behavior-contract.test.ts`: 7/7 passed for
+  generated existing-app guidance and customer-contract regressions. Root test
+  also passed all 29 web checks.
+- `pnpm build`: final full workspace build passed all six build tasks, uncached,
+  including CLI/MCP bundles and Cloudflare worker/static web output.
+- `pnpm test:release-artifacts`: passed real tarball installation; CLI
+  help/version/inspect, old rc.16 starter plus rc.17 customer additions and
+  retained bases; all 17 MCP output contracts through the official stdio client.
+  Packed inspect confirms Vite/src, aliases, capabilities false, item inventory
+  and zero modified/missing/unverified files in that consumer.
+- `pnpm --filter @logic2b/web test:budgets`: passed, browser JS 2,014.0 KiB,
+  largest chunk 193.4 KiB; active registry 776.9 KiB/index 97.4 KiB. No caps
+  increased. A 1,000-file snapshot measured 794-byte compact/122,482-byte detail
+  in the core fixture; MCP fixture values 794/109,372 bytes, complete duplicated
+  MCP results 1,706/226,908 bytes. JSON value and protocol sizes differ.
+- `git diff --check` and `git diff --quiet -- apps/web/public/r/content
+  apps/web/public/r/versions apps/web/public/og`: passed; immutable registry and
+  generated social-image bytes are unchanged. No dependency/lockfile change.
+
+Known limits: static configuration cannot verify runtime bundler aliases,
+stylesheet imports or browser behavior. External/package tsconfig extends,
+unsupported workspace patterns, competing apps/frameworks and ambiguous alias
+alternatives remain unknown or request app selection. Unsupported declared
+version formats remain unknown; manifest resolved/item versions require exact
+supported versions. Locations use TypeScript metadata rather than executing
+framework config. Native CSS entries are preserved: registry theme.css is
+hashed next to the configured entry, not as globals.css/tokens.css. Existing
+install_plan still uses its documented default layout; adapting custom paths and
+imports is explicit host work until M2 preconditioned planning/apply exists.
+Capabilities are declarations, not an apply authorization. An absent install
+manifest does not imply an empty app or ownership of native/shadcn components.
+
+Browser functional/axe/visual suites, Lighthouse, framework consumer-build
+matrix, Node 18 distribution floor and remote/CI execution were not rerun for
+this contract/generator change. No npm publication, push, deployment, paid trial
+or outreach was performed. EVAL-01 real baselines and M0 pilot evidence remain
+pending. Next ready task: M1-03, agent rules delivered with installs; M1-04 and
+M2-01 are now unblocked by the implemented project-context contract.
