@@ -1,0 +1,571 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ui.logic2b.com/benchmarks/agents/v2/attempt.schema.json",
+  "title": "Logic2b comparative outcome attempt v2",
+  "description": "Offline evaluator evidence; schema validation does not prove observer independence. Runtime validation additionally enforces tool/task/check membership, correction reason references, total bytes and verified artifacts.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "protocolVersion": {
+      "const": "2.0.0"
+    },
+    "attemptId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "classification": {
+      "enum": [
+        "real",
+        "synthetic"
+      ]
+    },
+    "conditionId": {
+      "enum": [
+        "baseline",
+        "existing-cli-mcp",
+        "new-workflow",
+        "ablation-no-review"
+      ]
+    },
+    "taskId": {
+      "enum": [
+        "customer-journey",
+        "recovery-and-permission",
+        "preserve-customizations",
+        "upstream-update",
+        "held-out-transfer"
+      ]
+    },
+    "repetition": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000
+    },
+    "cohortId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "workspace": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "fresh": {
+          "const": true
+        }
+      },
+      "required": [
+        "id",
+        "fresh"
+      ],
+      "additionalProperties": false
+    },
+    "fixture": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256-[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "id",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "versions": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$"
+        },
+        "cli": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$"
+        },
+        "mcp": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$"
+        },
+        "toolSchema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        }
+      },
+      "required": [
+        "registry",
+        "cli",
+        "mcp",
+        "toolSchema"
+      ],
+      "additionalProperties": false
+    },
+    "host": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        },
+        "versionKind": {
+          "enum": [
+            "alias",
+            "immutable"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "versionKind"
+      ],
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "os": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        },
+        "node": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[^\\u0000-\\u001f]+$"
+        }
+      },
+      "required": [
+        "os",
+        "node"
+      ],
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "boolean"
+        },
+        "shell": {
+          "type": "boolean"
+        },
+        "mcp": {
+          "type": "boolean"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+          },
+          "maxItems": 128,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "network",
+        "shell",
+        "mcp",
+        "tools"
+      ],
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "elapsedMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "toolCalls": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "inputBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "outputBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tokens": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "const": "unavailable"
+            }
+          ]
+        }
+      },
+      "required": [
+        "elapsedMs",
+        "toolCalls",
+        "inputBytes",
+        "outputBytes",
+        "tokens"
+      ],
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed",
+        "timed-out",
+        "interrupted"
+      ]
+    },
+    "assistance": {
+      "enum": [
+        "autonomous",
+        "human-assisted"
+      ]
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "elapsedMs": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "const": "unavailable"
+            }
+          ]
+        },
+        "toolCalls": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "const": "unavailable"
+            }
+          ]
+        },
+        "inputBytes": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "const": "unavailable"
+            }
+          ]
+        },
+        "outputBytes": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "const": "unavailable"
+            }
+          ]
+        },
+        "tokens": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "const": "unavailable"
+            }
+          ]
+        }
+      },
+      "required": [
+        "elapsedMs",
+        "toolCalls",
+        "inputBytes",
+        "outputBytes",
+        "tokens"
+      ],
+      "additionalProperties": false
+    },
+    "humanCorrections": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "const": "unavailable"
+            }
+          ]
+        },
+        "reasonArtifactIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+          },
+          "maxItems": 128,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "count"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "count": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "count"
+            ]
+          },
+          "then": {
+            "required": [
+              "reasonArtifactIds"
+            ],
+            "properties": {
+              "reasonArtifactIds": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "failed",
+              "unknown",
+              "not-run"
+            ]
+          },
+          "artifactIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+            },
+            "maxItems": 128,
+            "uniqueItems": true
+          },
+          "observer": {
+            "enum": [
+              "independent",
+              "agent"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "artifactIds",
+          "observer"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 64
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^(?!/)(?!.*[\\\\:])(?!(?:.*\\/)?\\.{1,2}(?:\\/|$))[^/]+(?:/[^/]+)*$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^sha256-[a-f0-9]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 16000000
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "sha256",
+          "bytes"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 128
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "protocolVersion",
+    "attemptId",
+    "classification",
+    "conditionId",
+    "taskId",
+    "repetition",
+    "order",
+    "cohortId",
+    "workspace",
+    "fixture",
+    "versions",
+    "host",
+    "model",
+    "environment",
+    "capabilities",
+    "budget",
+    "status",
+    "assistance",
+    "metrics",
+    "humanCorrections",
+    "checks",
+    "artifacts"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "classification": {
+            "const": "real"
+          }
+        },
+        "required": [
+          "classification"
+        ]
+      },
+      "then": {
+        "properties": {
+          "conditionId": {
+            "enum": [
+              "baseline",
+              "existing-cli-mcp"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "assistance": {
+            "const": "autonomous"
+          }
+        },
+        "required": [
+          "assistance"
+        ]
+      },
+      "then": {
+        "properties": {
+          "humanCorrections": {
+            "properties": {
+              "count": {
+                "enum": [
+                  0,
+                  "unavailable"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

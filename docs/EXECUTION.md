@@ -1,6 +1,6 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 6 September 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 3 October 2026.
 Owners below identify active work, not permanent maintainers. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
@@ -15,7 +15,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-04) |
 | M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
 | REL-01 | Publish the paired CLI/MCP npm release candidate — [release guide](../RELEASING.md) | M0-01, M0-02, M0-03, M0-04 | in-progress (rc.3 prepared and pushed; npm publication pending) | Codex |
-| EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | ready | — |
+| EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/report landed; real baselines pending) | Codex (EVAL-01) |
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | ready | — |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | ready | — |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | ready | — |
@@ -422,3 +422,72 @@ passed for this commit. Publication also still requires CI to pass for the
 exact candidate commit and separate user authorization to publish both npm
 packages to `next`, followed by the live beta-onboarding check and compatibility
 documentation update.
+
+
+### 3 October 2026 — EVAL-01 (protocol/report delivery; measurements pending)
+
+Delivered on `codex/eval-01-comparative-protocol`, from the clean
+`codex/npm-rc3-release` checkout at `2051eec`. The v2 comparative protocol,
+attempt/cohort JSON schemas, shared offline evaluator and report CLI live in
+`benchmarks/agents`. Four conditions cover public-documentation baseline,
+existing CLI/MCP, planned context/behavior/review/change workflow and a planned
+no-review ablation. Five tasks cover the customer journey, failure/permission
+recovery, local customization, upstream updates and held-out transfer. The
+seeded default schedule contains 100 assignments, including 50 planned ones;
+no schedule entry is a measurement.
+
+`pnpm benchmark:agents:report:v2` emits separate JSON/Markdown reports; the
+checked-in report states `pending` with zero real observations. New v2 contracts
+require exact version/alias metadata, declared budgets, explicit unavailable
+metrics, independent check observations and hashed artifact references.
+Frozen `cohorts.json` manifests pin the exact protocol, commit, docs/registry/
+rubric digests, browser, host/model/runtime/capabilities/versions/budgets,
+fixture digests and complete deterministic assignment schedule before outcomes.
+The first record and all later records must match those controls. Missing
+assignments remain in the primary denominator; human-assisted rescues remain
+primary failures and are also summarized separately. Without a cohort manifest,
+only observed counts are available and readiness cannot be claimed. Failed,
+unknown or missing required checks and unverifiable budget usage do not pass.
+
+The reader bounds manifests (1,000,000 bytes), artifacts (16,000,000 bytes each;
+64,000,000 declared bytes per attempt), counts (128 artifacts/1,000 attempts)
+and actual reads. It rejects traversal, symlinks and special files, verifies
+sizes/hashes and treats source as inert bytes. CLI writes reject symlink
+ancestors before creating directories and cannot target v1 runs/results.
+Malformed metadata aborts before replacing an existing report; invalid artifact
+evidence remains a failed observation. No dependency, telemetry or model
+execution was added. No published registry payload, v1 protocol, v1 run/result
+or lockfile changed. Hashes establish retained byte integrity; truthful
+observations and evaluator independence remain the collector's responsibility.
+
+Passed on Node 24.7.0 / pnpm 11.10.0:
+
+- `pnpm benchmark:agents:test`: 76 tests (50 core v2, 11 CLI, 15 existing
+  harness regressions), all passed. Covers incomplete observations, unavailable
+  usage, tampering, inert submitted JS, symlinks/FIFOs, rescued/omitted failure
+  denominators, predeclared controls, deterministic multi-cohort aggregation,
+  synthetic exclusion, CLI privacy and archived-result preservation.
+- `pnpm --dir benchmarks/agents lint`: strict TypeScript passed.
+- `pnpm lint` and `pnpm test`: eight workspace packages passed; seven unchanged
+  package tasks reused Turbo cache, and the benchmark package executed.
+- `pnpm benchmark:agents:report:v2`: generated the honest pending report.
+  `pnpm --dir benchmarks/agents report:v2 --plan` is also exercised by the CLI
+  suite without invoking agents or writing outcomes.
+- `git diff --check`: passed. `git diff --quiet --
+  benchmarks/agents/protocol.json benchmarks/agents/results
+  benchmarks/agents/runs apps/web/public/r pnpm-lock.yaml`: passed.
+
+Limitations: no real comparative trials or fabricated baseline numbers; no
+paid model run, participant contact, npm publication, merge or push. Actual
+customer/held-out fixtures, independent browser assertions and repeated
+baseline/treatment measurements remain pending, so EVAL-01 stays `in-progress`.
+The new workflow/ablation cannot accept real attempts until their tools exist.
+Full build, release-artifact, scaffold-consumer, browser visual/axe and
+Lighthouse suites were not rerun for this offline benchmark change. The v2
+reporter ingests trusted evaluator evidence; it does not run consumer builds or
+browser assertions itself.
+
+Next ready task: M1-01, the state/content/action contract and customer list/edit
+form. Its implementation also supplies the customer behavior needed for v2
+fixtures. EVAL-01's remaining collection work must freeze those fixtures and
+obtain applicable authorization before launching paid trials or outreach.

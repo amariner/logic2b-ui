@@ -16,7 +16,8 @@
     "benchmark:agents:test": "pnpm --dir benchmarks/agents test",
     "benchmark:agents:run": "pnpm --dir benchmarks/agents benchmark",
     "benchmark:agents:score": "pnpm --dir benchmarks/agents score",
-    "package:vscode": "pnpm --filter logic2b-ui package:vsix"
+    "package:vscode": "pnpm --filter logic2b-ui package:vsix",
+    "benchmark:agents:report:v2": "pnpm --dir benchmarks/agents report:v2"
   },
   "devDependencies": {
     "turbo": "^2"

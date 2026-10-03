@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 2,
+  "protocol": {
+    "id": "logic2b-outcome-v2",
+    "version": "2.0.0",
+    "sha256": "sha256-5ad83d6f52f5b0648f41c1419c419595e153ae0b1c1a0197cd0bedd9a1b0494e"
+  },
+  "status": "pending",
+  "assignmentCoverage": "unverified",
+  "excludedSynthetic": 0,
+  "coverage": [],
+  "groups": [],
+  "attempts": []
+}
