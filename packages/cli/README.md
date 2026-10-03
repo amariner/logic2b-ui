@@ -92,6 +92,59 @@ The host must declare its capabilities: `--file-writes`,
 `--dependency-install` and `--browser` default to false. These flags describe
 available permissions for later work; inspection itself still only reads.
 
+## Static UI review (source)
+
+The source CLI includes `review`; it awaits npm publication. Review explicitly
+selected React TSX/JSX files without changing, executing or uploading them:
+
+```bash
+pnpm --filter logic2b dev review src/customers.tsx src/customer-form.tsx --cwd /path/to/my-app
+pnpm --filter logic2b dev review src/customer-form.tsx --cwd /path/to/my-app --json --fail-on error
+pnpm --filter logic2b dev review src/customer-form.tsx --cwd /path/to/my-app --semantic-colors --fail-on warning
+```
+
+Paths must be relative to `--cwd` (the current directory by default). The command
+accepts 1–64 explicit `.tsx`/`.jsx` files, at most 128 KiB per file and 256 KiB
+combined, with valid UTF-8 text. It does not discover files recursively or expand
+globs. Directory paths, dependency/build/environment files, traversal, absolute
+paths, duplicates, symlinks and special files are rejected. Reads check open-file
+and directory identities to reject concurrent replacement. No project config,
+imports, dependency install or network request is executed.
+
+The versioned result lists findings, evidence, suggested fixes, evaluated rules,
+unknown checks, reasoned suppressions and limitations. Native controls and valid
+labels are supported; custom wrappers, dynamic names and unresolved relationships
+can remain unknown. Unknown is not pass, and a result with zero findings does not
+certify accessibility. Runtime behavior and cross-file semantics still need
+independent verification. `--semantic-colors` explicitly enables the semantic
+color policy; intentional project color choices are not universal defects.
+
+`--json` prints only the result. Human output includes relative file locations
+and the evidence for each finding. The default `--fail-on error` exits 1 for
+unsuppressed errors; `--fail-on warning` exits 1 for warnings or errors. Unknowns
+remain visible without affecting that finding threshold. Invalid arguments or
+unreadable/unsafe inputs always exit nonzero and produce no successful result.
+
+Use `--suppressions review-suppressions.json` for an explicit JSON array, limited
+to 64 KiB. Each suppression matches one supplied file, rule and one-based line,
+and must explain why it applies (12–512 characters and at least three words):
+
+```json
+[
+  {
+    "file": "src/customer-form.tsx",
+    "rule": "L2B-TOK-001",
+    "line": 8,
+    "reason": "This swatch intentionally previews the customer's chosen brand color."
+  }
+]
+```
+
+Suppressed findings remain in the result with their evidence and reason.
+Suppression files follow the same relative-path and regular-file restrictions;
+they do not apply code changes. See the [review rule reference](https://ui.logic2b.com/docs/review)
+for the implemented rule subset and its limits.
+
 ## Install-delivered agent rules (source)
 
 Agent-rule delivery is implemented in this repository and awaits npm publication.

@@ -1,6 +1,6 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 3 October 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 4 October 2026.
 Owners below identify active work, not permanent maintainers. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
@@ -19,7 +19,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
 | M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
 | M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | Codex (M1-03) |
-| M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | ready | — |
+| M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | done | Codex (M1-04) |
 | M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | ready | — |
 | M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | ready | — |
 | M2-03 | Customer journey create/change/update acceptance fixture | M2-01, M2-02 | ready | — |
@@ -809,3 +809,123 @@ was performed. M0 pilot evidence and EVAL-01 real baselines remain pending.
 Next ready task: M1-04, proof-backed accessible-name and token-policy static
 review, with wrappers/native controls and unresolved semantics handled honestly.
 M1-03 completion does not complete M1 or authorize the separate release work.
+
+### 4 October 2026 — M1-04
+
+Added source-only static review through `logic2b review <paths...>` and the
+read-only `review_ui` MCP tool. Both use the new private `@logic2b/review`
+package; supplied JSX/TSX is parsed as data and never executed, imported,
+fetched or uploaded. Branch: `codex/m1-04-static-review`. Scoped commit subject:
+`feat(review): add bounded evidence-based static UI review`.
+
+Changed contracts: strict request/result schemaVersion 1 and engineVersion "1",
+three high-confidence native accessible-name defect rules and one opt-in
+semantic-color policy warning. Findings include source location, evidence,
+confidence, fix guidance and documentation. Unknown semantics remain explicit;
+reasoned suppressions retain the original finding. No score or auto-fix is
+introduced. Custom/imported wrappers, spreads, dynamic labels and cross-file
+semantics are unknown rather than presumed defects. Native labels, title text,
+submit/reset defaults and inert template/attribute JSX have dedicated cases.
+
+The engine bounds file counts/UTF-8 bytes, safe relative paths, AST nodes/depth,
+recursive naming work and output size. Its shared 250,000-step work budget
+discards partial findings for an exhausted file and marks remaining files
+unknown without repeating expensive analysis. Regression subprocesses cover
+exponential label-reference graphs, 64-file amplification, repeated attributes,
+deep/wide trees and long tag names. CLI reads only explicit regular files,
+rejects symlinks/special files and detects root/ancestor/file replacements.
+MCP performs no host filesystem operations and exposes matching text/structured
+results, nested schemas and bounded -32602 input errors (19 tools total).
+
+`@babel/parser` 7.29.7 was already pinned transitively and is now an explicit
+runtime dependency of the shared package. It replaces the guide's proposed
+TypeScript compiler parser; CLI/MCP tarballs inline it and the private engine.
+The lockfile adds only the explicit parser importer and workspace links; no
+third-party version was changed. Dependency installation was explicit, never
+part of lint/test/build. The full built MCP import subtree measures 757,422
+bytes raw / 175,187 gzip over two chunks, versus the former 253,787-byte entry.
+Its regression caps are now 800 KiB raw / 192 KiB gzip and include dependent
+chunks. Browser bundle budgets are unchanged.
+
+English/Spanish documentation, CLI/MCP readmes and changelogs, canonical agent
+skill and the implementation guide describe source availability separately
+from publication. HTML/Markdown rule references share `REVIEW_RULES` metadata.
+Two new docs OG images were generated and visually inspected; existing images
+and published immutable registry/token payloads remain unchanged. The benchmark
+helper emits advisory evidence with the same rule ids and explicitly does not
+award acceptance or alter historical v1 scores. CI includes the new browser
+suites and retains their screenshots before subsequent suites clear output.
+
+Verification (Node 24.7.0 / pnpm 11.10.0, macOS):
+
+- `pnpm build --force`: all six tasks passed uncached, including immutable
+  registry integrity, CLI/MCP bundles and the complete Astro site.
+- `pnpm lint --force`: all nine packages passed uncached, including strict
+  TypeScript checks for the new core and browser fixtures.
+- `pnpm test --concurrency=2 --force`: all nine packages passed uncached;
+  708 tests, no skips (review 116, CLI 103, MCP 246, scaffold 60, tokens 47,
+  registry 12, web 29, VS Code 17, benchmark 78). The review corpus includes
+  all 41 registry blocks and 255 demo/chart source files: zero emitted errors
+  and 1,019 explicit unknowns, not an accessibility certificate.
+- `pnpm test:release-artifacts`: passed real tarball packing and clean consumer
+  installation; CLI help/version/inspect/rules/review, preserved instructions
+  through rc.16/rc.17 installs, exact canonical skill bytes, all 19 MCP output
+  contracts and inert-source review through the official client.
+- `pnpm benchmark:agents:test`: 78 passed. Also exercised
+  `pnpm --dir benchmarks/agents review /private/tmp/logic2b-m1-04-review-request.json`:
+  advisory output reports `L2B-A11Y-003` and `acceptanceEvidence: false`.
+- `pnpm --filter @logic2b/web test:budgets`: passed. Browser JS 2,014.4 KiB,
+  largest chunk 193.4 KiB; active registry 776.9 KiB/index 97.4 KiB; immutable
+  artifacts 3,109.2 KiB; token assets 27.5 KiB; docs OG 175 images, 3,896.0 KiB.
+- `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  PLAYWRIGHT_PORT=4324 DEBUG=pw:test,pw:browser pnpm --filter @logic2b/web exec
+  playwright test tests/review-docs.spec.ts --workers=1 --global-timeout=60000
+  --output=/tmp/logic2b-m1-04-browser-docs-debug`: 4/4 passed, exit 0, 14.4 s.
+  English/Spanish docs at 390/1280 px have HTML/Markdown rule parity, working
+  anchors, keyboard focus, no horizontal overflow or serious/critical axe
+  violations. Retained desktop/mobile screenshots were visually inspected.
+- `PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  PLAYWRIGHT_PORT=4324 DEBUG=pw:test,pw:browser pnpm --filter @logic2b/web exec
+  playwright test tests/review-oracle.spec.ts --workers=1 --global-timeout=60000
+  --output=/tmp/logic2b-m1-04-browser-oracle-debug`: 14/14 passed, exit 0, 11.4 s.
+  Independently checks real browser names and relevant axe violations for
+  trusted React fixtures paired with reviewed source, including native labels,
+  title/placeholder fallbacks, uppercase input types, unnamed controls/dialogs,
+  children props, custom wrappers and inert template/attribute JSX.
+- `git diff --cached --check` and `git diff HEAD --quiet -- apps/web/public/r
+  apps/web/public/tokens packages/registry/api.generated.ts`: passed; published
+  immutable artifacts were not regenerated.
+
+Earlier attempts are not counted as passes: sandboxed tsx IPC and dependency
+metadata DNS access required authorized retries; those retries passed. An
+initial root test run exposed the docs locale inventory missing the new page
+and was corrected. A stress subprocess timed out while the full site build
+was running; the final forced workspace suite ran after the build and passed
+without relaxing its five-second bound.
+
+Combined Playwright runs completed all 18 assertions but hung during worker/
+Chrome teardown, with both one and two workers. The single-worker retry exited
+1 after its 180-second global timeout. A final diagnostic command,
+`PLAYWRIGHT_CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+PLAYWRIGHT_PORT=4324 DEBUG=pw:test,pw:browser pnpm --filter @logic2b/web exec
+playwright test tests/review-docs.spec.ts tests/review-oracle.spec.ts --workers=2
+--global-timeout=60000 --output=/tmp/logic2b-m1-04-browser-verified`, also exited
+1 after all 18 assertions passed. None counts as a passing command. Separate
+final suites above both completed all teardown and exited 0. Debug traces
+reproduced a browser-close wait, but did not establish a root cause.
+No dependency patch, forced exit or weakened assertion
+was added to hide the issue; the combined CI invocation remains unverified.
+
+Limits: static review is conservative and does not certify runtime behavior,
+CSS contrast, keyboard/focus behavior, application state coverage or customized
+component implementations. Browser comparisons use manually paired trusted
+React fixtures; they never execute reviewed source. Structural docs axe checks
+retain the existing color-contrast exclusion. Actual Node 18 execution,
+full-catalog axe/visual and customer-journey suites, consumer framework builds,
+Lighthouse, live endpoint/npm onboarding and CI were not rerun for this task.
+No push, deployment, npm publication, telemetry or outreach was performed.
+M0 pilot evidence and EVAL-01 real baselines remain pending.
+
+Next ready task: M2-01, incremental change plans with write preconditions.
+M2-02 consumer runtime verification is also unblocked. This delivery does not
+complete all of M1 or authorize the separate release work.

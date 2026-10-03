@@ -1159,6 +1159,13 @@
       "sha256": "638706eb1a443427f4d962ce88b91db8e130e459ee85ea018ffd55b4e1e9450d"
     },
     {
+      "id": "es/review",
+      "title": "Revisión estática",
+      "image": "/og/docs/es/review.png",
+      "bytes": 28225,
+      "sha256": "acd1abda20314ea18e21cb7e5ab7f5f31d6e87ae9dac656a772a8550f9888bbd"
+    },
+    {
       "id": "es/theming",
       "title": "Temas",
       "image": "/og/docs/es/theming.png",
@@ -1199,6 +1206,13 @@
       "image": "/og/docs/llms.png",
       "bytes": 22398,
       "sha256": "2534adcb3fb5c5069227965baa3ae780322c1d18e430d1d8dc7c3c2ad9a0e2de"
+    },
+    {
+      "id": "review",
+      "title": "Static UI review",
+      "image": "/og/docs/review.png",
+      "bytes": 23529,
+      "sha256": "bee73ab2b53901b3f352982633a6f0e5ddf952b7c7b2a429e47d838a81417eb9"
     },
     {
       "id": "theming",

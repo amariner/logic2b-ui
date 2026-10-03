@@ -44,8 +44,14 @@ Bounded read-only project inspection (M1-02) and install-delivered agent rules
 recorded in the execution queue. Neither implies filesystem access by a remote
 MCP or permission to overwrite local instructions.
 
+Bounded source-only static review (M1-04) now provides native accessible-name
+findings, an opt-in semantic-color policy and explicit unknowns through a shared
+CLI/MCP engine. Imported wrappers, runtime behavior and broader review rules
+remain outside this first slice. npm publication and remote deployment are
+pending; see the execution queue for evidence.
+
 Incremental change plans, broader behavior/content coverage,
-`review_ui`, consumer runtime verification, structured composition, proposal
+consumer runtime verification, structured composition, proposal
 links and the agent-run kit are **planned**, unless the execution queue links
 a completed implementation and its evidence. Do not advertise these as shipped.
 Versioned integrity exists: since M0-03 the MCP resolves an omitted version

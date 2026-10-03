@@ -1,0 +1,17 @@
+---
+import { reviewRules } from "@/data/review-rules";
+interface Props { locale?: "en" | "es" }
+const es = Astro.props.locale === "es";
+---
+<div class="not-prose my-6 space-y-4">
+  {reviewRules.map((rule) => (
+    <section aria-labelledby={`reference-${rule.id}`} class="rounded-lg border p-4">
+      <h3 id={`reference-${rule.id}`} class="font-medium">
+        <a href={rule.docs}><code>{rule.id}</code></a>
+      </h3>
+      <p class="mt-1 text-xs text-muted-foreground">{rule.category} · {rule.severity}</p>
+      <p class="mt-2 text-sm leading-6">{rule.description}</p>
+    </section>
+  ))}
+  {es && <p class="text-xs text-muted-foreground">Las descripciones canónicas y los identificadores se comparten con los resultados de la herramienta.</p>}
+</div>

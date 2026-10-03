@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@logic2b/registry": "workspace:*",
+    "@logic2b/review": "workspace:*",
     "@logic2b/scaffold": "workspace:*",
     "@logic2b/tokens": "workspace:*",
     "@types/node": "^26.1.0",

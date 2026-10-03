@@ -34,6 +34,8 @@ export const SERVER_INSTRUCTIONS =
   "and installed inventory before adapting an install plan. `agent_rules` " +
   "returns managed instruction-file plans with preservation and write " +
   "preconditions; the host verifies and applies them within its authorization. " +
+  "`review_ui` checks host-supplied JSX/TSX for proven accessible-name defects " +
+  "and opt-in semantic-color policy, reporting unresolved semantics as unknown. " +
   "These tools do not access the host filesystem or execute supplied content."
 
 export const CORS_HEADERS: Record<string, string> = {

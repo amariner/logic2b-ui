@@ -1,160 +1,151 @@
-# 03 — `review_ui`: design-system review as a tool
+# 03 — Evidence-based static UI review
 
-**Status:** proposed · **Lane:** guarantee quality · **Target:** v1.0 ·
-**Depends on:** [02 UI states & content contract](./02-ui-states-and-content-contract.md)
-for the state rules; runs without it for the rest.
+**Status:** M1-04 implemented in source · **Updated:** 4 October 2026.
+Canonical scope: [ROADMAP](../../ROADMAP.md) and [execution queue](../EXECUTION.md).
+Publication and deployment are separate from source implementation.
 
-## Why (the user)
+## First vertical slice
 
-`lint_theme` proves a theme is still on-system after months of edits. Nothing
-does the same for **compositions**: the agent that hand-rolls a `<button>`
-because it forgot `Button` exists, the `Dialog` without a `DialogTitle` a
-screen reader user cannot name, the list that never renders an empty state,
-the `animate-*` class that ignores `prefers-reduced-motion`, the `text-red-500`
-that breaks the dark theme. These are the defects real people meet, and they
-are candidates for static inspection; cross-file context may prevent a conclusive
-finding. `review_ui` makes review something an
-agent runs on itself before it says "done".
+The private `@logic2b/review` package owns a pure synchronous `reviewUi` engine,
+strict request/result JSON schemas, validation, rule metadata and fixture corpus.
+The CLI `logic2b review` and local/HTTP MCP `review_ui` call that same engine.
+The source is parsed as inert JSX/TSX. It is never executed, imported, fetched,
+written or sent to analytics. The CLI alone collects explicitly selected files.
 
-## What ships
+The dated queue prioritizes proof-backed naming and explicit token policy.
+This delivery implements four stable rule ids:
 
-- `packages/review`: a pure, DOM-free rule engine over TSX/JSX sources.
-- MCP tool `review_ui` (remote + local).
-- CLI `logic2b review [paths…] [--json] [--fail-on warning|error]`.
-- `/docs/review` documenting every rule with a bad → good example.
-- The agent benchmark scorer reuses the same rule ids for the composition
-  task, so the benchmark measures what the tool teaches.
-- `AGENTS.md` (guide 07) tells agents to run it before finishing UI work.
+| Id | Severity | Category | Scope |
+| --- | --- | --- | --- |
+| `L2B-A11Y-001` | error | defect | Native dialog/alertdialog accessible names |
+| `L2B-A11Y-002` | error | defect | Native form-control accessible names |
+| `L2B-A11Y-003` | error | defect | Native button accessible names |
+| `L2B-TOK-001` | warning | design-policy | Recognized literal colors only with `policy.semanticColors: true` |
 
-## Design
+A native element is not a policy violation. Custom/imported components remain
+unknown: neither a name such as `Button` nor registry accessibility prose proves
+what a customized wrapper renders. There is no hardcoded registry-name table.
+Literal native nested/external labels and `aria-labelledby` targets are resolved
+within directly connected static JSX trees; dynamic content, spreads, ambiguous
+labels and different render scopes remain unknown. Every emitted finding has
+high confidence in the supplied static evidence, not a runtime certificate.
 
-### Contract
+This is a deliberate narrowing of the old proposal. Import/registry-contract
+resolution, state coverage, icons, motion, form validation, touch targets and
+primitive preferences remain later work. No rule claims absent local state
+branches are defects. Browser verification remains M2-02. No source-level
+finding proves CSS cascade, actual focus behavior or visual accessibility.
+
+## Versioned contract
 
 ```ts
 interface ReviewRequest {
-  files: Array<{ path: string; content: string }>   // ≤ 64 files, ≤ 256 KB total
-  componentsJson?: string                            // to learn aliases + icon library
-  preset?: string                                     // enables theme-aware rules
-  scope?: Array<"primitives" | "tokens" | "states" | "a11y" | "motion" | "forms" | "icons">
+  schemaVersion: 1
+  files: Array<{ path: string; content: string }>
+  policy?: { semanticColors?: boolean }
+  suppressions?: Array<{ file: string; rule: ReviewRule; line: number; reason: string }>
 }
 
 interface ReviewFinding {
-  rule: string              // "L2B-PRIM-001"
+  rule: ReviewRule
   severity: "error" | "warning" | "info"
-  category: "defect" | "design-policy" | "heuristic"
-  confidence: "high" | "medium" | "low"
+  category: "defect" | "design-policy"
+  confidence: "high"
   evidence: string[]
   file: string
-  line?: number
-  column?: number
-  message: string           // what and why, one sentence, user-facing impact first
-  fix?: string              // the registry way, as a code snippet or item name
-  docs: string              // absolute URL to the rule
+  line: number
+  column: number
+  message: string
+  fix: string
+  docs: string
 }
 
 interface ReviewResult {
-  registryVersion: string
+  schemaVersion: 1
+  engineVersion: "1"
   summary: { errors: number; warnings: number; info: number }
   findings: ReviewFinding[]
-  unknowns: Array<{ file: string; rule: string; reason: string }>
+  unknowns: Array<{ rule: ReviewRule; file: string; line: number; column: number; reason: string }>
+  suppressed: Array<{ finding: ReviewFinding; reason: string }>
+  evaluatedRules: ReviewRule[]
+  limitations: string[]
 }
 ```
 
-### Rules (v1)
+No registry is consulted, so the result does not invent a registry version.
+`evaluatedRules` means enabled rules, not complete coverage of every element.
+Counts exclude suppressions; a suppression retains the full original finding
+and a concrete reason of 3+ words / 12–512 characters. Unknowns and syntax gaps
+never count as passes. There is no score, auto-fix or execution plan.
 
-| Id | Severity | Detects | Fix it suggests |
-| --- | --- | --- | --- |
-| `PRIM-001` | info | Native styled controls that differ from an explicitly enabled project policy | Suggest the registry primitive; native HTML is valid |
-| `PRIM-002` | info | Custom overlay requiring focus/keyboard verification | Suggest a runtime check; role alone is not a defect |
-| `TOK-001` | error | Hardcoded colors: `bg-[#…]`, `text-red-500`, `oklch(`, `rgb(` in className/style | semantic tokens (`bg-destructive`, `text-muted-foreground`) |
-| `TOK-002` | warning | Arbitrary radius/shadow (`rounded-[…]`, `shadow-[…]`) | `rounded-md`/`--radius`, no shadows per DESIGN.md |
-| `A11Y-001` | error | `Dialog`/`AlertDialog`/`Sheet` content without a `*Title` | add `DialogTitle` (visually hidden if needed) |
-| `A11Y-002` | error | `Input`/`Select`/`Switch` without `Label`, `aria-label` or `aria-labelledby` | `Field` + `Label` |
-| `A11Y-003` | error | Icon-only `Button` without an accessible name | `aria-label` or `<span className="sr-only">` |
-| `A11Y-004` | warning | Any item whose `accessibility.consumer` duty is unmet, derived from the registry contract | the duty text verbatim |
-| `STATE-001` | warning | A data-owning block (guide 02) rendered without `status` wiring, or `.map(` over props/state without an empty branch | `status` prop / `Empty` |
-| `STATE-002` | info | `fetch`/`useQuery`/`useSWR` present but no loading or error branch in the same component | `Skeleton` + `Alert` |
-| `MOTION-001` | warning | `animate-*`, `transition-*` on non-registry elements without a `motion-reduce:` variant or the `Motion` primitive | `Motion`, `motion-*` presets |
-| `FORM-001` | warning | `<form>` without `Form`/`Field` and no validation library | `Form` recipe |
-| `FORM-002` | info | Email/name/postal/telephone inputs without `autoComplete` | the correct `autoComplete` token |
-| `ICON-001` | error | Icon imports from a package other than the one in `components.json` | rewrite the import |
-| `TOUCH-001` | warning | Clickable element sized below 24 px (`h-4 w-4` + `onClick`) | `size="icon"` / hit-area padding |
+Limits: 64 files, safe relative `.jsx`/`.tsx` paths of at most 256 characters,
+128 KiB UTF-8 per file / 256 KiB total source, 256 suppressions, 512 combined
+findings/unknowns/suppressions and 512 KiB result JSON. Paths reject traversal,
+absolute paths, backslashes, control characters and case collisions. Unknown
+fields and unsupported versions fail. AST traversal is limited to 50,000 nodes
+and depth 256; naming analysis has a shared 250,000-step per-review budget, including
+reference scans and recursive expansion. Parse/syntax/complexity failures return
+rule-scoped unknowns; work exhaustion discards partial findings for that file
+and marks remaining files unknown without repeating the expensive analysis.
+Oversized results fail and request a smaller batch instead of silently dropping
+findings. Text and structured MCP representations duplicate the result; total
+wire bytes exceed the JSON value size and remain subject to MCP protocol limits.
 
-Accessible-name rules are errors only when proven from resolved source. Valid
-nested/external labels and wrappers must pass; dynamic children/spreads and
-unresolved cross-file context are unknown. Token/icon/radius rules enforce an
-explicit design policy, not universal accessibility requirements. Missing local
-loading branches, validation libraries or motion classes are heuristics because
-providers, native validation or global CSS may supply the behavior. Support
-reasoned suppressions and report which rules were actually evaluated.
+## Parser and distribution
 
-Rule ids are stable and namespaced `L2B-<GROUP>-<NNN>`; the docs page is the
-canonical description. Severity is user-impact ordered: errors are things a
-real user will hit (cannot name a dialog, cannot see text in dark mode),
-warnings are likely defects, infos are hygiene.
+Use `@babel/parser` 7.29.7, an existing pinned transitive dependency made explicit
+for this package. It provides real JSX/TypeScript parsing without bundling the
+full TypeScript compiler. This replaces the old proposed compiler API approach.
+The package is DOM-, filesystem- and network-free. CLI/MCP tarballs inline both
+the private engine and parser, and must run in a clean consumer installation.
+Installed parser source is 512,666 bytes versus 9,144,216 bytes for the installed
+TypeScript compiler module (source-file sizes, not deployment measurements).
+The final built MCP subtree measured 757,422 bytes raw / 175,187 gzip across two
+chunks. Its regression caps are 800 KiB raw and 192 KiB gzip; browser limits stay
+unchanged. Measurements and commands are recorded in the execution handoff.
+Remote Worker measurements must include dependent chunks; lazy imports or a
+small entry chunk alone are not evidence of a small deployed parser.
 
-### Engine
+## Adapters and user instructions
 
-- Parse with the TypeScript compiler API already used for
-  `packages/registry/api.generated.ts` extraction (`typescript` is a workspace
-  dependency). Prototype and measure first: lazy imports do not remove a parser
-  from Worker deployment size. Use a bounded parser or document a local-only
-  subset if needed; do not claim local/remote parity without evidence.
-- Registry knowledge comes from `/r/index.json` + each item's `accessibility`
-  and `states` — the engine never hardcodes component names.
-- No execution of the reviewed code, ever. Same posture as `lint_theme`.
+`logic2b review <paths...> --cwd <app> --json --fail-on error|warning` reads only
+explicit regular files beneath the selected root. Symlinks/special files,
+invalid UTF-8 and detected replacements fail; it checks descriptor and ancestor
+identity before/after reads. No directory recursion or glob expansion is
+implemented. `--semantic-colors` enables policy; `--suppressions <relative.json>`
+reads a bounded 64 KiB JSON array. Exit 1 means the chosen finding threshold was
+met; invalid input/read failures also fail. Unknowns remain visible separately.
 
-### Where it lives
+`review_ui` receives the request directly, advertises read-only/closed-world
+annotations, and returns matching typed/text results. Invalid input/budget
+failures are bounded JSON-RPC -32602 errors before any I/O. It cannot inspect a
+host filesystem. A host must discover this capability before naming it in rules.
 
-| Piece | Path |
-| --- | --- |
-| Engine, rules, fixtures | `packages/review/src/{index,parse,rules/*.ts}`, `packages/review/test/fixtures/{bad,good}/*` |
-| MCP | `packages/mcp/src/tools.ts` |
-| CLI | `packages/cli/src/index.ts` (`review` command) |
-| Docs | `apps/web/src/content/docs/review.mdx` (+ `docs-es`) |
-| Benchmark | `benchmarks/agents/scripts/score.ts` (import rule ids) |
+English/Spanish `/docs/review` pages show examples and limitations. The rule
+reference derives ids/categories/descriptions from `REVIEW_RULES` for both HTML
+and Markdown. The packaged agent skill uses review only if advertised and keeps
+browser verification and customization preservation explicit.
 
-## Implementation steps
+The benchmark's `pnpm --dir benchmarks/agents review <request.json>` produces
+advisory evidence with these same rule ids. It does not rewrite historical v1
+scores, make the intervention its own acceptance judge, or mark the complete v2
+workflow available. Build/browser/human acceptance stays independent.
 
-1. Scaffold `packages/review` (private workspace package, `node:test`, strict
-   TS) with the parser wrapper and the finding types.
-2. Implement explicit `TOK-001` policy and provable `A11Y-001..003` cases first,
-   then `ICON-001`, then advisory `MOTION-001`, `FORM-*`,
-   `TOUCH-001`, then `STATE-*` (need guide 02 metadata; ship as `info` until
-   it lands).
-3. Fixture corpus: for every rule, one file that must trigger it and one that
-   must not. Add the registry's own blocks and demos as a "must produce zero
-   errors" corpus — the registry has to pass its own review.
-4. Register `review_ui` in MCP with the size limits; return the docs URL per
-   finding.
-5. CLI `review` reading the paths, printing grouped findings with
-   `file:line`, exit code by `--fail-on`.
-6. Docs page generated from the rule table (one source of truth in
-   `packages/review/src/rules/index.ts` exporting `RULES` with `docs`
-   strings).
-7. Report rules in the benchmark alongside independent browser/human outcomes
-   (guide 14). The intervention must not be the sole judge of its own success.
-8. Optional: a `logic2b review` GitHub Action example in `/docs/review`.
+## Gates and handoff
 
-## Gates
+- `pnpm --filter @logic2b/review test` and `lint`: positive/negative cases,
+  wrappers/native/external labels, inert malicious source, syntax/complexity,
+  UTF-8/path/output bounds, suppressions and zero-error registry/demo corpus.
+- CLI real-command tests: JSON/text, threshold exits, unsafe files, unchanged
+  trees, aliases/wrappers and source never executed or uploaded.
+- MCP direct, actual stdio and HTTP tests: nested schemas, typed/text equality,
+  negative corpus, limits and no fetches.
+- `pnpm lint`, `pnpm test --concurrency=2`, `pnpm build`,
+  `pnpm test:release-artifacts`, `pnpm benchmark:agents:test` and site budgets.
+- Built `/docs/review` and `/es/docs/review`: HTML/Markdown rule parity, valid
+  fragment links, keyboard/mobile overflow and structural axe checks. Inspect
+  retained screenshots; do not update existing visual baselines automatically.
 
-- `pnpm --filter @logic2b/review test`: every rule has a positive and a
-  negative fixture; the registry corpus yields zero errors.
-- MCP test: `review_ui` rejects oversize input and returns schema-valid
-  results.
-- Bundle budget: the remote MCP worker size after adding the engine stays
-  within the Cloudflare limit; assert in `apps/web` budgets.
-- Benchmark tests still pass (`pnpm benchmark:agents:test`).
-
-## Out of scope
-
-- Runtime checks in this static engine — guide 12 supplies consumer verification.
-- Auto-fixing — `fix` is a suggestion; the host applies it.
-- Non-React sources.
-
-## Open questions
-
-- No mandatory numeric quality score. Block on demonstrated defects and selected
-  policies, report uncertainty, and test native controls, external labels,
-  wrappers, spreads, global motion rules and intentional token overrides as
-  false-positive fixtures. A static pass does not certify accessibility.
+Record exact final commands, bundle measurements, limitations and commit in
+[EXECUTION](../EXECUTION.md). A passing static corpus does not assert all runtime
+accessibility requirements; native and wrapper unknowns must be retained.

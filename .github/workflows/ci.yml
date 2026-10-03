@@ -83,7 +83,14 @@ jobs:
       # against the dist/client built above.
       - run: pnpm --filter @logic2b/web exec playwright install --with-deps chromium
 
-      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts
+      - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts tests/review-docs.spec.ts tests/review-oracle.spec.ts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: onboarding-static-review-browser-evidence
+          path: apps/web/test-results
+          if-no-files-found: ignore
 
       # Keyboard create/edit/discard/recovery plus 52 customer state captures
       # and axe analyses across mobile/desktop and light/dark.

@@ -33,6 +33,11 @@ description: Build or maintain React interfaces in a project that uses the logic
    data and authorization. Verify the affected keyboard, mobile and error paths
    with the checks available in this project. Use review or proposal tools only
    when discovery confirms they exist; never invent an unavailable command.
+   If `review_ui` is exposed, supply only relevant JSX/TSX files with
+   `schemaVersion: 1`. Enable `policy.semanticColors` only when the project
+   requires it. Resolve proven defects, preserve explained customizations and
+   report `unknowns` and reasoned suppressions; zero static findings do not
+   certify accessibility or replace browser checks.
 6. Keep project-owned instructions outside managed logic2b markers intact. If
    `agent_rules` is available, request the intended editor format and reconcile
    its managed section with current file preconditions before applying it. The

@@ -4,6 +4,8 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## Unreleased
 
+- Add source-only `review <paths...>` for bounded, explicit TSX/JSX files with shared evidence-based findings, unresolved checks, optional semantic-color policy and reasoned suppressions; npm publication remains pending.
+- Support versioned review JSON, relative human diagnostics and `--fail-on error|warning` while rejecting unsafe/symlink/special inputs and concurrent replacement without executing or uploading source.
 - Deliver shared managed `AGENTS.md` and `DESIGN.md` with both init modes; refresh recorded inventory after add/update while preserving project instructions outside markers.
 - Add source `rules --format` generation for Claude, Cursor and Copilot, and persistent `--no-agent-rules` through `components.json` without implicit dependency installation.
 - Bound local rule/configuration reads, reject symlink targets and stale write preconditions, and preserve the supported Node 18 runtime with a Node-only WebCrypto fallback.
