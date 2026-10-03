@@ -13,6 +13,7 @@ import {
 
 export * from "./icons.ts"
 export * from "./behavior.ts"
+export * from "./project-context.ts"
 
 export const SCAFFOLD_FRAMEWORKS = ["next", "vite", "astro"] as const
 export type ScaffoldFramework = (typeof SCAFFOLD_FRAMEWORKS)[number]
@@ -695,6 +696,7 @@ export async function buildScaffoldPlan({
     },
     notes: [
       'Write every entry in "files" relative to an empty project directory.',
+      "For an existing app, inspect its configuration and installed inventory first; use confirmed aliases and stylesheet locations, preserve local edits, and resolve unknowns before adapting an install plan.",
       "The generated package.json pins the framework toolchain and includes every registry dependency.",
       "The starter is backend-agnostic: replace its static sample data and submit handlers with your application services.",
       "Dark mode is enabled on <html>; remove the dark class to start in the light theme.",

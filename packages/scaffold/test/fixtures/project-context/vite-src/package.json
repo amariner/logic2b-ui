@@ -1,0 +1,6 @@
+{
+  "name": "customer-vite",
+  "private": true,
+  "dependencies": { "react": "^19.1.0", "@tabler/icons-react": "3.46.0" },
+  "devDependencies": { "vite": "^7.0.0", "tailwindcss": "^4.1.0" }
+}

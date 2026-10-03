@@ -1,0 +1,5 @@
+{
+  "tailwind": { "css": "src/styles/theme.css" },
+  "aliases": { "components": "@/components", "ui": "@/components/ui", "utils": "@/lib/utils", "hooks": "@/hooks", "lib": "@/lib" },
+  "iconLibrary": "tabler"
+}

@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "registry": { "url": "https://ui.logic2b.com/r", "resolvedVersion": "1.0.0-rc.17" },
+  "items": { "button": { "version": "1.0.0", "files": ["ui/button.tsx"] }, "missing-widget": { "files": ["ui/missing-widget.tsx"] }, "unverified-widget": { "files": ["ui/unverified-widget.tsx"] } }
+}

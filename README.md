@@ -89,6 +89,13 @@ see [ROADMAP.md](./ROADMAP.md) for shipped boundaries and priorities.
   Presets also carry the icon implementation: CLI/MCP installs rewrite
   verified imports, package dependencies and update snapshots together.
 
+The source checkout also includes read-only project inspection for existing apps:
+`pnpm --filter logic2b dev inspect --cwd /path/to/app --json` reports confirmed
+configuration, host capabilities and unresolved context; `--details` adds
+installed-file hashes. The corresponding pure MCP `inspect_project` consumes
+host-supplied metadata. These changes await npm/remote publication; the contract,
+limits and adaptation guidance are in [project context](docs/guides/10-project-context.md).
+
 ## Beta onboarding
 
 Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package

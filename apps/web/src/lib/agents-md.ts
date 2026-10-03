@@ -13,6 +13,7 @@ import { BEHAVIOR_CONTRACTS } from "@logic2b/registry/behavior";
 import registryIndex from "../../public/r/index.json"
 
 import { encodePreset, FONTS, ICON_LIBRARIES, RADII, type ThemeConfig } from "@/lib/themes"
+import { PROJECT_CONTEXT_GUIDANCE } from "@/lib/prompts"
 
 const SITE = "https://ui.logic2b.com"
 
@@ -78,23 +79,32 @@ This project's interface is built on the logic2b ui design system
 (${SITE}): a shadcn-compatible component registry restyled entirely
 through CSS tokens. Follow these rules for any work that touches the UI.
 
+${PROJECT_CONTEXT_GUIDANCE}
+
 ## Stack contract
 
-- React 19 + Tailwind CSS v4 (CSS-first config — there is no
-  \`tailwind.config.js\`). Icons come from ${iconPackage}.
-- The theme is the token blocks in \`theme.css\`: \`:root\` (light) and
+- Registry components target React 19 + Tailwind CSS v4. Confirm compatibility
+  with the app's declared versions before changing dependencies.
+  Icons come from ${iconPackage}.
+- Find the theme through the confirmed stylesheet entry and imports.
+  Its token blocks are \`:root\` (light) and
   \`.dark\` (dark). Dark mode toggles with the \`dark\` class on \`<html>\`.
-- Code layout: primitives in \`@/components/ui\`, installed blocks in
-  \`@/components\`, charts in \`@/components/charts\`, the \`cn()\` class helper
-  in \`@/lib/utils\`.
+- Code layout follows confirmed \`components.json\` aliases and physical paths.
+  Fresh scaffolds commonly use \`@/components/ui\`, \`@/components\` and
+  \`@/lib/utils\`; preserve an existing app's custom destinations.
 
-## Don't hand-roll what the registry ships
+## Reuse existing UI and registry components
 
-Before writing any UI element from scratch, install it:
+Read the installed source before choosing an implementation. Reuse existing
+components, wrappers and native controls when they meet the requirement. If a
+compatible registry item is missing, install it at the confirmed destinations:
 
 - CLI: \`npx ${CLI_PACKAGE_SELECTOR} add <name>\` (resolves registry dependencies).
 - No shell? Use the MCP endpoint \`${SITE}/mcp\` — the \`install_plan\` tool
   returns the exact files to write and npm deps to add${cfg.iconLibrary === "lucide" ? " — or fetch the raw registry payload directly" : `; pass \`iconLibrary: "${cfg.iconLibrary}"\` so its canonical Lucide sources are rewritten`}.
+
+The following catalog lists available registry items, not this app's installed
+inventory. Confirm installed items from the manifest and actual source.
 
 Available primitives (${components.length}):
 ${wrapList(components)}
@@ -122,9 +132,10 @@ DaisyUI…) are off-limits — they fight the token system.
 - Depth comes from borders and surface steps (\`bg-card\`, \`bg-muted\`), not
   box-shadows.
 - Every change must hold in **both modes** — check light and dark.
-- Re-theming happens by regenerating tokens from a preset
+- Requested re-theming can regenerate tokens from a preset
   (\`npx ${CLI_PACKAGE_SELECTOR} init --preset ${preset}\` or the MCP \`apply_preset\`
-  tool), not by hand-editing individual token values.
+  tool). Confirm the target stylesheet and review the token diff first;
+  preserve unrelated styles and local overrides outside the requested change.
 
 ## Component conventions
 

@@ -1,0 +1,5 @@
+{
+  "name": "customer-workspace",
+  "private": true,
+  "workspaces": ["apps/*"]
+}

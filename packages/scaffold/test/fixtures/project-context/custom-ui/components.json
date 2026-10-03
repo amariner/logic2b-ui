@@ -1,0 +1,5 @@
+{
+  "tailwind": { "css": "client/design/tokens.css" },
+  "aliases": { "components": "~/views", "ui": "@design/primitives", "utils": "~/support/utils", "hooks": "~/state", "lib": "~/support" },
+  "iconLibrary": "phosphor"
+}

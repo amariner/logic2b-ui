@@ -1,4 +1,10 @@
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
+import {
+  inspectProject,
+  PROJECT_SNAPSHOT_SCHEMA,
+  validateProjectSnapshot,
+  type ProjectSnapshotV1,
+} from "@logic2b/scaffold/project-context"
 import { auditTokens } from "@logic2b/tokens/contrast"
 import {
   portableTokenBundle,
@@ -176,7 +182,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "add_command",
     description:
-      "Build the exact CLI command to install registry items in a project with a shell: `logic2b add` invocations for npm, pnpm, yarn and bun (names validated against the registry). For agents without a shell, use install_plan instead.",
+      "Build the exact CLI command to install registry items in a project with a shell: `logic2b add` invocations for npm, pnpm, yarn and bun (names validated against the registry). For an existing app, first use inspect_project and confirm aliases, installation locations and installed-file inventory. For agents without a shell, use install_plan instead.",
     inputSchema: {
       type: "object",
       properties: {
@@ -196,7 +202,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "install_plan",
     description:
-      "Resolve one or more registry items into an executable install plan: every file to write (project-relative path + full content, registry dependencies already resolved and deduplicated) and the npm dependencies to add. Made for agents without a terminal — no command to run, just write the files and add the deps to package.json. Paths assume the `@/*` import alias maps to the project source root.",
+      "Resolve registry items into file writes and npm dependencies without a shell. For an existing app, first use inspect_project and confirm aliases, installation locations and installed-file inventory. This plan uses the default @/* mapping from srcDir; adapt confirmed custom locations before writing and preserve existing files/customizations. It has no incremental-change preconditions. For a new application from empty, use scaffold_plan.",
     inputSchema: {
       type: "object",
       properties: {
@@ -229,7 +235,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "scaffold_plan",
     description:
-      "Generate a complete runnable starter project as file writes: framework shell, routing entry, package.json, logic2b theme and every component/block dependency. Works without a terminal. Choose Next.js, Vite or Astro and a marketing, dashboard or authentication starter; optionally apply an exact /create preset.",
+      "Generate a complete runnable starter application from empty as file writes: framework shell, routing entry, package.json, logic2b theme and every component/block dependency. Works without a terminal. Choose Next.js, Vite or Astro and a marketing, dashboard or authentication starter; optionally apply an exact /create preset. For an existing app, inspect_project first and preserve its confirmed configuration and customizations.",
     inputSchema: {
       type: "object",
       properties: {
@@ -397,9 +403,26 @@ const TOOL_DEFINITIONS = [
       required: ["css"],
     },
   },
+  {
+    name: "inspect_project",
+    description:
+      "Inspect a bounded, host-supplied project snapshot before selecting components or planning changes. Returns confirmed configuration, explicit uncertainty and host capabilities. Pure and read-only: no filesystem access, source execution or network requests. The default is a compact summary; pass details: true for the full sanitized context and installed-file inventory.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        snapshot: PROJECT_SNAPSHOT_SCHEMA,
+        details: {
+          type: "boolean",
+          description: "Include the full sanitized project context and installed-file inventory (default false).",
+        },
+      },
+      required: ["snapshot"],
+    },
+  },
 ] as const
 
-const PURE_TOOLS = new Set(["list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -451,8 +474,8 @@ function versionArg(args: Record<string, unknown>): string | undefined {
   return version || undefined
 }
 
-function textResult(value: unknown): ToolResult {
-  const text = JSON.stringify(value, null, 2)
+function textResult(value: unknown, compact = false): ToolResult {
+  const text = JSON.stringify(value, null, compact ? undefined : 2)
   return {
     content: [{ type: "text" as const, text }],
     // Normalize once to the actual wire value (omits undefined optional fields).
@@ -557,6 +580,23 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
   const version = stringArg(args, "version", { max: LIMITS.versionLength })
   if (version !== undefined) out.version = version.trim()
   switch (name) {
+    case "inspect_project": {
+      const unknown = Object.keys(args).find((key) => key !== "snapshot" && key !== "details")
+      if (unknown !== undefined) {
+        throw new ToolInputError(`Unknown inspect_project argument "${echo(unknown)}". Use only "snapshot" and "details".`)
+      }
+      if (args.details !== undefined && typeof args.details !== "boolean") {
+        throw new ToolInputError('The "details" argument must be a boolean.')
+      }
+      try {
+        out.snapshot = validateProjectSnapshot(args.snapshot)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Invalid project snapshot."
+        throw new ToolInputError(echo(message, 300))
+      }
+      if (args.details !== undefined) out.details = args.details
+      break
+    }
     case "list_components":
       out.kind = enumArg(args, "kind", KINDS)
       out.category = stringArg(args, "category")?.trim()
@@ -631,6 +671,14 @@ export async function runTool(
   { base = DEFAULT_REGISTRY, fetchImpl }: RunToolOptions = {}
 ): Promise<ToolResult> {
   const args = validateToolArguments(name, rawArgs)
+  if (name === "inspect_project") {
+    try {
+      return textResult(inspectProject(args.snapshot as ProjectSnapshotV1, { details: args.details as boolean | undefined }), true)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Invalid project inspection request."
+      throw new ToolInputError(echo(message, 300))
+    }
+  }
   try {
     if (name === "list_components") {
       const client = await createRegistryClient(base, versionArg(args), fetchImpl)
@@ -733,6 +781,7 @@ export async function runTool(
           bun: `bunx ${CLI_PACKAGE_SELECTOR} add ${names}${versionFlag}`,
         },
         notes: [
+          "For an existing app, inspect_project first and confirm its aliases, installation locations and installed-file inventory. Preserve local customizations before applying any command.",
           `If the project has no components.json yet, run \`npx ${CLI_PACKAGE_SELECTOR} init\` first (add --preset <id> to apply a /create theme).`,
           "The command resolves registry dependencies and prints the npm packages to install.",
           "No shell available? Use the install_plan tool instead — it returns the file writes directly.",
@@ -753,7 +802,13 @@ export async function runTool(
       // Snapshots are scaffold-internal. Per-item installs write their own
       // bases through the CLI and shell-less agents only need target writes.
       const { snapshots: _snapshots, ...publicPlan } = plan
-      return textResult(publicPlan)
+      return textResult({
+        ...publicPlan,
+        notes: [
+          "For an existing app, inspect_project first and use its confirmed aliases, installation locations and installed-file inventory. These paths use the default @/* mapping; adapt custom locations before writing, preserve existing files and local customizations, and resolve conflicts explicitly. This plan has no incremental-change preconditions.",
+          ...publicPlan.notes,
+        ],
+      })
     }
 
     if (name === "scaffold_plan") {
