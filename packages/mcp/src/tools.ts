@@ -442,6 +442,7 @@ function summarize(item: IndexItem) {
     ...(item.changelog ? { changelog: item.changelog } : {}),
     ...(item.accessibility ? { accessibility: item.accessibility } : {}),
     ...(item.api ? { api: item.api } : {}),
+    ...(item.behavior ? { behavior: item.behavior } : {}),
   }
 }
 

@@ -11,6 +11,7 @@ the queue records implementation and evidence.
 | Guide | Scope | Queue |
 | --- | --- | --- |
 | [00 — Public beta](./00-public-beta.md) | Honest onboarding, distribution and launch evidence | M0-01, M0-05 |
+| [02 — UI behavior and content](./02-ui-states-and-content-contract.md) | Controlled customer list/edit journey, versioned state/content/action evidence | M1-01 |
 | [10 — Project context](./10-project-context.md) | Local collection and bounded host-supplied context | M1-02 |
 | [11 — Incremental change plans](./11-incremental-change-plan.md) | Diffs, preconditions, apply/recovery | M2-01 |
 | [12 — Consumer verification](./12-consumer-verification.md) | Independent browser checks in generated apps | M2-02 |
@@ -67,7 +68,9 @@ person using it*. Every guide here moves one of four levers:
   second copy in the site.
 - **Plans, not mutations.** MCP tools return file writes and findings; the
   host decides what to apply. Same rule as `install_plan`.
-- **UI only.** Blocks stay pure UI with static sample data. The only
+- **UI only.** Blocks stay pure UI with controlled data/actions and optional
+  example data. Consumers own persistence, authorization and request status;
+  blocks do not fetch application data. The only
   server-side code this lane adds is project infrastructure (the aggregate
   endpoint in guide 09), which lives in the site worker like `/mcp` does.
 - **Gates before merge.** Every guide lists its tests. A guide is done when

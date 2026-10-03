@@ -1,0 +1,322 @@
+{
+  "$schema": "https://ui.logic2b.com/schema/registry-item.json",
+  "name": "customer-edit-01",
+  "type": "registry:block",
+  "title": "Customer edit form",
+  "description": "A controlled customer create/edit form with validation, submitting, failure/retry, permission and unsaved-change states. The application owns data, authorization and persistence.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils",
+    "button",
+    "card",
+    "input",
+    "label",
+    "alert",
+    "skeleton"
+  ],
+  "files": [
+    {
+      "path": "blocks/customer-edit-01/customer-edit-form.tsx",
+      "type": "registry:block",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Loader2Icon } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Alert, AlertDescription, AlertTitle } from \"@/components/ui/alert\"\nimport { Button } from \"@/components/ui/button\"\nimport { Card, CardContent, CardDescription, CardHeader, CardTitle } from \"@/components/ui/card\"\nimport { Input } from \"@/components/ui/input\"\nimport { Label } from \"@/components/ui/label\"\nimport { Skeleton } from \"@/components/ui/skeleton\"\n\nexport interface CustomerEditValue {\n  name: string\n  email: string\n  company: string\n  segment: \"active\" | \"new\" | \"churned\"\n}\n\nexport type CustomerEditStatus = \"idle\" | \"loading\" | \"submitting\" | \"error\" | \"success\" | \"permission-denied\"\nexport type CustomerEditErrors = Partial<Record<keyof CustomerEditValue, string>>\n\nexport interface CustomerEditContent {\n  title: string\n  description: string\n  nameLabel: string\n  nameHint: string\n  emailLabel: string\n  emailHint: string\n  companyLabel: string\n  companyHint: string\n  segmentLabel: string\n  segmentHint: string\n  activeSegment: string\n  newSegment: string\n  churnedSegment: string\n  save: string\n  saving: string\n  retry: string\n  cancel: string\n  loading: string\n  validationTitle: string\n  nameRequired: string\n  emailRequired: string\n  emailInvalid: string\n  segmentInvalid: string\n  errorTitle: string\n  errorDescription: string\n  successTitle: string\n  successDescription: string\n  permissionTitle: string\n  permissionDescription: string\n  unsavedChanges: string\n  discardTitle: string\n  discardDescription: string\n  keepEditing: string\n  discardChanges: string\n}\n\nexport const content: CustomerEditContent = {\n  title: \"Customer details\",\n  description: \"Keep customer information up to date. Name and email are required.\",\n  nameLabel: \"Name\",\n  nameHint: \"Use the customer's full name.\",\n  emailLabel: \"Email\",\n  emailHint: \"Enter a valid email address.\",\n  companyLabel: \"Company\",\n  companyHint: \"Optional. Add the company this customer belongs to.\",\n  segmentLabel: \"Segment\",\n  segmentHint: \"Choose the segment that best describes this customer.\",\n  activeSegment: \"Active\",\n  newSegment: \"New\",\n  churnedSegment: \"Churned\",\n  save: \"Save customer\",\n  saving: \"Saving customer...\",\n  retry: \"Try saving again\",\n  cancel: \"Cancel\",\n  loading: \"Loading customer details...\",\n  validationTitle: \"Check the highlighted fields.\",\n  nameRequired: \"Enter a customer name.\",\n  emailRequired: \"Enter an email address.\",\n  emailInvalid: \"Enter a valid email address, such as name@example.com.\",\n  segmentInvalid: \"Choose a customer segment.\",\n  errorTitle: \"Customer could not be saved\",\n  errorDescription: \"Your changes are still here. Try saving again.\",\n  successTitle: \"Customer saved\",\n  successDescription: \"Your changes have been saved.\",\n  permissionTitle: \"You cannot edit this customer\",\n  permissionDescription: \"Ask your workspace administrator for permission to add or edit customers.\",\n  unsavedChanges: \"You have unsaved changes.\",\n  discardTitle: \"Discard unsaved changes?\",\n  discardDescription: \"Your edits have not been saved. Keep editing or discard them.\",\n  keepEditing: \"Keep editing\",\n  discardChanges: \"Discard changes\",\n}\n\nexport interface CustomerEditFormProps extends Omit<React.ComponentProps<\"div\">, \"content\" | \"onChange\" | \"onSubmit\"> {\n  value: CustomerEditValue\n  onChange: (value: CustomerEditValue) => void\n  onSubmit: (value: CustomerEditValue) => void\n  onCancel?: () => void\n  /** Supply this when a surrounding dialog owns every cancellation request and its confirmation. */\n  onCancelRequest?: () => void\n  /** The saved baseline. Without it the initial value is the baseline for this mounted form. */\n  initialValue?: CustomerEditValue\n  /** Override baseline comparison when the consumer tracks unsaved changes itself. */\n  dirty?: boolean\n  status?: CustomerEditStatus\n  error?: string\n  successMessage?: string\n  validationErrors?: CustomerEditErrors\n  content?: Partial<CustomerEditContent>\n}\n\nconst sameValue = (left: CustomerEditValue, right: CustomerEditValue) =>\n  left.name === right.name && left.email === right.email && left.company === right.company && left.segment === right.segment\n\nfunction mergeErrors(local: CustomerEditErrors, external?: CustomerEditErrors): CustomerEditErrors {\n  const result = { ...local }\n  for (const field of [\"name\", \"email\", \"company\", \"segment\"] as const) {\n    if (external?.[field]) result[field] = external[field]\n  }\n  return result\n}\n\n/** The consumer persists changes and supplies outcomes; failed saves never clear the controlled value. */\nexport function CustomerEditForm({\n  value, onChange, onSubmit, onCancel, onCancelRequest, initialValue, dirty: controlledDirty,\n  status = \"idle\", error, successMessage, validationErrors, content: customContent, className, ...props\n}: CustomerEditFormProps) {\n  const copy = { ...content, ...customContent }\n  const id = React.useId()\n  const nameRef = React.useRef<HTMLInputElement>(null)\n  const emailRef = React.useRef<HTMLInputElement>(null)\n  const companyRef = React.useRef<HTMLInputElement>(null)\n  const segmentRef = React.useRef<HTMLSelectElement>(null)\n  const cancelRef = React.useRef<HTMLButtonElement>(null)\n  const keepEditingRef = React.useRef<HTMLButtonElement>(null)\n  const previousStatus = React.useRef(status)\n  const [savedValue, setSavedValue] = React.useState<CustomerEditValue>(() => ({ ...value }))\n  const [localErrors, setLocalErrors] = React.useState<CustomerEditErrors>({})\n  const [confirmDiscard, setConfirmDiscard] = React.useState(false)\n  const errors = mergeErrors(localErrors, validationErrors)\n  const invalid = Object.values(errors).some(Boolean)\n  const dirty = controlledDirty ?? !sameValue(value, initialValue ?? savedValue)\n  const busy = status === \"submitting\"\n  const unavailable = status === \"permission-denied\" || status === \"loading\"\n\n  React.useEffect(() => {\n    if (status === \"success\" && previousStatus.current !== \"success\") {\n      setSavedValue({ ...value })\n      setLocalErrors({})\n    }\n    previousStatus.current = status\n  }, [status, value])\n\n  React.useEffect(() => {\n    if (confirmDiscard) keepEditingRef.current?.focus()\n  }, [confirmDiscard])\n\n  function change(field: keyof CustomerEditValue, next: string) {\n    setLocalErrors((current) => ({ ...current, [field]: undefined }))\n    onChange({ ...value, [field]: next })\n  }\n\n  function submit(event: React.FormEvent<HTMLFormElement>) {\n    event.preventDefault()\n    if (busy || unavailable) return\n    const nextErrors: CustomerEditErrors = {}\n    if (!value.name.trim()) nextErrors.name = copy.nameRequired\n    if (!value.email.trim()) nextErrors.email = copy.emailRequired\n    else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value.email.trim())) nextErrors.email = copy.emailInvalid\n    if (![\"active\", \"new\", \"churned\"].includes(value.segment)) nextErrors.segment = copy.segmentInvalid\n    setLocalErrors(nextErrors)\n    const submittedErrors = mergeErrors(nextErrors, validationErrors)\n    if (Object.values(submittedErrors).some(Boolean)) {\n      if (submittedErrors.name) nameRef.current?.focus()\n      else if (submittedErrors.email) emailRef.current?.focus()\n      else if (submittedErrors.company) companyRef.current?.focus()\n      else if (submittedErrors.segment) segmentRef.current?.focus()\n      return\n    }\n    setConfirmDiscard(false)\n    onSubmit({ ...value, name: value.name.trim(), email: value.email.trim(), company: value.company.trim() })\n  }\n\n  function requestCancel() {\n    if (busy || unavailable) return\n    if (onCancelRequest) onCancelRequest()\n    else if (dirty) setConfirmDiscard(true)\n    else onCancel?.()\n  }\n\n  function keepEditing() {\n    if (busy || unavailable) return\n    setConfirmDiscard(false)\n    cancelRef.current?.focus()\n  }\n\n  function discardChanges() {\n    if (busy || unavailable) return\n    setConfirmDiscard(false)\n    onCancel?.()\n  }\n\n  return (\n    <div className={cn(\"mx-auto w-full max-w-xl\", className)} {...props}>\n      <div className=\"sr-only\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">{busy ? copy.saving : status === \"loading\" ? copy.loading : \"\"}</div>\n      <Card>\n        <CardHeader><CardTitle>{copy.title}</CardTitle><CardDescription>{copy.description}</CardDescription></CardHeader>\n        <CardContent className=\"grid gap-5\">\n          {status === \"permission-denied\" ? (\n            <Alert><AlertTitle>{copy.permissionTitle}</AlertTitle><AlertDescription>{copy.permissionDescription}</AlertDescription></Alert>\n          ) : status === \"loading\" ? (\n            <div aria-busy=\"true\" className=\"grid gap-4\"><p className=\"text-muted-foreground text-sm\">{copy.loading}</p>\n              {Array.from({ length: 4 }, (_, index) => <Skeleton key={index} className=\"h-16 w-full\" />)}\n            </div>\n          ) : (\n            <form noValidate onSubmit={submit} className=\"grid gap-5\" aria-busy={busy}>\n              {invalid && <Alert variant=\"destructive\"><AlertDescription>{copy.validationTitle}</AlertDescription></Alert>}\n              {status === \"error\" && <Alert variant=\"destructive\"><AlertTitle>{copy.errorTitle}</AlertTitle><AlertDescription>{error ?? copy.errorDescription}</AlertDescription></Alert>}\n              {status === \"success\" && <Alert role=\"status\"><AlertTitle>{copy.successTitle}</AlertTitle><AlertDescription>{successMessage ?? copy.successDescription}</AlertDescription></Alert>}\n              <fieldset disabled={busy} className=\"grid min-w-0 gap-5\">\n                <div className=\"grid gap-2\">\n                  <Label htmlFor={`${id}-name`}>{copy.nameLabel}</Label>\n                  <Input ref={nameRef} id={`${id}-name`} value={value.name} onChange={(event) => change(\"name\", event.target.value)}\n                    autoComplete=\"name\" required maxLength={120} className=\"min-h-11\"\n                    aria-invalid={Boolean(errors.name)} aria-describedby={`${id}-name-hint${errors.name ? ` ${id}-name-error` : \"\"}`} />\n                  <p id={`${id}-name-hint`} className=\"text-muted-foreground text-xs\">{copy.nameHint}</p>\n                  {errors.name && <p id={`${id}-name-error`} className=\"text-destructive text-sm\">{errors.name}</p>}\n                </div>\n                <div className=\"grid gap-2\">\n                  <Label htmlFor={`${id}-email`}>{copy.emailLabel}</Label>\n                  <Input ref={emailRef} id={`${id}-email`} type=\"email\" value={value.email} onChange={(event) => change(\"email\", event.target.value)}\n                    autoComplete=\"email\" required maxLength={254} className=\"min-h-11\"\n                    aria-invalid={Boolean(errors.email)} aria-describedby={`${id}-email-hint${errors.email ? ` ${id}-email-error` : \"\"}`} />\n                  <p id={`${id}-email-hint`} className=\"text-muted-foreground text-xs\">{copy.emailHint}</p>\n                  {errors.email && <p id={`${id}-email-error`} className=\"text-destructive text-sm\">{errors.email}</p>}\n                </div>\n                <div className=\"grid gap-2\">\n                  <Label htmlFor={`${id}-company`}>{copy.companyLabel}</Label>\n                  <Input ref={companyRef} id={`${id}-company`} value={value.company} onChange={(event) => change(\"company\", event.target.value)}\n                    autoComplete=\"organization\" maxLength={160} className=\"min-h-11\"\n                    aria-invalid={Boolean(errors.company)} aria-describedby={`${id}-company-hint${errors.company ? ` ${id}-company-error` : \"\"}`} />\n                  <p id={`${id}-company-hint`} className=\"text-muted-foreground text-xs\">{copy.companyHint}</p>\n                  {errors.company && <p id={`${id}-company-error`} className=\"text-destructive text-sm\">{errors.company}</p>}\n                </div>\n                <div className=\"grid gap-2\">\n                  <Label htmlFor={`${id}-segment`}>{copy.segmentLabel}</Label>\n                  <select ref={segmentRef} id={`${id}-segment`} value={value.segment} onChange={(event) => change(\"segment\", event.target.value)}\n                    required className=\"border-input bg-background focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive min-h-11 w-full rounded-md border px-3 text-sm outline-none focus-visible:ring-[3px]\"\n                    aria-invalid={Boolean(errors.segment)} aria-describedby={`${id}-segment-hint${errors.segment ? ` ${id}-segment-error` : \"\"}`}>\n                    <option value=\"active\">{copy.activeSegment}</option><option value=\"new\">{copy.newSegment}</option><option value=\"churned\">{copy.churnedSegment}</option>\n                  </select>\n                  <p id={`${id}-segment-hint`} className=\"text-muted-foreground text-xs\">{copy.segmentHint}</p>\n                  {errors.segment && <p id={`${id}-segment-error`} className=\"text-destructive text-sm\">{errors.segment}</p>}\n                </div>\n              </fieldset>\n              {dirty && !busy && <p className=\"text-muted-foreground text-sm\">{copy.unsavedChanges}</p>}\n              <div className=\"flex flex-col gap-2 sm:flex-row sm:justify-end\">\n                {(onCancel || onCancelRequest) && <Button ref={cancelRef} type=\"button\" variant=\"outline\" className=\"min-h-11\" onClick={requestCancel} disabled={busy}>{copy.cancel}</Button>}\n                <Button type=\"submit\" className=\"min-h-11\" disabled={busy}>{busy && <Loader2Icon className=\"size-4 animate-spin motion-reduce:animate-none\" aria-hidden=\"true\" />}{busy ? copy.saving : status === \"error\" ? copy.retry : copy.save}</Button>\n              </div>\n              {confirmDiscard && (\n                <Alert><AlertTitle>{copy.discardTitle}</AlertTitle><AlertDescription>\n                  <p>{copy.discardDescription}</p><div className=\"mt-3 flex w-full flex-col gap-2 sm:flex-row\">\n                    <Button ref={keepEditingRef} type=\"button\" variant=\"outline\" className=\"min-h-11\" onClick={keepEditing} disabled={busy || unavailable}>{copy.keepEditing}</Button>\n                    <Button type=\"button\" variant=\"destructive\" className=\"min-h-11\" onClick={discardChanges} disabled={busy || unavailable}>{copy.discardChanges}</Button>\n                  </div>\n                </AlertDescription></Alert>\n              )}\n            </form>\n          )}\n        </CardContent>\n      </Card>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "categories": [
+    "application"
+  ],
+  "behavior": {
+    "schemaVersion": 1,
+    "states": {
+      "idle": {
+        "support": "built-in",
+        "how": "Controlled value/onChange with status=\"idle\"; edit name, email, company and segment.",
+        "transitions": [
+          "submitting",
+          "validation-error",
+          "unsaved"
+        ]
+      },
+      "loading": {
+        "support": "built-in",
+        "how": "status=\"loading\" while the host loads the customer; fields and actions are unavailable.",
+        "transitions": [
+          "idle",
+          "error",
+          "permission-denied"
+        ]
+      },
+      "empty": {
+        "support": "not-applicable",
+        "how": "A form always has a value object; use empty fields with idle for customer creation."
+      },
+      "no-results": {
+        "support": "not-applicable",
+        "how": "Search results belong to the list block."
+      },
+      "error": {
+        "support": "built-in",
+        "how": "status=\"error\" and optional error; onSubmit retries the preserved controlled values.",
+        "transitions": [
+          "submitting",
+          "idle"
+        ],
+        "preserves": [
+          "value"
+        ]
+      },
+      "success": {
+        "support": "built-in",
+        "how": "status=\"success\" only after the application confirms a save; successMessage can replace the confirmation.",
+        "transitions": [
+          "idle"
+        ],
+        "preserves": [
+          "value"
+        ]
+      },
+      "submitting": {
+        "support": "built-in",
+        "how": "status=\"submitting\"; disable inputs, save and cancel, announce progress and ignore duplicate submission.",
+        "transitions": [
+          "success",
+          "error",
+          "permission-denied"
+        ],
+        "preserves": [
+          "value"
+        ]
+      },
+      "validation-error": {
+        "support": "built-in",
+        "how": "Submit missing/invalid name/email, or provide validationErrors for server field errors; link errors to controls and focus the first invalid field.",
+        "transitions": [
+          "idle",
+          "submitting"
+        ],
+        "preserves": [
+          "value"
+        ]
+      },
+      "permission-denied": {
+        "support": "built-in",
+        "how": "status=\"permission-denied\" explains the denied operation and disables edits/submission.",
+        "transitions": [
+          "idle"
+        ],
+        "preserves": [
+          "value"
+        ]
+      },
+      "unsaved": {
+        "support": "built-in",
+        "how": "Cancel a dirty form to show Keep editing/Discard changes. initialValue or dirty defines the baseline. onCancelRequest delegates all cancellation requests to the host instead.",
+        "transitions": [
+          "idle"
+        ],
+        "preserves": [
+          "value"
+        ]
+      },
+      "offline": {
+        "support": "consumer",
+        "how": "The host detects connectivity and supplies error or another offline explanation; values stay controlled."
+      },
+      "partial": {
+        "support": "not-applicable",
+        "how": "This form edits one complete customer value; partial records must be completed by the host."
+      }
+    },
+    "content": [
+      {
+        "key": "title",
+        "type": "text",
+        "path": "content.title",
+        "sample": "Customer details",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "save",
+        "type": "text",
+        "path": "content.save",
+        "sample": "Save customer",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "saving",
+        "type": "text",
+        "path": "content.saving",
+        "sample": "Saving customer...",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "retry",
+        "type": "text",
+        "path": "content.retry",
+        "sample": "Try saving again",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "cancel",
+        "type": "text",
+        "path": "content.cancel",
+        "sample": "Cancel",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "nameLabel",
+        "type": "text",
+        "path": "content.nameLabel",
+        "sample": "Name",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "emailLabel",
+        "type": "text",
+        "path": "content.emailLabel",
+        "sample": "Email",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "companyLabel",
+        "type": "text",
+        "path": "content.companyLabel",
+        "sample": "Company",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "segmentLabel",
+        "type": "text",
+        "path": "content.segmentLabel",
+        "sample": "Segment",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "loading",
+        "type": "text",
+        "path": "content.loading",
+        "sample": "Loading customer details...",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "validationTitle",
+        "type": "text",
+        "path": "content.validationTitle",
+        "sample": "Check the highlighted fields.",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "errorTitle",
+        "type": "text",
+        "path": "content.errorTitle",
+        "sample": "Customer could not be saved",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "errorDescription",
+        "type": "text",
+        "path": "content.errorDescription",
+        "sample": "Your changes are still here. Try saving again.",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "successTitle",
+        "type": "text",
+        "path": "content.successTitle",
+        "sample": "Customer saved",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "permissionTitle",
+        "type": "text",
+        "path": "content.permissionTitle",
+        "sample": "You cannot edit this customer",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "discardTitle",
+        "type": "text",
+        "path": "content.discardTitle",
+        "sample": "Discard unsaved changes?",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "keepEditing",
+        "type": "text",
+        "path": "content.keepEditing",
+        "sample": "Keep editing",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      },
+      {
+        "key": "discardChanges",
+        "type": "text",
+        "path": "content.discardChanges",
+        "sample": "Discard changes",
+        "guidance": "Override this key through the content prop; keep labels and recovery actions specific to the user's task."
+      }
+    ],
+    "actions": [
+      {
+        "name": "change",
+        "props": [
+          "value",
+          "onChange"
+        ],
+        "consumer": [
+          "Store the draft value and a baseline for dirty tracking; keep it through request failures."
+        ]
+      },
+      {
+        "name": "save",
+        "props": [
+          "onSubmit",
+          "status",
+          "validationErrors"
+        ],
+        "consumer": [
+          "Set submitting synchronously, persist/authorize on the server, then provide success/error/permission-denied and updated field errors."
+        ]
+      },
+      {
+        "name": "cancel",
+        "props": [
+          "onCancel",
+          "onCancelRequest",
+          "initialValue",
+          "dirty"
+        ],
+        "consumer": [
+          "Close/discard only after onCancel is called. If supplying onCancelRequest, own the dirty confirmation for every dismissal request, including Cancel; guard parent dialog dismissal and route navigation."
+        ]
+      }
+    ],
+    "intents": [
+      "create-customer",
+      "edit-customer",
+      "recover-request"
+    ],
+    "journey": {
+      "before": [
+        "admin-customers-01"
+      ],
+      "after": [
+        "admin-customers-01"
+      ]
+    },
+    "responsive": {
+      "viewports": [
+        "mobile",
+        "desktop"
+      ],
+      "strategy": "Single-column labeled form with wrapping messages and reachable save/cancel/discard actions.",
+      "touchTargets": "44px"
+    },
+    "consumer": [
+      "Supply controlled value/onChange and an application-owned onSubmit; there is no backend or automatic persistence.",
+      "Enforce permissions and authoritative validation on the server; client validation is basic name/email guidance.",
+      "Set submitting before awaiting a request and keep the value on failures; do not show success before persistence confirms it.",
+      "The built-in unsaved guard protects Cancel unless onCancelRequest delegates it to the host. The host must guard all dismissal requests, Escape/outside clicks/navigation, retain focus and prevent dismissal during submission."
+    ]
+  }
+}

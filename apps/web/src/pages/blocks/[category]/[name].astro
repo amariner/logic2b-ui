@@ -1,5 +1,6 @@
 ---
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
+import { behaviorFor } from "@logic2b/registry/behavior";
 import { Code } from "astro:components";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { buildAddPrompt } from "@/lib/prompts";
@@ -38,6 +39,11 @@ const { category, name } = Astro.params;
 const block = blocks.find((b) => b.name === name)!;
 const detail = detailModules[`../../../../public/r/${name}.json`];
 const files = detail?.files ?? [];
+const behavior = behaviorFor(block.name);
+const states = behavior ? Object.entries(behavior.states) : [];
+const builtInStates = states.filter(([, state]) => state.support === "built-in");
+const firstState = builtInStates[0]?.[0];
+const stateLabel = (state: string) => state.replace(/-/g, " ").replace(/^./, (letter) => letter.toUpperCase());
 
 // Shown code should read like the user's own file — same mapping build-registry.ts
 // used going the other way (ui/ and blocks/ live under components/, lib/ doesn't).
@@ -101,10 +107,103 @@ const installCmd = `npx ${CLI_PACKAGE_SELECTOR} add ${name}`;
         id={`frame-${block.name}`}
         title={`${block.title ?? block.name} preview`}
         src={`/blocks/preview/${block.name}`}
-        class="h-[720px] w-full rounded-lg border bg-background transition-[width] duration-200"
+        class="h-[720px] w-full max-w-full rounded-lg border bg-background transition-[width] duration-200"
         loading="lazy"
       />
     </div>
+
+    {
+      behavior && (
+        <section class="mt-10 min-w-0" aria-labelledby="behavior-heading">
+          <h2 id="behavior-heading" class="text-lg font-semibold">States</h2>
+          <p class="mt-1 max-w-3xl text-sm text-muted-foreground">
+            Inspect the states this block renders, then wire its controlled data and actions to your application.
+            Consumer states require application code; their responsibilities are listed below.
+          </p>
+          <div class="mt-4 rounded-xl border bg-muted/20 p-4">
+            <label for="behavior-state" class="block text-sm font-medium">Preview state</label>
+            <select id="behavior-state" class="mt-2 min-h-11 max-w-full rounded-md border bg-background px-3 text-sm">
+              {builtInStates.map(([name]) => (
+                <option value={name} selected={name === firstState}>
+                  {stateLabel(name)}
+                </option>
+              ))}
+            </select>
+            <div class="mt-3" aria-live="polite">
+              {builtInStates.map(([name, state]) => (
+                <div data-behavior-state={name} hidden={name !== firstState} class="text-sm">
+                  <p>{state.how}</p>
+                  {Boolean(state.transitions?.length) && <p class="mt-2 text-muted-foreground">Next: {state.transitions!.map(stateLabel).join("; ")}</p>}
+                  {Boolean(state.preserves?.length) && <p class="mt-2 text-muted-foreground">Preserves: {state.preserves!.join("; ")}</p>}
+                </div>
+              ))}
+            </div>
+            {firstState && (
+              <div id="behavior-preview" class="mt-4 flex justify-center overflow-hidden">
+                <iframe
+                  id={`state-frame-${block.name}`}
+                  title={`${block.title ?? block.name}: ${stateLabel(firstState)} state`}
+                  src={`/blocks/preview/${block.name}?state=${encodeURIComponent(firstState)}`}
+                  data-preview-base={`/blocks/preview/${block.name}`}
+                  data-preview-title={block.title ?? block.name}
+                  class="h-[720px] w-full max-w-full rounded-lg border bg-background transition-[width] duration-200"
+                  loading="lazy"
+                />
+              </div>
+            )}
+          </div>
+
+          <h3 class="mt-8 text-base font-semibold">State coverage</h3>
+          <dl class="mt-3 grid gap-4 sm:grid-cols-2">
+            {states.map(([name, state]) => (
+              <div class="min-w-0 rounded-lg border p-4">
+                <dt class="font-medium">{stateLabel(name)} <span class="text-xs font-normal text-muted-foreground">({state.support.replace(/-/g, " ")})</span></dt>
+                <dd class="mt-2 text-sm text-muted-foreground">{state.how}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <h3 class="mt-8 text-base font-semibold">Content slots</h3>
+          <p class="mt-1 text-sm text-muted-foreground">Customize the exported content object and pass overrides through the content prop.</p>
+          <div class="mt-3 overflow-x-auto rounded-lg border">
+            <table class="w-full text-left text-sm">
+              <caption class="sr-only">Editable content slots for {block.name}</caption>
+              <thead class="bg-muted/50">
+                <tr><th scope="col" class="p-3">Slot and source path</th><th scope="col" class="p-3">Sample copy</th><th scope="col" class="p-3">Guidance</th></tr>
+              </thead>
+              <tbody>
+                {behavior.content.map((slot) => (
+                  <tr class="border-t align-top">
+                    <th scope="row" class="p-3 font-normal"><code class="break-all">{slot.key}</code><span class="mt-1 block break-all text-xs text-muted-foreground">{slot.path}</span></th>
+                    <td class="p-3">{slot.sample}</td>
+                    <td class="p-3 text-muted-foreground">{slot.guidance ?? "Use clear, specific copy."}{slot.maxLength && <span class="mt-1 block">Suggested maximum: {slot.maxLength} characters.</span>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="mt-8 text-base font-semibold">Actions and consumer responsibilities</h3>
+          <div class="mt-3 grid gap-4 md:grid-cols-2">
+            {behavior.actions.map((action) => (
+              <div class="min-w-0 rounded-lg border p-4">
+                <h4 class="font-medium">{action.name}</h4>
+                <p class="mt-2 break-words font-mono text-xs">{action.props.join(", ")}</p>
+                <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
+                  {action.consumer.map((responsibility) => <li>{responsibility}</li>)}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <ul class="mt-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground">
+            {behavior.consumer.map((responsibility) => <li>{responsibility}</li>)}
+          </ul>
+          <p class="mt-4 text-sm text-muted-foreground">Supports: {behavior.intents.map(stateLabel).join(", ")}.</p>
+          {Boolean(behavior.journey.after?.length) && <p class="mt-2 text-sm text-muted-foreground">Next in the journey: {behavior.journey.after!.join(", ")}.</p>}
+          <p class="mt-4 text-sm text-muted-foreground">Responsive behavior: {behavior.responsive.strategy} Touch targets: {behavior.responsive.touchTargets}.</p>
+        </section>
+      )
+    }
 
     {
       files.length > 0 && (
@@ -162,16 +261,34 @@ const installCmd = `npx ${CLI_PACKAGE_SELECTOR} add ${name}`;
       const frame = document.getElementById(
         `frame-${target}`
       ) as HTMLIFrameElement | null;
+      const stateFrame = document.getElementById(
+        `state-frame-${target}`
+      ) as HTMLIFrameElement | null;
       const buttons = group.querySelectorAll<HTMLButtonElement>(".viewport-btn");
       buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
           if (!frame) return;
           frame.style.width = btn.dataset.width ?? "100%";
+          if (stateFrame) stateFrame.style.width = btn.dataset.width ?? "100%";
           buttons.forEach((b) => b.classList.remove("bg-accent"));
           btn.classList.add("bg-accent");
         });
       });
     });
+
+  const stateSelector = document.querySelector<HTMLSelectElement>("#behavior-state");
+  stateSelector?.addEventListener("change", () => {
+    const selected = stateSelector.selectedOptions[0];
+    const state = stateSelector.value;
+    document.querySelectorAll<HTMLElement>("[data-behavior-state]").forEach((panel) => {
+      panel.hidden = panel.dataset.behaviorState !== state;
+    });
+    const preview = document.querySelector<HTMLElement>("#behavior-preview");
+    const frame = preview?.querySelector<HTMLIFrameElement>("iframe");
+    if (!preview || !frame) return;
+    frame.src = `${frame.dataset.previewBase}?state=${encodeURIComponent(state)}`;
+    frame.title = `${frame.dataset.previewTitle}: ${selected.textContent} state`;
+  });
 
   const fileTabs = document.querySelectorAll<HTMLButtonElement>(".file-tab");
   const filePanels = document.querySelectorAll<HTMLDivElement>(".file-panel");

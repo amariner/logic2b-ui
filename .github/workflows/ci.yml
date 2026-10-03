@@ -85,6 +85,17 @@ jobs:
 
       - run: pnpm --filter @logic2b/web exec playwright test tests/beta-onboarding.spec.ts tests/theme-gallery.spec.ts
 
+      # Keyboard create/edit/discard/recovery plus 52 customer state captures
+      # and axe analyses across mobile/desktop and light/dark.
+      - run: pnpm --filter @logic2b/web exec playwright test tests/customer-journey.spec.ts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: customer-journey-browser-evidence
+          path: apps/web/test-results
+          if-no-files-found: ignore
+
       - run: pnpm --filter @logic2b/web test:a11y
 
       # Pixel-diff gate over every isolated component/chart demo and block,

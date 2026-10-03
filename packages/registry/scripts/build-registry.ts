@@ -9,6 +9,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { z } from "zod"
+import { BEHAVIOR_SCHEMA, validateBehavior, type RegistryBehavior } from "@logic2b/scaffold/behavior"
 
 import { registry } from "../registry.ts"
 import {
@@ -104,6 +105,7 @@ const registryItemSchema = z.object({
   docs: z.string().optional(),
   accessibility: accessibilitySchema,
   api: apiSchema,
+  behavior: z.unknown().transform(validateBehavior).optional(),
 })
 
 await Promise.all(
@@ -125,6 +127,7 @@ interface IndexEntry {
   changelog: string
   accessibility?: string
   api?: string
+  behavior?: RegistryBehavior
 }
 
 const index: IndexEntry[] = []
@@ -167,6 +170,7 @@ for (const item of registry) {
     docs: item.docs,
     accessibility: item.accessibility,
     api: item.api,
+    behavior: item.behavior,
   })
 
   // The unversioned endpoint is a mutable delivery mirror, so keep it compact.
@@ -198,6 +202,7 @@ for (const item of registry) {
       ? { accessibility: `/r/${item.name}.json#accessibility` }
       : {}),
     ...(item.api ? { api: `/r/${item.name}.json#api` } : {}),
+    ...(item.behavior ? { behavior: item.behavior } : {}),
   })
 }
 
@@ -259,6 +264,7 @@ for (const payload of payloads) {
 }
 
 await writeFile(join(outDir, "index.json"), JSON.stringify(index))
+await writeFile(resolve(outDir, "../schema/behavior.json"), JSON.stringify({ $schema: "https://json-schema.org/draft/2020-12/schema", ...BEHAVIOR_SCHEMA }, null, 2))
 await writeFile(versionManifestPath, serializedVersionManifest)
 await writeFile(
   join(outDir, "versions.json"),

@@ -19,6 +19,8 @@ import { API_CONTRACTS } from "../api.generated.ts"
 import { itemChangelog, REGISTRY_RELEASES } from "../releases.ts"
 import { REGISTRY_VERSION } from "../version.ts"
 import { apiGeneratedPath, generatedApiSource } from "./generate-api.ts"
+import { verifyBehaviorSource } from "./behavior-source.ts"
+import { BEHAVIOR_CONTRACTS } from "../behavior.ts"
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const publicRegistry = resolve(root, "../../apps/web/public/r")
@@ -95,6 +97,22 @@ for (const name of Object.keys(ACCESSIBILITY_CONTRACTS)) {
   else if (item.type !== "registry:ui") {
     errors.push(`accessibility contract "${name}" does not target a UI item`)
   }
+}
+
+// Behavior coverage deliberately starts with the two customer journey blocks.
+// The contract is checked against inert TypeScript source, never imported.
+for (const [name, behavior] of Object.entries(BEHAVIOR_CONTRACTS)) {
+  const item = registry.find((candidate) => candidate.name === name)
+  if (!item || item.type !== "registry:block") {
+    errors.push(`behavior contract "${name}" does not target a registry block`)
+    continue
+  }
+  const sourceFile = item.files?.find((file) => file.type === "registry:block" && file.path.endsWith(".tsx"))
+  if (!sourceFile || !existsSync(join(root, sourceFile.path))) {
+    errors.push(`behavior contract "${name}" has no source file to verify`)
+    continue
+  }
+  errors.push(...verifyBehaviorSource(await readFile(join(root, sourceFile.path), "utf8"), behavior, sourceFile.path))
 }
 
 const releaseVersions = new Set<string>()

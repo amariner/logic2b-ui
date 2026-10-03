@@ -96,4 +96,6 @@ export interface RegistryItem {
   accessibility?: RegistryAccessibility
   /** Generated from the public TypeScript exports in the item's UI source. */
   api?: RegistryApiContract
+  /** Versioned state/content/action contract; coverage is deliberately incremental. */
+  behavior?: import("@logic2b/scaffold/behavior").RegistryBehavior
 }

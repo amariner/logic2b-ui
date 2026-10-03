@@ -8,6 +8,7 @@ export type {
 import type { RegistryItem } from "./types.ts"
 import { accessibilityFor } from "./accessibility.ts"
 import { API_CONTRACTS } from "./api.generated.ts"
+import { behaviorFor } from "./behavior.ts"
 
 import { items as theme } from "./items/theme.ts"
 import { items as core } from "./items/core.ts"
@@ -38,5 +39,6 @@ export const registry: RegistryItem[] = items.map((item) => {
     ...item,
     ...(accessibility ? { accessibility } : {}),
     ...(api ? { api } : {}),
+    ...(behaviorFor(item.name) ? { behavior: behaviorFor(item.name) } : {}),
   }
 })

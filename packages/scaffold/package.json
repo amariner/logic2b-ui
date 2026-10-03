@@ -7,7 +7,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./package-selectors": "./src/package-selectors.ts"
+    "./package-selectors": "./src/package-selectors.ts",
+    "./behavior": "./src/behavior.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit -p tsconfig.json",

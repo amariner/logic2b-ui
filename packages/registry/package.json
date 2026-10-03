@@ -12,7 +12,8 @@
     "./api": "./api.generated.ts",
     "./types": "./types.ts",
     "./releases": "./releases.ts",
-    "./version": "./version.ts"
+    "./version": "./version.ts",
+    "./behavior": "./behavior.ts"
   },
   "scripts": {
     "generate:api": "tsx scripts/generate-api.ts",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@types/react": "^19.2.17",
     "tsx": "^4.23.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "@logic2b/scaffold": "workspace:*"
   }
 }

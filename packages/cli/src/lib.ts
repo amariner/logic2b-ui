@@ -5,6 +5,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { maxSatisfying, validRange } from "semver"
 import { transformIconItems } from "@logic2b/scaffold"
+import { validateBehavior, type RegistryBehavior } from "@logic2b/scaffold/behavior"
 import { ICON_LIBRARIES, type IconLibrary } from "@logic2b/tokens"
 
 import { merge3 } from "./merge.ts"
@@ -59,6 +60,7 @@ export interface RegistryItem {
   docs?: string
   accessibility?: AccessibilityContract
   api?: ApiContract
+  behavior?: RegistryBehavior
   /** Resolution metadata supplied by a version-aware registry client. */
   _registry?: {
     registryVersion?: string
@@ -80,6 +82,7 @@ export interface RegistryIndexItem {
   changelog?: string
   accessibility?: string
   api?: string
+  behavior?: RegistryBehavior
 }
 
 export type FetchLike = (
@@ -211,6 +214,7 @@ export function validateItem(name: string, data: unknown): RegistryItem {
     }
     assertSafeRegistryPath(file.path)
   }
+  if (item.behavior !== undefined) validateBehavior(item.behavior)
   return item as unknown as RegistryItem
 }
 
@@ -386,6 +390,9 @@ export async function resolveRegistryVersion(
   ) {
     throw new Error(`Registry manifest ${resolved} is malformed.`)
   }
+  for (const entry of manifestRaw.items) {
+    if (isObject(entry) && entry.behavior !== undefined) validateBehavior(entry.behavior)
+  }
   return {
     requested,
     resolved,
@@ -426,6 +433,9 @@ export async function createRegistryClient(
   if (!requestedVersion) {
     const rawIndex = await fetchJson(indexUrl(registry), fetchImpl)
     if (!Array.isArray(rawIndex)) throw new Error("Registry index is malformed.")
+    for (const entry of rawIndex) {
+      if (isObject(entry) && entry.behavior !== undefined) validateBehavior(entry.behavior)
+    }
     const index = rawIndex as RegistryIndexItem[]
     const byName = new Map(index.map((entry) => [entry.name, entry]))
     return {
@@ -744,6 +754,12 @@ export async function addComponents(
     console.log(
       `✓ registry ${client.resolvedVersion} (${client.requestedVersion}) recorded in .logic2b/manifest.json.`
     )
+  }
+  for (const item of resolved.values()) {
+    if (item.behavior) {
+      console.log(`\nConsumer responsibilities for ${item.name}:`)
+      for (const responsibility of item.behavior.consumer) console.log(`  • ${responsibility}`)
+    }
   }
   if (npmDeps.size > 0) {
     const deps = [...npmDeps].sort()

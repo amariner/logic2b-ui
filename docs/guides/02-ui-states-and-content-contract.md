@@ -1,158 +1,102 @@
 # 02 — UI states & content contract
 
-**Status:** proposed · **Lane:** guarantee quality · **Target:** v1.0 ·
-**Depends on:** nothing. Foundation for guides 01, 03, 04 and 06.
+**Scope:** M1-01 customer list and edit form · **Lane:** guarantee quality ·
+**Depends on:** M0-01–M0-04. Status and evidence live in `docs/EXECUTION.md`.
 
-## Why (the user)
+The 5 September 2026 queue decision narrows this guide to the reference customer
+journey. Do not expand contracts across the catalog before completing that
+journey. Uncovered blocks do not imply state support.
 
-Every block today renders its happy path with static sample data. A real
-person also meets the empty list, the failed request, the slow network, the
-form that rejected their input, the offline moment. When an agent installs a
-block, nothing tells it which of those states the block already handles, which
-ones it exposes as a slot and which ones the agent still has to write. The
-result is interfaces that look finished and behave unfinished.
+## Delivered slice
 
-We already ship a machine-readable **accessibility** contract per UI item. The
-same idea applied to **states and content** closes this gap: a block declares
-what it handles, where its copy lives, and what task it serves. Docs render
-it, MCP exposes it, the registry test fails if a block ships without it.
+`admin-customers-01` accepts customer data, request status, content overrides,
+controlled or local search, create/edit/retry callbacks and write permission.
+Its counts derive from supplied records. Empty data and unmatched searches are
+distinct. Missing callbacks disable their actions; the block never fetches.
 
-## What ships
+`customer-edit-01` accepts a controlled draft and change/submit callbacks. It
+provides labeled name/email/company/segment fields, basic name/email validation,
+linked field errors with first-invalid focus, submitting protection, preserved
+input after failure, retry and application-confirmed success. Dirty Cancel
+shows Keep editing/Discard changes. `onCancelRequest` delegates that guard to
+the host so dialogs can share a confirmation for Cancel, Escape and outside
+clicks. Consumers must guard navigation, enforce authorization and validation
+on the server, and set submitting before awaiting persistence.
 
-M1-01 first covers the customer list and edit form; expand after the reference
-journey passes. Add controlled data/content and action callbacks without a data
-fetching dependency. Distinguish no customers from no matching search results.
-Extend applicable states for submitting, validation failure, permission denied
-and unsaved changes. Specify triggers, transitions and preserved input/retry
-behavior. Mark inapplicable states explicitly. Metadata alone is not completion.
+The integrated list demo creates and edits in-memory records through a dialog,
+restores focus, blocks dismissal while saving, and demonstrates a failed save
+followed by retry. These examples do not supply a backend.
 
-- `states`, `content`, `intents`, `journey` and `responsive` metadata on every
-  `registry:block` (charts included where it applies).
-- A **States** tab on every block page (`/blocks/<category>/<name>`) showing
-  each declared state live, and a "Content slots" table.
-- `get_component` / `list_components` / `install_plan` return the metadata;
-  `Copy Prompt` and `AGENTS.md` include the consumer duties.
-- A registry test that fails when a block lacks the contract or declares a
-  content slot that does not exist in its source.
+## Shared contract
 
-## Design
+`RegistryItem.behavior?: RegistryBehavior` is optional for compatibility with
+historical releases and uncovered items. Both covered blocks require it.
+`schemaVersion: 1` is bounded and validated by shared core in
+`packages/scaffold/src/behavior.ts`; unsupported versions and unknown fields
+fail with actionable errors. `/schema/behavior.json` publishes the same schema.
+The wrapper leaves the registry index's existing `content` payload URL intact.
 
-### Contract
+The contract contains:
 
-```ts
-type StateName = "loading" | "empty" | "error" | "success" | "offline" | "partial"
+- All twelve states: idle, loading, empty, no-results, error, success,
+  submitting, validation-error, permission-denied, unsaved, offline and partial.
+  Each declares built-in, consumer or not-applicable support, a trigger and
+  optional transitions/preserved input. Offline detection and partial list
+  disclosure belong to the consumer.
+- Text content slots with stable keys, `content.<key>` paths, exact source
+  samples and copy guidance. Both source files export a typed `content` object
+  and accept partial overrides. Slots describe declared copy, not every
+  possible literal in the file.
+- Actions with actual public prop names and consumer responsibilities; closed
+  customer intents, journey neighbors, responsive strategy and touch targets.
+- Explicit responsibilities for data, persistence, permissions, navigation,
+  focus and preservation of copied-source customizations.
 
-interface RegistryStates {
-  /** How each state is covered. `built-in`: renders it from a prop; `slot`:
-   *  accepts a node/render prop; `consumer`: the composition must add it. */
-  [state in StateName]?: {
-    support: "built-in" | "slot" | "consumer"
-    /** How to trigger or supply it, e.g. `status="empty"` or `emptyState` prop. */
-    how: string
-  }
-}
+The registry linter parses source with TypeScript AST to verify declared copy
+paths/samples and action props. It never imports or executes supplied source.
+Core validation and negative source fixtures protect against drift.
 
-interface RegistryContentSlot {
-  /** Stable key, e.g. `hero.title`, `pricing.plans[].cta`. */
-  key: string
-  type: "text" | "richtext" | "image" | "list" | "link" | "number"
-  /** Where it lives in the source (the exported `content` object). */
-  path: string
-  sample: string
-  maxLength?: number
-  /** Guidance for the agent writing copy: tone, tense, must-not. */
-  guidance?: string
-}
-
-interface RegistryResponsive {
-  /** Breakpoints the block was designed and pixel-tested at. */
-  viewports: Array<"mobile" | "tablet" | "desktop">
-  /** e.g. "three-pane collapses to tabs below md". */
-  strategy: string
-  touchTargets: "44px" | "24px"
-}
-
-interface RegistryItem {
-  // …existing fields
-  states?: RegistryStates
-  content?: RegistryContentSlot[]
-  /** Verbs the block serves — the vocabulary compose_plan matches against. */
-  intents?: string[]            // "authenticate", "compare-plans", "review-order"
-  /** Typical neighbours in a user journey. */
-  journey?: { before?: string[]; after?: string[] }
-  responsive?: RegistryResponsive
-}
-```
-
-### Source convention: one `content` object per block
-
-Every block file exports a single typed `content` constant at the top
-(`export const content = { … } as const`) and renders from it. Blocks that
-already keep sample data in a `data.ts` keep it, but the copy (titles,
-labels, CTAs, empty/error messages) moves into `content`. Agents then change
-copy by editing one object, translators get one place per block, and the
-registry test can verify every declared slot `path` resolves in the source.
-
-### State rendering convention
-
-Blocks that own data views (`admin-*`, `products-01`, `kanban-01`,
-`mail-client-01`, `calendar-app-01`, `cart-01`, `dashboard-*`, `chart-*`)
-accept a `status?: "idle" | "loading" | "empty" | "error"` prop and render
-the matching state with registry primitives (`Skeleton`, `Empty`, `Alert`)
-and the copy from `content`. Marketing blocks declare their states as
-`consumer` (there is no data) except `success`/`error` on forms
-(`contact-01`, `login-*`, `signup-*`, `checkout-01`), which are `built-in`.
-
-### Where it lives
+## Adapters and documentation
 
 | Piece | Path |
 | --- | --- |
-| Types | `packages/registry/types.ts` |
-| Metadata | `packages/registry/states.ts` (mirror of `accessibility.ts`), merged in `packages/registry/registry.ts` |
-| Source convention | `packages/registry/src/blocks/*/` |
-| Registry test | `packages/registry/test/states.test.ts`, lint in `packages/registry/scripts/check-registry.ts` |
-| Block page tab | `apps/web/src/pages/blocks/[category]/[name].astro`, preview route `apps/web/src/pages/blocks/preview/[name].astro` (`?state=`) |
-| Prompts / AGENTS.md | `apps/web/src/lib/prompts.ts`, `apps/web/src/lib/agents-md.ts` |
-| MCP | `packages/mcp/src/registry.ts` (already forwards item payloads) |
+| Shared type/schema/validator | `packages/scaffold/src/behavior.ts` |
+| Covered metadata | `packages/registry/behavior.ts` |
+| Item/index/manifest construction | `packages/registry/scripts/build-registry.ts` |
+| Source verification | `packages/registry/scripts/behavior-source.ts` |
+| Live States section and content/actions tables | `apps/web/src/pages/blocks/[category]/[name].astro` |
+| Interactive variants | `apps/web/src/block-demos/{admin-customers-01,customer-edit-01}.tsx` |
+| Copy Prompt and generated AGENTS | `apps/web/src/lib/{prompts,agents-md}.ts` |
+| MCP read/install schemas and plans | `packages/mcp/src/{registry,tools,plan,output-schemas}.ts` |
+| CLI read/install adapter | `packages/cli/src/{lib,scaffold}.ts` |
 
-## Implementation steps
+Covered detail pages show a States section with a native selector and one live
+iframe for built-in variants, followed by the full support table. Consumer and
+inapplicable states have explanations. Query parameters select demo states;
+they do not change the component API. Copy Prompt, generated AGENTS and install
+plans carry the same duties. MCP returns plans and evidence, without assuming
+access to a consumer filesystem.
 
-1. Add the types and an empty `states.ts` with the merge in `registry.ts`.
-2. Write the registry test: every `registry:block` must declare `states`,
-   `content`, `intents` and `responsive`; every `content[].path` must exist
-   as a key path in the block's exported `content`; every `intents[]` value
-   must be in the closed vocabulary in `packages/registry/intents.ts`.
-3. Refactor blocks in category order (auth, marketing, dashboard, commerce,
-   admin, apps) to the `content` convention. Keep exports identical; the
-   visual baselines must not change (that is the proof the refactor is pure).
-4. Add the `status` prop to data-owning blocks with `Skeleton`/`Empty`/`Alert`
-   renders. Extend `apps/web/src/block-demos` so the preview route accepts
-   `?state=` and the States tab renders one iframe per declared state.
-5. Extend the visual and axe suites: one capture per declared state, light
-   and dark. Budget check on the added baselines.
-6. Surface the contract in docs, `Copy Prompt` ("this block leaves `error`
-   to you: render `<Alert variant="destructive">` with `content.errors.*`")
-   and `AGENTS.md` ("never ship a list without its empty state").
-7. Publish `/r/schemas/registry-item.json` including the new fields.
+Registry `1.0.0-rc.17` adds the edit form and replaces the list in a new immutable
+manifest. Historical manifests/content-addressed bytes must remain unchanged.
+Source changes and local artifacts do not mean npm or website publication.
 
 ## Gates
 
-- `pnpm --filter @logic2b/registry test` and `lint` pass with 38/38 blocks
-  covered.
-- Visual suite: existing baselines unchanged after step 3; new state
-  baselines added in step 5.
-- axe: every state variant has zero serious/critical violations (empty and
-  error states are where unnamed regions and unlabeled retry buttons hide).
-- `install_plan` snapshot tests include the new fields.
+- Shared validation/source tests, package lint/tests, root lint/tests.
+- Registry build/integrity and historical-byte preservation.
+- CLI/MCP install parity, malformed-contract rejection and packed artifact gate.
+- Functional keyboard create/edit/discard/recovery flows at 390 and 1280 px.
+- Built-in state captures in light/dark at both widths, overflow checks and
+  zero serious/critical structural axe violations. Contrast is audited through
+  the existing token checks; this does not claim every custom palette passes.
+- Relevant visual baselines reviewed before acceptance, web build and existing
+  bundle budgets. Record exact results and any environment limits in execution.
 
-## Out of scope
+## Next slices and boundaries
 
-- Runtime data fetching or a data layer of any kind.
-- Localised copy bundles (the `content` object makes them possible; shipping
-  them is a later i18n item).
-
-## Open questions
-
-- Should `content` be a `registry:lib`-style separate file so `update` can
-  merge copy and structure independently? Start inline; measure conflicts in
-  `logic2b update` after the feedback loop (guide 09) exists.
+M1-02 adds project context and its local collector; M1-04 adds static review
+grounded in this contract. Later journey
+slices may add states or neighboring blocks with implementation and evidence.
+Runtime data fetching, backend storage, translation bundles, automatic route
+guards and full-catalog metadata are outside M1-01.

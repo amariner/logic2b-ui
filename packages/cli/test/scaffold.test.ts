@@ -18,6 +18,7 @@ import {
   projectFiles,
   scaffoldProject,
 } from "../src/scaffold.ts"
+import { behaviorContract } from "./helpers/behavior.ts"
 
 const base = "https://registry.test"
 
@@ -161,9 +162,33 @@ describe("CLI project scaffolding", () => {
       plan.items.find((item) => item.name === "footer-01")?.requested,
       false,
     )
+    assert.ok(plan.items.every((item) => !Object.hasOwn(item, "behavior")))
     assert.deepEqual(lock.items["landing-page-01"].files, [
       "blocks/landing-page-01/landing-page.tsx",
     ])
+  })
+
+  test("forwards behavior for requested and transitive items without changing source snapshots", async () => {
+    const behaviorFetch: FetchLike = async (url, init) => {
+      const name = ["landing-page-01", "navbar-01"].find((name) => itemUrl(base, name) === url)
+      if (name) return { ok: true, status: 200, text: async () => JSON.stringify({ ...(registry[name] as object), behavior: behaviorContract }) }
+      return fetchImpl(url, init)
+    }
+    const plan = await buildCliScaffoldPlan({ registry: base, framework: "vite", starter: "marketing", fetchImpl: behaviorFetch })
+    assert.deepEqual(plan.items.find((item) => item.name === "landing-page-01")?.behavior, behaviorContract)
+    assert.deepEqual(plan.items.find((item) => item.name === "navbar-01")?.behavior, behaviorContract)
+    assert.equal(Object.hasOwn(plan.items.find((item) => item.name === "theme")!, "behavior"), false)
+    assert.equal(plan.files.find((file) => file.path === ".logic2b/base/blocks/navbar-01/navbar.tsx")?.content, "export function Navbar() {}")
+  })
+
+  test("rejects unsupported behavior during scaffold planning before materializing files", async () => {
+    const target = join(root, "invalid-behavior-app")
+    const invalidFetch: FetchLike = async (url, init) => {
+      if (url === itemUrl(base, "landing-page-01")) return { ok: true, status: 200, text: async () => JSON.stringify({ ...(registry["landing-page-01"] as object), behavior: { ...behaviorContract, schemaVersion: 2 } }) }
+      return fetchImpl(url, init)
+    }
+    await assert.rejects(() => scaffoldProject({ cwd: target, registry: base, framework: "vite", starter: "marketing", install: false, fetchImpl: invalidFetch }), /Invalid behavior contract/)
+    assert.equal(existsSync(target), false)
   })
 
   test("wraps the generated app in a real Turbo workspace", async () => {

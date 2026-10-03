@@ -580,7 +580,7 @@ export const items: RegistryItem[] = [
     type: "registry:block",
     title: "Customers admin dashboard",
     description:
-      "A customers back-office view: a KPI row (total customers, new this month, repeat rate) over a customers table with avatars, order count, lifetime spend, last order, active/new/churned segment badges, per-row actions and live search. Use as the customers tab of a store admin.",
+      "A controlled customers list with derived counts, live search and create/edit callbacks. Includes loading, empty, no-results, failure/retry and permission states; the application owns data and persistence.",
     categories: ["application"],
     dependencies: ["lucide-react"],
     registryDependencies: [
@@ -589,9 +589,10 @@ export const items: RegistryItem[] = [
       "badge",
       "button",
       "card",
-      "dropdown-menu",
       "input",
       "table",
+      "alert",
+      "skeleton",
     ],
     files: [
       {
@@ -599,5 +600,15 @@ export const items: RegistryItem[] = [
         type: "registry:block",
       },
     ],
+  },
+  {
+    name: "customer-edit-01",
+    type: "registry:block",
+    title: "Customer edit form",
+    description: "A controlled customer create/edit form with validation, submitting, failure/retry, permission and unsaved-change states. The application owns data, authorization and persistence.",
+    categories: ["application"],
+    dependencies: ["lucide-react"],
+    registryDependencies: ["utils", "button", "card", "input", "label", "alert", "skeleton"],
+    files: [{ path: "src/blocks/customer-edit-01/customer-edit-form.tsx", type: "registry:block" }],
   },
 ]
