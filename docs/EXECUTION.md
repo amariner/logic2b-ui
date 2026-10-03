@@ -7,7 +7,7 @@ the scope is specified; only start after the Dependencies column is satisfied.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
-| DEPLOY-02 | Reconcile local static-review work with current production; merge, push and deploy (user authorized) | M1-04; DEPLOY-01 | in-progress | Codex (review integration) |
+| DEPLOY-02 | Reconcile local static-review work with current production; merge, push and deploy (user authorized) | M1-04; DEPLOY-01 | done | Codex (review integration) |
 | DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | done | Codex (deployment recovery) |
 | REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | Codex |
 | SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | Codex |
@@ -1408,7 +1408,7 @@ discards a file's partial results and retains `truncated`/unknown evidence.
 No public review schema, rule catalog, dependency version, npm version, Worker
 size cap, immutable payload or image baseline is replaced. Browser tests use
 manually paired trusted React markup to check naming independently of reviewed
-source. CI now runs those 14 cases plus the existing bilingual review docs
+source. CI now runs those 16 cases plus the two existing bilingual review docs
 checks and uploads their evidence before later suites clear the directory.
 Docs distinguish the already available remote tool from npm publication.
 
@@ -1427,22 +1427,97 @@ fresh MCP bundle (`LOGIC2B_REVIEW_BUNDLED=1 pnpm --filter @logic2b/mcp exec node
 --import tsx --test test/review-integration.test.ts`). Frozen installation
 passed without lockfile changes. The first full build passed six uncached
 tasks and budgets passed at 824.6 KiB MCP / 1,626.1 KiB total server modules.
-It preceded the final visibility-only correction and is being rebuilt.
+That initial build preceded the final visibility-only correction; the final
+uncached build and its verification passed as recorded below.
 
 The first full workspace test run exposed an environment limitation in the
 existing composition apply test: macOS `/tmp` is a symlink, correctly rejected
-by its destination preconditions. That run is not a pass. The final local
-suite uses the physical temporary directory `TMPDIR=/private/tmp`; no product
-path check or test assertion is weakened. The independent browser oracle also
+by its destination preconditions. Neither that run nor the second workspace
+run with `TMPDIR=/private/tmp` passed: Turbo's strict environment filters that
+variable. Running the CLI suite directly with
+`TMPDIR=/private/tmp pnpm --filter logic2b test` passed all 146 tests; no product
+path check or test assertion was weakened. The independent browser oracle also
 retains the visibility override and invalid CSS-value examples. Unknown style
 semantics are not treated as proof of an invisible subtree.
 
-Remote CI, merge and production confirmation remain pending for DEPLOY-02;
-the final delivery entry will record their actual results and source version.
+The final delivery evidence below records completed CI, merge, provider
+confirmation and live production checks.
 
 The first integration CI (`37157996490`) passed install/build/lint but failed
 the isolated review stress subprocess's five-second limit while Turbo ran nine
 package suites together. CI now uses `pnpm test --concurrency=2`, matching the
 bounded local workspace run. The stress timeout, input cases, assertions and
-all downstream gates remain unchanged; the replacement CI must establish the
-result. This run is not counted as passing verification.
+all downstream gates remain unchanged. This failed run is not counted as
+passing verification; replacement CI `37158197329` passed all gates.
+
+Final local commands and results:
+
+- `CI=true pnpm install --frozen-lockfile --ignore-scripts --reporter=append-only`
+  passed without lockfile changes.
+- `pnpm build --force` passed all six uncached tasks after the final correction;
+  `pnpm lint --force` passed all nine tasks.
+- `pnpm test --concurrency=2 --force` and
+  `TMPDIR=/private/tmp pnpm test --concurrency=2 --force` encountered the macOS
+  limitation above. All other package suites passed, and the direct CLI suite
+  completed the 527 package tests across these gates. Full workspace testing
+  then passed in Linux CI without this environment limitation.
+- `TMPDIR=/private/tmp pnpm test:release-artifacts` passed the installed CLI and
+  all 22 MCP tool contracts in an isolated consumer.
+- `pnpm --filter @logic2b/web test:budgets` passed: MCP 824.6 KiB, total Worker
+  modules 1,626.1 KiB. Existing caps, immutable registry bytes and baselines
+  remain unchanged.
+- `pnpm --filter @logic2b/web exec wrangler deploy --dry-run --config
+  dist/server/wrangler.json --outdir /private/tmp/logic2b-oct04-deploy-dry-run`
+  passed with the existing ASSETS, SESSION and IMAGES bindings.
+- With `PLAYWRIGHT_CHROMIUM_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`,
+  `PLAYWRIGHT_PORT=4324` and `DEBUG=pw:browser`,
+  `pnpm --filter @logic2b/web exec playwright test tests/review-oracle.spec.ts
+  --workers=1 --global-timeout=90000 --output=/tmp/logic2b-integration-browser-oracle`
+  passed 16/16. The same command using `tests/review-docs.spec.ts` and
+  `--output=/tmp/logic2b-integration-browser-docs` passed 2/2. English desktop and
+  Spanish mobile captures were visually inspected.
+- `node /private/tmp/logic2b-deploy-smoke.mjs http://127.0.0.1:8791
+  /private/tmp/logic2b-integration-local-smoke.json` passed 17/17 against the
+  final build running in Wrangler. It only uses synthetic inputs and does not
+  execute returned source.
+
+Full [PR CI 37158197329](https://github.com/amariner/logic2b-ui/actions/runs/37158197329)
+passed on head `47a7a93e414883af4fb925fc32ba10187f57bf4d`: 527 package tests,
+packed release consumers, generated Next/Vite/Astro compositions, 11 browser
+runner tests, generated consumer verification, all three customer maintenance
+stages, 57 site functional tests, 318 accessibility tests, 654 visual tests and
+nine Lighthouse runs across three routes. Accessibility excludes color contrast
+under the existing policy; generated consumer and updated journey checks each
+retain four qualified contrast reviews, not a claim of full certification.
+
+[PR #1](https://github.com/amariner/logic2b-ui/pull/1) merged as
+`733c6fa89d658a3f42c5676719a620004fd6f962`. Its tree is identical to the tested
+PR head (`git diff --exit-code 47a7a93 733c6fa` passed). Local `main` was updated
+with `git fetch origin`, `git switch main` and `git merge --ff-only origin/main`.
+
+Cloudflare's `Workers Builds: logic2b-ui` check succeeded on that exact merge
+commit at `2026-10-03T22:47:49Z`, build
+[`85011825-d7ce-473c-bc58-8d612de112ff`](https://dash.cloudflare.com/aae490dbbef82853249e6d50951427b3/workers/services/view/logic2b-ui/production/builds/85011825-d7ce-473c-bc58-8d612de112ff).
+`pnpm --filter @logic2b/web exec wrangler deployments list --name logic2b-ui
+--json` confirmed deployment `56e4e431-081a-473d-bb49-6e81c56ec1ed` serving
+version `2d4f45fb-8f26-485d-b5cd-2090b8e4bd52` at 100%.
+
+`node /private/tmp/logic2b-deploy-smoke.mjs https://ui.logic2b.com
+/private/tmp/logic2b-deploy-smoke-evidence.json` passed 17/17 at
+`2026-10-03T22:48:06.974Z`. The sanitized [live evidence](evidence/deploy-02-smoke.json)
+records public page/registry/schema HTTP checks, the real MCP handshake and
+22-tool catalog, review schemas and text parity, partial/complete context,
+opt-in token policy, unsupported schema rejection, new ref/JSX-attribute
+unknowns and a Spanish Vite customer composition. The composition retains its
+five consumer callback gaps. Returned source was inspected as text, never
+executed. This live smoke does not replace CI's browser/build evidence or
+exercise every tool; Cloudflare's matching SHA establishes deployment identity.
+
+**DEPLOY-02 is done.** Public contracts remain compatible; npm packages were
+not published. The next development work is the unfinished broader M3-01
+scope; tasks depending on its completion remain gated. The separate push CI
+on `main` started automatically; the passing verification cited here is the
+complete PR CI on the identical tree, not a claim that the later run has
+finished. This final follow-up changes only the execution record and sanitized
+evidence and uses `[skip ci]`; Cloudflare may independently rebuild it without
+changing product/runtime source.
