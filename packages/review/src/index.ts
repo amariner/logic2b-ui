@@ -1,7 +1,7 @@
 export * from "./contract.ts"
 export { RULES } from "./rules.ts"
-import { REVIEW_LIMITS, validateReview, type ReviewFinding, type ReviewResult, type RuleId } from "./contract.ts"
-import { parseReviewFile } from "./parse.ts"
+import { REVIEW_LIMITS, validateReview, type ReviewFinding, type ReviewResult, type ReviewUnknown, type RuleId } from "./contract.ts"
+import { MAX_REVIEW_WORK, ReviewWorkLimitError, parseReviewFile, spend } from "./parse.ts"
 import { reviewTokens } from "./tokens.ts"
 import { reviewNames } from "./a11y.ts"
 import { RULES } from "./rules.ts"
@@ -12,19 +12,33 @@ export function reviewUi(raw: unknown): ReviewResult {
   const enabled = (Object.keys(RULES) as RuleId[]).filter(id => request.scope!.includes(RULES[id].scope) && (id !== "L2B-TOK-001" || request.policy?.semanticColors === true))
   for (const id of Object.keys(RULES) as RuleId[]) if (!enabled.includes(id)) result.disabledRules.push({ rule: id, reason: id === "L2B-TOK-001" && request.policy?.semanticColors !== true ? "Semantic color policy was not explicitly enabled." : "Rule scope was not requested." })
   let remaining: number = REVIEW_LIMITS.nodes
+  const work = { remaining: MAX_REVIEW_WORK }
   const evaluated = new Set<RuleId>()
   for (const file of request.files) {
-    const parsed = parseReviewFile(file, remaining)
-    if (parsed.error) { result.unknowns.push({ file: file.path, rule: "parse", ...parsed.error }); if (parsed.error.reason.startsWith("AST node budget")) { result.truncated = true; remaining = 0 } continue }
+    if (work.remaining <= 0) { result.truncated = true; result.unknowns.push({ file: file.path, rule: "parse", line: 1, column: 1, reason: "Shared static analysis work budget exhausted; submit this file in a smaller review." }); continue }
+    const parsed = parseReviewFile(file, remaining, work)
+    if (parsed.error) { result.unknowns.push({ file: file.path, rule: "parse", ...parsed.error }); if (parsed.error.reason.startsWith("AST")) result.truncated = true; if (parsed.error.reason.startsWith("AST node budget")) remaining = 0; continue }
     remaining -= parsed.nodes.length
     const findings: ReviewFinding[] = []
-    if (enabled.includes("L2B-TOK-001")) { const checked = reviewTokens(parsed); findings.push(...checked.findings); result.unknowns.push(...checked.unknowns) }
-    if (request.scope!.includes("a11y")) { const checked = reviewNames(parsed); findings.push(...checked.findings); result.unknowns.push(...checked.unknowns) }
+    const unknowns: ReviewUnknown[] = []
+    const suppressions: Array<{ line: number; rule: string; reason: string }> = []
+    try {
+      if (enabled.includes("L2B-TOK-001")) { const checked = reviewTokens(parsed); findings.push(...checked.findings); unknowns.push(...checked.unknowns) }
+      if (request.scope!.includes("a11y")) { const checked = reviewNames(parsed); findings.push(...checked.findings); unknowns.push(...checked.unknowns) }
+      for (const comment of parsed.comments) {
+        spend(parsed, Math.max(1, Math.ceil(String(comment.value).length / 64)))
+        const match = String(comment.value).trim().match(/^logic2b-review-disable-next-line (L2B-[A-Z0-9]+-\d{3}) -- (\S.{2,199})$/)
+        if (match && Object.hasOwn(RULES, match[1])) suppressions.push({ line: (comment.loc?.end?.line ?? comment.loc?.start.line ?? 1) + 1, rule: match[1], reason: match[2] })
+        if (suppressions.length > REVIEW_LIMITS.suppressions) break
+      }
+    } catch (error) {
+      if (!(error instanceof ReviewWorkLimitError)) throw error
+      result.truncated = true
+      result.unknowns.push({ file: file.path, rule: "parse", line: 1, column: 1, reason: "Static analysis work budget exceeded; partial findings for this file were discarded. Simplify the source or review fewer files." })
+      continue
+    }
     for (const id of enabled) evaluated.add(id)
-    const suppressions = parsed.comments.flatMap(comment => {
-      const match = String(comment.value).trim().match(/^logic2b-review-disable-next-line (L2B-[A-Z]+-\d{3}) -- (\S.{2,199})$/)
-      return match && Object.hasOwn(RULES, match[1]) ? [{ line: file.content.slice(0, comment.end).split(/\r\n?|\n|\u2028|\u2029/).length + 1, rule: match[1], reason: match[2] }] : []
-    })
+    result.unknowns.push(...unknowns)
     if (suppressions.length > REVIEW_LIMITS.suppressions) { result.truncated = true; result.unknowns.push({ file: file.path, rule: "parse", line: 1, column: 1, reason: "Suppression limit exceeded; findings in this file were not suppressed." }) }
     for (const finding of findings) {
       const suppression = suppressions.length <= REVIEW_LIMITS.suppressions ? suppressions.find(s => s.line === finding.line && s.rule === finding.rule) : undefined

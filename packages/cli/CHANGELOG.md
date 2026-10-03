@@ -4,6 +4,10 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Harden static review reads against ancestor/source replacements and special
+  file races, keeping the existing directory, scope, label-context and exit-code
+  contracts. Bound shared analysis work and preserve explicit incomplete results.
+
 - Add `compose` for structured customer list/form requirements,
   exact verified registry metadata, dependency closure and explicit consumer
   gaps. Optional `--project` exports grounded Next/Vite/Astro demo source with
