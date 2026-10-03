@@ -1439,3 +1439,10 @@ semantics are not treated as proof of an invisible subtree.
 
 Remote CI, merge and production confirmation remain pending for DEPLOY-02;
 the final delivery entry will record their actual results and source version.
+
+The first integration CI (`37157996490`) passed install/build/lint but failed
+the isolated review stress subprocess's five-second limit while Turbo ran nine
+package suites together. CI now uses `pnpm test --concurrency=2`, matching the
+bounded local workspace run. The stress timeout, input cases, assertions and
+all downstream gates remain unchanged; the replacement CI must establish the
+result. This run is not counted as passing verification.

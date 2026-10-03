@@ -31,7 +31,9 @@ jobs:
       # duplicate item names) + tsc --noEmit on the non-Astro packages.
       - run: pnpm lint
 
-      - run: pnpm test
+      # Keep bounded-work subprocess checks meaningful on the shared runner;
+      # nine concurrent package suites can starve their wall-clock allowance.
+      - run: pnpm test --concurrency=2
 
       # Bundle the native VS Code extension and validate its Marketplace
       # manifest by producing the same unsigned preview VSIX documented for
