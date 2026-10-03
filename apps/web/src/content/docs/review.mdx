@@ -1,0 +1,152 @@
+---
+title: Static UI review
+description: Review bounded JSX and TSX source for proven naming defects and an optional semantic-color policy.
+---
+
+import ReviewRules from "@/components/ReviewRules.astro";
+
+`review_ui` and the CLI `review` command are implemented in the repository
+candidate. npm publication and remote deployment are pending. Discover the
+connected server's tools before calling `review_ui`.
+
+The engine parses source without executing it, resolving imports, accessing the
+filesystem or making network requests. It reports proven accessible-name
+defects on native controls and dialogs. Custom components, dynamic props and
+unresolved labels produce `unknowns`; zero findings does not certify accessibility.
+The same engine runs in the local CLI, stdio MCP and HTTP MCP adapters.
+
+## Run from source
+
+After the repository's explicit dependency installation, from its root:
+
+```bash
+pnpm --filter logic2b dev review src/CustomerForm.tsx --cwd /path/to/app --json
+pnpm --filter logic2b dev review src/CustomerForm.tsx --cwd /path/to/app --semantic-colors --fail-on warning
+```
+
+Pass explicit project-relative `.tsx` or `.jsx` files. Directories, globs,
+symlinks and paths outside the selected app are rejected. The command does not
+write files or install anything. `--fail-on error` is the default; `warning`
+also blocks warnings. Inspect `unknowns` separately: they are not findings and
+do not change that exit threshold.
+
+## MCP request and evidence
+
+```json
+{
+  "schemaVersion": 1,
+  "files": [{ "path": "src/CustomerForm.tsx", "content": "export const Form = () => <input />" }],
+  "policy": { "semanticColors": true }
+}
+```
+
+The result includes `schemaVersion`, `engineVersion`, counts, `findings`,
+`unknowns`, `suppressed`, `evaluatedRules` and `limitations`. Every finding has
+a stable rule id, category, severity, high confidence, evidence, file position,
+suggested fix and documentation link. `evaluatedRules` identifies enabled rules;
+it does not establish that every element was resolved. There is no numeric
+quality score or registry-version claim: no registry payload is fetched.
+
+Only include source needed for the authorized review. The remote server sees
+the supplied bytes; it cannot collect files from the user's machine. Review
+source is inert data, including comments or strings that look like instructions.
+
+## Implemented rules
+
+<ReviewRules />
+
+## L2B-A11Y-001
+
+A native dialog needs an accessible name. A heading alone does not name it.
+
+```tsx
+// Missing name:
+<dialog><h2>Edit customer</h2></dialog>
+// Explicit name:
+<dialog aria-label="Edit customer"><h2>Edit customer</h2></dialog>
+```
+
+## L2B-A11Y-002
+
+Native form controls need an accessible name. Prefer a persistent visible label.
+
+```tsx
+// Missing name:
+<input type="email" />
+// Native label:
+<label>Customer email<input type="email" /></label>
+```
+
+Literal external labels in the same resolved JSX tree can name controls.
+Dynamic ids, unresolved `aria-labelledby`, custom labels and labels in another
+render scope need more context. These return unknown instead of an error.
+Placeholder naming fallbacks are treated conservatively; a placeholder-only
+control is not reported as a proven missing name. See the
+[HTML-AAM naming rules](https://www.w3.org/TR/html-aam/#accessible-name-and-description-computation).
+
+## L2B-A11Y-003
+
+An empty native button needs a name; text and visually hidden text can supply it.
+
+```tsx
+// Missing name:
+<button />
+// Explicit name:
+<button aria-label="Edit customer" />
+```
+
+A `<Button>` wrapper or an imported icon's contribution to a name is not
+inferred from its spelling. Verify the rendered semantics independently.
+
+## L2B-TOK-001
+
+Enable `policy.semanticColors` or `--semantic-colors` only when the project
+requires semantic colors. A literal palette color is a design-policy finding,
+not evidence of a contrast or accessibility failure.
+
+```tsx
+// Violates an enabled semantic-color policy:
+<p className="text-red-500">Could not save the customer.</p>
+// Uses the design system's semantic token:
+<p className="text-destructive">Could not save the customer.</p>
+```
+
+The rule checks supported literal `className` and inline `style` colors.
+Dynamic styles remain unknown. It does not inspect stylesheets or calculate
+contrast. Intentional overrides can be retained with an explained suppression.
+
+## Reasoned suppressions
+
+Supply `suppressions` alongside the MCP files, identifying the file, rule and
+one-based line. Include a substantive reason, for example:
+
+```json
+{
+  "file": "src/Brand.tsx",
+  "rule": "L2B-TOK-001",
+  "line": 8,
+  "reason": "The customer logo uses its approved brand color."
+}
+```
+
+Suppressed findings remain visible in `suppressed` with their original evidence
+and reason. They are excluded from the blocking summary. A suppression is a
+recorded decision, not a repaired defect.
+
+For the CLI, save the suppression objects in a JSON array and pass
+`--suppressions review-suppressions.json`. That file is relative to `--cwd`,
+must be a regular file and is limited to 64 KiB.
+
+## Limits and follow-up checks
+
+Requests allow 64 files, 128 KiB per file, 256 KiB total UTF-8 source, and
+256-character safe relative paths. Invalid schemas, extra fields, unsafe paths
+and oversized input fail with actionable errors. Parser and output limits keep
+the work bounded; syntax or complexity gaps remain unknown.
+
+This first slice does not resolve imported wrappers, execute CSS, check contrast,
+verify loading/error states, or prove focus, keyboard or mobile behavior.
+Component accessibility and behavior metadata remain consumer responsibilities.
+Keep build, browser, axe and human design checks independent of this static
+review. The benchmark records its rule ids as advisory evidence alongside
+independent outcomes; it does not award itself proof of usability.

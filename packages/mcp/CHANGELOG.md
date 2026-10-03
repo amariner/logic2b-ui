@@ -4,6 +4,14 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## Unreleased
 
+- Add the pure `review_ui` tool using the shared static JSX/TSX review engine:
+  proven native accessible-name defects, opt-in semantic-color policy, explicit
+  unknowns and reasoned suppressions. Inputs and evidence are bounded; nested
+  schemas and text/structured equality are shared by stdio and HTTP. Supplied
+  source is never imported or executed, and review performs no filesystem or
+  network access. This is source implementation pending npm publication and
+  remote deployment.
+
 - Add the pure `agent_rules` tool with bounded editor-format plans, managed
   sections, preserved project instructions and current-file hash preconditions.
   Scaffold plans include AGENTS.md and DESIGN.md by default with an explicit

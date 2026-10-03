@@ -33,6 +33,7 @@ import { applyPresetToCss, decodePreset } from "@logic2b/tokens"
 import { PACKAGE_VERSION } from "./version.ts"
 import { REGISTRY_VERSION } from "@logic2b/registry/version"
 import { registerInspectCommand } from "./inspect.ts"
+import { registerReviewCommand } from "./review.ts"
 import { createAgentRulesConfig, prepareAgentRulesRefresh, refreshAgentRules, registerRulesCommand, updateAgentRulesConfig } from "./rules.ts"
 
 const program = new Command()
@@ -43,6 +44,7 @@ program
   .version(PACKAGE_VERSION)
 
 registerInspectCommand(program)
+registerReviewCommand(program)
 registerRulesCommand(program)
 
 program

@@ -45,6 +45,12 @@ function parseText(result: { content: { text: string }[] }) {
 }
 
 describe("TOOLS", () => {
+  test("review_ui returns the shared nested contract without registry access", async () => {
+    const result = await runTool("review_ui", { schemaVersion: 1, files: [{ path: "src/ui.tsx", content: "export const UI = () => <button />" }] }, { fetchImpl: noFetch })
+    assert.equal(parseText(result).summary.errors, 1)
+    assert.equal(TOOLS.find((tool) => tool.name === "review_ui")!.annotations.openWorldHint, false)
+  })
+
   test("schemas reject empty outputs and annotations describe data-only tools", () => {
     for (const tool of TOOLS) {
       assert.equal(contracts.get(tool.name)!({}).valid, false, tool.name)
@@ -96,6 +102,7 @@ describe("TOOLS", () => {
         "lint_theme",
         "inspect_project",
         "agent_rules",
+        "review_ui",
       ]
     )
   })

@@ -1,3 +1,4 @@
+import { REVIEW_LIMITS } from "@logic2b/review"
 import { PROJECT_LIMITS } from "@logic2b/scaffold/project-context"
 import { RULES_LIMITS } from "@logic2b/scaffold/rules"
 
@@ -47,6 +48,14 @@ export const LIMITS = {
   rulesFormats: RULES_LIMITS.formats,
   rulesToolNames: RULES_LIMITS.toolNames,
   rulesPathLength: RULES_LIMITS.pathLength,
+  /** review_ui accepts source as bounded inert data and limits its evidence. */
+  reviewFiles: REVIEW_LIMITS.files,
+  reviewFileBytes: REVIEW_LIMITS.fileBytes,
+  reviewTotalBytes: REVIEW_LIMITS.totalBytes,
+  reviewPathLength: REVIEW_LIMITS.path,
+  reviewSuppressions: REVIEW_LIMITS.suppressions,
+  reviewFindings: REVIEW_LIMITS.findings,
+  reviewOutputBytes: REVIEW_LIMITS.outputBytes,
   /** Maximum size of one fetched registry document in bytes. */
   registryDocumentBytes: 4 * 1024 * 1024,
   /** Maximum total file-content bytes returned by one plan or item read. */

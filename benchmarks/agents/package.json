@@ -6,11 +6,13 @@
     "benchmark": "node --import tsx scripts/run-benchmark.mts",
     "lint": "tsc --noEmit -p tsconfig.json",
     "score": "node scripts/score-runs.mjs",
+    "review": "node --import tsx scripts/static-review.mts",
     "test": "node --import tsx --test test/*.test.mjs test/*.test.mts",
     "test:fixtures": "node --import tsx scripts/verify-fixtures.mts",
     "report:v2": "node --import tsx scripts/report-v2.mts"
   },
   "devDependencies": {
+    "@logic2b/review": "workspace:*",
     "@types/node": "24.3.0",
     "typescript": "6.0.3",
     "tsx": "4.23.0"

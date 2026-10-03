@@ -1,3 +1,4 @@
+import { reviewUi, REVIEW_INPUT_SCHEMA, validateReviewRequest, type ReviewRequest } from "@logic2b/review"
 import { CLI_PACKAGE_SELECTOR } from "@logic2b/scaffold/package-selectors";
 import {
   buildAgentRulesPlan,
@@ -438,9 +439,15 @@ const TOOL_DEFINITIONS = [
       "Generate managed project instructions and separate design context as file writes with current-file hash preconditions. Accepts preset, stack, icon library, editor formats and bounded inventory/current instruction files. Preserves project-owned text outside managed sections; defaults to AGENTS.md plus DESIGN.md. Pure and read-only: no filesystem access, source execution or registry requests. The host checks each precondition and applies writes within the existing authorized scope.",
     inputSchema: RULES_INPUT_SCHEMA,
   },
+  {
+    name: "review_ui",
+    description:
+      "Statically review bounded host-supplied JSX/TSX source for proven accessible-name defects in native dialogs, form controls and buttons. Semantic-color findings require policy.semanticColors: true. Returns evidence, reasoned suppressions, evaluated rules and explicit unknowns for custom wrappers or dynamic semantics. Pure and read-only: no filesystem, network, imports or source execution. Static findings do not replace browser/keyboard verification.",
+    inputSchema: REVIEW_INPUT_SCHEMA,
+  },
 ] as const
 
-const PURE_TOOLS = new Set(["agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
+const PURE_TOOLS = new Set(["review_ui", "agent_rules", "inspect_project", "list_presets", "export_tokens", "decode_preset", "contrast_audit", "lint_theme"])
 
 export const TOOLS = TOOL_DEFINITIONS.map((tool) => ({
   ...tool,
@@ -598,6 +605,16 @@ export function validateToolArguments(name: string, rawArgs: unknown): Record<st
   const version = stringArg(args, "version", { max: LIMITS.versionLength })
   if (version !== undefined) out.version = version.trim()
   switch (name) {
+    case "review_ui": {
+      try {
+        validateReviewRequest(args)
+        Object.assign(out, args)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Invalid UI review request."
+        throw new ToolInputError(echo(message, 300))
+      }
+      break
+    }
     case "agent_rules": {
       try {
         Object.assign(out, validateAgentRulesOptions(args))
@@ -700,6 +717,14 @@ export async function runTool(
   { base = DEFAULT_REGISTRY, fetchImpl }: RunToolOptions = {}
 ): Promise<ToolResult> {
   const args = validateToolArguments(name, rawArgs)
+  if (name === "review_ui") {
+    try {
+      return textResult(reviewUi(args as unknown as ReviewRequest), true)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Invalid UI review request."
+      throw new ToolInputError(echo(message, 300))
+    }
+  }
   if (name === "agent_rules") {
     try {
       return textResult(await buildAgentRulesPlan(args as AgentRulesOptions), true)

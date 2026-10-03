@@ -24,6 +24,7 @@
     "@fontsource-variable/space-grotesk": "^5.2.10",
     "@hookform/resolvers": "^5.9.1",
     "@logic2b/registry": "workspace:*",
+    "@logic2b/review": "workspace:*",
     "@logic2b/scaffold": "workspace:*",
     "@logic2b/tokens": "workspace:*",
     "@tailwindcss/vite": "^4.3.2",

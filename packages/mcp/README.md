@@ -8,7 +8,8 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes current source and the remote endpoint. npm `@next`
+This catalog describes current source. Additions marked as source implementation
+require separate npm publication and remote deployment. npm `@next`
 still points to `1.0.0-rc.2`, which has 15 tools and lacks `list_presets`,
 structured results, verified default reads and the new input limits.
 See [pending npm publication](https://github.com/amariner/logic2b-ui/blob/main/RELEASING.md#pending-npm-publication).
@@ -107,6 +108,51 @@ preconditions. Adapt confirmed custom locations before applying those writes,
 preserve existing files and local customizations, and resolve conflicts
 explicitly. Incremental change plans remain a separate planned contract.
 `scaffold_plan` is the explicit path for a new application from empty.
+
+### Review supplied UI source (source implementation)
+
+`review_ui` uses the same pure `@logic2b/review` engine as `logic2b review`.
+The host supplies JSX/TSX files; the server never reads files, resolves imports,
+executes source or sends source to a registry or another service. It is
+implemented in source for both stdio and HTTP; publication and deployment are
+separate release steps. Before publication, use this checkout's server with
+`pnpm --filter @logic2b/mcp dev`.
+
+```json
+{
+  "schemaVersion": 1,
+  "files": [{ "path": "src/customer.tsx", "content": "export const Save = () => <button />" }],
+  "policy": { "semanticColors": true },
+  "suppressions": []
+}
+```
+
+The initial rules prove missing accessible names for native dialogs
+(`L2B-A11Y-001`), form controls (`L2B-A11Y-002`) and buttons
+(`L2B-A11Y-003`). `L2B-TOK-001` checks hardcoded colors only when
+`policy.semanticColors` is true; this is design policy, not an accessibility
+verdict. Intentional native HTML is supported. Custom components, dynamic
+names/spreads, unresolved labels and parse/complexity gaps are reported as
+`unknowns`; they do not become proven defects or a claim that review passed.
+
+Results contain `schemaVersion: 1`, `engineVersion: "1"`, severity counts,
+located findings with evidence/fix suggestions/docs, `unknowns`, `suppressed`,
+`evaluatedRules` and `limitations`. Suppress a confirmed finding with
+`{ "file": "src/customer.tsx", "rule": "L2B-A11Y-003", "line": 1,
+"reason": "The host supplies the verified accessible name." }`.
+Each suppression must name a supplied file, an implemented rule and a positive
+line, with a meaningful reason of 12–512 characters. Suppressed evidence remains
+in the result and is excluded from severity counts. Review does not apply fixes
+or certify accessibility; run browser, keyboard and assistive-technology checks
+for behavior and semantics that static source cannot prove.
+
+Requests allow 64 files, 128 KiB UTF-8 per file and 256 KiB total. Relative paths
+are limited to 256 characters, suppressions to 256, reported entries to 512 and
+the result JSON value to 512 KiB. Invalid versions, fields, types, unsafe paths,
+duplicate entries or exceeded budgets produce JSON-RPC `-32602` with a bounded
+message. Split large reviews into smaller requests. As with other tools, the
+text fallback and structured result each carry the same JSON value, so wire
+responses are larger than the result-value budget.
 
 ### Deliver project instructions (source implementation)
 
@@ -217,7 +263,7 @@ distinguish protocol failures from tool results:
 | Malformed JSON body | HTTP 400, JSON-RPC `-32700` |
 | Invalid envelope (missing `jsonrpc`, bad `id`, empty batch, batch over the limit, unsupported `Mcp-Protocol-Version` header) | HTTP 400 or per-message `-32600` |
 | Unsupported method | `-32601` |
-| Unknown tool, wrong argument type, oversized/empty/duplicate value, unsafe `srcDir`, invalid project snapshot or inspection result above its requested budget | `-32602` (stdio: `McpError` invalid params) |
+| Unknown tool, wrong argument type, oversized/empty/duplicate value, unsafe `srcDir`, invalid project snapshot/review source or inspection/review result above its budget | `-32602` (stdio: `McpError` invalid params) |
 | Unexpected server failure | `-32603` with a bounded message |
 | Tool execution failure (unknown item, invalid preset id, integrity mismatch, oversized registry-read or plan response) | Successful response with `isError: true` and no `structuredContent` |
 
@@ -233,6 +279,9 @@ Documented limits (`packages/mcp/src/limits.ts`, mirrored in the input schemas):
 | `list_presets` query | 256 characters |
 | Version selector / preset id / project name | 64 / 256 / 64 characters |
 | Caller CSS (`apply_preset`, `lint_theme`) | 1,000,000 bytes |
+| `review_ui` files / source bytes | 64 / 128 KiB each, 256 KiB total UTF-8 |
+| `review_ui` path / suppressions | 256 characters / 256 |
+| `review_ui` evidence entries / result JSON | 512 / 512 KiB |
 | Raw `contrast_audit` token map | 256 entries, 256 characters each |
 | One fetched registry document | 4 MiB |
 | Source bytes returned by one item read or plan | 4 MiB |

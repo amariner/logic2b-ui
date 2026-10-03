@@ -6,6 +6,14 @@ are installation/composition smoke evidence, not comparative product advantage.
 Run `pnpm benchmark:agents:report:v2` from the repository root to regenerate the
 pending report without invoking an agent or executing submitted source.
 
+The repository candidate also records advisory M1-04 static review evidence:
+`pnpm --dir benchmarks/agents review /path/to/review-request.json`. Supply the
+same bounded schemaVersion 1 request accepted by `review_ui`. The output reuses
+the engine's stable rule ids and retains findings, suppressions and unknowns.
+It does not change historical v1 scores or award v2 acceptance: independent
+build/browser/human evidence remains required. No real evaluation is implied by
+running this offline helper, and source is never executed or uploaded.
+
 A reproducible benchmark for the question that matters to this registry: can a
 coding agent install, theme and compose logic2b ui correctly, or does it fall
 back to hand-written lookalikes?

@@ -5,6 +5,7 @@
 type Schema = Record<string, unknown>
 import { BEHAVIOR_SCHEMA } from "@logic2b/scaffold/behavior"
 import { PROJECT_INSPECTION_SCHEMA } from "@logic2b/scaffold/project-context"
+import { REVIEW_RESULT_SCHEMA } from "@logic2b/review"
 import { RULES_PLAN_SCHEMA } from "@logic2b/scaffold/rules"
 const string = { type: "string" }
 const number = { type: "number" }
@@ -86,6 +87,7 @@ const parsedMode = object({
 })
 
 export const OUTPUT_SCHEMAS = {
+  review_ui: REVIEW_RESULT_SCHEMA,
   agent_rules: RULES_PLAN_SCHEMA,
   inspect_project: PROJECT_INSPECTION_SCHEMA,
   list_components: object({ ...version, count, items: array(summary) }, [...versionRequired, "count", "items"]),

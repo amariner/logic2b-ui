@@ -186,9 +186,29 @@ try {
   const version = await execFileAsync(cliBin, ["--version"])
   assert.equal(version.stdout.trim(), cliSource.version)
   const help = await execFileAsync(cliBin, ["--help"])
-  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules"]) {
+  for (const command of ["init", "add", "update", "diff", "list", "status", "inspect", "rules", "review"]) {
     assert.match(help.stdout, new RegExp(`\\b${command}\\b`))
   }
+  const reviewRoot = join(root, "review-from-tarball")
+  await mkdir(reviewRoot)
+  const reviewPath = join(reviewRoot, "customer.tsx")
+  await writeFile(reviewPath, 'throw new Error("must never execute"); export const UI = () => <input />\n')
+  await assert.rejects(
+    () => execFileAsync(cliBin, ["review", "customer.tsx", "--cwd", reviewRoot, "--json"]),
+    (error: unknown) => {
+      const failure = error as { code: number; stdout: string }
+      assert.equal(failure.code, 1)
+      const result = JSON.parse(failure.stdout)
+      assert.equal(result.schemaVersion, 1)
+      assert.equal(result.summary.errors, 1)
+      assert.equal(result.findings[0]?.rule, "L2B-A11Y-002")
+      return true
+    },
+  )
+  await writeFile(reviewPath, 'export const UI = () => <button>Save customer</button>\n')
+  const reviewed = await execFileAsync(cliBin, ["review", "customer.tsx", "--cwd", reviewRoot, "--json"])
+  assert.equal(JSON.parse(reviewed.stdout).summary.errors, 0)
+  assert.equal(await readFile(reviewPath, "utf8"), 'export const UI = () => <button>Save customer</button>\n')
   const customerRelease = await customerFixtures(customerRegistryVersion)
   await withLocalRegistry(async (registry) => {
     const target = join(root, "generated-from-tarball")
@@ -329,6 +349,7 @@ try {
           "list_components",
           "list_presets",
           "list_registry_versions",
+          "review_ui",
           "scaffold_plan",
           "search_components",
         ]
@@ -348,6 +369,7 @@ try {
       assert.ok(defaultVersion, `registry fixture publishes no "${REGISTRY_DEFAULT_CHANNEL}" channel`)
       const css = (theme.files as Array<{ content: string }>)[0]!.content
       const cases: Array<[string, Record<string, unknown>]> = [
+        ["review_ui", { schemaVersion: 1, files: [{ path: "src/review.tsx", content: "export const UI = () => <button />" }] }],
         ["inspect_project", { snapshot: { schemaVersion: 1, configs: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } } }],
         ["inspect_project", { snapshot: { schemaVersion: 1, configs: [], capabilities: { fileWrites: false, dependencyInstall: false, browser: false } }, details: true }],
         ["list_components", {}],
@@ -405,6 +427,15 @@ try {
         return result.structuredContent as Record<string, unknown>
       }
       const existingRules = "# Consumer instructions\nPreserve intentional wrappers.\n"
+      const review = await callPackedTool("review_ui", {
+        schemaVersion: 1,
+        files: [{ path: "src/review.tsx", content: 'throw new Error("must never execute"); export const UI = () => <><button /><Button /><button aria-label="Save" className="text-red-500" /></>' }],
+        policy: { semanticColors: true },
+      }) as { findings: Array<{ rule: string; category: string }>; unknowns: unknown[]; evaluatedRules: string[] }
+      assert.ok(review.findings.some((finding) => finding.rule === "L2B-A11Y-003"))
+      assert.ok(review.findings.some((finding) => finding.rule === "L2B-TOK-001" && finding.category === "design-policy"))
+      assert.ok(review.unknowns.length > 0)
+      assert.ok(review.evaluatedRules.includes("L2B-TOK-001"))
       const rulePlan = await callPackedTool("agent_rules", { currentFiles: [{ path: "AGENTS.md", content: existingRules }], inventory: [{ name: "button", kind: "component" }] }) as { files: Array<{ path: string; content: string; action: string; precondition: { kind: string; sha256?: string } }> }
       const ruleFile = rulePlan.files.find((file) => file.path === "AGENTS.md")!
       assert.ok(ruleFile.content.startsWith(existingRules))
@@ -458,6 +489,9 @@ try {
         ["search_components", { query: "x", limit: 0 }],
         ["install_plan", { items: ["button", "button"] }],
         ["agent_rules", { currentFiles: [{ path: "../AGENTS.md", content: "private" }] }],
+        ["review_ui", { schemaVersion: 2, files: [{ path: "src/ui.tsx", content: "" }] }],
+        ["review_ui", { schemaVersion: 1, files: [{ path: "../private.tsx", content: "" }] }],
+        ["review_ui", { schemaVersion: 1, files: [{ path: "src/ui.tsx", content: "é".repeat(65_537) }] }],
         ["agent_rules", { currentFiles: [{ path: "AGENTS.md", content: "<!-- logic2b:rules:start v2 -->\n<!-- logic2b:rules:end -->" }] }],
       ] as const) {
         await assert.rejects(
@@ -473,8 +507,8 @@ try {
   })
 
   passed = true
-  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/inspect/rules, managed refresh and rc.16/rc.17 installs verified`)
-  console.log(`✓ @logic2b/mcp@${mcpSource.version}: canonical skill packaged, all 18 tool output contracts, bounded rule plans and scaffold opt-out verified over stdio`)
+  console.log(`✓ logic2b@${cliSource.version}: packed, consumer-installed, help/version/inspect/rules/review, managed refresh and rc.16/rc.17 installs verified`)
+  console.log(`✓ @logic2b/mcp@${mcpSource.version}: canonical skill packaged, all 19 tool output contracts, inert UI review, bounded rule plans and scaffold opt-out verified over stdio`)
 } finally {
   if (passed) {
     await rm(root, { recursive: true, force: true })

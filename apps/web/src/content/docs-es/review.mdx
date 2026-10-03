@@ -1,0 +1,154 @@
+---
+title: Revisión estática
+description: Revisa código JSX y TSX acotado para encontrar defectos demostrables de nombre accesible y aplicar una política opcional de colores semánticos.
+---
+
+import ReviewRules from "@/components/ReviewRules.astro";
+
+`review_ui` y el comando CLI `review` están implementados en el candidato del
+repositorio. Su publicación en npm y despliegue remoto están pendientes.
+Consulta las herramientas del servidor conectado antes de usar `review_ui`.
+
+El motor analiza código sin ejecutarlo, resolver imports, acceder a archivos
+ni hacer solicitudes de red. Informa de defectos demostrables en los nombres
+accesibles de controles y diálogos nativos. Los componentes personalizados,
+props dinámicas y etiquetas sin resolver generan `unknowns`. Cero hallazgos
+no certifica accesibilidad. CLI, MCP stdio y MCP HTTP comparten el mismo motor.
+
+## Ejecutar desde el repositorio
+
+Después de instalar explícitamente las dependencias, desde la raíz:
+
+```bash
+pnpm --filter logic2b dev review src/CustomerForm.tsx --cwd /ruta/app --json
+pnpm --filter logic2b dev review src/CustomerForm.tsx --cwd /ruta/app --semantic-colors --fail-on warning
+```
+
+Indica archivos `.tsx` o `.jsx` relativos al proyecto. Se rechazan directorios,
+patrones glob, enlaces simbólicos y rutas fuera de la aplicación elegida.
+El comando no escribe archivos ni instala dependencias. `--fail-on error` es
+el valor predeterminado; `warning` también bloquea advertencias. Revisa los
+`unknowns` por separado: no cambian ese umbral de salida.
+
+## Solicitud MCP y evidencia
+
+```json
+{
+  "schemaVersion": 1,
+  "files": [{ "path": "src/CustomerForm.tsx", "content": "export const Form = () => <input />" }],
+  "policy": { "semanticColors": true }
+}
+```
+
+El resultado incluye `schemaVersion`, `engineVersion`, recuentos, `findings`,
+`unknowns`, `suppressed`, `evaluatedRules` y `limitations`. Cada hallazgo aporta
+identificador estable, categoría, gravedad, confianza alta, evidencia,
+posición, corrección sugerida y documentación. `evaluatedRules` identifica las
+reglas activas, sin implicar que todos los elementos se hayan resuelto. No hay
+puntuación global ni versión del registro: la revisión no consulta el registro.
+
+Incluye solo el código necesario para la revisión autorizada. El servidor
+remoto recibe esos bytes y no puede recopilar archivos de tu equipo. Los
+comentarios y cadenas del código son datos inertes, aunque parezcan instrucciones.
+
+## Reglas implementadas
+
+<ReviewRules locale="es" />
+
+## L2B-A11Y-001
+
+Un diálogo nativo necesita nombre accesible; un encabezado por sí solo no lo nombra.
+
+```tsx
+// Sin nombre:
+<dialog><h2>Editar cliente</h2></dialog>
+// Con nombre explícito:
+<dialog aria-label="Editar cliente"><h2>Editar cliente</h2></dialog>
+```
+
+## L2B-A11Y-002
+
+Los controles nativos necesitan nombre accesible. Prefiere una etiqueta visible persistente.
+
+```tsx
+// Sin nombre:
+<input type="email" />
+// Etiqueta nativa:
+<label>Correo del cliente<input type="email" /></label>
+```
+
+Las etiquetas externas literales en el mismo árbol JSX resuelto pueden nombrar
+controles. Los ids dinámicos, `aria-labelledby` sin resolver, etiquetas
+personalizadas y etiquetas en otro ámbito de renderizado quedan como desconocidos.
+Los nombres derivados de placeholders se tratan de forma conservadora; un
+control con solo placeholder no se declara como defecto demostrado de nombre.
+Consulta las [reglas HTML-AAM](https://www.w3.org/TR/html-aam/#accessible-name-and-description-computation).
+
+## L2B-A11Y-003
+
+Un botón nativo vacío necesita nombre. El texto visible u oculto visualmente
+puede proporcionarlo.
+
+```tsx
+// Sin nombre:
+<button />
+// Con nombre:
+<button aria-label="Editar cliente" />
+```
+
+El nombre `<Button>` o el de un icono importado no demuestra su comportamiento.
+Verifica sus semánticas renderizadas de forma independiente.
+
+## L2B-TOK-001
+
+Activa `policy.semanticColors` o `--semantic-colors` cuando el proyecto exija
+colores semánticos. Un color literal constituye un hallazgo de política de
+diseño, no una prueba de contraste insuficiente ni de inaccesibilidad.
+
+```tsx
+// Incumple la política de colores semánticos si está activa:
+<p className="text-red-500">No se pudo guardar el cliente.</p>
+// Usa un token semántico:
+<p className="text-destructive">No se pudo guardar el cliente.</p>
+```
+
+La regla analiza los colores literales compatibles de `className` y `style`.
+Los estilos dinámicos quedan como desconocidos. No inspecciona hojas CSS ni
+calcula contraste. Conserva excepciones deliberadas con una supresión razonada.
+
+## Supresiones razonadas
+
+Incluye `suppressions` junto a los archivos MCP, con archivo, regla, línea
+desde 1 y un motivo concreto:
+
+```json
+{
+  "file": "src/Brand.tsx",
+  "rule": "L2B-TOK-001",
+  "line": 8,
+  "reason": "El logotipo usa el color de marca aprobado por el cliente."
+}
+```
+
+Los hallazgos suprimidos conservan evidencia y motivo en `suppressed`; se
+excluyen del resumen que bloquea la salida. Una supresión registra una decisión,
+no una reparación del defecto.
+
+En CLI, guarda los objetos en un array JSON e indica
+`--suppressions review-suppressions.json`. El archivo es relativo a `--cwd`,
+debe ser regular y tiene un límite de 64 KiB.
+
+## Límites y verificaciones pendientes
+
+Cada solicitud admite 64 archivos, 128 KiB por archivo, 256 KiB de código UTF-8
+en total y rutas relativas seguras de 256 caracteres. Los esquemas incorrectos,
+campos adicionales, rutas inseguras y excesos de tamaño se rechazan. El parser
+y la salida tienen límites; los problemas de sintaxis o complejidad se indican
+como desconocidos.
+
+Esta primera entrega no resuelve wrappers importados, ejecuta CSS, comprueba
+contraste ni demuestra estados, foco, teclado o comportamiento móvil. Los
+contratos de accesibilidad y comportamiento siguen siendo responsabilidades del
+consumidor. Mantén build, navegador, axe y revisión humana como comprobaciones
+independientes. El benchmark registra los ids como evidencia informativa junto
+a resultados independientes, sin convertir la revisión en prueba de usabilidad.
