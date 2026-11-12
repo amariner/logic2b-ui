@@ -4,6 +4,9 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+- Use the Logic2B UI product name in the CLI help and generated
+  project files, managed agent rules and design notes.
+
 - Harden static review reads against ancestor/source replacements and special
   file races, keeping the existing directory, scope, label-context and exit-code
   contracts. Bound shared analysis work and preserve explicit incomplete results.

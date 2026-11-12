@@ -1,5 +1,5 @@
 /**
- * @logic2b/tokens — the single source of truth for the logic2b ui theme data.
+ * @logic2b/tokens — the single source of truth for the Logic2B UI theme data.
  *
  * Base color scales, accents, chart ramps, radii, fonts, the preset codec
  * (base64url of "base|theme|chart|radius|font|heading") and the CSS emitters.

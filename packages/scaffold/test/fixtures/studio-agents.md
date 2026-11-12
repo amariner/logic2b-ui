@@ -1,7 +1,7 @@
 # AGENTS.md — UI house rules
-> generated with logic2b ui · preset `bmV1dHJhbHxiYXNlfGRlZmF1bHR8ZGVmYXVsdHxpbnRlcnxpbnRlcnxtb25vfGRlZmF1bHR8ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8bHVjaWRl`
+> generated with Logic2B UI · preset `bmV1dHJhbHxiYXNlfGRlZmF1bHR8ZGVmYXVsdHxpbnRlcnxpbnRlcnxtb25vfGRlZmF1bHR8ZGVmYXVsdHxkZWZhdWx0fGRlZmF1bHR8bHVjaWRl`
 
-This project's interface is built on the logic2b ui design system
+This project's interface is built on the Logic2B UI design system
 (https://ui.logic2b.com): a shadcn-compatible component registry restyled entirely
 through CSS tokens. Follow these rules for any work that touches the UI.
 

@@ -46,7 +46,7 @@ const program = new Command()
 
 program
   .name("logic2b")
-  .description("Add logic2b ui components to your project.")
+  .description("Add Logic2B UI components to your project.")
   .version(PACKAGE_VERSION)
 
 program.command("compose")

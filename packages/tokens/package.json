@@ -2,7 +2,7 @@
   "name": "@logic2b/tokens",
   "version": "0.1.0",
   "private": true,
-  "description": "Single source of truth for the logic2b ui theme data: base scales, accents, chart ramps, radii, fonts, the preset codec and the CSS emitters.",
+  "description": "Single source of truth for the Logic2B UI theme data: base scales, accents, chart ramps, radii, fonts, the preset codec and the CSS emitters.",
   "license": "MIT",
   "type": "module",
   "exports": {

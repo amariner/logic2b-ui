@@ -1,6 +1,6 @@
 {
   "name": "logic2b-ui",
-  "displayName": "logic2b ui",
+  "displayName": "Logic2B UI",
   "description": "Browse the logic2b registry, install source components and apply design presets from VS Code.",
   "version": "0.1.0",
   "publisher": "logic2b-preview",

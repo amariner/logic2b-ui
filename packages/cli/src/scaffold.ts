@@ -177,7 +177,7 @@ export function projectFiles(
       path: "README.md",
       content:
         `# ${plan.projectName}\n\n` +
-        "A logic2b ui workspace. The generated application lives in `apps/web`.\n",
+        "A Logic2B UI workspace. The generated application lives in `apps/web`.\n",
     },
   ]
   return [

@@ -88,7 +88,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "list_components",
     description:
-      "List the items available in the logic2b ui registry (components, blocks, charts and the theme). Optionally filter by kind or category. Returns each item's name, kind, title and description.",
+      "List the items available in the Logic2B UI registry (components, blocks, charts and the theme). Optionally filter by kind or category. Returns each item's name, kind, title and description.",
     inputSchema: {
       type: "object",
       properties: {
@@ -110,7 +110,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "search_components",
     description:
-      "Search the logic2b ui registry by keyword. Ranks by name/title/description match and returns the best-matching items. Use this to find a component, block or chart to install.",
+      "Search the Logic2B UI registry by keyword. Ranks by name/title/description match and returns the best-matching items. Use this to find a component, block or chart to install.",
     inputSchema: {
       type: "object",
       properties: {

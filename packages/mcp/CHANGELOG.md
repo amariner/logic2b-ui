@@ -4,6 +4,9 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+- Use the Logic2B UI product name in the server instructions, tool descriptions and generated
+  project files, managed agent rules and design notes.
+
 - Bound static-review analysis work and depth while retaining its version-1
   request/result contract. Treat unresolved refs, styles and JSX attribute values
   conservatively; add independent browser-name and actual transport regressions.

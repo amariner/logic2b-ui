@@ -160,7 +160,7 @@ export interface InitPromptOptions {
 }
 
 /**
- * Prompt for the /create studio: set up logic2b ui with this exact theme,
+ * Prompt for the /create studio: set up Logic2B UI with this exact theme,
  * in a fresh app or an existing one.
  */
 export function buildInitPrompt({
@@ -186,19 +186,19 @@ export function buildInitPrompt({
    ${scaffold}
    \`\`\`
 
-2. Inside the project, initialize logic2b ui with my theme preset:
+2. Inside the project, initialize Logic2B UI with my theme preset:
 
    \`\`\`bash
    npx ${CLI_PACKAGE_SELECTOR} init --preset ${presetId}
    \`\`\``
 
-  const existingProjectSteps = `1. In the project root, initialize logic2b ui with my theme preset:
+  const existingProjectSteps = `1. In the project root, initialize Logic2B UI with my theme preset:
 
    \`\`\`bash
    npx ${CLI_PACKAGE_SELECTOR} init --preset ${presetId}
    \`\`\``
 
-  return `Set up the logic2b ui design system (${SITE}) in ${
+  return `Set up the Logic2B UI design system (${SITE}) in ${
     mode === "new" ? "a new project" : "this project"
   } with my exact theme. Follow every step and verify at the end.
 
@@ -260,7 +260,7 @@ export function buildTypesetPrompt(cfg: ThemeConfig, presetId: string): string {
    @import "./typeset.css";
    \`\`\``
 
-  return `Apply this exact type scale (logic2b ui /typeset, ${SITE}) to my project. Follow every step and verify at the end.
+  return `Apply this exact type scale (Logic2B UI /typeset, ${SITE}) to my project. Follow every step and verify at the end.
 
 ## Steps
 
@@ -296,11 +296,11 @@ export function buildAddPrompt(name: string, stack: Stack = "auto"): string {
   const notes = stackNotes(stack)
   const behavior = (registryIndex as { name: string; behavior?: RegistryBehavior }[]).find(item => item.name === name)?.behavior
   const duties = behavior ? `\n\n## Behavior contract\n\n${behavior.consumer.map(note => `- ${note}`).join("\n")}\nInspect behavior.states and behavior.content in the exact installed registry payload. Exercise loading, empty/no-results, error/retry, validation, submitting, permission and unsaved-change cases that apply.` : ""
-  return `Add the "${name}" item from the logic2b ui registry (${SITE}) to this project. Follow every step and verify at the end.${duties}
+  return `Add the "${name}" item from the Logic2B UI registry (${SITE}) to this project. Follow every step and verify at the end.${duties}
 
 ## Steps
 
-1. If the project has no \`components.json\` yet, set up logic2b ui first:
+1. If the project has no \`components.json\` yet, set up Logic2B UI first:
 
    \`\`\`bash
    npx ${CLI_PACKAGE_SELECTOR} init

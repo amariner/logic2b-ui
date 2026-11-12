@@ -94,7 +94,7 @@ export const PLAYGROUND_RECIPES = {
         exportName: "AccordionItem",
         props: { value: "item-1" },
         children: [
-          { exportName: "AccordionTrigger", children: "What is logic2b ui?" },
+          { exportName: "AccordionTrigger", children: "What is Logic2B UI?" },
           { exportName: "AccordionContent", children: "A registry built for people and coding agents." },
         ],
       },
@@ -1107,7 +1107,7 @@ export const PLAYGROUND_RECIPES = {
         exportName: "DialogContent",
         children: [
           { exportName: "DialogHeader", children: [{ exportName: "DialogTitle", children: "Edit project" }, { exportName: "DialogDescription", children: "Update the project details, then save your changes." }] },
-          { element: "label", props: { className: "grid gap-2 text-sm" }, children: [{ element: "span", children: "Project name" }, { element: "input", props: { type: "text", defaultValue: "logic2b ui", className: "h-9 rounded-md border px-3" } }] },
+          { element: "label", props: { className: "grid gap-2 text-sm" }, children: [{ element: "span", children: "Project name" }, { element: "input", props: { type: "text", defaultValue: "Logic2B UI", className: "h-9 rounded-md border px-3" } }] },
           { exportName: "DialogFooter", children: [{ exportName: "DialogClose", props: { className: "rounded-md border px-4 py-2 text-sm font-medium" }, children: "Save changes" }] },
         ],
       },
@@ -1449,7 +1449,7 @@ export const PLAYGROUND_RECIPES = {
         children: [
           { exportName: "SidebarHeader", children: [{ exportName: "SidebarInput", props: { placeholder: "Search…", "aria-label": "Search navigation" } }] },
           { exportName: "SidebarContent", children: [{ exportName: "SidebarGroup", children: [{ exportName: "SidebarGroupLabel", children: "Platform" }, { exportName: "SidebarGroupContent", children: [{ exportName: "SidebarMenu", children: [{ exportName: "SidebarMenuItem", children: [{ exportName: "SidebarMenuButton", props: { type: "button", isActive: true }, children: "Registry" }] }, { exportName: "SidebarMenuItem", children: [{ exportName: "SidebarMenuButton", props: { type: "button" }, children: "Design tokens" }] }, { exportName: "SidebarMenuItem", children: [{ exportName: "SidebarMenuButton", props: { type: "button" }, children: "Benchmarks" }] }] }] }] }] },
-          { exportName: "SidebarFooter", children: "logic2b ui" },
+          { exportName: "SidebarFooter", children: "Logic2B UI" },
         ],
       },
       { exportName: "SidebarInset", props: { className: "min-h-72 p-6" }, children: [{ exportName: "SidebarTrigger" }, { element: "p", props: { className: "mt-6 text-sm text-muted-foreground" }, children: "Project workspace" }] },

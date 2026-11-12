@@ -1,9 +1,23 @@
 # Logic2B UI — Interfaces agents can build, verify and maintain
 
-Updated: 18 September 2026. This is the canonical product direction and delivery
+Updated: 12 November 2026. This is the canonical product direction and delivery
 order. [EXECUTION.md](./docs/EXECUTION.md) is the actionable queue;
 [implementation guides](./docs/guides/README.md) define individual contracts.
 The previous roadmap is preserved in [docs/roadmap-history.md](./docs/roadmap-history.md).
+
+## Current priorities (November 2026)
+
+The code is ahead of what users can install and ahead of the evidence that it
+helps. Close those two gaps before widening scope.
+
+| Phase | Goal | Tasks |
+| --- | --- | --- |
+| 0 — Ship what exists | npm, remote MCP, site and docs describe the same candidate | REL-03 publish paired `1.0.0-rc.3` to `next`; REL-04 decide the stale `latest` tags; BRAND-01 Logic2B identity across site, CLI, MCP and VS Code (done) |
+| 1 — Real evidence | Know whether the workflow helps real projects | PILOT-01 dogfood on two Logic products (Astro + React); EVAL-01 real comparative measurements; CTX-01 measure the 22-tool catalog cost and offer a compact profile if needed |
+| 2 — What SaaS teams need | Generic list/edit screens and schema-driven forms/tables | M3-01 complete composition beyond customers; M3-03 JSON Schema forms and explicit-column tables |
+| 3 — Only if Phase 1 supports it | Proposal previews and agent-run UI | M3-02, M3-04, M4-01, PREF-01, EVAL-02 |
+
+Not now: more catalog items, more MCP tools or framework ports.
 
 ## Product promise
 

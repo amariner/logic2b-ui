@@ -1,7 +1,7 @@
 {
   "name": "logic2b",
   "version": "1.0.0-rc.3",
-  "description": "CLI for logic2b ui \u2014 add copy-paste components to your project.",
+  "description": "CLI for Logic2B UI \u2014 add copy-paste components to your project.",
   "type": "module",
   "bin": {
     "logic2b": "dist/index.js"

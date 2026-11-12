@@ -204,7 +204,7 @@ describe("CLI project scaffolding", () => {
     assert.equal(result.packageManager, "pnpm")
     assert.ok(existsSync(join(target, "src/pages/index.astro")))
     assert.ok(existsSync(join(target, "components.json")))
-    assert.match(await readFile(join(target, "README.md"), "utf8"), /logic2b ui/)
+    assert.match(await readFile(join(target, "README.md"), "utf8"), /Logic2B UI/)
   })
 
   test("seeds update snapshots so a generated project can take registry changes", async () => {

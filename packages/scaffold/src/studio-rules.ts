@@ -45,9 +45,9 @@ export function buildAgentsMd(cfg: ThemeConfig, items: readonly IndexEntry[]): s
   const iconPackage = ICON_LIBRARIES[cfg.iconLibrary]?.package ?? ICON_LIBRARIES.lucide.package
 
   return `# AGENTS.md — UI house rules
-> generated with logic2b ui · preset \`${preset}\`
+> generated with Logic2B UI · preset \`${preset}\`
 
-This project's interface is built on the logic2b ui design system
+This project's interface is built on the Logic2B UI design system
 (${SITE}): a shadcn-compatible component registry restyled entirely
 through CSS tokens. Follow these rules for any work that touches the UI.
 

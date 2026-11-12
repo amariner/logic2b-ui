@@ -4,7 +4,7 @@ export default function SeparatorDemo() {
   return (
     <div>
       <div className="space-y-1">
-        <h4 className="text-sm font-medium leading-none">logic2b ui</h4>
+        <h4 className="text-sm font-medium leading-none">Logic2B UI</h4>
         <p className="text-sm text-muted-foreground">
           Copy-paste components, AI-assisted.
         </p>

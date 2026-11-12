@@ -1,15 +1,19 @@
 # Agent execution queue
 
-Canonical direction: [ROADMAP](../ROADMAP.md). Updated 4 October 2026.
+Canonical direction: [ROADMAP](../ROADMAP.md). Updated 12 November 2026.
 The Owner column identifies who is driving active work. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
+| BRAND-01 | Logic2B corporate identity: site lockup, favicon, Inter Tight, social cards, product name in CLI/MCP/VS Code | — | done | maintainer |
+| REL-04 | Decide the stale npm `latest` tags (`logic2b@0.4.0`, `@logic2b/mcp@0.2.0`): deprecate with a pointer to `@next` or keep until `1.0.0` | REL-03 | ready | — |
+| PILOT-01 | Dogfood the agent workflow on two Logic products (Astro + React): one list/edit screen each, record corrections, context cost and failures | REL-03 | ready | — |
+| CTX-01 | Measure tool-catalog bytes and per-task tool calls; if costly, add a compact default tool profile with advanced tools on demand | EVAL-01 | ready | — |
 | DEPLOY-02 | Reconcile local static-review work with current production; merge, push and deploy (user authorized) | M1-04; DEPLOY-01 | done | maintainer |
 | DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | done | maintainer |
-| REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | maintainer |
+| REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized; blocked on npm authentication on the release machine) | SYNC-01 | blocked | maintainer |
 | SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | maintainer |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | maintainer |
 | M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | maintainer |

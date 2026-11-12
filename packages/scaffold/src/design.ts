@@ -23,7 +23,7 @@ export function buildDesignMd(cfg: ThemeConfig): string {
     ACCENTS[cfg.theme]?.label ??
     (custom ? `Custom (hue ${custom.hue}, chroma ${custom.chroma})` : cfg.theme)
   return `# Design Tokens — Style Reference
-> generated with logic2b ui · preset \`${preset}\`
+> generated with Logic2B UI · preset \`${preset}\`
 
 **Theme:** light + dark (toggled with the \`dark\` class on \`<html>\`)
 **Base:** ${baseLabel} · **Accent:** ${accentLabel} · **Radius:** ${radius}

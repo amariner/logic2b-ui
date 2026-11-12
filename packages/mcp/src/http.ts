@@ -22,7 +22,7 @@ export const SUPPORTED_PROTOCOL_VERSIONS = [
 export const LATEST_PROTOCOL_VERSION = SUPPORTED_PROTOCOL_VERSIONS[0]
 
 export const SERVER_INSTRUCTIONS =
-  "Registry tools for logic2b ui (https://ui.logic2b.com): list, search and " +
+  "Registry tools for Logic2B UI (https://ui.logic2b.com): list, search and " +
   "read installable components, blocks, charts and the theme — and install " +
   "them without a shell. `install_plan` returns the exact files to write " +
   "(registry dependencies resolved) plus the npm deps to add; " +
