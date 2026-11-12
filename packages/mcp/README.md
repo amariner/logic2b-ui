@@ -1,7 +1,7 @@
 # @logic2b/mcp
 
 An [MCP](https://modelcontextprotocol.io) server that exposes the
-[logic2b ui](https://ui.logic2b.com) registry to coding agents. Point your
+[Logic2B UI](https://ui.logic2b.com) registry to coding agents. Point your
 agent at it to discover components, read source and request install, scaffold
 and theme plans. The host needs file-writing tools to apply those plans and a
 runtime to install dependencies, build and verify the resulting application.

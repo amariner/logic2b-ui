@@ -1,4 +1,4 @@
-# logic2b ui for VS Code
+# Logic2B UI for VS Code
 
 Browse the logic2b registry, install source components you own, and apply a
 theme preset without leaving VS Code.

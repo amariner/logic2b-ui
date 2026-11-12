@@ -1,6 +1,6 @@
 # logic2b
 
-The command-line tool for [logic2b ui](https://ui.logic2b.com) — add beautifully
+The command-line tool for [Logic2B UI](https://ui.logic2b.com) — add beautifully
 designed, copy-paste components to your project. You own the code.
 
 ## Usage

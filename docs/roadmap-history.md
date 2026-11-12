@@ -1,7 +1,7 @@
-# logic2b ui — Roadmap archive (through 1 September 2026)
+# Logic2B UI — Roadmap archive (through 1 September 2026)
 
 Historical record, not the execution queue. The current direction, priorities
-and release criteria live in [ROADMAP.md](./ROADMAP.md). Completed claims below
+and release criteria live in [ROADMAP.md](../ROADMAP.md). Completed claims below
 describe their original scope and date; they are not a current certification.
 
 The goal: the best place to start an interface in 2026 — not "another shadcn",
@@ -22,7 +22,7 @@ agent is the builder, but a person is the user.** Speed is solved; the next
 gap is whether what agents build is good for the human on the other side —
 right screens, real states, honest copy, respected preferences, and a look
 before anything lands. That is the **user lane** below; each item has an
-implementation guide under [`docs/guides`](./docs/guides/README.md).
+implementation guide under [`docs/guides`](./guides/README.md).
 
 Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
@@ -79,7 +79,7 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
   `/create` preset is applied before the files leave the tool. CI materializes,
   installs and production-builds all three stacks from the real registry.
 - ✅ **`AGENTS.md` generator** next to `DESIGN.md` in the studio's Get Code —
-  house rules for agents working in a repo that consumes logic2b ui: the full
+  house rules for agents working in a repo that consumes Logic2B UI: the full
   primitive/block/chart inventory, the token rules, what not to hand-roll, and
   the no-shell install paths. The design system as executable context.
 - ✅ **MCP baseline parity** — `get_demo` serves the docs' usage examples as
@@ -166,7 +166,7 @@ Legend: ✅ shipped · 🔜 next up · 💡 later / exploring
 
 ## Now (🔜) — Sep–Oct: the user lane, in priority order
 
-Everything an agent needs to *build* with logic2b ui exists — and the real
+Everything an agent needs to *build* with Logic2B UI exists — and the real
 agent benchmark shows top models scoring 98% on install, compose and
 scaffold. This lane is about what the **person using the result** gets. Nine
 initiatives, four levers; the guides are the executable spec, this list is
@@ -181,7 +181,7 @@ the order.
    viewports it was designed for. Docs get a States tab, MCP returns it,
    `Copy Prompt` and `AGENTS.md` carry the consumer duties, and the registry
    test fails without it — the accessibility contract, applied to behavior.
-   → [guide 02](./docs/guides/02-ui-states-and-content-contract.md) · v1.0
+   → [guide 02](./guides/02-ui-states-and-content-contract.md) · v1.0
 2. 🔜 **`review_ui` — design review as a tool** — a static, non-executing
    rule engine over TSX (`packages/review`) surfaced as an MCP tool and
    `logic2b review`: hand-rolled primitives, hardcoded colors, dialogs
@@ -189,7 +189,7 @@ the order.
    without empty states, motion without reduced-motion, wrong icon package,
    sub-24 px targets. Stable rule ids, a docs page per rule, and the agent
    benchmark scores with the same ids so the tool and the leaderboard agree.
-   → [guide 03](./docs/guides/03-review-ui.md) · v1.0
+   → [guide 03](./guides/03-review-ui.md) · v1.0
 
 **Keep the human in the loop** — see it before it lands:
 
@@ -198,14 +198,14 @@ the order.
    light/dark, per viewport, with section swap and the theme rail. No server
    state: the URL is the proposal. `scaffold_plan`, `install_plan` and the CLI
    return the link; Approve hands back the id and the exact command / MCP
-   call / prompt that reproduces it. → [guide 04](./docs/guides/04-proposal-links.md) · v1.0
+   call / prompt that reproduces it. → [guide 04](./guides/04-proposal-links.md) · v1.0
 4. 🔜 **Agent rules distribution** — `AGENTS.md` + `DESIGN.md` written by
    `init` and every scaffold, refreshed between markers by `add`/`update`,
    returned by an `agent_rules` MCP tool, emitted as Cursor rules / Copilot
    instructions / `CLAUDE.md` import, exposed by the VS Code extension, and
    shipped as a Claude Code skill in the MCP tarball. The managed block is
    budgeted at 6 KB because context costs the user too.
-   → [guide 07](./docs/guides/07-agent-rules-distribution.md) · v1.0
+   → [guide 07](./guides/07-agent-rules-distribution.md) · v1.0
 
 **Understand intent** — the right screens for the brief:
 
@@ -214,12 +214,12 @@ the order.
    gaps and a confidence level, deterministic so it is testable and
    benchmarkable; `logic2b compose "<brief>"` and a Compose tab in the studio
    share the core. No model runs in the tool — grounding and completeness do.
-   → [guide 01](./docs/guides/01-compose-plan.md) · v1.1
+   → [guide 01](./guides/01-compose-plan.md) · v1.1
 6. 🔜 **`form_plan` and `table_plan`** — JSON Schema / zod → a `Form`/`Field`
    composition with labels, linked errors, `autoComplete` and wizard steps;
    a data sample → a `data-table` with inferred column kinds, toolbar,
    empty/loading/error states and a mobile strategy. Verified by `review_ui`
-   as a test. → [guide 06](./docs/guides/06-form-and-table-plan.md) · v1.1
+   as a test. → [guide 06](./guides/06-form-and-table-plan.md) · v1.1
 
 **Guarantee quality, continued** — the surfaces people increasingly use:
 
@@ -229,13 +229,13 @@ the order.
    in-app assistant panel, inline AI edits with a diff, and an agent-run
    timeline with approvals; a patterns guide on streaming, consent, cost and
    live-region accessibility. Deterministic demos, no keys, tokens only.
-   → [guide 05](./docs/guides/05-ai-product-kit.md) · v1.1
+   → [guide 05](./guides/05-ai-product-kit.md) · v1.1
 8. 🔜 **User preferences** — `density` and `contrast` as preset axes (12 → 14
    fields, old ids keep decoding), a `use-preferences` hook and
    `preferences-menu` honoring `prefers-reduced-motion` / `prefers-contrast`
    with runtime overrides for motion and text size, a Preferences section in
    `settings-01`, studio controls, and the contrast audit run on the
-   high-contrast ladder. → [guide 08](./docs/guides/08-user-preferences.md) · v1.1
+   high-contrast ladder. → [guide 08](./guides/08-user-preferences.md) · v1.1
 
 **Learn from outcomes** — close the loop:
 
@@ -244,7 +244,7 @@ the order.
    confidence — never briefs, paths, contents or preset ids) to an aggregate
    endpoint, published daily as `/r/insights.json` with re-identification
    thresholds, feeding the roadmap, prompts and benchmark weights.
-   → [guide 09](./docs/guides/09-outcome-feedback-loop.md) · v1.2
+   → [guide 09](./guides/09-outcome-feedback-loop.md) · v1.2
 
 ## Done — Jul–Aug polish and the September trust pass
 
@@ -255,7 +255,7 @@ here as the record of what "release candidate" means:
 ### 1. Scope cleanup — the registry ships UI, not services
 
 - ✅ **Retired `packages/reservations`** (the booking/payments Worker + D1
-  backend). logic2b ui is a **visual** system — blocks are pure UI with static
+  backend). Logic2B UI is a **visual** system — blocks are pure UI with static
   sample data, and backends are the consumer's job. The admin blocks (orders,
   reservations, customers, analytics) stay: they render from static sample
   data and don't import the backend. The package's schema and REST API contract
@@ -528,7 +528,7 @@ long-term bets keep widening the gap between "an agent can read our docs" and
   parity, and MCP `export_tokens` resolves any preset id into the same
   platform-neutral contracts.
 - 💡 **Agent telemetry (opt-in)** — promoted to the user lane as the outcome
-  feedback loop, see [guide 09](./docs/guides/09-outcome-feedback-loop.md).
+  feedback loop, see [guide 09](./guides/09-outcome-feedback-loop.md).
 
 ## Beyond the browser (💡 exploring)
 
@@ -573,7 +573,7 @@ that green light. Working backwards:
    leaderboard with immutable evidence and nine observed builds ✅.
 4. **Sep–Oct** — the user lane's v1.0 items: states & content contract,
    `review_ui`, proposal links and agent rules distribution
-   ([guides 02, 03, 04, 07](./docs/guides/README.md)). These are the four
+   ([guides 02, 03, 04, 07](./guides/README.md)). These are the four
    that change what a person gets from an agent-built interface, and they
    are cheap relative to what is already built; the rest of the lane
    (`compose_plan`, planners, AI kit, preferences) ships in v1.1. Also in

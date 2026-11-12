@@ -18,16 +18,11 @@ playwright-report/
 playwright/.cache/
 .lighthouseci/
 
-# Internal planning docs & editor tooling (never publish)
-# ROADMAP.md is public now and lives at the repo root.
-CLAUDE.md
-GUIA-MAESTRA.md
-ESTADO.md
-DECISIONES.md
+# Local editor and assistant settings
+.vscode/
+.idea/
 .claude/
-PROMPT-SESION.md
-VISION.md
-BRIEFING-MOVIL.md
+CLAUDE.md
 
 # Generated package copy; source lives in /skills.
 /packages/mcp/skills/

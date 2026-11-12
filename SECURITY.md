@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-logic2b ui is in public beta. Security fixes land on `main` and ship through the
+Logic2B UI is in public beta. Security fixes land on `main` and ship through the
 `next` npm channel for `logic2b` (CLI) and `@logic2b/mcp`; the public registry
 at `https://ui.logic2b.com` is rebuilt from `main`. Older release candidates
 are not patched separately: upgrade to the current `next` version.

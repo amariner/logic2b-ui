@@ -1,7 +1,7 @@
 # logic2b agent benchmark
 
 A reproducible benchmark for the question that matters to this registry: can a
-coding agent install, theme and compose logic2b ui correctly, or does it fall
+coding agent install, theme and compose Logic2B UI correctly, or does it fall
 back to hand-written lookalikes?
 
 The v1 protocol has three tasks worth 100 points each:

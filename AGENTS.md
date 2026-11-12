@@ -1,10 +1,10 @@
-# Working on logic2b ui
+# Working on Logic2B UI
 
 ## Read first
 
 Read `ROADMAP.md`, `docs/EXECUTION.md` and the selected task's implementation
 guide before making changes. Those files describe the current direction;
-`ROADMAP-HISTORY.md` is historical. If an old guide conflicts with the roadmap
+`docs/roadmap-history.md` is historical. If an old guide conflicts with the roadmap
 or a dated decision in the queue, follow the current decision and update the
 guide in the same change. User instructions remain authoritative.
 
@@ -20,7 +20,7 @@ for completing states, interactions, accessibility and maintenance workflows.
 1. Choose the earliest `ready` task whose dependencies are complete. Record
    its owner and `in-progress` status in `docs/EXECUTION.md` before editing.
 2. Inspect git status and preserve unrelated user/agent changes. Use a
-   `codex/` branch for a scoped delivery. Coordinate shared-file ownership
+   short-lived feature branch (`feat/…`, `fix/…`) for a scoped delivery. Coordinate shared-file ownership
    when other agents are actually working; this file does not require spawning.
 3. Implement a narrow vertical slice: contract, shared core, integration,
    user-facing instructions and meaningful verification. Keep proposed APIs

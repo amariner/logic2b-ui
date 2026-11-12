@@ -1,31 +1,31 @@
 # Agent execution queue
 
 Canonical direction: [ROADMAP](../ROADMAP.md). Updated 4 October 2026.
-Owners below identify active work, not permanent maintainers. `ready` means
+The Owner column identifies who is driving active work. `ready` means
 the scope is specified; only start after the Dependencies column is satisfied.
 `planned` is a milestone, not a shipped API. Completed evidence is recorded below.
 
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
-| DEPLOY-02 | Reconcile local static-review work with current production; merge, push and deploy (user authorized) | M1-04; DEPLOY-01 | done | Codex (review integration) |
-| DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | done | Codex (deployment recovery) |
-| REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | Codex |
-| SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | Codex |
-| DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | current agent |
-| M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | current agent |
-| M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | done | Codex (M0-01) |
-| M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-03) |
-| M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | Claude (M0-04) |
-| M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | Claude (M0-05) |
-| EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/reporting landed; real measurements pending) | Codex (EVAL-01) |
-| M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | Codex (M1-01) |
-| M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | Codex (M1-02) |
-| M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | Codex (M1-03) |
-| M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | done | Codex (M1-04) |
-| M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | done | Codex (M2-01) |
-| M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | done | Codex (M2-02) |
-| M2-03 | Customer journey create/change/update acceptance fixture — [15](guides/15-customer-journey-acceptance.md) | M2-01, M2-02 | done | Codex (M2-03) |
-| M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | in-progress | Codex (customer project source slice) |
+| DEPLOY-02 | Reconcile local static-review work with current production; merge, push and deploy (user authorized) | M1-04; DEPLOY-01 | done | maintainer |
+| DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | done | maintainer |
+| REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | in-progress | maintainer |
+| SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | maintainer |
+| DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | maintainer |
+| M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | maintainer |
+| M0-01 | Honest beta onboarding and advertised package selectors — [00](guides/00-public-beta.md) | DIR-01 | done | maintainer |
+| M0-03 | Immutable default registry resolution — [13](guides/13-mcp-contracts.md) | M0-02 | done | maintainer |
+| M0-04 | MCP input/resource limits and negative protocol corpus — [13](guides/13-mcp-contracts.md) | M0-02 | done | maintainer |
+| M0-05 | Public landing/demo and contributor/release health — [00](guides/00-public-beta.md) | M0-01 | in-progress (code/docs landed; video + pilot pending) | maintainer |
+| EVAL-01 | Comparative protocol and baseline measurements — [14](guides/14-outcome-evaluation.md) | DIR-01 | in-progress (protocol/reporting landed; real measurements pending) | maintainer |
+| M1-01 | State/content/action contract; customer list + edit form first — [02](guides/02-ui-states-and-content-contract.md) | M0-03 | done | maintainer |
+| M1-02 | Project context contract and local collector — [10](guides/10-project-context.md) | M0-04 | done | maintainer |
+| M1-03 | Agent rules delivered with installs — [07](guides/07-agent-rules-distribution.md) | M0-01 | done | maintainer |
+| M1-04 | Evidence-based static review; high-confidence rules first — [03](guides/03-review-ui.md) | M1-02; M1-01 for states | done | maintainer |
+| M2-01 | Incremental change plan and preconditioned apply — [11](guides/11-incremental-change-plan.md) | M1-02 | done | maintainer |
+| M2-02 | Consumer runtime verification — [12](guides/12-consumer-verification.md) | M1-01, M1-04 | done | maintainer |
+| M2-03 | Customer journey create/change/update acceptance fixture — [15](guides/15-customer-journey-acceptance.md) | M2-01, M2-02 | done | maintainer |
+| M3-01 | Structured composition core — [01](guides/01-compose-plan.md) | M1-01, M1-02 | in-progress | maintainer |
 | M3-02 | Versioned proposal preview/install equivalence — [04](guides/04-proposal-links.md) | M3-01 | ready | — |
 | M3-03 | JSON Schema forms and explicit-column tables — [06](guides/06-form-and-table-plan.md) | M1-04, M3-01 | ready | — |
 | M3-04 | One MCP Apps proposal pilot, web fallback — [04](guides/04-proposal-links.md) | M3-02, M0-02 | ready | — |
@@ -129,7 +129,7 @@ inferred from the new output schemas. The M0 milestone is not complete.
 
 ### 5 September 2026 — M0-01
 
-Completed beta onboarding on `codex/m0-01-beta-onboarding`. The landing MCP
+Completed beta onboarding. The landing MCP
 announcement now opens human setup documentation. A shared private
 `@logic2b/scaffold/package-selectors` export owns `logic2b@next` and
 `@logic2b/mcp@next`; current site commands, prompts, Markdown widgets, MCP
@@ -191,7 +191,7 @@ limits and M0-05 public landing/contributor work remain open; M0 is not complete
 
 ### 6 September 2026 — M0-03
 
-Delivered on `codex/m0-03-immutable-default` (stacked on the M0-01 branch).
+Delivered.
 An omitted MCP `version` now resolves the shared `REGISTRY_DEFAULT_CHANNEL`
 (`next`, exported by `@logic2b/scaffold/package-selectors` next to the npm
 selectors and independent from them). `createRegistryClient` always resolves
@@ -246,7 +246,7 @@ M0 is not complete.
 
 ### 6 September 2026 — M0-04
 
-Delivered on `codex/m0-04-mcp-limits`. Documented limits live in
+Delivered. Documented limits live in
 `packages/mcp/src/limits.ts` and are mirrored in every tool input schema
 (`maxLength`, `maxItems`, `uniqueItems`, `minimum`/`maximum`,
 `maxProperties`): 2 MiB streamed request bodies, 8 messages per batch, 32
@@ -296,7 +296,7 @@ lands.
 
 ### 6 September 2026 — M0-05 (partial)
 
-Delivered on `codex/m0-05-public-beta`. The landing now states "Your design
+Delivered. The landing now states "Your design
 system, ready for agents." with two primary paths (use with an agent →
 `/docs/llms#mcp-server`, browse components → `/blocks`), a beta line built
 from the shared package selectors and `REGISTRY_VERSION`, three executable
@@ -419,7 +419,7 @@ English/Spanish availability notes with the observed registry state.
 
 ### 9 September 2026 — EVAL-01 (protocol/reporting slice)
 
-Implemented on `codex/eval-01-protocol-v2`. Added a separate versioned outcome
+Implemented. Added a separate versioned outcome
 protocol with three resource conditions and five customer/maintenance tasks.
 `pnpm --dir benchmarks/agents outcomes schedule <seed>` produces a reproducible
 randomized 75-attempt pilot schedule. `outcomes report <attempts.json>
@@ -463,7 +463,7 @@ remain independently pending.
 ### 9 September 2026 — M1-01
 
 Delivered the first customer list/edit vertical slice on
-`codex/m1-01-customer-states`. `admin-customers-01` now consumes real supplied
+`m1-01-customer-states`. `admin-customers-01` now consumes real supplied
 rows, computes truthful counts, filters locally and exposes create/edit/retry
 callbacks. It defaults to empty data; missing callbacks disable their actions.
 Static examples and simulated persistence live in the website demo. The new
@@ -537,7 +537,7 @@ and M0-05 video/external pilots remain independently pending.
 
 ### 9 September 2026 — M1-02
 
-Delivered on `codex/m1-02-project-context`. Shared `ProjectSnapshotV1`,
+Delivered. Shared `ProjectSnapshotV1`,
 `ProjectContextV1`, strict snapshot validation, JSON schemas and pure detection
 live in `@logic2b/scaffold/project-context` and `project-context-schema`.
 `logic2b inspect --json` collects bounded local configuration and hashes;
@@ -620,7 +620,7 @@ and M2-01 incremental plans are now unblocked by the shared project context.
 
 ### 9 September 2026 — M1-03
 
-Delivered on `codex/m1-03-agent-rules` (commit subject: `feat: distribute managed agent rules across installs and plans`).
+Delivered (commit subject: `feat: distribute managed agent rules across installs and plans`).
 The shared `@logic2b/scaffold/rules` core now owns compact agent instructions,
 all four editor formats, managed merges and DESIGN.md. The studio keeps
 byte-identical legacy AGENTS.md/DESIGN.md exports through thin adapters.
@@ -686,7 +686,7 @@ overall development goal remains active.
 
 ### 18 September 2026 — M1-04
 
-Delivered on `codex/m1-04-static-review` (commit subject: `feat(review): add evidence-based static UI review`).
+Delivered (commit subject: `feat(review): add evidence-based static UI review`).
 Completed the existing uncommitted shared-engine/CLI work, then integrated and
 verified MCP, documentation, agent instructions and benchmark reporting.
 
@@ -791,7 +791,7 @@ are now unblocked too. The user's overall development goal remains active.
 
 ### 18 September 2026 — M2-01
 
-Delivered on `codex/m2-01-incremental-changes`, based on M1-04 commit
+Delivered, based on M1-04 commit
 `862e072`. The shared scaffold core assembles explicit host-authored candidate
 files into `ChangePlanV1`: canonical SHA-256 id, exact registry evidence,
 selected app root, create/update operations with before/after hashes, derived
@@ -901,7 +901,7 @@ journey acceptance fixture. The overall development goal remains active.
 
 ### 18 September 2026 — M2-02
 
-Implemented consumer runtime verification on `codex/m2-02-consumer-verification`.
+Implemented consumer runtime verification on `m2-02-consumer-verification`.
 The bounded, versioned suite/report/summary contract lives in the shared
 scaffold package. CLI `verify` runs declarative semantic-selector checks against
 an explicitly started loopback application; MCP `verify_report` validates and
@@ -1006,7 +1006,7 @@ The M2 milestone remains open.
 ### 18 September 2026 — M2-03
 
 Completed the generated consumer's customization/change/update lifecycle on
-`codex/m2-03-customer-update-acceptance`. Guide 15 and the fixture README document
+`m2-03-customer-update-acceptance`. Guide 15 and the fixture README document
 explicit prepare, install, build, change, update and check phases; CI retains
 all three browser reports and the synthetic maintenance evidence. No additional
 public CLI command, MCP tool or dependency was introduced.
@@ -1136,7 +1136,7 @@ checks pass; a new Linux CI run remains necessary to confirm the new references.
 ### 30 September 2026 — M3-01 customer composition slice
 
 Delivered the first structured composition slice on
-`codex/m3-01-structured-composition`. **M3-01 remains in progress**; this is a
+`m3-01-structured-composition`. **M3-01 remains in progress**; this is a
 complete bounded customer core/CLI/MCP slice, not the full composition initiative.
 Guide 16 documents the actual version-1 request/plan, English/Spanish usage,
 covered/partial/gap meaning and the remaining work.
@@ -1172,7 +1172,7 @@ Checks and outcomes (Node 24.19.0, pnpm 11.19.0):
   response parity. New tool coverage is also part of the full catalog fixtures.
 - CLI type checks passed; `NODE_PATH= pnpm test` includes all 139 CLI tests,
   actual composition commands, valid/gap/invalid exits, bounded UTF-8 JSON and
-  no project writes. Initial testing exposed ambient `/opt/codex/.../playwright`
+  no project writes. Initial testing exposed an ambient global `playwright`
   loading via this host's `NODE_PATH`, then a second workspace Playwright load.
   The unchanged verification test passes with that ambient module search path
   cleared; browser product code was not changed to conceal it.
@@ -1208,7 +1208,7 @@ dependent M3-02 proposal previews; do not infer that broader composition shipped
 ### 30 September 2026 — M3-01 grounded customer project source
 
 Continued the slice from `838b206` on
-`codex/m3-01-structured-composition`. **M3-01 remains in progress**. The shared
+`m3-01-structured-composition`. **M3-01 remains in progress**. The shared
 core now exports complete customer demo projects through CLI and both MCP
 transports. The additive request accepts `output: "project"` and a canonical
 theme `preset`; default metadata output remains read-only. Optional `project`
@@ -1298,7 +1298,7 @@ dependency installer stalled on the runner's Azure Ubuntu HTTP mirror from
 tests, packaged consumers, nine generated app builds and budgets had passed;
 browser installation and every browser gate remained unverified.
 
-The scoped `codex/production-deployment-recovery` change uses the canonical
+The scoped `production-deployment-recovery` change uses the canonical
 Ubuntu HTTPS archive only for that exact mirror URI, preserves other hosts and
 paths, and bounds APT HTTP/HTTPS timeouts to 30 seconds with two retries.
 Dependency and matching Chromium installations now have separate ten/five-minute
@@ -1387,7 +1387,7 @@ customer composition. The local `57ef51b` branch had diverged before those
 deliveries. Replacing production with that tree would remove three MCP tools
 and break the deployed version-1 review request/result contract.
 
-The integration branch `codex/integrate-static-review-production` reconciles
+The integration branch `integrate-static-review-production` reconciles
 both histories using current production as the base. It preserves all 22 tools,
 `change_plan`, `verify_report`, customer composition, registry rc.18, consumer
 customization protections, current CI recovery and reviewed Linux baselines.

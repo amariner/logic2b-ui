@@ -1,9 +1,9 @@
-# logic2b ui — Interfaces agents can build, verify and maintain
+# Logic2B UI — Interfaces agents can build, verify and maintain
 
 Updated: 18 September 2026. This is the canonical product direction and delivery
 order. [EXECUTION.md](./docs/EXECUTION.md) is the actionable queue;
 [implementation guides](./docs/guides/README.md) define individual contracts.
-The previous roadmap is preserved in [ROADMAP-HISTORY.md](./ROADMAP-HISTORY.md).
+The previous roadmap is preserved in [docs/roadmap-history.md](./docs/roadmap-history.md).
 
 ## Product promise
 

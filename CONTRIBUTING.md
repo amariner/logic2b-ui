@@ -1,4 +1,4 @@
-# Contributing to logic2b ui
+# Contributing to Logic2B UI
 
 Thanks for helping. This document explains how to set up the repository, what a
 change needs before it can merge, and what we do not accept. Product direction

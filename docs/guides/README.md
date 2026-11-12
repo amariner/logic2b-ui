@@ -32,7 +32,7 @@ without re-deriving the design.
 
 Their milestones are described in [ROADMAP.md](../../ROADMAP.md).
 The thesis in one line: agents already build fast
-with logic2b ui; the next gap is whether what they build is *good for the
+with Logic2B UI; the next gap is whether what they build is *good for the
 person using it*. Every guide here moves one of four levers:
 
 | Lever | Question it answers | Guides |

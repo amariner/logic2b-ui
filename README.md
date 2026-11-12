@@ -1,230 +1,147 @@
-# logic2b ui
+<p align="center">
+  <a href="https://ui.logic2b.com">
+    <img src="./.github/assets/banner.png" alt="Logic2B UI — Your design system, ready for agents" width="100%" />
+  </a>
+</p>
 
-Your design system, ready for agents. A shadcn/ui-compatible React component
-registry with reproducible themes, install plans and tools for maintaining
-customized interfaces. Built for developers creating SaaS products, dashboards
-and internal tools with coding agents; hosted on Cloudflare Workers.
+<p align="center">
+  <a href="https://github.com/amariner/logic2b-ui/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/amariner/logic2b-ui/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
+  <a href="https://www.npmjs.com/package/logic2b"><img alt="logic2b on npm" src="https://img.shields.io/npm/v/logic2b/next?label=logic2b&color=1466ff" /></a>
+  <a href="https://www.npmjs.com/package/@logic2b/mcp"><img alt="@logic2b/mcp on npm" src="https://img.shields.io/npm/v/@logic2b/mcp/next?label=%40logic2b%2Fmcp&color=1466ff" /></a>
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-000000" /></a>
+</p>
 
-Our direction is a complete workflow: understand the project, compose real
-components, verify behavior and preserve local work through subsequent changes.
-The source candidate includes bounded project inspection, managed agent
-instructions, evidence-based static review and preconditioned incremental
-change plans with local apply/recovery, and consumer browser verification with
-  explicit evidence and coverage limits, plus an initial explicit customer
-  composition core through CLI `compose` and MCP `compose_plan`.
-  Broader composition and
-proposal previews remain planned; see [ROADMAP.md](./ROADMAP.md) for delivery
-boundaries and priorities. Source availability does not imply npm publication
-or deployment of those additions.
+<p align="center">
+  <a href="https://ui.logic2b.com">Website</a> ·
+  <a href="https://ui.logic2b.com/docs">Documentation</a> ·
+  <a href="https://ui.logic2b.com/docs/components">Components</a> ·
+  <a href="https://ui.logic2b.com/create">Theme studio</a> ·
+  <a href="./ROADMAP.md">Roadmap</a>
+</p>
 
-## What's inside
+---
 
-- **`packages/registry`** — the product: copy-paste React 19 + Tailwind v4
-  components with a shadcn-compatible API, a typed index, and a build script
-  that emits shadcn-compatible JSON payloads plus immutable version manifests,
-  content-addressed files and per-item changelogs.
-- **`apps/web`** — the site: landing, docs, charts, the `/create` theme builder,
-  the `/themes` preset gallery and the `/demos` gallery for the complete
-  generated starters. Astro 7 with React islands, deployed to Cloudflare Workers.
-- **`packages/cli`** — `npx logic2b@next add button`: fetches components from the
-  registry and writes them into your project (resolving registry dependencies).
-  `init --template vite --starter marketing` creates a complete app;
-  `--monorepo` wraps it in a Turbo workspace and `--preset <id>` applies any
-  theme and its Lucide, Tabler, Phosphor or Hugeicons choice exactly.
-- **`packages/mcp`** — an MCP server that exposes the registry to coding
-  agents (search, scaffold, install and maintain components and themes).
-  Also served remotely at `https://ui.logic2b.com/mcp` — no local server installation.
-- **`packages/review`** — a shared, non-executing TSX/JSX review engine in the
-  source candidate, used by CLI `review` and MCP `review_ui`. Four rules cover
-  explicit semantic-color policy and supported native accessible names;
-  unresolved components and label context stay unknown.
-- **`packages/vscode`** — a native VS Code extension preview: browse and search
-  the registry, install items through the public CLI, and apply `/create`
-  presets to local or remote workspaces. CI produces a validated VSIX.
+**Logic2B UI** is a shadcn/ui-compatible React component registry with
+reproducible themes, install plans and tools for maintaining customized
+interfaces. It is built for teams creating SaaS products, dashboards and
+internal tools with coding agents — and for the people who review what those
+agents ship.
 
-## LLM-first
+The goal is a complete workflow: understand an existing project, compose real
+components, verify their behavior and preserve local customizations through
+later changes and upstream updates.
 
-- **Copy Prompt everywhere** — every install surface (docs, blocks, charts and
-  the `/create` studio) can copy a self-contained prompt for Claude Code,
-  Cursor or Copilot instead of a shell command: CLI steps, a no-CLI fallback
-  against the raw registry JSON, the exact theme CSS and a verification
-  checklist in one paste.
-- `/llms.txt` — index of all docs, blocks and charts with absolute URLs
-  (blocks and charts link straight to their installable JSON payloads).
-- `/llms-full.txt` — the whole documentation in one Markdown file.
-- Every docs page is available as plain Markdown by appending `.md`.
-- Every docs route has its own 1200×630 social card, generated from the page
-  frontmatter with theme-aware section styling and covered by a SHA-256
-  manifest plus image-size budgets.
-- **`AGENTS.md` + `DESIGN.md` export** — the `/create` studio generates the
-  house rules (component inventory, token rules, what not to hand-roll) and
-  the style reference for any theme, ready to drop into a repo so agents
-  follow the design system.
-- `/r/index.json` + `/r/<name>.json` — shadcn-compatible mirrors with full
-  source; republished on deploy, unversioned and not integrity-checked.
-- `/r/versions.json` + `/r/changelog/<name>.json` — immutable release discovery,
-  SHA-256 integrity contracts and per-item update history.
-- Every `registry:ui` payload includes an accessibility contract: semantic
-  ownership, keyboard behavior, consumer responsibilities and known gaps.
-- `/tokens/default` — deterministic exports of the semantic theme contract as
-  Tokens Studio / Figma Variables, DTCG JSON, CSS, iOS Swift and Android
-  resources.
-- `/demos` + `/demos/index.json` — live marketing, dashboard and auth starters
-  backed by the same canonical catalog used by CLI and MCP scaffolding.
-- `/themes` + `/themes/index.json` — eight curated, localized presets rendered
-  from their real light/dark tokens, with canonical ids, complete configs and
-  measured audit notes. MCP exposes the same catalog through `list_presets`.
-- `landing-page-01` — the canonical marketing starter as one installable block;
-  its navbar, animated hero, animated feature grid, CTA and footer resolve
-  transitively instead of being duplicated across consumers.
-- Component docs now include lazy, executable prop playgrounds for all 71 UI
-  components. Direct, compound, structured-data and portal recipes plus narrow
-  Recharts, react-hook-form and Sonner adapters render the real registry
-  exports, keep descendant bindings and generated JSX in sync, and support
-  copy/reset without shipping a browser compiler in the initial docs bundle.
-- **MCP server** — point an agent at the remote endpoint
-  (`https://ui.logic2b.com/mcp`, streamable HTTP, zero install) or run
-  `npx -y @logic2b/mcp@next` locally. Beyond search and read, `install_plan`
-  returns the exact file writes + npm deps for any set of items;
-  `scaffold_plan` returns a complete Next, Vite or Astro starter;
-  `list_presets` discovers curated starting points; and `apply_preset` rebuilds
-  theme.css for any `/create` preset. `lint_theme`
-  then detects token drift and contrast regressions as that theme evolves —
-  the host needs file-writing tools to apply plans and a runtime to install
-  dependencies, build and verify the application. Registry tools accept an
-  explicit exact version, semver range or channel; an omitted `version`
-  resolves the `next` registry channel. Either way one immutable manifest is
-  resolved per call and every payload is SHA-256 verified; results report the
-  exact `registryVersion`. Component reads expose the same accessibility
-  contract used by the docs.
-  Presets also carry the icon implementation: CLI/MCP installs rewrite
-  verified imports, package dependencies and update snapshots together.
+> **Status: public beta.** The CLI and MCP server ship on the npm `next`
+> channel. See [RELEASING.md](./RELEASING.md) for the release policy and
+> [ROADMAP.md](./ROADMAP.md) for what is shipped versus planned.
 
-## Beta onboarding
+## Quick start
 
-For source-candidate review usage and its evidence limits, see
-[the review guide](./docs/guides/03-review-ui.md). Confirm `review` in CLI help
-or `review_ui` in MCP `tools/list` before invoking an installed/deployed copy.
-Review requires explicit source selection; semantic-color policy is opt-in,
-and missing-name defects require a justified complete-label-context assertion.
-Static findings supplement application verification; unknown is not pass.
+Add components to an existing React + Tailwind v4 project:
 
-The source candidate also adds MCP `change_plan` and CLI `change plan`,
-`change apply`, `change recover` and `change status`. The host supplies complete
-candidate files; plans bind those bytes to current file hashes or explicit
-absence. Local apply validates every precondition and retains a recovery
-journal. Repeated apply is a no-op; stale files produce conflicts. Dependencies
-and project checks never run automatically. See the
-[incremental changes guide](./apps/web/src/content/docs/changes.mdx) for the
-workflow, transaction recovery and concurrent-writer limitations. Confirm the
-commands/tool exist in your installed copy; this does not establish publication.
+```bash
+npx logic2b@next add button card dialog
+```
 
-CLI `verify` checks a running loopback application using explicitly installed
-Playwright/axe tools and a bounded declarative suite. It saves local screenshots,
-assertion evidence, tool versions and selected-file fingerprints; missing
-coverage never passes. App build/start and dependency installation remain
-separate operations. MCP `verify_report` validates and summarizes the supplied
-report without running a browser, fetching artifacts or authenticating evidence.
-See [consumer verification](./apps/web/src/content/docs/verification.mdx) for
-the complete workflow, reference fixture and remaining human review. These
-source-candidate additions require their own release or deployment.
+Create a new app with a theme preset from the [studio](https://ui.logic2b.com/create):
 
-The [customer maintenance fixture](./docs/guides/15-customer-journey-acceptance.md)
-replays customization, a second feature request and a real upstream update in
-a generated app. It checks that the custom column, copy and theme survive,
-that stale plans reject without writes, and that unresolved merge conflicts
-remain failures until explicitly resolved. Each stage retains its own build
-and browser evidence, including remaining contrast review needs.
+```bash
+npx logic2b@next init --template vite --starter marketing --preset <id>
+```
 
-The [customer composition slice](./docs/guides/16-customer-composition.md)
-grounds structured customer list/form requirements in verified immutable
-payloads. It reports content slots, state support, callback/accessibility duties,
-dependency closure and gaps. Coverage is declared metadata, not a functional
-application: callback wiring remains partial, unsupported intents remain gaps,
-and previews remain pending. Optional project output now provides grounded
-Next/Vite/Astro source with static routes, local demo callbacks and presets;
-CLI `--apply` materializes only a new directory. Confirm `compose`
-in CLI help or `compose_plan` in MCP `tools/list`; this is a source candidate.
+Connect a coding agent to the remote MCP endpoint (streamable HTTP, nothing
+to install):
 
-Use `logic2b@next` and `@logic2b/mcp@next` for the published beta. npm package
-selectors and `--registry-version` / MCP `version` select different artifacts.
-`next` can move; record `npx logic2b@next --version` and the MCP handshake version
-when reporting a problem. The remote MCP and current source include structured
-results, verified default registry reads, input limits and `list_presets`.
-The npm `@next` packages still resolve to `1.0.0-rc.2`; its MCP lacks those
-additions. See [pending npm publication](./RELEASING.md#pending-npm-publication)
-for the release gap.
+```text
+https://ui.logic2b.com/mcp
+```
 
-Start with the [installation guide](https://ui.logic2b.com/docs/installation)
-(including the [compatibility table](https://ui.logic2b.com/docs/installation#compatibility))
-or the [human MCP setup guide](https://ui.logic2b.com/docs/llms#mcp-server).
-`pnpm --filter @logic2b/mcp demo:walkthrough` replays the maintenance loop the
-landing page promises: preset, scaffold, local edits, drift detection and
-correction, against the committed registry.
+or run it locally with `npx -y @logic2b/mcp@next`. See the
+[installation guide](https://ui.logic2b.com/docs/installation) and the
+[MCP setup guide](https://ui.logic2b.com/docs/llms#mcp-server).
 
-Contributions follow [CONTRIBUTING.md](./CONTRIBUTING.md); report
-vulnerabilities as described in [SECURITY.md](./SECURITY.md).
+## Features
+
+- **71 UI components plus blocks and charts** — React 19 + Tailwind v4,
+  shadcn-compatible APIs, each component with a documented accessibility
+  contract and an executable prop playground.
+- **Reproducible themes** — the `/create` studio turns any theme into a single
+  preset id that the site, CLI, MCP server and VS Code extension apply exactly,
+  including its icon library. Eight curated presets ship in `/themes`.
+- **Immutable, verified registry** — versioned manifests, content-addressed
+  payloads and SHA-256 integrity checks on every read; per-item changelogs.
+- **Built for agents** — MCP tools that return file writes instead of shell
+  commands (`install_plan`, `scaffold_plan`, `apply_preset`, `lint_theme`,
+  `list_presets`, …), `llms.txt`, Markdown versions of every docs page and
+  copy-ready prompts on every install surface.
+- **Maintenance, not just generation** — project inspection, managed agent
+  rules, evidence-based static review, preconditioned incremental changes with
+  recovery and browser verification of the consumer app (some of these are in
+  the source ahead of npm publication; see [RELEASING.md](./RELEASING.md)).
+- **Design tokens everywhere** — deterministic exports for Tokens Studio /
+  Figma Variables, DTCG JSON, CSS, iOS Swift and Android resources.
+
+## Repository layout
+
+| Path | Description |
+| --- | --- |
+| [`packages/registry`](./packages/registry) | Component, block and chart sources; registry build, release history and integrity checks |
+| [`packages/tokens`](./packages/tokens) | Theme presets, token exports, contrast audit and theme linting |
+| [`packages/scaffold`](./packages/scaffold) | Shared scaffold and composition core used by the CLI and MCP |
+| [`packages/review`](./packages/review) | Non-executing TSX/JSX static review engine |
+| [`packages/cli`](./packages/cli) | `logic2b` CLI — `add`, `init`, `list`, `diff`, `status`, `update`, `rules`, `review`, `change`, `verify`, `compose` |
+| [`packages/mcp`](./packages/mcp) | MCP server (stdio and HTTP) exposing the registry to coding agents |
+| [`packages/vscode`](./packages/vscode) | VS Code extension preview |
+| [`apps/web`](./apps/web) | Website, bilingual docs (EN/ES), theme studio and `/mcp` route — Astro on Cloudflare Workers |
+| [`benchmarks`](./benchmarks) | Framework lab and agent benchmark protocol with archived results |
+| [`skills`](./skills) | Agent skill distributed with the MCP package |
+| [`docs`](./docs) | Implementation guides, execution queue and project history |
 
 ## Development
 
+Requirements: Node.js 22.12+ and pnpm 11 (pinned through `packageManager`).
+
 ```bash
-pnpm install
-pnpm --dir packages/registry build   # generate /r/*.json
-pnpm --dir apps/web dev              # dev server on :4321
-pnpm --filter @logic2b/web generate:og # regenerate docs social cards
-pnpm build                           # full build (turbo)
-pnpm lint && pnpm test               # registry/type checks + unit tests
-pnpm test:release-artifacts          # pack/install CLI + MCP consumer smoke
-pnpm --filter @logic2b/mcp test:scaffolds # install/build starters + compositions
-pnpm --filter @logic2b/mcp test:compositions # build + customer browser/axe evidence
-pnpm --filter logic2b test:scaffold     # install/build a generated monorepo
-pnpm --filter @logic2b/web test:e2e  # 712 axe analyses + 652 visual checks (after build)
-pnpm --filter @logic2b/web test:budgets
-pnpm --filter @logic2b/web test:lighthouse
-pnpm package:vscode                   # build a locally installable VSIX
-pnpm benchmark:frameworks             # isolated Next/Vite/Astro/TanStack lab
-pnpm benchmark:agents:test            # validate agent protocol + scorer
-pnpm --dir benchmarks/agents test:fixtures # install/build agent fixtures
-pnpm benchmark:agents:run -- <config> # execute a real run (inside a sandbox)
+pnpm install --frozen-lockfile
+pnpm --dir packages/registry build      # generate the registry payloads
+pnpm --filter @logic2b/web dev          # site on http://localhost:4321
+pnpm build                              # full build
+pnpm lint && pnpm test                  # type checks, registry integrity, unit tests
 ```
 
-The release-candidate checklist and npm dist-tag policy live in
-[RELEASING.md](./RELEASING.md).
+Additional gates:
 
-## Deploy
+```bash
+pnpm test:release-artifacts                  # pack and smoke-test CLI + MCP tarballs
+pnpm --filter @logic2b/mcp test:scaffolds    # install and build generated starters
+pnpm --filter @logic2b/web test:e2e          # axe + visual suites (after build)
+pnpm --filter @logic2b/web test:budgets      # bundle and payload size budgets
+pnpm package:vscode                          # build the VS Code extension VSIX
+```
 
-The site is configured for **Cloudflare Workers** (the `@astrojs/cloudflare`
-adapter plus `apps/web/wrangler.jsonc`). The build is self-contained — no secrets
-or environment variables required.
+## Deployment
 
-- **Manual:** `cd apps/web && npx wrangler deploy`.
-- **Automatic:** in the Cloudflare dashboard, connect this repo under
-  _Workers & Pages → your Worker → Builds_. Root directory `apps/web`, build
-  command `npx astro build`. Every push to `main` then deploys on its own.
-- **Other hosts (Vercel, Netlify, a static server):** the site builds to static
-  files, so just swap the adapter in `apps/web/astro.config.mjs` for your
-  platform. `wrangler.jsonc` is Cloudflare-only and ignored everywhere else.
+The site deploys to **Cloudflare Workers** through `@astrojs/cloudflare` and
+`apps/web/wrangler.jsonc`. The build needs no secrets.
 
-## Roadmap
+```bash
+cd apps/web && npx wrangler deploy
+```
 
-See [ROADMAP.md](./ROADMAP.md) for the current product direction and milestone
-exit criteria. Agents building this repository start with [AGENTS.md](./AGENTS.md)
-and pick scoped work from [docs/EXECUTION.md](./docs/EXECUTION.md), supported by
-[implementation guides](./docs/guides/README.md). Earlier deliveries and launch
-assumptions are retained in [ROADMAP-HISTORY.md](./ROADMAP-HISTORY.md).
-The [framework lab](./benchmarks/frameworks) and [agent benchmark](./benchmarks/agents)
-publish their original scope; comparative outcome evaluation is a separate
-planned workstream, not a claim inferred from the existing leaderboard.
+To deploy elsewhere, swap the adapter in `apps/web/astro.config.mjs`.
 
 ## Contributing
 
-Components follow the shadcn conventions: one file per component, `cva` for
-variants, the `cn()` helper for classes, a `data-slot` on each root element, and
-strict TypeScript. Commits use
-[Conventional Commits](https://www.conventionalcommits.org).
+Contributions are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) and the
+[Code of Conduct](./CODE_OF_CONDUCT.md) before opening a pull request. Commits
+follow [Conventional Commits](https://www.conventionalcommits.org). Coding
+agents start with [AGENTS.md](./AGENTS.md); visual rules live in
+[DESIGN.md](./DESIGN.md). Earlier milestones are archived in
+[docs/roadmap-history.md](./docs/roadmap-history.md).
+
+Report vulnerabilities privately as described in [SECURITY.md](./SECURITY.md).
 
 ## License
 
-MIT © [logic2b](https://ui.logic2b.com) — see [LICENSE](./LICENSE). Notices for
-bundled open-source software live in
-[THIRD-PARTY-LICENSES.md](./THIRD-PARTY-LICENSES.md).
+[MIT](./LICENSE) © Andreu Mariner — [Logic2B](https://logic2b.com).
+Third-party notices are listed in [THIRD-PARTY-LICENSES.md](./THIRD-PARTY-LICENSES.md).
