@@ -12,7 +12,7 @@ helps. Close those two gaps before widening scope.
 
 | Phase | Goal | Tasks |
 | --- | --- | --- |
-| 0 — Ship what exists | npm, remote MCP, site and docs describe the same candidate | REL-03 publish paired `1.0.0-rc.3` to `next`; REL-04 decide the stale `latest` tags; BRAND-01 Logic2B identity across site, CLI, MCP and VS Code (done) |
+| 0 — Ship what exists | npm, remote MCP, site and docs describe the same candidate | REL-03 publish paired `1.0.0-rc.3` to `next` (done 12 Nov 2026); REL-04 deprecate the stale `latest` tags (done); BRAND-01 Logic2B identity across site, CLI, MCP and VS Code (done) |
 | 1 — Real evidence | Know whether the workflow helps real projects | PILOT-01 dogfood on two Logic products (Astro + React); EVAL-01 real comparative measurements; CTX-01 measure the 22-tool catalog cost and offer a compact profile if needed |
 | 2 — What SaaS teams need | Generic list/edit screens and schema-driven forms/tables | M3-01 complete composition beyond customers; M3-03 JSON Schema forms and explicit-column tables |
 | 3 — Only if Phase 1 supports it | Proposal previews and agent-run UI | M3-02, M3-04, M4-01, PREF-01, EVAL-02 |

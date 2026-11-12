@@ -4,6 +4,8 @@ All notable changes to the `logic2b` CLI are documented here.
 
 ## 1.0.0-rc.3
 
+Published to npm `next` on 12 November 2026 (`latest` unchanged).
+
 - Use the Logic2B UI product name in the CLI help and generated
   project files, managed agent rules and design notes.
 
@@ -17,27 +19,26 @@ All notable changes to the `logic2b` CLI are documented here.
   preset transforms; `--apply <new-directory>` writes only a new destination,
   without installing or building. Local callbacks do not supply persistence or
   server authorization. Prose interpretation and previews remain pending.
-  Source candidate pending publication.
 
 - Merge independent edits on adjacent lines during upstream updates. Keep
   genuine unresolved conflicts explicit across repeated updates with tagged
   markers and local records; exit 1 for conflicts or missing-base differences.
   Add generated-consumer create/change/update acceptance with preserved custom
-  columns, copy and tokens. Source candidate pending publication.
+  columns, copy and tokens.
 
 - Add declarative local `verify` against an explicitly started loopback app,
   with bounded source fingerprints, browser/axe evidence and honest coverage.
   Missing tools and incomplete measurements remain skipped/unknown; no implicit
-  installation, build or app start. Source candidate pending publication.
+  installation, build or app start.
 
 - Add bounded incremental `change plan`, explicit `change apply` with dry-run,
   stale-file preconditions and a recovery journal, plus `change status` and
   `change recover`. Preserve already-applied files and newer edits; never run
-  dependencies, scripts or supplied source. Source candidate pending publication.
+  dependencies, scripts or supplied source.
 
 - Add bounded TSX/JSX `review` with evidence-backed findings, explicit semantic
   color policy, unresolved contexts and reasoned suppressions; never execute
-  reviewed source. This is a source-candidate addition pending publication.
+  reviewed source.
 
 - Deliver managed agent/design instructions with init/add/update, editor formats via `rules`, and `--no-agent-rules`; preserve project text outside markers.
 

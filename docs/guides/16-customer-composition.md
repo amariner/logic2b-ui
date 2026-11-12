@@ -3,8 +3,8 @@
 Updated 30 September 2026. M3-01 remains in progress; this source slice provides
 the shared core, CLI `compose` and MCP `compose_plan` for the customer journey.
 It also exports grounded project files and presets for Next, Vite and Astro.
-It requires a new package release/endpoint deployment before external use.
-Check CLI help or MCP `tools/list`; npm rc.2 does not have these additions.
+These additions shipped in npm `1.0.0-rc.3` (`next`, 12 November 2026) and
+the remote endpoint; npm rc.2 does not have them. Check CLI help or MCP `tools/list`.
 
 ## Explicit requirements
 

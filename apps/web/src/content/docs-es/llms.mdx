@@ -69,11 +69,11 @@ completar esos pasos por sí solo. El servidor remoto no accede a tus archivos.
 El transporte stdio local requiere Node.js 18+ y npm. Usa `@logic2b/mcp@next`
 para la beta y `logic2b@next` para la CLI. Estos selectores npm son independientes
 de `version` del registro. Registra la versión del handshake MCP y `--version`
-de la CLI: `next` puede cambiar. El MCP remoto y el código actual ofrecen
-resultados estructurados, lecturas verificadas por defecto, límites de entrada
-y `list_presets`. El paquete npm `@next` sigue en `1.0.0-rc.2`: devuelve JSON
-como texto y aún no incluye esas novedades. Usa el endpoint remoto para acceder
-al catálogo completo descrito aquí hasta la próxima publicación npm.
+de la CLI: `next` puede cambiar. El paquete npm `@next` resuelve a
+`1.0.0-rc.3` y coincide con el MCP remoto: resultados estructurados, lecturas
+verificadas por defecto, límites de entrada y el catálogo completo descrito
+aquí, incluido `list_presets`. Las instalaciones antiguas de `1.0.0-rc.2`
+devuelven JSON como texto y no incluyen esas novedades.
 
 Si omites `version`, el MCP resuelve el canal `next` del registro a una
 versión exacta, verifica el SHA-256 de cada payload y devuelve `registryVersion`;
@@ -83,8 +83,8 @@ inválidos son errores JSON-RPC y los fallos de ejecución devuelven `isError`. 
 protocolo: un GET con HTTP 405 es esperado; comprueba la conexión con un cliente
 MCP, no navegando al endpoint.
 
-El registro expone el Model Context Protocol de dos formas, con la diferencia
-de versión npm indicada arriba. Para leer: `list_components`, `search_components`,
+El registro expone el Model Context Protocol de dos formas: remoto y
+stdio local. Para leer: `list_components`, `search_components`,
 `get_component`, `get_demo`, `list_registry_versions` y `get_changelog`. Las
 lecturas, instalaciones y operaciones de tema aceptan `version` como semver
 exacto, rango o canal, y verifican SHA-256 antes de responder.

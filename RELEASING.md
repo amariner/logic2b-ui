@@ -77,25 +77,36 @@ Only the final trademark-approved `1.0.0` release moves to `latest`. If one RC
 package publishes and the other fails, fix and publish the same version of the
 missing package—never reuse an already published npm version.
 
-## Pending npm publication
+## npm publication history
 
-Checked against the public npm registry on 7 September 2026:
+Nothing is pending: npm `next` serves the current paired candidate.
 
-| Package | Published `next` | Published `latest` | Pending delivery |
+### 12 November 2026 — `1.0.0-rc.3`
+
+| Package | `next` | `latest` (deprecated) | Tarball shasum |
 | --- | --- | --- | --- |
-| `@logic2b/mcp` | `1.0.0-rc.2` | `0.2.0` | Structured outputs, verified default registry reads, bounded inputs/protocol errors, beta command selectors and the 16th tool, `list_presets` |
-| `logic2b` | `1.0.0-rc.2` | `0.4.0` | Paired candidate required by the shared CLI/MCP version policy; no new CLI command from the gallery integration |
+| `logic2b` | `1.0.0-rc.3` | `0.4.0` | `9aa852863f73457d729dc444e519e1a021cb3a29` |
+| `@logic2b/mcp` | `1.0.0-rc.3` | `0.2.0` | `1f7947c4adc1eaa4abc1251095ffa02cdd0ab6b0` |
 
-The website and remote MCP deploy from GitHub independently of npm. The gallery
-is available through `/themes`, `/es/themes`, `/themes/index.json` and remote
-`list_presets` after the integration deployment. Updating `main` does not update
-either npm dist-tag. Tokens and scaffold are private workspace packages bundled
-into the distributable binaries; they need no separate npm publication.
+Both tarballs were packed with `pnpm pack` from `992b81c` and published with
+`npm publish <tgz> --tag next --access public`; `latest` was not moved. The
+stale `latest` versions are deprecated with a pointer to `@next`
+(`logic2b@0.4.0` → `/docs/installation`, `@logic2b/mcp@0.2.0` →
+`/docs/llms#mcp-server`) until the final `1.0.0` replaces them. The live
+beta-onboarding check resolved rc.3 for npm, stdio MCP and the remote endpoint.
+Evidence is recorded under REL-03/REL-04 in `docs/EXECUTION.md`.
 
-The user authorized the paired `1.0.0-rc.3` publication on 7 September 2026.
-Both manifests and changelogs now describe that candidate; npm still serves rc.2
-until publication succeeds. Run the release-candidate gate above for the exact
-candidate commit, then publish both packages to `next`. Keep `latest` unchanged.
-After publication, run the live beta-onboarding check and update the compatibility
-tables and MCP availability notes in English and Spanish. Authentication and
-publication results are tracked under REL-03 in `docs/EXECUTION.md`.
+pnpm's default minimum release age makes `pnpm dlx logic2b@next` keep
+resolving the previous version for about 24 hours after a publication; npm and
+exact-version pnpm selectors resolve immediately. Run
+`test:beta-onboarding` again after that window.
+
+The website and remote MCP deploy from GitHub independently of npm. Updating
+`main` does not update either npm dist-tag. Tokens and scaffold are private
+workspace packages bundled into the distributable binaries; they need no
+separate npm publication.
+
+### Earlier
+
+`1.0.0-rc.2` was published to `next` before 7 September 2026; `latest` remained
+CLI `0.4.0` / MCP `0.2.0`.

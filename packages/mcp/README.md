@@ -8,11 +8,13 @@ runtime to install dependencies, build and verify the resulting application.
 
 ## Tools
 
-This catalog describes the current source candidate: 22 tools with
-structured results, verified default reads and bounded inputs. Older
-`1.0.0-rc.2` installations have 15 tools and lack these additions. Confirm
-`inspect_project`, `review_ui`, `compose_plan`, `change_plan` and `verify_report` appear in `tools/list` before using them; source changes need
-a package release or endpoint deployment to become available to other hosts.
+This catalog describes `1.0.0-rc.3`, published to npm `next` on 12 November
+2026: 22 tools with structured results, verified default reads and bounded
+inputs. Older `1.0.0-rc.2` installations have 15 tools and lack these
+additions; upgrade with `@logic2b/mcp@next` and confirm `inspect_project`,
+`review_ui`, `compose_plan`, `change_plan` and `verify_report` appear in
+`tools/list`. Later source changes need a package release or endpoint
+deployment to become available to other hosts.
 
 ### Inspect an existing project
 
@@ -307,7 +309,7 @@ suppression directives. A truncated result is incomplete. No registry version
 is returned because the engine never reads a registry. Structured content and
 the text fallback contain the same result.
 
-This source addition needs a package release or endpoint deployment; check
+Available since `1.0.0-rc.3` on npm `next` and on the remote endpoint; check
 `tools/list` before relying on it. See [static UI review](https://ui.logic2b.com/docs/review)
 for rule examples and intentional exceptions. Unknown is not pass; retain
 independent keyboard, screen-reader and application behavior checks.

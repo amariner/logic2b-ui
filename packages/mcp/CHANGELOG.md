@@ -4,6 +4,8 @@ All notable changes to `@logic2b/mcp` are documented here.
 
 ## 1.0.0-rc.3
 
+Published to npm `next` on 12 November 2026 (`latest` unchanged).
+
 - Use the Logic2B UI product name in the server instructions, tool descriptions and generated
   project files, managed agent rules and design notes.
 
@@ -18,7 +20,7 @@ All notable changes to `@logic2b/mcp` are documented here.
   source, static routes, local demo callbacks and preset transforms. Missing
   requirements suppress source; production wiring stays partial. The tool
   performs no writes, installation or runtime verification. No proposal URL is
-  inferred. Source candidate pending publication.
+  inferred.
 
 - Add pure `verify_report` for host-produced runtime reports: validate the
   declared suite, selected-file fingerprints, bounded evidence references and

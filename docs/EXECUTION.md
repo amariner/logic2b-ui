@@ -8,12 +8,12 @@ the scope is specified; only start after the Dependencies column is satisfied.
 | ID | Task and guide | Dependencies | Status | Owner |
 | --- | --- | --- | --- | --- |
 | BRAND-01 | Logic2B corporate identity: site lockup, favicon, Inter Tight, social cards, product name in CLI/MCP/VS Code | — | done | maintainer |
-| REL-04 | Decide the stale npm `latest` tags (`logic2b@0.4.0`, `@logic2b/mcp@0.2.0`): deprecate with a pointer to `@next` or keep until `1.0.0` | REL-03 | ready | — |
+| REL-04 | Decide the stale npm `latest` tags (`logic2b@0.4.0`, `@logic2b/mcp@0.2.0`): deprecated with a pointer to `@next` until `1.0.0` | REL-03 | done | maintainer |
 | PILOT-01 | Dogfood the agent workflow on two Logic products (Astro + React): one list/edit screen each, record corrections, context cost and failures | REL-03 | ready | — |
 | CTX-01 | Measure tool-catalog bytes and per-task tool calls; if costly, add a compact default tool profile with advanced tools on demand | EVAL-01 | ready | — |
 | DEPLOY-02 | Reconcile local static-review work with current production; merge, push and deploy (user authorized) | M1-04; DEPLOY-01 | done | maintainer |
 | DEPLOY-01 | Complete authorized production delivery; recover browser installer CI | M3-01 source delivery `708da8d` | done | maintainer |
-| REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized; blocked on npm authentication on the release machine) | SYNC-01 | blocked | maintainer |
+| REL-03 | Publish paired CLI/MCP `1.0.0-rc.3` to npm `next` (user authorized) | SYNC-01 | done | maintainer |
 | SYNC-01 | Integrate pending theme gallery, MCP contracts and release documentation (user requested) | M0-04 | done | maintainer |
 | DIR-01 | Reorient roadmap, contributor instructions and executable contracts | — | done | maintainer |
 | M0-02 | Typed MCP results with backward-compatible text — [13](guides/13-mcp-contracts.md) | DIR-01 | done | maintainer |
@@ -1525,3 +1525,55 @@ complete PR CI on the identical tree, not a claim that the later run has
 finished. This final follow-up changes only the execution record and sanitized
 evidence and uses `[skip ci]`; Cloudflare may independently rebuild it without
 changing product/runtime source.
+
+### 12 November 2026 — REL-03 and REL-04
+
+Published the paired `1.0.0-rc.3` candidate to npm `next` and deprecated the
+stale `latest` versions. The user completed npm's browser-based 2FA for each
+write; no password, OTP or token passed through the agent.
+
+- Tarballs packed with `pnpm pack` from `992b81c` (CI green):
+  `logic2b-1.0.0-rc.3.tgz` (shasum `9aa852863f73457d729dc444e519e1a021cb3a29`,
+  5 files) and `logic2b-mcp-1.0.0-rc.3.tgz` (shasum
+  `1f7947c4adc1eaa4abc1251095ffa02cdd0ab6b0`, 6 files). Manifests contain no
+  `workspace:` ranges.
+- `npm publish <tgz> --tag next --access public` for both. Two first attempts
+  failed with `E404 GET /-/v1/done` because the web-auth session expired before
+  approval; nothing was published by those attempts, and no version was reused.
+- `npm deprecate logic2b@0.4.0 "Outdated. Use logic2b@next — https://ui.logic2b.com/docs/installation"`
+  and `npm deprecate @logic2b/mcp@0.2.0 "Outdated. Use @logic2b/mcp@next — https://ui.logic2b.com/docs/llms#mcp-server"`.
+- `npm view` at `2026-11-12T11:22Z`: `logic2b` `next` `1.0.0-rc.3`, `latest`
+  `0.4.0`; `@logic2b/mcp` `next` `1.0.0-rc.3`, `latest` `0.2.0`. Both `0.4.0`
+  and `0.2.0` report the deprecation message (registry document checked directly).
+
+Live verification: `pnpm --filter @logic2b/mcp test:beta-onboarding` failed
+its npm/pnpm parity assertion: `npx logic2b@next` resolved `1.0.0-rc.3`, but
+`pnpm dlx logic2b@next` (global pnpm 12.11.2) resolved `1.0.0-rc.2`. pnpm's
+cached metadata already lists `next: 1.0.0-rc.3` and `pnpm dlx
+logic2b@1.0.0-rc.3` works, so this is pnpm's default minimum release age
+excluding versions younger than about 24 hours, not a publication defect;
+`npm_config_dlx_cache_max_age=0`, an isolated cache dir and
+`minimum-release-age=0` overrides did not change it. A temporary copy of the
+script that only replaced that pnpm selector with the exact resolved version
+(not committed) passed:
+
+- `logic2b@next` resolved `1.0.0-rc.3`; help/init (Vite marketing)/add button verified.
+- stdio `@logic2b/mcp@next` resolved `1.0.0-rc.3`; handshake and `install_plan` verified.
+- Remote MCP: GET 405 and streamable HTTP handshake verified (`1.0.0-rc.3`).
+
+Docs: `RELEASING.md` moves the pending section to a dated publication history;
+English/Spanish installation and llms pages, `packages/mcp/README.md`, CLI/MCP
+changelogs and guide 16 now state rc.3 is published. Immutable registry content,
+archived benchmarks and dated historical entries are unchanged.
+
+Local checks (Node 24.22.0 from `~/.local/bin`, pnpm 11.10.0): `pnpm lint`
+passed; `pnpm --filter @logic2b/web build` passed; `pnpm test --concurrency=2`
+passed 8/9 packages, with one CLI compose test failing only because turbo does
+not pass `TMPDIR` and `/tmp` is a symlink on this Mac;
+`TMPDIR=/private/tmp/l2b-tmp pnpm --filter logic2b test` passed 146/146.
+
+Limitations: rerun the unmodified `test:beta-onboarding` after 13 November
+2026 11:10 UTC to confirm `pnpm dlx logic2b@next` parity. `latest` stays on the
+deprecated versions until the trademark-approved `1.0.0`.
+
+Next ready task: PILOT-01 (dogfood the agent workflow on two Logic products).
