@@ -18,7 +18,7 @@ const { title } = Astro.props;
     <script is:inline>
       // Same anti-flash script as BaseLayout: the iframe is a standalone
       // document, so it needs its own copy (not inherited from the parent).
-      const theme = localStorage.getItem("theme") ?? "dark";
+      const theme = localStorage.getItem("theme") ?? "light";
       document.documentElement.classList.toggle("dark", theme === "dark");
     </script>
   </head>

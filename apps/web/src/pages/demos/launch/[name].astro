@@ -18,9 +18,9 @@ if (!demo) throw new Error(`Unknown launch demo: ${Astro.params.name}`)
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={demo.description} />
     <meta name="robots" content="noindex" />
-    <title>{demo.title} live demo — logic2b ui</title>
+    <title>{demo.title} live demo — Logic2B UI</title>
     <script is:inline>
-      const theme = localStorage.getItem("theme") ?? "dark";
+      const theme = localStorage.getItem("theme") ?? "light";
       document.documentElement.classList.toggle("dark", theme === "dark");
     </script>
   </head>

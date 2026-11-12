@@ -8,7 +8,7 @@ export const GET: APIRoute = async ({ site }) => {
   );
 
   const body = [
-    "# logic2b ui — documentación en español",
+    "# Logic2B UI — documentación en español",
     "",
     "> Componentes de interfaz que copias, adaptas y posees, con un registro",
     "> abierto diseñado para asistentes y agentes de programación.",

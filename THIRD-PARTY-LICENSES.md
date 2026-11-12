@@ -1,6 +1,6 @@
 # Third-Party Licenses
 
-logic2b ui is built on top of open-source software. The packages below are the
+Logic2B UI is built on top of open-source software. The packages below are the
 property of their respective authors and are used under their original licenses.
 This notice is provided in compliance with those licenses. Full license texts
 ship with each package (`node_modules/<package>/LICENSE`) and in the linked
@@ -22,6 +22,18 @@ upstream repositories.
 | [react / react-dom](https://github.com/facebook/react) | MIT | © Meta Platforms, Inc. and affiliates |
 | [tailwindcss](https://github.com/tailwindlabs/tailwindcss) | MIT | © Tailwind Labs, Inc. |
 | [simple-icons](https://github.com/simple-icons/simple-icons) | CC0-1.0 | Simple Icons Collaborators |
+
+## Fonts
+
+| Font | License | Copyright |
+| --- | --- | --- |
+| [Inter Tight](https://github.com/rsms/inter) (self-hosted subset) | OFL-1.1 | © 2016 The Inter Project Authors |
+| [Inter](https://github.com/rsms/inter) via `@fontsource-variable/inter` | OFL-1.1 | © 2016 The Inter Project Authors |
+| [Space Grotesk](https://github.com/floriankarsten/space-grotesk) via `@fontsource-variable/space-grotesk` | OFL-1.1 | © 2020 The Space Grotesk Project Authors |
+| [Poppins](https://github.com/itfoundry/Poppins) (wordmark subsets) | OFL-1.1 | © 2020 Indian Type Foundry |
+
+The Logic2B name, isotype and wordmark are trademarks of Logic2B and are not
+covered by the MIT License of this repository.
 
 Brand logos rendered via simple-icons (Next.js, Vite, TanStack, React Router,
 Astro, Laravel) are trademarks of their respective owners and are used for

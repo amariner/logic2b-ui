@@ -22,7 +22,7 @@ export function HeroDemo() {
       <Card>
         <CardHeader>
           <CardTitle>Create account</CardTitle>
-          <CardDescription>Start building with logic2b ui.</CardDescription>
+          <CardDescription>Start building with Logic2B UI.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">

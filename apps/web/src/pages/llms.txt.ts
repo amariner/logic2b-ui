@@ -36,7 +36,7 @@ export const GET: APIRoute = async ({ site }) => {
   );
 
   const body = [
-    "# logic2b ui",
+    "# Logic2B UI",
     "",
     "> Copy-paste UI components with an open JSON registry, designed for",
     "> consumption by LLMs and coding agents.",

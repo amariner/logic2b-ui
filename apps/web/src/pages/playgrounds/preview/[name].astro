@@ -20,9 +20,9 @@ if (!hasPlayground(name)) throw new Error(`Unknown playground: ${name}`)
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="robots" content="noindex" />
-    <title>{name} playground — logic2b ui</title>
+    <title>{name} playground — Logic2B UI</title>
     <script is:inline>
-      const theme = localStorage.getItem("theme") ?? "dark";
+      const theme = localStorage.getItem("theme") ?? "light";
       document.documentElement.classList.toggle("dark", theme === "dark");
     </script>
   </head>
